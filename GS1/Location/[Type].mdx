@@ -2,13 +2,14 @@
 layout: locationType
 source: GS1/Location
 $type: GS1/Location/Type
-$id: https://standards.org.ai/GS1/Location/Type/{locationType.id}
-sameAs: LocationType/{locationType.id}
+$id: https://standards.org.ai/GS1/Location/Type/{locationType.code}
+sameAs: https://standards.org.ai/LocationType/{locationType.code}
+canonical: https://gs1.org.ai/Location/Type/{locationType.code}
 params:
   - Type
 schema:
   locationType:
-    id: id
+    code: id
     label: label
     type: type
     description: description
@@ -18,7 +19,7 @@ schema:
 
 # {locationType.label}
 
-<LocationTypeHeader id={locationType.id} label={locationType.label} />
+<LocationTypeHeader code={locationType.code} label={locationType.label} />
 
 ## Description
 
@@ -30,12 +31,12 @@ schema:
 
 ## Parent Type
 
-<LocationTypeLink id={locationType.parentType} />
+<LocationTypeLink code={locationType.parentType} />
 
 ## Child Types
 
-<ChildLocationTypes parentId={locationType.id} />
+<ChildLocationTypes parentCode={locationType.code} />
 
 ## Related Location Types
 
-<RelatedLocationTypes typeId={locationType.id} />
+<RelatedLocationTypes typeCode={locationType.code} />

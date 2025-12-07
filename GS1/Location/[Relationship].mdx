@@ -2,13 +2,14 @@
 layout: locationRelationship
 source: GS1/Location
 $type: GS1/Location/Relationship
-$id: https://standards.org.ai/GS1/Location/Relationship/{relationship.id}
-sameAs: LocationRelationship/{relationship.id}
+$id: https://standards.org.ai/GS1/Location/Relationship/{relationship.code}
+sameAs: https://standards.org.ai/LocationRelationship/{relationship.code}
+canonical: https://gs1.org.ai/Location/Relationship/{relationship.code}
 params:
   - Relationship
 schema:
   relationship:
-    id: id
+    code: id
     name: name
     description: description
     sourceType: sourceType
@@ -17,7 +18,7 @@ schema:
 
 # {relationship.name}
 
-<RelationshipHeader id={relationship.id} name={relationship.name} />
+<RelationshipHeader code={relationship.code} name={relationship.name} />
 
 ## Description
 
@@ -25,12 +26,12 @@ schema:
 
 ## Source Type
 
-<LocationTypeLink id={relationship.sourceType} />
+<LocationTypeLink code={relationship.sourceType} />
 
 ## Target Type
 
-<LocationTypeLink id={relationship.targetType} />
+<LocationTypeLink code={relationship.targetType} />
 
 ## Usage Examples
 
-<RelationshipExamples relationshipId={relationship.id} />
+<RelationshipExamples relationshipCode={relationship.code} />

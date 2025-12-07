@@ -2,13 +2,14 @@
 layout: term
 source: GS1/Vocabulary
 $type: GS1/Vocabulary/Term
-$id: https://standards.org.ai/GS1/Vocabulary/Term/{term.id}
-sameAs: Term/{term.id}
+$id: https://standards.org.ai/GS1/Vocabulary/Term/{term.code}
+sameAs: https://standards.org.ai/Term/{term.code}
+canonical: https://gs1.org.ai/Vocabulary/Term/{term.code}
 params:
   - Term
 schema:
   term:
-    id: id
+    code: id
     label: label
     type: type
     description: description
@@ -18,7 +19,7 @@ schema:
 
 # {term.label}
 
-<TermHeader id={term.id} label={term.label} type={term.type} />
+<TermHeader code={term.code} label={term.label} type={term.type} />
 
 ## Description
 
@@ -34,8 +35,8 @@ Verb: {term.verb} | Noun: {term.noun}
 
 ## Related Terms
 
-<RelatedTerms termId={term.id} />
+<RelatedTerms termCode={term.code} />
 
 ## Usage in Events
 
-<EventsByTerm termId={term.id} />
+<EventsByTerm termCode={term.code} />

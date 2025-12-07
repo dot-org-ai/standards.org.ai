@@ -2,20 +2,21 @@
 layout: identifierType
 source: GS1/Identifier
 $type: GS1/Identifier/Type
-$id: https://standards.org.ai/GS1/Identifier/Type/{identifierType.id}
-sameAs: IdentifierType/{identifierType.id}
+$id: https://standards.org.ai/GS1/Identifier/Type/{identifierType.code}
+sameAs: https://standards.org.ai/IdentifierType/{identifierType.code}
+canonical: https://gs1.org.ai/Identifier/Type/{identifierType.code}
 params:
   - Type
 schema:
   identifierType:
-    id: identifier
-    class: class
+    code: identifier
+    identifierClass: class
     description: description
 ---
 
-# {identifierType.id}
+# {identifierType.code}
 
-<IdentifierTypeHeader id={identifierType.id} identifierClass={identifierType.class} />
+<IdentifierTypeHeader code={identifierType.code} identifierClass={identifierType.identifierClass} />
 
 ## Description
 
@@ -23,16 +24,16 @@ schema:
 
 ## Identifies
 
-{identifierType.class}
+{identifierType.identifierClass}
 
 ## Format Specification
 
-<IdentifierFormat identifierId={identifierType.id} />
+<IdentifierFormat identifierCode={identifierType.code} />
 
 ## Usage Examples
 
-<IdentifierExamples identifierId={identifierType.id} />
+<IdentifierExamples identifierCode={identifierType.code} />
 
 ## Related Identifiers
 
-<RelatedIdentifiers identifierId={identifierType.id} />
+<RelatedIdentifiers identifierCode={identifierType.code} />

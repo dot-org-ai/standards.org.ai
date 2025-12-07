@@ -2,36 +2,38 @@
 layout: ability
 source: ONET
 $type: ONET/Ability
-$id: https://standards.org.ai/ONET/Ability/{elementId}
-sameAs: Ability/{elementId}
+$id: https://standards.org.ai/ONET/Ability/{ability.code}
+sameAs: https://standards.org.ai/Ability/{ability.code}
+canonical: https://onet.org.ai/Ability/{ability.code}
 params:
   - Ability
 schema:
-  elementId: elementID
-  name: elementName
-  description: description
+  ability:
+    code: elementID
+    name: elementName
+    description: description
 ---
 
-# {name}
+# {ability.name}
 
-<AbilityHeader elementId={elementId} name={name} />
+<AbilityHeader code={ability.code} name={ability.name} />
 
 ## Description
 
-{description}
+{ability.description}
 
 ## Occupations Requiring This Ability
 
-<OccupationsByAbility elementId={elementId} />
+<OccupationsByAbility code={ability.code} />
 
 ## Related Work Activities
 
-<WorkActivitiesByAbility elementId={elementId} />
+<WorkActivitiesByAbility code={ability.code} />
 
 ## Related Work Contexts
 
-<WorkContextsByAbility elementId={elementId} />
+<WorkContextsByAbility code={ability.code} />
 
 ## Related Abilities
 
-<RelatedAbilities elementId={elementId} />
+<RelatedAbilities code={ability.code} />

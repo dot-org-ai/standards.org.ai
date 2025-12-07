@@ -1,2 +1,2 @@
-*.source filter=lfs diff=lfs merge=lfs -text
 .data/** filter=lfs diff=lfs merge=lfs -text
+.source/** filter=lfs diff=lfs merge=lfs -text

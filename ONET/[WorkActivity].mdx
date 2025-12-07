@@ -2,40 +2,42 @@
 layout: workActivity
 source: ONET
 $type: ONET/WorkActivity
-$id: https://standards.org.ai/ONET/WorkActivity/{elementId}
-sameAs: WorkActivity/{elementId}
+$id: https://standards.org.ai/ONET/WorkActivity/{workActivity.code}
+sameAs: https://standards.org.ai/WorkActivity/{workActivity.code}
+canonical: https://onet.org.ai/WorkActivity/{workActivity.code}
 params:
   - WorkActivity
 schema:
-  elementId: elementID
-  name: elementName
-  description: description
+  workActivity:
+    code: elementID
+    name: elementName
+    description: description
 ---
 
-# {name}
+# {workActivity.name}
 
-<WorkActivityHeader elementId={elementId} name={name} />
+<WorkActivityHeader code={workActivity.code} name={workActivity.name} />
 
 ## Description
 
-{description}
+{workActivity.description}
 
 ## Intermediate Work Activities
 
-<IWAList elementId={elementId} />
+<IWAList code={workActivity.code} />
 
 ## Detailed Work Activities
 
-<DWAList elementId={elementId} />
+<DWAList code={workActivity.code} />
 
 ## Occupations Performing This Activity
 
-<OccupationsByWorkActivity elementId={elementId} />
+<OccupationsByWorkActivity code={workActivity.code} />
 
 ## Related Abilities
 
-<AbilitiesByWorkActivity elementId={elementId} />
+<AbilitiesByWorkActivity code={workActivity.code} />
 
 ## Related Skills
 
-<SkillsByWorkActivity elementId={elementId} />
+<SkillsByWorkActivity code={workActivity.code} />

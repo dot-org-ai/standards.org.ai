@@ -2,32 +2,34 @@
 layout: knowledge
 source: ONET
 $type: ONET/Knowledge
-$id: https://standards.org.ai/ONET/Knowledge/{elementId}
-sameAs: Knowledge/{elementId}
+$id: https://standards.org.ai/ONET/Knowledge/{knowledge.code}
+sameAs: https://standards.org.ai/Knowledge/{knowledge.code}
+canonical: https://onet.org.ai/Knowledge/{knowledge.code}
 params:
   - Knowledge
 schema:
-  elementId: elementID
-  name: elementName
-  description: description
+  knowledge:
+    code: elementID
+    name: elementName
+    description: description
 ---
 
-# {name}
+# {knowledge.name}
 
-<KnowledgeHeader elementId={elementId} name={name} />
+<KnowledgeHeader code={knowledge.code} name={knowledge.name} />
 
 ## Description
 
-{description}
+{knowledge.description}
 
 ## Occupations Requiring This Knowledge
 
-<OccupationsByKnowledge elementId={elementId} />
+<OccupationsByKnowledge code={knowledge.code} />
 
 ## Related Skills
 
-<SkillsByKnowledge elementId={elementId} />
+<SkillsByKnowledge code={knowledge.code} />
 
 ## Related Knowledge Areas
 
-<RelatedKnowledge elementId={elementId} />
+<RelatedKnowledge code={knowledge.code} />

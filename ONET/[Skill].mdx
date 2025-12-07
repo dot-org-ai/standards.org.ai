@@ -2,36 +2,38 @@
 layout: skill
 source: ONET
 $type: ONET/Skill
-$id: https://standards.org.ai/ONET/Skill/{elementId}
-sameAs: Skill/{elementId}
+$id: https://standards.org.ai/ONET/Skill/{skill.code}
+sameAs: https://standards.org.ai/Skill/{skill.code}
+canonical: https://onet.org.ai/Skill/{skill.code}
 params:
   - Skill
 schema:
-  elementId: elementID
-  name: elementName
-  description: description
+  skill:
+    code: elementID
+    name: elementName
+    description: description
 ---
 
-# {name}
+# {skill.name}
 
-<SkillHeader elementId={elementId} name={name} />
+<SkillHeader code={skill.code} name={skill.name} />
 
 ## Description
 
-{description}
+{skill.description}
 
 ## Occupations Requiring This Skill
 
-<OccupationsBySkill elementId={elementId} />
+<OccupationsBySkill code={skill.code} />
 
 ## Related Work Activities
 
-<WorkActivitiesBySkill elementId={elementId} />
+<WorkActivitiesBySkill code={skill.code} />
 
 ## Related Work Contexts
 
-<WorkContextsBySkill elementId={elementId} />
+<WorkContextsBySkill code={skill.code} />
 
 ## Related Skills
 
-<RelatedSkills elementId={elementId} />
+<RelatedSkills code={skill.code} />

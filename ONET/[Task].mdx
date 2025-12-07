@@ -2,33 +2,35 @@
 layout: task
 source: ONET
 $type: ONET/Task
-$id: https://standards.org.ai/ONET/Task/{id}
-sameAs: Task/{id}
+$id: https://standards.org.ai/ONET/Task/{task.code}
+sameAs: https://standards.org.ai/Task/{task.code}
+canonical: https://onet.org.ai/Task/{task.code}
 params:
   - Task
 schema:
-  id: taskID
-  task: task
-  taskType: taskType
-  occupation: oNETSOCCode
+  task:
+    code: taskID
+    statement: task
+    taskType: taskType
+    occupation: oNETSOCCode
 ---
 
-# {task}
+# {task.statement}
 
-<TaskHeader id={id} taskType={taskType} />
+<TaskHeader code={task.code} taskType={task.taskType} />
 
 ## Task Details
 
-<TaskDetails id={id} />
+<TaskDetails code={task.code} />
 
 ## Associated Occupation
 
-<OccupationLink code={occupation} />
+<OccupationLink code={task.occupation} />
 
 ## Detailed Work Activities
 
-<DWAList task={id} />
+<DWAList task={task.code} />
 
 ## Related Tasks
 
-<RelatedTasks task={id} />
+<RelatedTasks task={task.code} />

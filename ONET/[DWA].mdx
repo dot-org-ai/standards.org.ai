@@ -2,13 +2,14 @@
 layout: dwa
 source: ONET
 $type: ONET/DWA
-$id: https://standards.org.ai/ONET/DWA/{dwa.id}
-sameAs: DWA/{dwa.id}
+$id: https://standards.org.ai/ONET/DWA/{dwa.code}
+sameAs: https://standards.org.ai/DWA/{dwa.code}
+canonical: https://onet.org.ai/DWA/{dwa.code}
 params:
   - DWA
 schema:
   dwa:
-    id: dWAID
+    code: dWAID
     title: dWATitle
     element: elementID
     iwa: iWAID
@@ -16,20 +17,20 @@ schema:
 
 # {dwa.title}
 
-<DWAHeader id={dwa.id} title={dwa.title} />
+<DWAHeader code={dwa.code} title={dwa.title} />
 
 ## Parent Work Activity
 
-<WorkActivityLink elementId={dwa.element} />
+<WorkActivityLink code={dwa.element} />
 
 ## Intermediate Work Activity
 
-<IWALink id={dwa.iwa} />
+<IWALink code={dwa.iwa} />
 
 ## Tasks Using This Activity
 
-<TasksByDWA dwa={dwa.id} />
+<TasksByDWA dwa={dwa.code} />
 
 ## Occupations Performing This Activity
 
-<OccupationsByDWA dwa={dwa.id} />
+<OccupationsByDWA dwa={dwa.code} />

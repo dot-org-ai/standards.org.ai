@@ -2,13 +2,14 @@
 layout: schema
 source: GS1
 $type: GS1/Schema
-$id: https://standards.org.ai/GS1/Schema/{schema.id}
-sameAs: Schema/{schema.id}
+$id: https://standards.org.ai/GS1/Schema/{schema.code}
+sameAs: https://standards.org.ai/Schema/{schema.code}
+canonical: https://gs1.org.ai/Schema/{schema.code}
 params:
   - Schema
 schema:
   schema:
-    id: id
+    code: id
     name: name
     type: type
     description: description
@@ -16,7 +17,7 @@ schema:
 
 # {schema.name}
 
-<SchemaHeader id={schema.id} name={schema.name} type={schema.type} />
+<SchemaHeader code={schema.code} name={schema.name} type={schema.type} />
 
 ## Description
 
@@ -28,12 +29,12 @@ schema:
 
 ## Properties
 
-<SchemaProperties schemaId={schema.id} />
+<SchemaProperties schemaCode={schema.code} />
 
 ## Related Schemas
 
-<RelatedSchemas schemaId={schema.id} />
+<RelatedSchemas schemaCode={schema.code} />
 
 ## Usage Examples
 
-<SchemaExamples schemaId={schema.id} />
+<SchemaExamples schemaCode={schema.code} />

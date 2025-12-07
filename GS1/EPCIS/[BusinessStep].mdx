@@ -2,21 +2,22 @@
 layout: businessStep
 source: GS1/EPCIS
 $type: GS1/EPCIS/BusinessStep
-$id: https://standards.org.ai/GS1/EPCIS/BusinessStep/{businessStep.id}
-sameAs: BusinessStep/{businessStep.id}
+$id: https://standards.org.ai/GS1/EPCIS/BusinessStep/{businessStep.code}
+sameAs: https://standards.org.ai/BusinessStep/{businessStep.code}
+canonical: https://gs1.org.ai/EPCIS/BusinessStep/{businessStep.code}
 params:
   - BusinessStep
 schema:
   businessStep:
-    id: businessStep
+    code: businessStep
     verb: verb
     noun: noun
     description: description
 ---
 
-# {businessStep.id}
+# {businessStep.code}
 
-<BusinessStepHeader id={businessStep.id} verb={businessStep.verb} noun={businessStep.noun} />
+<BusinessStepHeader code={businessStep.code} verb={businessStep.verb} noun={businessStep.noun} />
 
 ## Description
 
@@ -32,8 +33,8 @@ schema:
 
 ## Related Dispositions
 
-<DispositionsByBusinessStep stepId={businessStep.id} />
+<DispositionsByBusinessStep stepCode={businessStep.code} />
 
 ## Usage Examples
 
-<BusinessStepExamples stepId={businessStep.id} />
+<BusinessStepExamples stepCode={businessStep.code} />

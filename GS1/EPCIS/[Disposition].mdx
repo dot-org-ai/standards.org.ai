@@ -2,21 +2,22 @@
 layout: disposition
 source: GS1/EPCIS
 $type: GS1/EPCIS/Disposition
-$id: https://standards.org.ai/GS1/EPCIS/Disposition/{disposition.id}
-sameAs: Disposition/{disposition.id}
+$id: https://standards.org.ai/GS1/EPCIS/Disposition/{disposition.code}
+sameAs: https://standards.org.ai/Disposition/{disposition.code}
+canonical: https://gs1.org.ai/EPCIS/Disposition/{disposition.code}
 params:
   - Disposition
 schema:
   disposition:
-    id: disposition
+    code: disposition
     verb: verb
     noun: noun
     description: description
 ---
 
-# {disposition.id}
+# {disposition.code}
 
-<DispositionHeader id={disposition.id} verb={disposition.verb} noun={disposition.noun} />
+<DispositionHeader code={disposition.code} verb={disposition.verb} noun={disposition.noun} />
 
 ## Description
 
@@ -32,8 +33,8 @@ schema:
 
 ## Related Business Steps
 
-<BusinessStepsByDisposition dispositionId={disposition.id} />
+<BusinessStepsByDisposition dispositionCode={disposition.code} />
 
 ## Usage Examples
 
-<DispositionExamples dispositionId={disposition.id} />
+<DispositionExamples dispositionCode={disposition.code} />

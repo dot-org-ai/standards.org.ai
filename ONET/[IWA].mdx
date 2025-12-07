@@ -2,29 +2,30 @@
 layout: iwa
 source: ONET
 $type: ONET/IWA
-$id: https://standards.org.ai/ONET/IWA/{iwa.id}
-sameAs: IWA/{iwa.id}
+$id: https://standards.org.ai/ONET/IWA/{iwa.code}
+sameAs: https://standards.org.ai/IWA/{iwa.code}
+canonical: https://onet.org.ai/IWA/{iwa.code}
 params:
   - IWA
 schema:
   iwa:
-    id: iWAID
+    code: iWAID
     title: iWATitle
     element: elementID
 ---
 
 # {iwa.title}
 
-<IWAHeader id={iwa.id} title={iwa.title} />
+<IWAHeader code={iwa.code} title={iwa.title} />
 
 ## Parent Work Activity
 
-<WorkActivityLink elementId={iwa.element} />
+<WorkActivityLink code={iwa.element} />
 
 ## Detailed Work Activities
 
-<DWAsByIWA iwa={iwa.id} />
+<DWAsByIWA iwa={iwa.code} />
 
 ## Occupations Performing This Activity
 
-<OccupationsByIWA iwa={iwa.id} />
+<OccupationsByIWA iwa={iwa.code} />
