@@ -1,0 +1,99 @@
+---
+layout: level
+source: Education/ISCED
+$type: Education/ISCED/Level
+$id: https://standards.org.ai/Education/ISCED/Level/{level.code}
+sameAs: https://standards.org.ai/EducationLevel/{level.code}
+canonical: https://standards.org.ai/ISCED/Level/{level.code}
+params:
+  - Level
+schema:
+  level:
+    code: string
+    name: string
+    description: string
+    category: string
+    orientation: string
+    ageRange: string
+    durationYears: string
+    entryRequirements: string
+    typicalOutcomes: string
+---
+
+# ISCED Level {level.code}: {level.name}
+
+<LevelHeader code={level.code} name={level.name} category={level.category} />
+
+## Overview
+
+{level.description}
+
+<div className="level-info-grid">
+  {level.category && (
+    <div className="category">
+      <h3>Category</h3>
+      <p>{level.category}</p>
+    </div>
+  )}
+
+  {level.orientation && (
+    <div className="orientation">
+      <h3>Orientation</h3>
+      <p>{level.orientation}</p>
+    </div>
+  )}
+
+  {level.ageRange && (
+    <div className="age-range">
+      <h3>Typical Age Range</h3>
+      <p>{level.ageRange}</p>
+    </div>
+  )}
+
+  {level.durationYears && (
+    <div className="duration">
+      <h3>Typical Duration</h3>
+      <p>{level.durationYears}</p>
+    </div>
+  )}
+</div>
+
+{level.entryRequirements && (
+  <section className="entry-requirements">
+    <h2>Entry Requirements</h2>
+    <p>{level.entryRequirements}</p>
+  </section>
+)}
+
+{level.typicalOutcomes && (
+  <section className="outcomes">
+    <h2>Typical Learning Outcomes</h2>
+    <p>{level.typicalOutcomes}</p>
+  </section>
+)}
+
+## Fields of Education at This Level
+
+<FieldsList level={level.code} />
+
+## Programme Orientations
+
+<ProgrammesList level={level.code} />
+
+## Educational Pathways
+
+<PathwaysDiagram level={level.code} />
+
+## Related Standards
+
+<RelatedStandards level={level.code} />
+
+## Additional Resources
+
+<section className="resources">
+  <h3>UNESCO Resources</h3>
+  <ul>
+    <li><a href="http://uis.unesco.org/en/topic/international-standard-classification-education-isced">ISCED Official Documentation</a></li>
+    <li><a href="http://uis.unesco.org/sites/default/files/documents/international-standard-classification-of-education-isced-2011-en.pdf">ISCED 2011 Fields of Education</a></li>
+  </ul>
+</section>

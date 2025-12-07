@@ -1,0 +1,48 @@
+---
+layout: sicMajorGroup
+source: SEC
+$type: SEC/SICMajorGroup
+$id: https://standards.org.ai/SEC/SICMajorGroup/{majorGroup.code}
+sameAs: https://standards.org.ai/SICMajorGroup/{majorGroup.code}
+canonical: https://us.org.ai/SEC/SICMajorGroup/{majorGroup.code}
+params:
+  - SICMajorGroup
+schema:
+  majorGroup:
+    code: code
+    name: name
+    division: division
+    industryGroups: industryGroups
+---
+
+# {majorGroup.name}
+
+<SICMajorGroupHeader code={majorGroup.code} name={majorGroup.name} />
+
+## Major Group Code
+
+{majorGroup.code}
+
+## Division
+
+<SICDivisionLink division={majorGroup.division} />
+
+## Industry Groups
+
+<SICIndustryGroupList majorGroup={majorGroup.code} />
+
+## All SIC Codes
+
+<SICCodeList majorGroup={majorGroup.code} />
+
+## Companies in Major Group
+
+<CompaniesByMajorGroup majorGroup={majorGroup.code} />
+
+## Sibling Major Groups
+
+<SiblingMajorGroups division={majorGroup.division} current={majorGroup.code} />
+
+## Major Group Statistics
+
+<MajorGroupStatistics majorGroup={majorGroup.code} />

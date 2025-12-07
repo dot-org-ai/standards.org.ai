@@ -1,0 +1,62 @@
+---
+layout: institution
+source: Finance/SWIFT
+$type: Finance/SWIFT/Institution
+$id: https://standards.org.ai/Finance/SWIFT/Institution/{institution.bic}
+sameAs: https://standards.org.ai/Institution/{institution.bic}
+canonical: https://standards.org.ai/SWIFT/Institution/{institution.bic}
+params:
+  - Institution
+schema:
+  institution:
+    bic: bic
+    institutionName: institutionName
+    country: country
+    city: city
+    lei: lei
+    institutionType: institutionType
+---
+
+# {institution.institutionName}
+
+<InstitutionHeader
+  bic={institution.bic}
+  name={institution.institutionName}
+  country={institution.country}
+/>
+
+## BIC/SWIFT Code
+
+{institution.bic}
+
+## Location
+
+<LocationInfo city={institution.city} country={institution.country} />
+
+## Institution Type
+
+{institution.institutionType}
+
+## Legal Entity Identifier (LEI)
+
+<LEILink lei={institution.lei} />
+
+## Branches
+
+<BranchesByInstitution bic={institution.bic} />
+
+## SWIFT Services
+
+<SWIFTServices bic={institution.bic} />
+
+## Message Statistics
+
+<InstitutionMessageStats bic={institution.bic} />
+
+## Correspondents
+
+<CorrespondentBanks bic={institution.bic} />
+
+## Network Participation
+
+<NetworkParticipation bic={institution.bic} />

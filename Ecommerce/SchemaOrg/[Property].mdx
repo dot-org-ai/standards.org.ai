@@ -1,0 +1,125 @@
+---
+layout: property
+source: Ecommerce/SchemaOrg
+$type: SchemaOrg/Property
+$id: https://standards.org.ai/Ecommerce/SchemaOrg/Property/{property.id}
+sameAs: https://schema.org/{property.id}
+canonical: https://schema.org.ai/Property/{property.id}
+params:
+  - Property
+schema:
+  property:
+    id: PropertyId
+    name: PropertyName
+    description: PropertyDescription
+    domainIncludes: array
+    rangeIncludes: array
+    inverseOf: string
+    subPropertyOf: array
+    version: Version
+---
+
+# {property.name}
+
+<Header
+  type="Schema.org Property"
+  code={property.id}
+  name={property.name}
+  standard="Schema.org"
+/>
+
+## Description
+
+{property.description}
+
+## Schema.org ID
+
+{property.id}
+
+## Domain (Used with Types)
+
+{property.domainIncludes && property.domainIncludes.length > 0 ? (
+  <TypeList types={property.domainIncludes} label="This property can be used with:" />
+) : (
+  <p>All types</p>
+)}
+
+## Range (Expected Values)
+
+{property.rangeIncludes && property.rangeIncludes.length > 0 ? (
+  <TypeList types={property.rangeIncludes} label="Expected value types:" />
+) : (
+  <p>Any value type</p>
+)}
+
+{property.subPropertyOf && property.subPropertyOf.length > 0 && (
+  <>
+    ## Sub-property Of
+
+    <PropertyList properties={property.subPropertyOf} />
+  </>
+)}
+
+{property.inverseOf && (
+  <>
+    ## Inverse Of
+
+    <PropertyLink property={property.inverseOf} />
+  </>
+)}
+
+## Usage Examples
+
+### JSON-LD Example
+
+<CodeExample
+  title={`Using ${property.name} in JSON-LD`}
+  language="json"
+  code={`{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "${property.id}": "Example value for ${property.name}"
+}`}
+/>
+
+### Microdata Example
+
+<CodeExample
+  title={`Using ${property.name} in Microdata`}
+  language="html"
+  code={`<div itemscope itemtype="https://schema.org/Product">
+  <span itemprop="${property.id}">Example value for ${property.name}</span>
+</div>`}
+/>
+
+### RDFa Example
+
+<CodeExample
+  title={`Using ${property.name} in RDFa`}
+  language="html"
+  code={`<div vocab="https://schema.org/" typeof="Product">
+  <span property="${property.id}">Example value for ${property.name}</span>
+</div>`}
+/>
+
+## Related Properties
+
+<RelatedProperties property={property.id} />
+
+## E-commerce Specific Usage
+
+{(property.domainIncludes?.includes('Product') ||
+  property.domainIncludes?.includes('Offer') ||
+  property.domainIncludes?.includes('ProductModel')) && (
+  <EcommercePropertyUsage property={property.id} />
+)}
+
+## Version
+
+Schema.org {property.version || 'Latest'}
+
+## See Also
+
+- [Schema.org Official Documentation](https://schema.org/{property.id})
+- [Google Structured Data Guidelines](https://developers.google.com/search/docs/appearance/structured-data)
+- [Types using this Property](#domain-used-with-types)

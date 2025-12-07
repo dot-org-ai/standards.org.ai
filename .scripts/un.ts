@@ -70,6 +70,26 @@ interface EDIFACTData {
   message_types: EDIFACTMessageType[]
 }
 
+interface LOCODESubdivisionRecord {
+  Country: string
+  Code: string
+  Name: string
+  Type: string
+  ParentSubdivision: string
+}
+
+interface UNSPSCRow {
+  segmentCode: string
+  segmentTitle: string
+  familyCode: string
+  familyTitle: string
+  classCode: string
+  classTitle: string
+  commodityCode: string
+  commodityTitle: string
+  definition: string
+}
+
 function transformLOCODE(): void {
   console.log('Transforming UN/LOCODE...')
 
@@ -302,14 +322,186 @@ function transformEDIFACTCategories(): void {
   }
 }
 
+function transformLOCODESubdivisions(): void {
+  console.log('Transforming UN/LOCODE Subdivisions...')
+
+  const sourceFile = join(SOURCE_DIR, 'UN.LOCODE.SubdivisionCodes.csv')
+
+  try {
+    const records = parseCSV<LOCODESubdivisionRecord>(sourceFile)
+
+    const subdivisions: StandardRecord[] = []
+
+    for (const record of records) {
+      const country = record.Country
+      const code = record.Code
+      if (!country || !code) continue
+
+      const name = record.Name
+      if (!name) continue
+
+      const fullCode = `${country}-${code}`
+      const id = `${country}_${toWikipediaStyleId(name)}`
+
+      subdivisions.push({
+        ns: NS,
+        type: 'Subdivision',
+        id,
+        name,
+        description: `Type: ${record.Type || 'N/A'}`,
+        code: fullCode,
+      })
+    }
+
+    writeStandardTSV(join(DATA_DIR, 'UN.Subdivisions.tsv'), subdivisions)
+  } catch (e) {
+    console.log('Skipping LOCODE subdivisions - file not found or invalid:', e)
+  }
+}
+
+function transformSPSC(): void {
+  console.log('Transforming UN/SPSC (UNSPSC)...')
+
+  // UNSPSC is handled separately but we create references from UN namespace
+  const unspscSourceDir = getSourcePath('UNSPSC')
+  const sourceFile = join(unspscSourceDir, 'UNSPSC.Codes.tsv')
+
+  try {
+    const data = parseTSV<UNSPSCRow>(sourceFile)
+
+    // Extract unique segments, families, classes, commodities
+    const segmentsMap = new Map<string, UNSPSCRow>()
+    const familiesMap = new Map<string, UNSPSCRow>()
+    const classesMap = new Map<string, UNSPSCRow>()
+    const commoditiesMap = new Map<string, UNSPSCRow>()
+
+    for (const row of data) {
+      if (row.segmentCode && row.segmentTitle && !segmentsMap.has(row.segmentCode)) {
+        segmentsMap.set(row.segmentCode, row)
+      }
+      if (row.familyCode && row.familyTitle && !familiesMap.has(row.familyCode)) {
+        familiesMap.set(row.familyCode, row)
+      }
+      if (row.classCode && row.classTitle && !classesMap.has(row.classCode)) {
+        classesMap.set(row.classCode, row)
+      }
+      if (row.commodityCode && row.commodityTitle && !commoditiesMap.has(row.commodityCode)) {
+        commoditiesMap.set(row.commodityCode, row)
+      }
+    }
+
+    // Write Segments
+    const segmentRecords: StandardRecord[] = Array.from(segmentsMap.values()).map(row => ({
+      ns: NS,
+      type: 'SPSCSegment',
+      id: toWikipediaStyleId(row.segmentTitle),
+      name: row.segmentTitle,
+      description: '',
+      code: row.segmentCode,
+    }))
+    writeStandardTSV(join(DATA_DIR, 'UN.SPSCSegments.tsv'), segmentRecords)
+
+    // Write Families
+    const familyRecords: StandardRecord[] = Array.from(familiesMap.values()).map(row => ({
+      ns: NS,
+      type: 'SPSCFamily',
+      id: toWikipediaStyleId(row.familyTitle),
+      name: row.familyTitle,
+      description: '',
+      code: row.familyCode,
+    }))
+    writeStandardTSV(join(DATA_DIR, 'UN.SPSCFamilies.tsv'), familyRecords)
+
+    // Write Classes
+    const classRecords: StandardRecord[] = Array.from(classesMap.values()).map(row => ({
+      ns: NS,
+      type: 'SPSCClass',
+      id: toWikipediaStyleId(row.classTitle),
+      name: row.classTitle,
+      description: '',
+      code: row.classCode,
+    }))
+    writeStandardTSV(join(DATA_DIR, 'UN.SPSCClasses.tsv'), classRecords)
+
+    // Write Commodities
+    const commodityRecords: StandardRecord[] = Array.from(commoditiesMap.values()).map(row => ({
+      ns: NS,
+      type: 'SPSCCommodity',
+      id: toWikipediaStyleId(row.commodityTitle),
+      name: row.commodityTitle,
+      description: cleanDescription(row.definition),
+      code: row.commodityCode,
+    }))
+    writeStandardTSV(join(DATA_DIR, 'UN.SPSCCommodities.tsv'), commodityRecords)
+
+    // Write hierarchy relationships
+    const hierarchyRelationships: Record<string, string>[] = []
+
+    // Family -> Segment
+    for (const row of familiesMap.values()) {
+      if (row.segmentCode) {
+        hierarchyRelationships.push({
+          fromNs: NS,
+          fromType: 'SPSCFamily',
+          fromCode: row.familyCode,
+          toNs: NS,
+          toType: 'SPSCSegment',
+          toCode: row.segmentCode,
+          relationshipType: 'child_of',
+        })
+      }
+    }
+
+    // Class -> Family
+    for (const row of classesMap.values()) {
+      if (row.familyCode) {
+        hierarchyRelationships.push({
+          fromNs: NS,
+          fromType: 'SPSCClass',
+          fromCode: row.classCode,
+          toNs: NS,
+          toType: 'SPSCFamily',
+          toCode: row.familyCode,
+          relationshipType: 'child_of',
+        })
+      }
+    }
+
+    // Commodity -> Class
+    for (const row of commoditiesMap.values()) {
+      if (row.classCode) {
+        hierarchyRelationships.push({
+          fromNs: NS,
+          fromType: 'SPSCCommodity',
+          fromCode: row.commodityCode,
+          toNs: NS,
+          toType: 'SPSCClass',
+          toCode: row.classCode,
+          relationshipType: 'child_of',
+        })
+      }
+    }
+
+    writeTSV(
+      join(REL_DIR, 'UN.SPSC.Hierarchy.tsv'),
+      hierarchyRelationships,
+      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    )
+  } catch (e) {
+    console.log('Skipping SPSC - file not found or invalid:', e)
+  }
+}
+
 export async function transformUN(): Promise<void> {
   console.log('=== UN Standards Transformation ===\n')
   ensureOutputDirs()
 
   transformM49Regions()
   transformLOCODE()
+  transformLOCODESubdivisions()
   transformEDIFACT()
   transformEDIFACTCategories()
+  transformSPSC()
 
   console.log('\n=== UN Transformation Complete ===')
 }

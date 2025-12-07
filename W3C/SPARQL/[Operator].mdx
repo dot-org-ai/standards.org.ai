@@ -1,0 +1,577 @@
+---
+layout: operator
+source: W3C/SPARQL
+$type: W3C/SPARQL/Operator
+$id: https://standards.org.ai/W3C/SPARQL/Operator/{operator.code}
+sameAs: https://standards.org.ai/Operator/{operator.code}
+canonical: https://w3.org.ai/SPARQL/Operator/{operator.code}
+params:
+  - Operator
+schema:
+  operator:
+    code: string
+    symbol: string
+    name: string
+    category: string
+    operands: array
+    returnType: string
+    description: string
+    specification: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Syntax } from '@/components/standards/Syntax'
+import { Description } from '@/components/standards/Description'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { OperandTable } from '@/components/standards/OperandTable'
+import { RelatedItems } from '@/components/standards/RelatedItems'
+import { SpecificationLink } from '@/components/standards/SpecificationLink'
+import { Metadata } from '@/components/standards/Metadata'
+import { Alert } from '@/components/standards/Alert'
+
+<Header
+  title={operator.symbol + ' (' + operator.name + ')'}
+  category={operator.category}
+  type="SPARQL Operator"
+  standard="W3C SPARQL 1.1"
+/>
+
+<Metadata
+  items={[
+    { label: 'Symbol', value: operator.symbol },
+    { label: 'Category', value: operator.category },
+    { label: 'Operands', value: operator.operands.length.toString() },
+    { label: 'Return Type', value: operator.returnType },
+    { label: 'Standard', value: 'SPARQL 1.1' },
+    { label: 'Status', value: 'W3C Recommendation' }
+  ]}
+/>
+
+## Syntax
+
+<Syntax language="sparql">
+{operator.operands.length === 1 ?
+  `${operator.symbol}${operator.operands[0].name}` :
+  operator.operands.length === 2 ?
+  `${operator.operands[0].name} ${operator.symbol} ${operator.operands[1].name}` :
+  `${operator.operands.map(op => op.name).join(' ' + operator.symbol + ' ')}`}
+</Syntax>
+
+{operator.category === 'Relational' && (
+  <Alert type="warning">
+  Relational operators compare RDF terms according to SPARQL's value comparison rules. Be aware of type coercion and error handling when comparing different types.
+  </Alert>
+)}
+
+{operator.category === 'Logical' && (
+  <Alert type="info">
+  Logical operators use effective boolean value (EBV) semantics. Some values may raise errors if they cannot be converted to boolean.
+  </Alert>
+)}
+
+## Description
+
+<Description>
+{operator.description}
+
+The {operator.symbol} operator is a {operator.category.toLowerCase()} operator that {operator.category === 'Logical' ? 'evaluates boolean expressions and returns true or false' : operator.category === 'Relational' ? 'compares two values and returns a boolean result' : operator.category === 'Arithmetic' ? 'performs mathematical calculations on numeric values' : operator.category === 'Unary' ? 'operates on a single operand' : 'processes RDF terms'}. It is commonly used in FILTER expressions, BIND clauses, and SELECT expressions to {operator.category === 'Logical' ? 'combine or negate conditions' : operator.category === 'Relational' ? 'filter results based on value comparisons' : operator.category === 'Arithmetic' ? 'compute derived values' : 'transform data'}.
+</Description>
+
+## Operands
+
+<OperandTable
+  operands={operator.operands.map(op => ({
+    position: op.position || (operator.operands.indexOf(op) + 1).toString(),
+    name: op.name,
+    type: op.type,
+    description: op.description
+  }))}
+/>
+
+## Return Value
+
+**Type**: `{operator.returnType}`
+
+Returns {operator.returnType === 'xsd:boolean' ? 'true or false based on the evaluation' :
+         operator.returnType === 'numeric' ? 'a numeric result of the operation' :
+         operator.returnType === 'same as operands' ? 'a value with the same type as the operands' :
+         'the result of the operation'}.
+
+{operator.category === 'Arithmetic' && (
+  <>
+  <br/><br/>
+  **Type Promotion**: Numeric operations follow XPath type promotion rules:
+  - Integer + Integer = Integer
+  - Integer + Decimal = Decimal
+  - Integer/Decimal + Float/Double = Float/Double
+  </>
+)}
+
+## Examples
+
+### Basic Usage in FILTER
+
+<CodeExample language="sparql" title="Using {operator.symbol} in FILTER Expression">
+{`# Filter results using ${operator.symbol} operator
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?item ?${operator.category === 'Arithmetic' ? 'value' : operator.category === 'Relational' ? 'price' : 'property'}
+WHERE {
+  ?item schema:${operator.category === 'Arithmetic' ? 'value' : operator.category === 'Relational' ? 'price' : 'name'} ?${operator.category === 'Arithmetic' ? 'value' : operator.category === 'Relational' ? 'price' : 'property'} ${operator.category === 'Logical' ? `;
+        schema:isActive ?active` : ''} .
+
+  # Apply ${operator.symbol} operator
+  FILTER(${operator.operands.length === 1 ?
+    `${operator.symbol}(?${operator.category === 'Logical' ? 'active' : 'value'})` :
+    operator.category === 'Logical' ?
+    `?active ${operator.symbol} ?hasStock` :
+    operator.category === 'Relational' ?
+    `?price ${operator.symbol} ${operator.symbol === '=' ? '100.0' : operator.symbol === '!=' ? '0' : operator.symbol === '<' || operator.symbol === '<=' ? '1000' : '50'}` :
+    `?value ${operator.symbol} ${operator.symbol === '+' || operator.symbol === '-' ? '10' : operator.symbol === '*' ? '2' : '5'} ${operator.symbol === '>' || operator.symbol === '>=' || operator.symbol === '<' || operator.symbol === '<=' ? '> 0' : ''}`})
+}
+LIMIT 20`}
+</CodeExample>
+
+### Using in BIND Expression
+
+<CodeExample language="sparql" title="Computing Values with {operator.symbol}">
+{`# Use ${operator.symbol} to ${operator.category === 'Arithmetic' ? 'compute derived values' : operator.category === 'Logical' ? 'create boolean flags' : 'evaluate conditions'}
+PREFIX ex: <http://example.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?item ?original ?${operator.category === 'Arithmetic' ? 'computed' : operator.category === 'Logical' ? 'result_flag' : 'comparison'}
+WHERE {
+  ?item ex:${operator.category === 'Arithmetic' ? 'baseValue' : 'property'} ?original ${operator.category === 'Logical' ? `;
+        ex:isValid ?isValid ;
+        ex:isActive ?isActive` : ''} .
+
+  # Create computed value using ${operator.symbol}
+  BIND(${operator.operands.length === 1 ?
+    `${operator.symbol}?original` :
+    operator.category === 'Logical' ?
+    `?isValid ${operator.symbol} ?isActive` :
+    operator.category === 'Arithmetic' ?
+    `?original ${operator.symbol} ${operator.symbol === '+' ? '100' : operator.symbol === '-' ? '50' : operator.symbol === '*' ? '1.5' : '2'}` :
+    `?original ${operator.symbol} ${operator.symbol === '=' ? '?original' : '100'}`} AS ?${operator.category === 'Arithmetic' ? 'computed' : operator.category === 'Logical' ? 'result_flag' : 'comparison'})
+
+  ${operator.category === 'Arithmetic' ? 'FILTER(?computed > 0)' : ''}
+}
+ORDER BY ?${operator.category === 'Arithmetic' ? 'computed' : 'item'}
+LIMIT 25`}
+</CodeExample>
+
+### Complex Expressions
+
+<CodeExample language="sparql" title="Combining Multiple Operators">
+{`# Complex query combining ${operator.symbol} with other operators
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?product ?title ?finalPrice ?eligibility
+WHERE {
+  ?product a schema:Product ;
+           schema:name ?title ;
+           schema:price ?basePrice ;
+           schema:inventory ?stock ${operator.category === 'Logical' ? `;
+           schema:featured ?featured` : ''} .
+
+  ${operator.category === 'Arithmetic' ? `
+  # Calculate final price with tax
+  BIND(?basePrice ${operator.symbol} (?basePrice * 0.15) AS ?finalPrice)
+  ` : operator.category === 'Relational' ? `
+  # Filter by price range
+  FILTER(?basePrice ${operator.symbol} 100 && ?stock > 0)
+  BIND(?basePrice AS ?finalPrice)
+  ` : `
+  # Determine eligibility
+  BIND((?stock > 0 ${operator.symbol} ?featured) AS ?eligibility)
+  BIND(?basePrice AS ?finalPrice)
+  `}
+
+  # Additional filtering
+  FILTER(${operator.category === 'Arithmetic' ? '?finalPrice > 0 && ?finalPrice < 10000' : operator.category === 'Logical' ? '?eligibility' : '?stock > 0'})
+}
+ORDER BY ${operator.category === 'Arithmetic' ? 'DESC(?finalPrice)' : '?title'}
+LIMIT 30`}
+</CodeExample>
+
+### Nested Operator Usage
+
+<CodeExample language="sparql" title="Nested Operations with {operator.symbol}">
+{`# Demonstrate nested operations
+PREFIX ex: <http://example.org/>
+PREFIX math: <http://www.w3.org/2005/xpath-functions/math#>
+
+SELECT ?item ?value1 ?value2 ?complex_result
+WHERE {
+  ?item ex:value1 ?value1 ;
+        ex:value2 ?value2 ${operator.category === 'Logical' ? `;
+        ex:flag1 ?flag1 ;
+        ex:flag2 ?flag2` : ''} .
+
+  # Nested operation
+  BIND(${operator.category === 'Arithmetic' ?
+    `((?value1 ${operator.symbol} ?value2) * 2) + 10` :
+    operator.category === 'Logical' ?
+    `(?flag1 ${operator.symbol} ?flag2) && (?value1 > ?value2)` :
+    operator.category === 'Relational' ?
+    `(?value1 ${operator.symbol} ?value2) && (?value1 != ?value2)` :
+    `${operator.symbol}(?value1 >= 0)`} AS ?complex_result)
+
+  FILTER(BOUND(?complex_result))
+}
+ORDER BY ?complex_result
+LIMIT 15`}
+</CodeExample>
+
+## Use Cases
+
+### Common Patterns
+
+1. **{operator.category === 'Logical' ? 'Conditional Logic' : operator.category === 'Relational' ? 'Value Comparison' : operator.category === 'Arithmetic' ? 'Mathematical Computation' : 'Data Processing'}**
+   {operator.category === 'Logical' ? `
+   - Combine multiple conditions in filters
+   - Create boolean flags for classification
+   - Implement complex business logic
+   ` : operator.category === 'Relational' ? `
+   - Filter by numeric ranges
+   - Compare dates and times
+   - Match exact values or exclude specific items
+   ` : operator.category === 'Arithmetic' ? `
+   - Calculate prices, totals, and percentages
+   - Apply formulas to derive new values
+   - Perform unit conversions
+   ` : `
+   - Transform and process RDF data
+   - Create derived values
+   - Implement custom logic
+   `}
+
+2. **Data Validation**
+   ```sparql
+   FILTER(${operator.operands.length === 1 ?
+     `${operator.symbol}(?invalid_flag)` :
+     operator.category === 'Relational' ?
+     `?value ${operator.symbol} ?threshold` :
+     `?input ${operator.symbol} ?reference`})
+   ```
+
+3. **Result Enrichment**
+   ```sparql
+   BIND(${operator.operands.length === 1 ?
+     `${operator.symbol}?source` :
+     `?source ${operator.symbol} ${operator.category === 'Arithmetic' ? '?factor' : '?comparator'}`} AS ?enriched)
+   ```
+
+4. **{operator.category === 'Logical' ? 'Access Control' : operator.category === 'Relational' ? 'Ranking and Sorting' : 'Analytics'}**
+   {operator.category === 'Logical' ? `
+   - Implement permission checks
+   - Filter by user roles and capabilities
+   - Combine multiple authorization rules
+   ` : operator.category === 'Relational' ? `
+   - Sort by comparison results
+   - Implement ranking algorithms
+   - Create priority queues
+   ` : `
+   - Aggregate and compute statistics
+   - Generate reports with calculated metrics
+   - Perform data analysis
+   `}
+
+## Best Practices
+
+### Performance Considerations
+
+{operator.category === 'Logical' ? `
+1. **Short-Circuit Evaluation**: SPARQL uses short-circuit evaluation for && and ||
+   - Place cheaper conditions first in &&
+   - Place likely-true conditions first in ||
+
+2. **Filter Placement**: Apply FILTER as early as possible
+   \`\`\`sparql
+   WHERE {
+     ?item ex:property ?value .
+     FILTER(?value > 100)  # Early filter
+     ?item ex:other ?other .
+   }
+   \`\`\`
+` : operator.category === 'Relational' ? `
+1. **Type Consistency**: Ensure operands have compatible types
+   \`\`\`sparql
+   # Good: Same types
+   FILTER(?price > 100.0)
+
+   # May cause issues: Mixed types
+   # FILTER(?price > "100")  # String vs Numeric
+   \`\`\`
+
+2. **Index Usage**: Structure comparisons to leverage indexes
+   - Use = when possible for exact matches
+   - Avoid != when filtering can be done positively
+` : operator.category === 'Arithmetic' ? `
+1. **Numeric Type Consistency**: Keep numeric types consistent
+   \`\`\`sparql
+   # Good: Consistent decimal types
+   BIND(?decimal ${operator.symbol} 1.5 AS ?result)
+
+   # Avoid: Type mixing that forces promotion
+   # BIND(?integer ${operator.symbol} 1.5e0 AS ?result)  # Forces float
+   \`\`\`
+
+2. **Pre-computation**: Compute constants outside loops
+   \`\`\`sparql
+   # Less efficient
+   FILTER(?value * 1.15 > ?threshold * 1.15)
+
+   # Better
+   FILTER(?value > ?threshold)
+   \`\`\`
+` : `
+1. **Minimize Operations**: Simplify expressions when possible
+2. **Type Safety**: Verify operand types before applying operators
+3. **Error Handling**: Consider edge cases and null values
+`}
+
+### Error Handling
+
+{operator.category === 'Logical' ? `
+Logical operators use **Effective Boolean Value (EBV)**:
+- \`true\` and \`false\` remain as-is
+- Non-zero numbers are true, zero is false
+- Non-empty strings are true, empty is false
+- Other values may raise errors
+
+\`\`\`sparql
+# Safe: Explicit boolean
+FILTER(?flag = true && ?other = true)
+
+# Risky: Implicit EBV on unknown type
+# FILTER(?unknownValue)  # May error
+\`\`\`
+` : operator.category === 'Relational' ? `
+Relational operators may error when:
+- Comparing incompatible types
+- Operands are unbound
+- Values cannot be compared
+
+\`\`\`sparql
+# Safe: Type check first
+FILTER(isNumeric(?value) && ?value ${operator.symbol} 100)
+
+# Risky: No type check
+# FILTER(?value ${operator.symbol} 100)  # May error if ?value is IRI
+\`\`\`
+` : operator.category === 'Arithmetic' ? `
+Arithmetic operators require numeric operands:
+- Non-numeric values cause errors
+- Division by zero raises errors
+- Type promotion follows XPath rules
+
+\`\`\`sparql
+# Safe: Type validation
+FILTER(isNumeric(?value) && isNumeric(?divisor) && ?divisor != 0)
+BIND(?value ${operator.symbol} ?divisor AS ?result)
+
+# Risky: No validation
+# BIND(?value ${operator.symbol} ?divisor AS ?result)  # May error
+\`\`\`
+` : `
+Always validate operands before applying operators:
+\`\`\`sparql
+FILTER(BOUND(?value) && appropriate_test(?value))
+\`\`\`
+`}
+
+### Common Mistakes
+
+1. **Type Mismatches**: {operator.category === 'Arithmetic' ? 'Using non-numeric values in arithmetic' : operator.category === 'Relational' ? 'Comparing incompatible types without checking' : 'Applying operators to wrong data types'}
+2. **Unbound Variables**: Not checking if variables are bound before using them
+3. **{operator.category === 'Arithmetic' ? 'Division by Zero' : operator.category === 'Logical' ? 'EBV Errors' : 'Null Handling'}**: {operator.category === 'Arithmetic' ? 'Not checking divisor is non-zero' : operator.category === 'Logical' ? 'Assuming all values have valid EBV' : 'Not handling null/unbound values'}
+
+## Related Operators
+
+<RelatedItems
+  items={[
+    operator.category === 'Logical' ?
+      { type: 'Operator', code: 'AND', label: '&& (AND) - Logical conjunction' } :
+    operator.category === 'Relational' ?
+      { type: 'Operator', code: 'EQ', label: '= (Equals) - Equality test' } :
+    operator.category === 'Arithmetic' ?
+      { type: 'Operator', code: 'PLUS', label: '+ (Plus) - Addition' } :
+      { type: 'Operator', code: 'NOT', label: '! (NOT) - Negation' },
+
+    operator.category === 'Logical' ?
+      { type: 'Operator', code: 'OR', label: '|| (OR) - Logical disjunction' } :
+    operator.category === 'Relational' ?
+      { type: 'Operator', code: 'NEQ', label: '!= (Not equals) - Inequality test' } :
+    operator.category === 'Arithmetic' ?
+      { type: 'Operator', code: 'MINUS', label: '- (Minus) - Subtraction' } :
+      { type: 'Operator', code: 'LT', label: '< (Less than) - Comparison' },
+
+    operator.category === 'Logical' ?
+      { type: 'Operator', code: 'NOT', label: '! (NOT) - Logical negation' } :
+    operator.category === 'Relational' ?
+      { type: 'Operator', code: 'LT', label: '< (Less than) - Comparison' } :
+    operator.category === 'Arithmetic' ?
+      { type: 'Operator', code: 'MULTIPLY', label: '* (Multiply) - Multiplication' } :
+      { type: 'Operator', code: 'GT', label: '> (Greater than) - Comparison' },
+
+    { type: 'Keyword', code: 'FILTER', label: 'FILTER - Apply constraints' },
+    { type: 'Keyword', code: 'BIND', label: 'BIND - Assign variables' },
+    { type: 'Function', code: 'IF', label: 'IF() - Conditional function' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title={`SPARQL 1.1 Query Language - ${operator.category} Operators`}
+  url={`https://www.w3.org/TR/sparql11-query/#${operator.category === 'Logical' ? 'func-logical' : operator.category === 'Relational' ? 'OperatorMapping' : operator.category === 'Arithmetic' ? 'OperatorMapping' : 'expressions'}`}
+  section={operator.specification}
+  organization="W3C"
+/>
+
+### Operator Precedence
+
+SPARQL operators follow standard precedence rules (highest to lowest):
+
+1. **Unary**: `!`, `+` (unary), `-` (unary)
+2. **Multiplicative**: `*`, `/`
+3. **Additive**: `+`, `-`
+4. **Relational**: `=`, `!=`, `<`, `>`, `<=`, `>=`, `IN`, `NOT IN`
+5. **Logical AND**: `&&`
+6. **Logical OR**: `||`
+
+Use parentheses `()` to override precedence:
+```sparql
+# Without parentheses: multiplication first
+?a + ?b * ?c  # Equals: ?a + (?b * ?c)
+
+# With parentheses: addition first
+(?a + ?b) * ?c
+```
+
+### Additional Resources
+
+- [SPARQL Operator Mapping](https://www.w3.org/TR/sparql11-query/#OperatorMapping)
+- [XPath Functions in SPARQL](https://www.w3.org/TR/xpath-functions/)
+- [RDF Term Equality](https://www.w3.org/TR/sparql11-query/#func-RDFterm-equal)
+- [Effective Boolean Value](https://www.w3.org/TR/sparql11-query/#ebv)
+
+## Notes
+
+### Type System Integration
+
+{operator.category === 'Arithmetic' ? `
+SPARQL arithmetic operations follow XPath/XSD numeric type rules:
+
+**Numeric Types** (in promotion order):
+1. \`xsd:integer\`
+2. \`xsd:decimal\`
+3. \`xsd:float\`
+4. \`xsd:double\`
+
+**Promotion Rules**:
+- Operations promote to the "higher" type
+- \`integer ${operator.symbol} decimal → decimal\`
+- \`decimal ${operator.symbol} float → float\`
+- \`integer ${operator.symbol} double → double\`
+
+\`\`\`sparql
+# Type promotion in action
+BIND(5 ${operator.symbol} 2.5 AS ?result)     # integer ${operator.symbol} decimal → decimal
+BIND(5.0 ${operator.symbol} 2e0 AS ?result)   # decimal ${operator.symbol} float → float
+\`\`\`
+` : operator.category === 'Relational' ? `
+SPARQL value comparison rules:
+
+**Comparable Types**:
+- Numerics: Follow XSD type hierarchy
+- Strings: Lexical comparison
+- Booleans: true ${operator.symbol} false ordering
+- DateTimes: Temporal ordering
+
+**Incomparable Types** (raise errors):
+- IRI ${operator.symbol} Literal
+- Numeric ${operator.symbol} String
+- Different type families
+
+\`\`\`sparql
+# Safe comparisons
+FILTER(?num ${operator.symbol} 100)           # Numeric comparison
+FILTER(?str ${operator.symbol} "value")       # String comparison
+
+# Unsafe - may error
+# FILTER(?iri ${operator.symbol} "string")    # IRI vs String
+# FILTER(?num ${operator.symbol} "100")       # Numeric vs String
+\`\`\`
+` : operator.category === 'Logical' ? `
+Effective Boolean Value (EBV) conversion:
+
+**True Values**:
+- Boolean \`true\`
+- Non-zero numbers
+- Non-empty strings
+
+**False Values**:
+- Boolean \`false\`
+- Numeric zero (0, 0.0)
+- Empty string ("")
+
+**Error Values**:
+- IRIs
+- Unbound variables
+- Non-string, non-numeric literals (except booleans)
+
+\`\`\`sparql
+# Safe EBV usage
+FILTER(?boolFlag ${operator.symbol} true)
+FILTER(bound(?var) ${operator.symbol} ?var != 0)
+
+# Risky - may error
+# FILTER(?unknownValue)                # Unknown type
+\`\`\`
+` : `
+The ${operator.symbol} operator works with RDF terms according to SPARQL semantics.
+
+Always verify operand types and handle potential errors:
+\`\`\`sparql
+FILTER(BOUND(?value) && appropriate_test(?value))
+BIND(safe_operation(?value) AS ?result)
+\`\`\`
+`}
+
+### Compatibility Notes
+
+- **SPARQL 1.0 vs 1.1**: {operator.category === 'Arithmetic' ? 'Arithmetic operators behavior consistent across versions' : operator.category === 'Relational' ? 'Comparison semantics refined in SPARQL 1.1' : operator.category === 'Logical' ? 'Logical operators consistent across versions' : 'Operator behavior standardized in SPARQL 1.1'}
+- **Endpoint Variations**: Some endpoints may have optimizations for specific operators
+- **Extension Functions**: Custom operators via extension functions (endpoint-specific)
+
+### Performance Tuning
+
+{operator.category === 'Arithmetic' ? `
+Optimize arithmetic operations:
+1. Pre-compute constants
+2. Avoid redundant calculations
+3. Use BIND for complex formulas
+4. Consider materializing computed values
+` : operator.category === 'Relational' ? `
+Optimize comparisons:
+1. Use indexed fields for comparisons
+2. Apply = before <, >, etc. when possible
+3. Filter early in query execution
+4. Avoid NOT and != when possible (harder to optimize)
+` : operator.category === 'Logical' ? `
+Optimize logical expressions:
+1. Leverage short-circuit evaluation
+2. Place cheap conditions first
+3. Minimize complex nested expressions
+4. Use EXISTS/NOT EXISTS for graph pattern tests
+` : `
+General optimization:
+1. Minimize operator applications
+2. Filter data early
+3. Use appropriate indexes
+4. Test query performance
+`}

@@ -1,0 +1,69 @@
+---
+layout: subgroup
+source: Ecommerce/ECLASS
+$type: ECLASS/SubGroup
+$id: https://standards.org.ai/Ecommerce/ECLASS/SubGroup/{subGroup.code}
+sameAs: https://standards.org.ai/SubGroup/{subGroup.code}
+canonical: https://standards.org.ai/ECLASS/SubGroup/{subGroup.code}
+params:
+  - SubGroup
+schema:
+  subGroup:
+    code: SubGroupCode
+    name: SubGroupName
+    description: SubGroupDescription
+    segmentCode: SegmentCode
+    mainGroupCode: MainGroupCode
+    groupCode: GroupCode
+    version: Version
+---
+
+# {subGroup.name}
+
+<Header
+  type="eCl@ss Sub-Group"
+  code={subGroup.code}
+  name={subGroup.name}
+  standard="eCl@ss"
+/>
+
+## Description
+
+{subGroup.description}
+
+## eCl@ss Code
+
+{subGroup.code}
+
+## Hierarchy
+
+<EclassHierarchy
+  segment={subGroup.segmentCode}
+  mainGroup={subGroup.mainGroupCode}
+  group={subGroup.groupCode}
+  subGroup={subGroup.code}
+  level="subGroup"
+/>
+
+## Parent Group
+
+<GroupLink code={subGroup.groupCode} />
+
+## Classes
+
+<ClassList subGroup={subGroup.code} />
+
+## Properties
+
+<PropertyList subGroup={subGroup.code} />
+
+## Related Standards
+
+<RelatedStandards
+  eclassCode={subGroup.code}
+  type="SubGroup"
+/>
+
+## Version
+
+eCl@ss {subGroup.version || 'Latest'}

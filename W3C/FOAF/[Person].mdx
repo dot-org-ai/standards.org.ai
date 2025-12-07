@@ -1,0 +1,255 @@
+---
+layout: Person
+source: W3C/FOAF
+$type: W3C/FOAF/Person
+$id: https://standards.org.ai/W3C/FOAF/Person/{person.code}
+sameAs: https://standards.org.ai/Person/{person.code}
+canonical: https://w3.org.ai/FOAF/Person/{person.code}
+params:
+  - Person
+schema:
+  person:
+    code: string
+    uri: string
+    name: string
+    givenName: string
+    familyName: string
+    nick: string
+    mbox: string
+    mbox_sha1sum: string
+    homepage: string
+    weblog: string
+    img: string
+    depiction: string
+    knows: array
+    interest: array
+    currentProject: array
+    pastProject: array
+    workplaceHomepage: string
+    schoolHomepage: string
+    publications: array
+    account: array
+---
+
+# {person.name}
+
+<div className="person-header">
+  <div className="person-profile">
+    {person.img && (
+      <div className="person-avatar">
+        <img src={person.img} alt={person.name} />
+      </div>
+    )}
+    <div className="person-info">
+      <h1 className="person-name">{person.name}</h1>
+      {person.nick && <p className="person-nick">aka "{person.nick}"</p>}
+      <span className="person-uri">{person.uri}</span>
+    </div>
+  </div>
+</div>
+
+<section className="contact-info">
+  <h2>Contact Information</h2>
+
+  <div className="contact-grid">
+    {person.mbox && (
+      <div className="contact-item">
+        <strong>Email:</strong>
+        <a href={`mailto:${person.mbox}`}>{person.mbox}</a>
+      </div>
+    )}
+
+    {person.homepage && (
+      <div className="contact-item">
+        <strong>Homepage:</strong>
+        <a href={person.homepage}>{person.homepage}</a>
+      </div>
+    )}
+
+    {person.weblog && (
+      <div className="contact-item">
+        <strong>Blog:</strong>
+        <a href={person.weblog}>{person.weblog}</a>
+      </div>
+    )}
+
+    {person.workplaceHomepage && (
+      <div className="contact-item">
+        <strong>Workplace:</strong>
+        <a href={person.workplaceHomepage}>{person.workplaceHomepage}</a>
+      </div>
+    )}
+
+    {person.schoolHomepage && (
+      <div className="contact-item">
+        <strong>School:</strong>
+        <a href={person.schoolHomepage}>{person.schoolHomepage}</a>
+      </div>
+    )}
+  </div>
+</section>
+
+{person.account && person.account.length > 0 && (
+  <section className="online-accounts">
+    <h3>Online Accounts</h3>
+    <ul className="account-list">
+      {person.account.map((account, idx) => (
+        <li key={idx}>
+          <a href={account.accountServiceHomepage}>
+            {account.accountName} on {account.accountServiceHomepage}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{person.interest && person.interest.length > 0 && (
+  <section className="interests">
+    <h2>Interests</h2>
+    <div className="interest-tags">
+      {person.interest.map((interest, idx) => (
+        <span key={idx} className="interest-tag">
+          <a href={interest.uri || interest}>{interest.label || interest}</a>
+        </span>
+      ))}
+    </div>
+  </section>
+)}
+
+{person.currentProject && person.currentProject.length > 0 && (
+  <section className="current-projects">
+    <h2>Current Projects</h2>
+    <div className="project-grid">
+      {person.currentProject.map((project, idx) => (
+        <div key={idx} className="project-card">
+          <h4>
+            <a href={project.uri || project.homepage || project}>
+              {project.name || project.title || project}
+            </a>
+          </h4>
+          {project.description && <p>{project.description}</p>}
+          {project.homepage && <a href={project.homepage}>Project Homepage</a>}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{person.pastProject && person.pastProject.length > 0 && (
+  <section className="past-projects">
+    <h3>Past Projects</h3>
+    <ul>
+      {person.pastProject.map((project, idx) => (
+        <li key={idx}>
+          <a href={project.uri || project.homepage || project}>
+            {project.name || project.title || project}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{person.publications && person.publications.length > 0 && (
+  <section className="publications">
+    <h2>Publications</h2>
+    <ul className="publication-list">
+      {person.publications.map((pub, idx) => (
+        <li key={idx} className="publication-item">
+          <a href={pub.uri || pub}>{pub.title || pub}</a>
+          {pub.date && <span className="pub-date"> ({pub.date})</span>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{person.knows && person.knows.length > 0 && (
+  <section className="social-network">
+    <h2>Social Network</h2>
+    <p>{person.name} knows {person.knows.length} people:</p>
+    <div className="people-grid">
+      {person.knows.map((contact, idx) => (
+        <div key={idx} className="person-card">
+          {contact.img && <img src={contact.img} alt={contact.name} className="person-thumb" />}
+          <h4>
+            <a href={contact.uri || contact}>{contact.name || contact}</a>
+          </h4>
+          {contact.nick && <p className="person-nick">"{contact.nick}"</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<section className="foaf-overview">
+  <h2>About FOAF Persons</h2>
+  <div className="info-box">
+    <p>
+      <strong>FOAF (Friend of a Friend)</strong> is a vocabulary for describing people,
+      their activities, and their relationships to other people and objects.
+    </p>
+    <h4>Key Properties</h4>
+    <ul>
+      <li><strong>foaf:name:</strong> A person's full name</li>
+      <li><strong>foaf:mbox:</strong> Email address (mailbox)</li>
+      <li><strong>foaf:knows:</strong> Relationship to another person</li>
+      <li><strong>foaf:homepage:</strong> Personal homepage URL</li>
+      <li><strong>foaf:currentProject:</strong> Projects currently involved in</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<${person.uri}> a foaf:Person ;
+  foaf:name "${person.name}" ;${person.givenName ? `
+  foaf:givenName "${person.givenName}" ;` : ''}${person.familyName ? `
+  foaf:familyName "${person.familyName}" ;` : ''}${person.nick ? `
+  foaf:nick "${person.nick}" ;` : ''}${person.mbox ? `
+  foaf:mbox <mailto:${person.mbox}> ;` : ''}${person.homepage ? `
+  foaf:homepage <${person.homepage}> ;` : ''}${person.weblog ? `
+  foaf:weblog <${person.weblog}> ;` : ''}${person.img ? `
+  foaf:img <${person.img}> ;` : ''}${person.knows ? `
+  ${person.knows.map(k => `foaf:knows <${k.uri || k}>`).join(' ;\n  ')} ;` : ''}${person.interest ? `
+  ${person.interest.map(i => `foaf:interest <${i.uri || i}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Find all friends</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?friend ?name
+WHERE {
+  <${person.uri}> foaf:knows ?friend .
+  ?friend foaf:name ?name .
+}`}</code></pre>
+
+  <h4>Find friends of friends (2 degrees)</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT DISTINCT ?foaf ?name
+WHERE {
+  <${person.uri}> foaf:knows/foaf:knows ?foaf .
+  ?foaf foaf:name ?name .
+  FILTER(?foaf != <${person.uri}>)
+}`}</code></pre>
+
+  <h4>Find common interests</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?person ?name ?sharedInterest
+WHERE {
+  <${person.uri}> foaf:knows ?person ;
+                  foaf:interest ?sharedInterest .
+  ?person foaf:name ?name ;
+          foaf:interest ?sharedInterest .
+}`}</code></pre>
+</section>

@@ -1,0 +1,292 @@
+---
+layout: Dataset
+source: W3C/VoID
+$type: W3C/VoID/Dataset
+$id: https://standards.org.ai/W3C/VoID/Dataset/{dataset.code}
+sameAs: https://standards.org.ai/Dataset/{dataset.code}
+canonical: https://w3.org.ai/VoID/Dataset/{dataset.code}
+params:
+  - Dataset
+schema:
+  dataset:
+    code: string
+    uri: string
+    title: string
+    description: string
+    homepage: string
+    sparqlEndpoint: string
+    uriSpace: array
+    exampleResource: array
+    vocabulary: array
+    triples: number
+    entities: number
+    properties: number
+    distinctSubjects: number
+    distinctObjects: number
+    classes: array
+    dataDump: array
+    subset: array
+    license: string
+    publisher: object
+---
+
+# {dataset.title}
+
+<div className="dataset-header">
+  <div className="dataset-metadata">
+    <span className="dataset-uri">{dataset.uri}</span>
+    <span className="dataset-type">VoID Dataset</span>
+  </div>
+</div>
+
+{dataset.description && (
+  <section className="description">
+    <h2>Description</h2>
+    <p>{dataset.description}</p>
+  </section>
+)}
+
+<section className="dataset-statistics">
+  <h2>Dataset Statistics</h2>
+
+  <div className="stats-grid">
+    {dataset.triples && (
+      <div className="stat-card">
+        <div className="stat-value">{dataset.triples.toLocaleString()}</div>
+        <div className="stat-label">Triples</div>
+      </div>
+    )}
+
+    {dataset.entities && (
+      <div className="stat-card">
+        <div className="stat-value">{dataset.entities.toLocaleString()}</div>
+        <div className="stat-label">Entities</div>
+      </div>
+    )}
+
+    {dataset.properties && (
+      <div className="stat-card">
+        <div className="stat-value">{dataset.properties.toLocaleString()}</div>
+        <div className="stat-label">Properties</div>
+      </div>
+    )}
+
+    {dataset.distinctSubjects && (
+      <div className="stat-card">
+        <div className="stat-value">{dataset.distinctSubjects.toLocaleString()}</div>
+        <div className="stat-label">Distinct Subjects</div>
+      </div>
+    )}
+
+    {dataset.distinctObjects && (
+      <div className="stat-card">
+        <div className="stat-value">{dataset.distinctObjects.toLocaleString()}</div>
+        <div className="stat-label">Distinct Objects</div>
+      </div>
+    )}
+  </div>
+</section>
+
+{dataset.sparqlEndpoint && (
+  <section className="sparql-access">
+    <h2>SPARQL Endpoint</h2>
+    <div className="endpoint-box">
+      <code className="endpoint-url">{dataset.sparqlEndpoint}</code>
+      <a href={dataset.sparqlEndpoint} className="btn-primary">Query Dataset</a>
+    </div>
+    <p>Use this SPARQL endpoint to query the dataset directly.</p>
+  </section>
+)}
+
+<div className="dataset-info-grid">
+  {dataset.publisher && (
+    <section className="publisher">
+      <h3>Publisher</h3>
+      <div className="publisher-details">
+        <p><strong>{dataset.publisher.name}</strong></p>
+        {dataset.publisher.homepage && (
+          <p><a href={dataset.publisher.homepage}>Homepage</a></p>
+        )}
+      </div>
+    </section>
+  )}
+
+  {dataset.homepage && (
+    <section className="homepage">
+      <h3>Homepage</h3>
+      <p><a href={dataset.homepage}>{dataset.homepage}</a></p>
+    </section>
+  )}
+
+  {dataset.license && (
+    <section className="license">
+      <h3>License</h3>
+      <p><a href={dataset.license}>{dataset.license}</a></p>
+    </section>
+  )}
+</div>
+
+{dataset.uriSpace && dataset.uriSpace.length > 0 && (
+  <section className="uri-space">
+    <h3>URI Space</h3>
+    <p>This dataset uses the following URI namespace{dataset.uriSpace.length !== 1 ? 's' : ''}:</p>
+    <ul>
+      {dataset.uriSpace.map((ns, idx) => (
+        <li key={idx}><code>{ns}</code></li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{dataset.exampleResource && dataset.exampleResource.length > 0 && (
+  <section className="examples">
+    <h3>Example Resources</h3>
+    <ul className="example-list">
+      {dataset.exampleResource.map((resource, idx) => (
+        <li key={idx}>
+          <a href={resource}>{resource}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{dataset.vocabulary && dataset.vocabulary.length > 0 && (
+  <section className="vocabularies">
+    <h2>Vocabularies Used</h2>
+    <p>This dataset uses {dataset.vocabulary.length} vocabular{dataset.vocabulary.length !== 1 ? 'ies' : 'y'}:</p>
+    <ul className="vocabulary-list">
+      {dataset.vocabulary.map((vocab, idx) => (
+        <li key={idx}>
+          <a href={vocab.uri || vocab}>{vocab.label || vocab}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{dataset.classes && dataset.classes.length > 0 && (
+  <section className="classes">
+    <h3>Classes</h3>
+    <p>The dataset contains instances of {dataset.classes.length} class{dataset.classes.length !== 1 ? 'es' : ''}:</p>
+    <div className="classes-grid">
+      {dataset.classes.map((cls, idx) => (
+        <div key={idx} className="class-card">
+          <h4><a href={cls.uri || cls}>{cls.label || cls}</a></h4>
+          {cls.count && <p className="class-count">{cls.count.toLocaleString()} instances</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{dataset.dataDump && dataset.dataDump.length > 0 && (
+  <section className="data-dumps">
+    <h2>Data Dumps</h2>
+    <p>Download the complete dataset:</p>
+    <div className="dump-grid">
+      {dataset.dataDump.map((dump, idx) => (
+        <div key={idx} className="dump-card">
+          <h4>{dump.format || 'Data Dump'}</h4>
+          <a href={dump.uri || dump} className="btn-download" download>
+            Download {dump.format || 'Dataset'}
+          </a>
+          {dump.size && <p className="dump-size">Size: {dump.size}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{dataset.subset && dataset.subset.length > 0 && (
+  <section className="subsets">
+    <h3>Dataset Subsets</h3>
+    <ul>
+      {dataset.subset.map((subset, idx) => (
+        <li key={idx}>
+          <a href={subset.uri || subset}>{subset.title || subset}</a>
+          {subset.description && <p>{subset.description}</p>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="void-overview">
+  <h2>About VoID Datasets</h2>
+  <div className="info-box">
+    <p>
+      <strong>VoID (Vocabulary of Interlinked Datasets)</strong> is used to express metadata
+      about RDF datasets. It helps users and applications discover and understand the
+      contents and structure of datasets.
+    </p>
+    <h4>Key Information VoID Provides</h4>
+    <ul>
+      <li><strong>Access:</strong> Where and how to access the data (SPARQL endpoints, dumps)</li>
+      <li><strong>Statistics:</strong> Size metrics (triples, entities, classes)</li>
+      <li><strong>Structure:</strong> Vocabularies used, URI patterns, example resources</li>
+      <li><strong>Provenance:</strong> Publisher, license, homepage</li>
+      <li><strong>Relationships:</strong> Links to other datasets</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<${dataset.uri}> a void:Dataset ;
+  dcterms:title "${dataset.title}" ;${dataset.description ? `
+  dcterms:description "${dataset.description}" ;` : ''}${dataset.publisher ? `
+  dcterms:publisher [
+    a foaf:Organization ;
+    foaf:name "${dataset.publisher.name}"
+  ] ;` : ''}${dataset.homepage ? `
+  foaf:homepage <${dataset.homepage}> ;` : ''}${dataset.sparqlEndpoint ? `
+  void:sparqlEndpoint <${dataset.sparqlEndpoint}> ;` : ''}${dataset.triples ? `
+  void:triples ${dataset.triples} ;` : ''}${dataset.entities ? `
+  void:entities ${dataset.entities} ;` : ''}${dataset.properties ? `
+  void:properties ${dataset.properties} ;` : ''}${dataset.distinctSubjects ? `
+  void:distinctSubjects ${dataset.distinctSubjects} ;` : ''}${dataset.distinctObjects ? `
+  void:distinctObjects ${dataset.distinctObjects} ;` : ''}${dataset.uriSpace ? `
+  ${dataset.uriSpace.map(ns => `void:uriSpace "${ns}"`).join(' ;\n  ')} ;` : ''}${dataset.vocabulary ? `
+  ${dataset.vocabulary.map(v => `void:vocabulary <${v.uri || v}>`).join(' ;\n  ')} ;` : ''}${dataset.dataDump ? `
+  ${dataset.dataDump.map(d => `void:dataDump <${d.uri || d}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>Useful SPARQL Queries</h3>
+
+  <h4>Get dataset statistics</h4>
+  <pre><code>{`PREFIX void: <http://rdfs.org/ns/void#>
+
+SELECT ?triples ?entities ?properties
+WHERE {
+  <${dataset.uri}> void:triples ?triples ;
+                   void:entities ?entities ;
+                   void:properties ?properties .
+}`}</code></pre>
+
+  <h4>List all classes and their counts</h4>
+  <pre><code>{`PREFIX void: <http://rdfs.org/ns/void#>
+
+SELECT ?class ?count
+WHERE {
+  <${dataset.uri}> void:classPartition ?partition .
+  ?partition void:class ?class ;
+             void:entities ?count .
+}
+ORDER BY DESC(?count)`}</code></pre>
+
+  <h4>Find data dumps and access points</h4>
+  <pre><code>{`PREFIX void: <http://rdfs.org/ns/void#>
+
+SELECT ?endpoint ?dump
+WHERE {
+  <${dataset.uri}> void:sparqlEndpoint ?endpoint ;
+                   void:dataDump ?dump .
+}`}</code></pre>
+</section>

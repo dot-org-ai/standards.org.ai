@@ -1,0 +1,39 @@
+---
+layout: msa
+source: Census/Metropolitan
+$type: Census/MSA
+$id: https://standards.org.ai/Census/MSA/{msa.code}
+sameAs: https://standards.org.ai/MSA/{msa.code}
+canonical: https://us.org.ai/Census/MSA/{msa.code}
+params:
+  - MSA
+schema:
+  msa:
+    code: code
+    name: name
+    cbsa: cbsa
+---
+
+# {msa.name}
+
+<MSAHeader code={msa.code} name={msa.name} />
+
+## MSA Code (Legacy)
+
+{msa.code}
+
+## Current CBSA
+
+<CBSALink code={msa.cbsa} />
+
+## Note
+
+This is a legacy Metropolitan Statistical Area code. The Census Bureau now uses CBSA (Core Based Statistical Area) codes for both metropolitan and micropolitan areas.
+
+## Demographics
+
+<MSADemographics code={msa.code} />
+
+## Economy
+
+<MSAEconomy code={msa.code} />

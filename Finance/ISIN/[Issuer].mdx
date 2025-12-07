@@ -1,0 +1,58 @@
+---
+layout: issuer
+source: Finance/ISIN
+$type: Finance/ISIN/Issuer
+$id: https://standards.org.ai/Finance/ISIN/Issuer/{issuer.code}
+sameAs: https://standards.org.ai/Issuer/{issuer.code}
+canonical: https://standards.org.ai/ISIN/Issuer/{issuer.code}
+params:
+  - Issuer
+schema:
+  issuer:
+    code: code
+    name: name
+    lei: lei
+    country: country
+    sector: sector
+    website: website
+---
+
+# {issuer.name}
+
+<IssuerHeader code={issuer.code} name={issuer.name} country={issuer.country} />
+
+## Issuer Information
+
+<IssuerInfo
+  lei={issuer.lei}
+  country={issuer.country}
+  sector={issuer.sector}
+/>
+
+## Legal Entity Identifier (LEI)
+
+<LEILink lei={issuer.lei} />
+
+## Website
+
+<ExternalLink url={issuer.website} />
+
+## Issued Securities
+
+<SecuritiesByIssuer issuerCode={issuer.code} />
+
+## Security Types
+
+<SecurityTypeBreakdown issuerCode={issuer.code} />
+
+## Outstanding Issues
+
+<OutstandingIssues issuerCode={issuer.code} />
+
+## Credit Ratings
+
+<IssuerCreditRatings issuerCode={issuer.code} />
+
+## Financial Information
+
+<IssuerFinancials issuerCode={issuer.code} />

@@ -1,0 +1,69 @@
+---
+layout: value
+source: Ecommerce/ETIM
+$type: ETIM/Value
+$id: https://standards.org.ai/Ecommerce/ETIM/Value/{value.code}
+sameAs: https://standards.org.ai/Value/{value.code}
+canonical: https://standards.org.ai/ETIM/Value/{value.code}
+params:
+  - Value
+schema:
+  value:
+    code: ValueCode
+    name: ValueName
+    description: ValueDescription
+    featureCode: FeatureCode
+    version: Version
+    sortOrder: number
+---
+
+# {value.name}
+
+<Header
+  type="ETIM Value"
+  code={value.code}
+  name={value.name}
+  standard="ETIM International"
+/>
+
+## Description
+
+{value.description}
+
+## ETIM Code
+
+{value.code}
+
+## Parent Feature
+
+<FeatureLink code={value.featureCode} />
+
+## Value Details
+
+<ValueDetails
+  code={value.code}
+  name={value.name}
+  feature={value.featureCode}
+  sortOrder={value.sortOrder}
+/>
+
+## Used in Classes
+
+<ClassesByValue value={value.code} />
+
+## Multilingual Names
+
+<ValueTranslations value={value.code} />
+
+## Related Values
+
+<SiblingValues feature={value.featureCode} current={value.code} />
+
+## Version
+
+ETIM {value.version || 'Latest'}
+
+## See Also
+
+- [Parent Feature](/Ecommerce/ETIM/Feature/{value.featureCode})
+- [ETIM International](https://www.etim-international.com/)

@@ -1,0 +1,207 @@
+---
+layout: Organization
+source: W3C/FOAF
+$type: W3C/FOAF/Organization
+$id: https://standards.org.ai/W3C/FOAF/Organization/{organization.code}
+sameAs: https://standards.org.ai/Organization/{organization.code}
+canonical: https://w3.org.ai/FOAF/Organization/{organization.code}
+params:
+  - Organization
+schema:
+  organization:
+    code: string
+    uri: string
+    name: string
+    homepage: string
+    logo: string
+    mbox: string
+    phone: string
+    member: array
+    fundedBy: array
+    account: array
+    based_near: string
+    depiction: string
+    theme: array
+---
+
+# {organization.name}
+
+<div className="org-header">
+  <div className="org-profile">
+    {organization.logo && (
+      <div className="org-logo">
+        <img src={organization.logo} alt={organization.name} />
+      </div>
+    )}
+    <div className="org-info">
+      <h1 className="org-name">{organization.name}</h1>
+      <span className="org-uri">{organization.uri}</span>
+    </div>
+  </div>
+</div>
+
+<section className="org-contact">
+  <h2>Contact Information</h2>
+
+  <div className="contact-grid">
+    {organization.homepage && (
+      <div className="contact-item">
+        <strong>Homepage:</strong>
+        <a href={organization.homepage}>{organization.homepage}</a>
+      </div>
+    )}
+
+    {organization.mbox && (
+      <div className="contact-item">
+        <strong>Email:</strong>
+        <a href={`mailto:${organization.mbox}`}>{organization.mbox}</a>
+      </div>
+    )}
+
+    {organization.phone && (
+      <div className="contact-item">
+        <strong>Phone:</strong>
+        <a href={`tel:${organization.phone}`}>{organization.phone}</a>
+      </div>
+    )}
+
+    {organization.based_near && (
+      <div className="contact-item">
+        <strong>Location:</strong>
+        <span>{organization.based_near}</span>
+      </div>
+    )}
+  </div>
+</section>
+
+{organization.account && organization.account.length > 0 && (
+  <section className="online-presence">
+    <h3>Online Presence</h3>
+    <ul className="account-list">
+      {organization.account.map((account, idx) => (
+        <li key={idx}>
+          <a href={account.accountServiceHomepage}>
+            {account.accountName}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{organization.theme && organization.theme.length > 0 && (
+  <section className="themes">
+    <h2>Focus Areas</h2>
+    <div className="theme-tags">
+      {organization.theme.map((theme, idx) => (
+        <span key={idx} className="theme-tag">
+          <a href={theme.uri || theme}>{theme.label || theme}</a>
+        </span>
+      ))}
+    </div>
+  </section>
+)}
+
+{organization.member && organization.member.length > 0 && (
+  <section className="members">
+    <h2>Members</h2>
+    <p>This organization has {organization.member.length} member{organization.member.length !== 1 ? 's' : ''}:</p>
+    <div className="members-grid">
+      {organization.member.map((member, idx) => (
+        <div key={idx} className="member-card">
+          {member.img && <img src={member.img} alt={member.name} className="member-photo" />}
+          <h4>
+            <a href={member.uri || member}>{member.name || member}</a>
+          </h4>
+          {member.title && <p className="member-title">{member.title}</p>}
+          {member.mbox && (
+            <p className="member-contact">
+              <a href={`mailto:${member.mbox}`}>{member.mbox}</a>
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{organization.fundedBy && organization.fundedBy.length > 0 && (
+  <section className="funding">
+    <h3>Funded By</h3>
+    <ul>
+      {organization.fundedBy.map((funder, idx) => (
+        <li key={idx}>
+          <a href={funder.uri || funder.homepage || funder}>
+            {funder.name || funder}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="foaf-overview">
+  <h2>About FOAF Organizations</h2>
+  <div className="info-box">
+    <p>
+      <strong>FOAF Organizations</strong> represent groups, companies, institutions, or other
+      organized entities. They can have members, be involved in projects, and maintain
+      various online presences.
+    </p>
+    <h4>Key Properties</h4>
+    <ul>
+      <li><strong>foaf:name:</strong> Organization's name</li>
+      <li><strong>foaf:member:</strong> People who are members of the organization</li>
+      <li><strong>foaf:homepage:</strong> Official website</li>
+      <li><strong>foaf:logo:</strong> Organization's logo image</li>
+      <li><strong>foaf:fundedBy:</strong> Funding sources</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<${organization.uri}> a foaf:Organization ;
+  foaf:name "${organization.name}" ;${organization.homepage ? `
+  foaf:homepage <${organization.homepage}> ;` : ''}${organization.logo ? `
+  foaf:logo <${organization.logo}> ;` : ''}${organization.mbox ? `
+  foaf:mbox <mailto:${organization.mbox}> ;` : ''}${organization.phone ? `
+  foaf:phone <tel:${organization.phone}> ;` : ''}${organization.member ? `
+  ${organization.member.map(m => `foaf:member <${m.uri || m}>`).join(' ;\n  ')} ;` : ''}${organization.fundedBy ? `
+  ${organization.fundedBy.map(f => `foaf:fundedBy <${f.uri || f}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>List all members</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?member ?name ?email
+WHERE {
+  <${organization.uri}> foaf:member ?member .
+  ?member foaf:name ?name .
+  OPTIONAL { ?member foaf:mbox ?email }
+}
+ORDER BY ?name`}</code></pre>
+
+  <h4>Find organizational relationships</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?relation ?type ?name
+WHERE {
+  {
+    <${organization.uri}> ?type ?relation .
+    ?relation a foaf:Organization ;
+              foaf:name ?name .
+  } UNION {
+    ?relation ?type <${organization.uri}> .
+    ?relation a foaf:Organization ;
+              foaf:name ?name .
+  }
+}`}</code></pre>
+</section>

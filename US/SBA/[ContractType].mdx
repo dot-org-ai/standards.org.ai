@@ -1,0 +1,49 @@
+---
+layout: contractType
+source: US/SBA
+$type: US/SBA/ContractType
+$id: https://standards.org.ai/US/SBA/ContractType/{contractType.code}
+sameAs: https://standards.org.ai/SBA/ContractType/{contractType.code}
+canonical: https://us.org.ai/SBA/ContractType/{contractType.code}
+params:
+  - ContractType
+schema:
+  contractType:
+    code: ContractTypeCode
+    name: ContractTypeName
+    description: Description
+    threshold: Threshold
+    applicableBusinessTypes: ApplicableBusinessTypes
+---
+
+# {contractType.name}
+
+<ContractTypeHeader code={contractType.code} name={contractType.name} />
+
+## Description
+
+{contractType.description}
+
+## Threshold
+
+{contractType.threshold}
+
+## Applicable Business Types
+
+<BusinessTypesByContractType contractTypeCode={contractType.code} />
+
+## Eligibility Requirements
+
+<ContractTypeEligibility code={contractType.code} />
+
+## Set-Aside Procedures
+
+<SetAsideProcedures code={contractType.code} />
+
+## Related Regulations
+
+<RelatedRegulations contractTypeCode={contractType.code} />
+
+## Industries Commonly Using This Set-Aside
+
+<IndustriesByContractType contractTypeCode={contractType.code} />

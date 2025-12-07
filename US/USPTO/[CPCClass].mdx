@@ -1,0 +1,40 @@
+---
+layout: cpc-class
+source: US/USPTO
+$type: US/USPTO/CPCClass
+$id: https://standards.org.ai/US/USPTO/CPCClass/{class.code}
+sameAs: https://standards.org.ai/CPCClass/{class.code}
+canonical: https://us.org.ai/USPTO/CPCClass/{class.code}
+params:
+  - CPCClass
+schema:
+  class:
+    code: code
+    name: name
+    section: section
+    subclasses: subclasses
+---
+
+# CPC Class {class.code}: {class.name}
+
+<CPCClassHeader code={class.code} name={class.name} section={class.section} />
+
+## Overview
+
+CPC Class {class.code} is part of Section {class.section} and covers {class.name}.
+
+## Subclasses
+
+<CPCSubclassList class={class.code} />
+
+## Main Groups
+
+<CPCMainGroupList class={class.code} />
+
+## Patent Count
+
+<CPCClassStats class={class.code} />
+
+## USPC Equivalent
+
+<USPCEquivalent cpcClass={class.code} />

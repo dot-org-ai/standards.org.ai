@@ -1,0 +1,39 @@
+---
+layout: locarno-class
+source: US/USPTO
+$type: US/USPTO/LocarnoClass
+$id: https://standards.org.ai/US/USPTO/LocarnoClass/{locarno.code}
+sameAs: https://standards.org.ai/LocarnoClass/{locarno.code}
+canonical: https://us.org.ai/USPTO/LocarnoClass/{locarno.code}
+params:
+  - LocarnoClass
+schema:
+  locarno:
+    code: code
+    name: name
+    subclasses: subclasses
+---
+
+# Locarno Class {locarno.code}: {locarno.name}
+
+<LocarnoClassHeader code={locarno.code} name={locarno.name} />
+
+## Overview
+
+The Locarno Classification is an international classification system for industrial designs. Class {locarno.code} covers {locarno.name}.
+
+## Subclasses
+
+<LocarnoSubclassList class={locarno.code} />
+
+## Design Patents
+
+<DesignPatentList locarnoClass={locarno.code} limit={50} />
+
+## Statistics
+
+<LocarnoClassStats class={locarno.code} />
+
+## Examples
+
+<LocarnoClassExamples class={locarno.code} />

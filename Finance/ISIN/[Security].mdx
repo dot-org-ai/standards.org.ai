@@ -1,0 +1,70 @@
+---
+layout: security
+source: Finance/ISIN
+$type: Finance/ISIN/Security
+$id: https://standards.org.ai/Finance/ISIN/Security/{security.isin}
+sameAs: https://standards.org.ai/Security/{security.isin}
+canonical: https://standards.org.ai/ISIN/Security/{security.isin}
+params:
+  - Security
+schema:
+  security:
+    isin: isin
+    name: name
+    issuer: issuer
+    securityType: securityType
+    currency: currency
+    countryOfIssue: countryOfIssue
+    maturityDate: maturityDate
+    couponRate: couponRate
+    faceValue: faceValue
+---
+
+# {security.name}
+
+<SecurityHeader isin={security.isin} name={security.name} type={security.securityType} />
+
+## ISIN
+
+{security.isin}
+
+## Security Information
+
+<SecurityInfo
+  type={security.securityType}
+  currency={security.currency}
+  country={security.countryOfIssue}
+/>
+
+## Issuer
+
+<IssuerLink code={security.issuer} />
+
+## Financial Details
+
+<SecurityFinancials
+  maturityDate={security.maturityDate}
+  couponRate={security.couponRate}
+  faceValue={security.faceValue}
+  currency={security.currency}
+/>
+
+## Market Data
+
+<SecurityMarketData isin={security.isin} />
+
+## Related Securities
+
+<RelatedSecurities issuer={security.issuer} current={security.isin} />
+
+## Trading Venues
+
+<TradingVenues isin={security.isin} />
+
+## Corporate Actions
+
+<CorporateActions isin={security.isin} />
+
+## Identifiers
+
+<AlternativeIdentifiers isin={security.isin} />

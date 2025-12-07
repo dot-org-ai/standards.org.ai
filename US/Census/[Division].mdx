@@ -1,0 +1,40 @@
+---
+layout: division
+source: Census/Geographic
+$type: Census/Division
+$id: https://standards.org.ai/Census/Division/{division.code}
+sameAs: https://standards.org.ai/Division/{division.code}
+canonical: https://us.org.ai/Census/Division/{division.code}
+params:
+  - Division
+schema:
+  division:
+    code: code
+    name: name
+    region: region
+    states: states
+---
+
+# {division.name}
+
+<DivisionHeader code={division.code} name={division.name} />
+
+## Division Code
+
+{division.code}
+
+## Census Region
+
+<RegionLink region={division.region} />
+
+## States
+
+<StateList division={division.code} states={division.states} />
+
+## Demographics
+
+<DivisionDemographics code={division.code} />
+
+## Economy
+
+<DivisionEconomy code={division.code} />

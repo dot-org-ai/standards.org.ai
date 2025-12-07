@@ -1,0 +1,58 @@
+---
+layout: code
+source: Finance/MCC
+$type: Finance/MCC/Code
+$id: https://standards.org.ai/Finance/MCC/Code/{code.mcc}
+sameAs: https://standards.org.ai/MCC/{code.mcc}
+canonical: https://standards.org.ai/MCC/Code/{code.mcc}
+params:
+  - Code
+schema:
+  code:
+    mcc: mcc
+    name: name
+    description: description
+    category: category
+    usedBy: usedBy
+    interchangeFee: interchangeFee
+---
+
+# MCC {code.mcc}: {code.name}
+
+<MCCHeader mcc={code.mcc} name={code.name} category={code.category} />
+
+## Description
+
+{code.description}
+
+## Category
+
+<CategoryLink code={code.category} />
+
+## Payment Networks
+
+{code.usedBy}
+
+## Interchange Fee Information
+
+{code.interchangeFee}
+
+## Common Merchant Examples
+
+<MerchantExamples mcc={code.mcc} />
+
+## Similar MCC Codes
+
+<SimilarMCCCodes mcc={code.mcc} category={code.category} />
+
+## Usage Statistics
+
+<MCCUsageStats mcc={code.mcc} />
+
+## Regulatory Considerations
+
+<MCCRegulatory mcc={code.mcc} />
+
+## Processing Guidelines
+
+<MCCProcessingGuidelines mcc={code.mcc} />

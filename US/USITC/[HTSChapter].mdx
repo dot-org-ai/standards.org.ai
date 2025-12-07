@@ -1,0 +1,44 @@
+---
+layout: htschapter
+source: US/USITC
+$type: US/USITC/HTSChapter
+$id: https://standards.org.ai/US/USITC/HTSChapter/{chapter.code}
+sameAs: https://standards.org.ai/HTSChapter/{chapter.code}
+canonical: https://us.org.ai/USITC/HTSChapter/{chapter.code}
+params:
+  - HTSChapter
+schema:
+  chapter:
+    code: code
+    name: name
+    section: section
+    notes: notes
+---
+
+# Chapter {chapter.code} - {chapter.name}
+
+<HTSChapterHeader code={chapter.code} name={chapter.name} />
+
+## Section
+
+<HTSSectionLink code={chapter.section} />
+
+## Chapter Notes
+
+{chapter.notes}
+
+## Headings in This Chapter
+
+<HTSHeadingList chapter={chapter.code} />
+
+## Import Statistics
+
+<ImportsByChapterStats chapter={chapter.code} />
+
+## Duty Rates Summary
+
+<DutyRatesByChapter chapter={chapter.code} />
+
+## Related Chapters
+
+<RelatedHTSChapters current={chapter.code} />

@@ -1,0 +1,40 @@
+---
+layout: attribute
+source: GS1/GPC
+$type: GS1/GPC/Attribute
+$id: https://standards.org.ai/GS1/GPC/Attribute/{attribute.code}
+sameAs: https://standards.org.ai/Attribute/{attribute.code}
+canonical: https://gs1.org.ai/GPC/Attribute/{attribute.code}
+params:
+  - Attribute
+schema:
+  attribute:
+    code: AttributeCode
+    name: AttributeName
+    definition: AttributeDefinition
+    brick: BrickCode
+---
+
+# {attribute.name}
+
+<AttributeHeader code={attribute.code} name={attribute.name} />
+
+## Definition
+
+{attribute.definition}
+
+## Associated Brick
+
+<BrickLink code={attribute.brick} />
+
+## Attribute Values
+
+<AttributeValues attributeCode={attribute.code} />
+
+## Products With This Attribute
+
+<ProductsByAttribute attributeCode={attribute.code} />
+
+## Related Attributes
+
+<RelatedAttributes code={attribute.code} brick={attribute.brick} />

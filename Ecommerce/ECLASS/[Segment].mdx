@@ -1,0 +1,58 @@
+---
+layout: segment
+source: Ecommerce/ECLASS
+$type: ECLASS/Segment
+$id: https://standards.org.ai/Ecommerce/ECLASS/Segment/{segment.code}
+sameAs: https://standards.org.ai/Segment/{segment.code}
+canonical: https://standards.org.ai/ECLASS/Segment/{segment.code}
+params:
+  - Segment
+schema:
+  segment:
+    code: SegmentCode
+    name: SegmentName
+    description: SegmentDescription
+    version: Version
+---
+
+# {segment.name}
+
+<Header
+  type="eCl@ss Segment"
+  code={segment.code}
+  name={segment.name}
+  standard="eCl@ss"
+/>
+
+## Description
+
+{segment.description}
+
+## eCl@ss Code
+
+{segment.code}
+
+## Main Groups
+
+<MainGroupList segment={segment.code} />
+
+## Classification Hierarchy
+
+<EclassHierarchy
+  segment={segment.code}
+  level="segment"
+/>
+
+## Statistics
+
+<SegmentStatistics segment={segment.code} />
+
+## Related Standards
+
+- [ETIM Classification](/Ecommerce/ETIM)
+- [GS1 GPC Classification](/GS1/GPC)
+- [UNSPSC Classification](/UNSPSC)
+
+## Version
+
+eCl@ss {segment.version || 'Latest'}

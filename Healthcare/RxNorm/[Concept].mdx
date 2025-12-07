@@ -1,0 +1,118 @@
+---
+layout: concept
+source: Healthcare/RxNorm
+$type: Healthcare/RxNorm/Concept
+$id: https://standards.org.ai/Healthcare/RxNorm/Concept/{concept.code}
+sameAs: https://standards.org.ai/RxConcept/{concept.code}
+canonical: https://standards.org.ai/RxNorm/Concept/{concept.code}
+params:
+  - Concept
+schema:
+  concept:
+    code: string
+    rxcui: string
+    name: string
+    synonym: array
+    termType: string
+    language: string
+    suppress: boolean
+    tty: string
+    rxnormDoseForm: string
+    ingredient: array
+    strength: array
+    relatedConcepts: array
+---
+
+# {concept.name}
+
+<ConceptHeader rxcui={concept.rxcui} name={concept.name} termType={concept.termType} />
+
+## RxNorm Concept Unique Identifier (RXCUI)
+
+**{concept.rxcui}**
+
+## Concept Details
+
+<div className="concept-details">
+  <div className="name">
+    <strong>Name:</strong> {concept.name}
+  </div>
+  {concept.termType && (
+    <div className="term-type">
+      <strong>Term Type (TTY):</strong> {concept.termType}
+    </div>
+  )}
+  {concept.language && (
+    <div className="language">
+      <strong>Language:</strong> {concept.language}
+    </div>
+  )}
+  {concept.suppress !== undefined && (
+    <div className="suppress">
+      <strong>Suppressed:</strong> {concept.suppress ? 'Yes' : 'No'}
+    </div>
+  )}
+</div>
+
+{concept.synonym && concept.synonym.length > 0 && (
+  <section className="synonyms">
+    <h2>Synonyms</h2>
+    <ul className="synonym-list">
+      {concept.synonym.map((syn, idx) => (
+        <li key={idx}>{syn}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{concept.ingredient && concept.ingredient.length > 0 && (
+  <section className="ingredients">
+    <h2>Active Ingredients</h2>
+    <div className="ingredient-list">
+      {concept.ingredient.map((ing, idx) => (
+        <IngredientLink key={idx} code={ing} />
+      ))}
+    </div>
+  </section>
+)}
+
+{concept.strength && concept.strength.length > 0 && (
+  <section className="strengths">
+    <h2>Available Strengths</h2>
+    <div className="strength-list">
+      {concept.strength.map((str, idx) => (
+        <StrengthLink key={idx} code={str} />
+      ))}
+    </div>
+  </section>
+)}
+
+{concept.rxnormDoseForm && (
+  <section className="dose-form">
+    <h2>Dose Form</h2>
+    <FormLink code={concept.rxnormDoseForm} />
+  </section>
+)}
+
+{concept.relatedConcepts && concept.relatedConcepts.length > 0 && (
+  <section className="related-concepts">
+    <h2>Related Concepts</h2>
+    <div className="related-list">
+      {concept.relatedConcepts.map((rel, idx) => (
+        <ConceptLink key={idx} rxcui={rel.rxcui} relationship={rel.relationship} />
+      ))}
+    </div>
+  </section>
+)}
+
+## NDC Codes
+
+<NDCsByRxNorm rxcui={concept.rxcui} />
+
+## Drug Interactions
+
+<DrugInteractions rxcui={concept.rxcui} />
+
+## RxNorm Relationships
+
+<RxNormRelationships rxcui={concept.rxcui} />

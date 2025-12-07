@@ -1,0 +1,39 @@
+---
+layout: htssection
+source: US/USITC
+$type: US/USITC/HTSSection
+$id: https://standards.org.ai/US/USITC/HTSSection/{section.code}
+sameAs: https://standards.org.ai/HTSSection/{section.code}
+canonical: https://us.org.ai/USITC/HTSSection/{section.code}
+params:
+  - HTSSection
+schema:
+  section:
+    code: code
+    name: name
+    notes: notes
+---
+
+# Section {section.code} - {section.name}
+
+<HTSSectionHeader code={section.code} name={section.name} />
+
+## Section Notes
+
+{section.notes}
+
+## Chapters in This Section
+
+<HTSChapterList section={section.code} />
+
+## Overview
+
+This section of the Harmonized Tariff Schedule (HTS) contains tariff classifications for {section.name.toLowerCase()}.
+
+## Related Resources
+
+<RelatedHTSSections current={section.code} />
+
+## Trade Statistics
+
+<TradeBySectionStats section={section.code} />

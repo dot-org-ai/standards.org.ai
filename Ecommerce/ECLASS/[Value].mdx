@@ -1,0 +1,69 @@
+---
+layout: value
+source: Ecommerce/ECLASS
+$type: ECLASS/Value
+$id: https://standards.org.ai/Ecommerce/ECLASS/Value/{value.code}
+sameAs: https://standards.org.ai/Value/{value.code}
+canonical: https://standards.org.ai/ECLASS/Value/{value.code}
+params:
+  - Value
+schema:
+  value:
+    code: ValueCode
+    name: ValueName
+    description: ValueDescription
+    propertyCode: PropertyCode
+    version: Version
+    preferredName: PreferredName
+---
+
+# {value.name}
+
+<Header
+  type="eCl@ss Property Value"
+  code={value.code}
+  name={value.preferredName || value.name}
+  standard="eCl@ss"
+/>
+
+## Description
+
+{value.description}
+
+## eCl@ss Code
+
+{value.code}
+
+## Parent Property
+
+<PropertyLink code={value.propertyCode} />
+
+## Value Details
+
+<ValueDetails
+  code={value.code}
+  name={value.name}
+  preferredName={value.preferredName}
+  property={value.propertyCode}
+/>
+
+## Used in Classes
+
+<ClassesByValue value={value.code} />
+
+## Multilingual Names
+
+<ValueTranslations value={value.code} />
+
+## Related Values
+
+<SiblingValues property={value.propertyCode} current={value.code} />
+
+## Version
+
+eCl@ss {value.version || 'Latest'}
+
+## See Also
+
+- [Parent Property](/Ecommerce/ECLASS/Property/{value.propertyCode})
+- [eCl@ss Official Documentation](https://www.eclass.eu/)

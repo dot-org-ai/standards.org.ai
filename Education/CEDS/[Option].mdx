@@ -1,0 +1,120 @@
+---
+layout: option
+source: Education/CEDS
+$type: Education/CEDS/Option
+$id: https://standards.org.ai/Education/CEDS/Option/{option.code}
+sameAs: https://standards.org.ai/OptionSet/{option.code}
+canonical: https://standards.org.ai/CEDS/Option/{option.code}
+params:
+  - Option
+schema:
+  option:
+    code: string
+    name: string
+    definition: string
+    optionSetType: string
+    values: array
+    source: string
+    version: string
+    status: string
+---
+
+# {option.name}
+
+<OptionHeader code={option.code} name={option.name} type={option.optionSetType} />
+
+## Definition
+
+{option.definition}
+
+<div className="option-metadata">
+  <div className="metadata-grid">
+    {option.optionSetType && (
+      <div className="type">
+        <h3>Option Set Type</h3>
+        <p>{option.optionSetType}</p>
+      </div>
+    )}
+
+    {option.version && (
+      <div className="version">
+        <h3>Version</h3>
+        <p>{option.version}</p>
+      </div>
+    )}
+
+    {option.status && (
+      <div className="status">
+        <h3>Status</h3>
+        <p><span className={`status-badge status-${option.status.toLowerCase()}`}>{option.status}</span></p>
+      </div>
+    )}
+
+    {option.source && (
+      <div className="source">
+        <h3>Source</h3>
+        <p>{option.source}</p>
+      </div>
+    )}
+  </div>
+</div>
+
+## Valid Values
+
+{option.values && option.values.length > 0 ? (
+  <section className="option-values">
+    <p>This option set contains {option.values.length} valid values:</p>
+    <div className="values-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Value</th>
+            <th>Definition</th>
+          </tr>
+        </thead>
+        <tbody>
+          {option.values.map((val, idx) => (
+            <tr key={idx}>
+              <td><code>{val.code}</code></td>
+              <td><strong>{val.value}</strong></td>
+              <td>{val.definition}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+) : (
+  <p>No values defined for this option set.</p>
+)}
+
+## Elements Using This Option Set
+
+<ElementsByOptionSet optionSet={option.code} />
+
+## Usage Guidelines
+
+<UsageGuidelines optionSet={option.code} />
+
+## Implementation Notes
+
+<ImplementationNotes optionSet={option.code} />
+
+## Mappings to External Standards
+
+<OptionSetMappings optionSet={option.code} />
+
+## Change History
+
+<ChangeHistory optionSet={option.code} />
+
+## Resources
+
+<section className="resources">
+  <h3>CEDS Resources</h3>
+  <ul>
+    <li><a href={`https://ceds.ed.gov/optionSet/${option.code}`}>Official CEDS Option Set Page</a></li>
+    <li><a href="https://ceds.ed.gov/">CEDS Data Standards</a></li>
+  </ul>
+</section>

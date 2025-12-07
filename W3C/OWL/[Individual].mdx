@@ -1,0 +1,431 @@
+---
+layout: individual
+source: W3C/OWL
+$type: W3C/OWL/Individual
+$id: https://standards.org.ai/W3C/OWL/Individual/{Individual.code}
+sameAs: https://standards.org.ai/Individual/{Individual.code}
+canonical: https://w3.org.ai/OWL/Individual/{Individual.code}
+params:
+  - Individual
+schema:
+  Individual:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    types: array
+    sameAs: array
+    differentFrom: array
+---
+
+import { IndividualHeader } from '@/components/semantic-web/IndividualHeader'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<IndividualHeader
+  uri={Individual.uri}
+  label={Individual.label}
+  type="OWL Named Individual"
+/>
+
+## Description
+
+{Individual.comment}
+
+This is a **named individual** in an OWL (Web Ontology Language) ontology, representing a specific, identifiable instance in the domain of discourse.
+
+## Type Membership
+
+{Individual.types && Individual.types.length > 0 ? (
+  <>
+    <p>This individual is an instance of the following classes:</p>
+    <ul>
+      {Individual.types.map((type) => (
+        <li key={type}>
+          <code>{type}</code>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>No explicit type assertions are defined for this individual.</p>
+)}
+
+## Identity Assertions
+
+### Same As
+
+{Individual.sameAs && Individual.sameAs.length > 0 ? (
+  <>
+    <p>This individual is the same as (equivalent to):</p>
+    <ul>
+      {Individual.sameAs.map((same) => (
+        <li key={same}>
+          <code>{same}</code>
+          <p className="text-sm text-gray-600">These URIs refer to the same real-world entity</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>No <code>owl:sameAs</code> assertions are defined.</p>
+)}
+
+### Different From
+
+{Individual.differentFrom && Individual.differentFrom.length > 0 ? (
+  <>
+    <p>This individual is explicitly different from:</p>
+    <ul>
+      {Individual.differentFrom.map((diff) => (
+        <li key={diff}>
+          <code>{diff}</code>
+          <p className="text-sm text-gray-600">These represent distinct entities</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>No <code>owl:differentFrom</code> assertions are defined.</p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Individual Definition
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ex: <http://example.org/> .
+
+{Individual.uri} a owl:NamedIndividual ;
+    rdfs:label "{Individual.label}"@en ;
+    rdfs:comment "{Individual.comment}"@en .
+
+# Type assertions
+{Individual.types && Individual.types.map(type => `{Individual.uri} a ${type} .`).join('\n')}
+
+# Property values
+{Individual.uri} ex:property "value" ;
+    ex:relatedTo ex:otherIndividual .
+```
+
+### Individual with Properties
+
+```turtle
+{Individual.uri} a owl:NamedIndividual ,
+                  ex:Person ;
+    rdfs:label "{Individual.label}"@en ;
+    ex:name "Example Name" ;
+    ex:email "example@example.org" ;
+    ex:birthDate "1990-01-01"^^xsd:date ;
+    ex:knows ex:person2 ,
+             ex:person3 .
+```
+
+### Identity Assertions
+
+```turtle
+# Same individual, different URIs
+{Individual.uri} owl:sameAs ex:alternativeURI .
+
+# Different individuals
+{Individual.uri} owl:differentFrom ex:otherIndividual .
+
+# All different
+ex:individual1 a owl:NamedIndividual .
+ex:individual2 a owl:NamedIndividual .
+ex:individual3 a owl:NamedIndividual .
+
+[ a owl:AllDifferent ;
+  owl:distinctMembers (ex:individual1 ex:individual2 ex:individual3)
+] .
+```
+
+### Negative Property Assertions
+
+```turtle
+# Stating what is NOT true
+{Individual.uri} a owl:NamedIndividual .
+
+[] a owl:NegativePropertyAssertion ;
+   owl:sourceIndividual {Individual.uri} ;
+   owl:assertionProperty ex:hasProperty ;
+   owl:targetIndividual ex:target .
+# Explicitly states: {Individual.uri} does NOT have ex:hasProperty ex:target
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:ex="http://example.org/">
+  <owl:NamedIndividual rdf:about="{Individual.uri}">
+    <rdfs:label xml:lang="en">{Individual.label}</rdfs:label>
+    <rdfs:comment xml:lang="en">{Individual.comment}</rdfs:comment>
+    <rdf:type rdf:resource="http://example.org/Person"/>
+    <ex:property rdf:resource="http://example.org/value"/>
+  </owl:NamedIndividual>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "ex": "http://example.org/"
+  },
+  "@id": "{Individual.uri}",
+  "@type": ["owl:NamedIndividual", "ex:Person"],
+  "rdfs:label": {
+    "@value": "{Individual.label}",
+    "@language": "en"
+  },
+  "rdfs:comment": {
+    "@value": "{Individual.comment}",
+    "@language": "en"
+  },
+  "ex:property": {
+    "@id": "ex:value"
+  }
+}
+```
+
+### SPARQL Queries
+
+```sparql
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Get all information about this individual
+DESCRIBE {Individual.uri}
+
+# Find all properties and values
+SELECT ?property ?value
+WHERE {
+  {Individual.uri} ?property ?value .
+}
+
+# Find all types
+SELECT ?type
+WHERE {
+  {Individual.uri} a ?type .
+  FILTER(?type != owl:NamedIndividual)
+}
+
+# Find individuals of the same type
+SELECT ?other ?label
+WHERE {
+  {Individual.uri} a ?type .
+  ?other a ?type .
+  FILTER(?other != {Individual.uri})
+  OPTIONAL { ?other rdfs:label ?label }
+}
+
+# Find equivalent individuals (via sameAs)
+SELECT ?equivalent
+WHERE {
+  {Individual.uri} owl:sameAs ?equivalent .
+}
+UNION
+WHERE {
+  ?equivalent owl:sameAs {Individual.uri} .
+}
+```
+
+</UsageExamples>
+
+## OWL Reasoning
+
+### Inferences
+
+Reasoners will infer the following about this individual:
+
+1. **Type Inference**: Inferred types based on property domain/range
+2. **Equality**: Merging of facts about equivalent individuals (owl:sameAs)
+3. **Property Values**: Inferred property values via transitivity, symmetry, etc.
+4. **Class Membership**: Membership in superclasses
+
+### Example Inferences
+
+```turtle
+# Stated
+{Individual.uri} ex:hasParent ex:parent .
+ex:hasParent rdfs:domain ex:Person .
+
+# Inferred
+{Individual.uri} a ex:Person .
+
+# Stated
+{Individual.uri} owl:sameAs ex:alt .
+ex:alt ex:property "value" .
+
+# Inferred
+{Individual.uri} ex:property "value" .
+```
+
+## Named vs Anonymous Individuals
+
+This is a **named individual** with a persistent URI identifier.
+
+### Named Individual
+
+- Has a URI that can be referenced
+- Suitable for important, reusable entities
+- Can be shared across datasets
+- Example: `{Individual.uri}`
+
+### Anonymous Individual (Blank Node)
+
+```turtle
+# For comparison, anonymous individuals:
+ex:person ex:address [
+  a ex:Address ;
+  ex:street "123 Main St" ;
+  ex:city "Springfield"
+] .
+```
+
+## Best Practices
+
+When working with `{Individual.label}`:
+
+1. **Unique Names Assumption (UNA)**: OWL doesn't assume UNA; use owl:sameAs or owl:differentFrom explicitly
+2. **Identity**: Use owl:sameAs to link equivalent URIs across datasets
+3. **Distinction**: Use owl:differentFrom when entities might be confused
+4. **URIs**: Choose persistent, dereferenceable URIs
+5. **Documentation**: Provide rdfs:label and rdfs:comment
+6. **Linked Data**: Link to related individuals in other datasets
+7. **Validation**: Verify compliance with class restrictions
+
+## Common Patterns
+
+### Person Individual
+
+```turtle
+ex:johnDoe a owl:NamedIndividual ,
+             ex:Person ;
+    ex:firstName "John" ;
+    ex:lastName "Doe" ;
+    ex:email "john.doe@example.org" ;
+    ex:birthDate "1980-05-15"^^xsd:date ;
+    ex:knows ex:janeDoe ;
+    owl:sameAs <http://dbpedia.org/resource/John_Doe> .
+```
+
+### Organization Individual
+
+```tuple
+ex:acmeCorp a owl:NamedIndividual ,
+              ex:Organization ;
+    ex:legalName "Acme Corporation" ;
+    ex:founded "1950"^^xsd:gYear ;
+    ex:hasEmployee ex:johnDoe ;
+    ex:homepage <https://www.acme.example.org> .
+```
+
+### Location Individual
+
+```turtle
+ex:springfield a owl:NamedIndividual ,
+                 ex:City ;
+    ex:cityName "Springfield" ;
+    ex:state ex:illinois ;
+    ex:country ex:usa ;
+    ex:population 116250 ;
+    geo:lat "39.7817"^^xsd:decimal ;
+    geo:long "-89.6501"^^xsd:decimal .
+```
+
+## Validation
+
+### Class Membership Validation
+
+Ensure the individual satisfies all restrictions of its classes:
+
+```turtle
+ex:PersonWithParents a owl:Class ;
+    rdfs:subClassOf ex:Person ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasParent ;
+        owl:cardinality 2
+    ] .
+
+# Valid
+ex:john a ex:PersonWithParents ;
+    ex:hasParent ex:parent1 , ex:parent2 .
+
+# Invalid - would be caught by reasoner
+# ex:jane a ex:PersonWithParents ;
+#     ex:hasParent ex:parent1 .  # Only one parent
+```
+
+## Linking and Integration
+
+### Cross-Dataset Links
+
+```turtle
+{Individual.uri} owl:sameAs <http://dbpedia.org/resource/Example> ;
+    owl:sameAs <http://wikidata.org/entity/Q12345> ;
+    owl:sameAs <https://example.org/id/123> .
+```
+
+### Provenance
+
+```turtle
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+{Individual.uri} a owl:NamedIndividual ;
+    prov:wasAttributedTo ex:contributor ;
+    prov:generatedAtTime "2024-01-01T00:00:00Z"^^xsd:dateTime ;
+    prov:wasDerivedFrom ex:sourceData .
+```
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2002/07/owl#Thing', label: 'owl:Thing' },
+    { uri: 'http://www.w3.org/2002/07/owl#NamedIndividual', label: 'owl:NamedIndividual' },
+    { uri: 'http://www.w3.org/2002/07/owl#sameAs', label: 'owl:sameAs' },
+    { uri: 'http://www.w3.org/2002/07/owl#differentFrom', label: 'owl:differentFrom' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="OWL 2 Web Ontology Language Structural Specification and Functional-Style Syntax"
+  url="https://www.w3.org/TR/owl2-syntax/"
+  section="individuals"
+/>
+
+### Normative References
+
+- [OWL 2 Web Ontology Language Primer](https://www.w3.org/TR/owl2-primer/)
+- [OWL 2 Web Ontology Language Direct Semantics](https://www.w3.org/TR/owl2-direct-semantics/)
+- [Named Individuals in OWL 2](https://www.w3.org/TR/owl2-syntax/#Named_Individuals)
+
+## Technical Details
+
+- **Namespace**: Defined in ontology
+- **URI**: `{Individual.uri}`
+- **Status**: W3C Recommendation
+- **Version**: OWL 2
+
+## Additional Resources
+
+- [OWL 2 Primer - Individuals](https://www.w3.org/TR/owl2-primer/#Individuals)
+- [Unique Name Assumption](https://www.w3.org/TR/owl2-syntax/#Unique_Name_Assumption)
+- [Linked Data Principles](https://www.w3.org/DesignIssues/LinkedData.html)

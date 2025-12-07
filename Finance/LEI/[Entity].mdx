@@ -1,0 +1,72 @@
+---
+layout: entity
+source: Finance/LEI
+$type: Finance/LEI/Entity
+$id: https://standards.org.ai/Finance/LEI/Entity/{entity.lei}
+sameAs: https://standards.org.ai/Entity/{entity.lei}
+canonical: https://standards.org.ai/LEI/Entity/{entity.lei}
+params:
+  - Entity
+schema:
+  entity:
+    lei: lei
+    legalName: legalName
+    entityStatus: entityStatus
+    legalJurisdiction: legalJurisdiction
+    legalForm: legalForm
+    entityCategory: entityCategory
+    registeredAddress: registeredAddress
+    headquartersAddress: headquartersAddress
+    registrationAuthority: registrationAuthority
+---
+
+# {entity.legalName}
+
+<EntityHeader lei={entity.lei} legalName={entity.legalName} status={entity.entityStatus} />
+
+## Legal Entity Identifier (LEI)
+
+{entity.lei}
+
+## Entity Information
+
+<EntityInfo
+  status={entity.entityStatus}
+  jurisdiction={entity.legalJurisdiction}
+  legalForm={entity.legalForm}
+  category={entity.entityCategory}
+/>
+
+## Registration Authority
+
+<RegistrationAuthorityLink code={entity.registrationAuthority} />
+
+## Addresses
+
+### Registered Address
+
+{entity.registeredAddress}
+
+### Headquarters Address
+
+{entity.headquartersAddress}
+
+## Relationships
+
+<EntityRelationships lei={entity.lei} />
+
+## Parent Entity
+
+<ParentEntity lei={entity.lei} />
+
+## Subsidiaries
+
+<SubsidiaryEntities lei={entity.lei} />
+
+## Identifiers
+
+<EntityIdentifiers lei={entity.lei} />
+
+## Status History
+
+<EntityStatusHistory lei={entity.lei} />

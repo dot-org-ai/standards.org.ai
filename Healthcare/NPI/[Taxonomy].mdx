@@ -1,0 +1,104 @@
+---
+layout: taxonomy
+source: Healthcare/NPI
+$type: Healthcare/NPI/Taxonomy
+$id: https://standards.org.ai/Healthcare/NPI/Taxonomy/{taxonomy.code}
+sameAs: https://standards.org.ai/ProviderTaxonomy/{taxonomy.code}
+canonical: https://standards.org.ai/NPI/Taxonomy/{taxonomy.code}
+params:
+  - Taxonomy
+schema:
+  taxonomy:
+    code: string
+    grouping: string
+    classification: string
+    specialization: string
+    definition: string
+    notes: string
+    display: string
+    section: string
+---
+
+# {taxonomy.display || taxonomy.classification}
+
+<TaxonomyHeader
+  code={taxonomy.code}
+  classification={taxonomy.classification}
+  specialization={taxonomy.specialization}
+/>
+
+## Taxonomy Code
+
+**{taxonomy.code}**
+
+## Classification
+
+<div className="taxonomy-classification">
+  {taxonomy.grouping && (
+    <div className="grouping">
+      <strong>Grouping:</strong> {taxonomy.grouping}
+    </div>
+  )}
+  <div className="classification">
+    <strong>Classification:</strong> {taxonomy.classification}
+  </div>
+  {taxonomy.specialization && (
+    <div className="specialization">
+      <strong>Specialization:</strong> {taxonomy.specialization}
+    </div>
+  )}
+  {taxonomy.section && (
+    <div className="section">
+      <strong>Section:</strong> {taxonomy.section}
+    </div>
+  )}
+</div>
+
+## Definition
+
+{taxonomy.definition && (
+  <div className="definition">
+    {taxonomy.definition}
+  </div>
+)}
+
+{taxonomy.notes && (
+  <section className="notes">
+    <h2>Additional Notes</h2>
+    <div className="notes-content">
+      {taxonomy.notes}
+    </div>
+  </section>
+)}
+
+## Hierarchy
+
+<TaxonomyHierarchy
+  grouping={taxonomy.grouping}
+  classification={taxonomy.classification}
+  specialization={taxonomy.specialization}
+/>
+
+## Providers with This Taxonomy
+
+<ProvidersByTaxonomy code={taxonomy.code} />
+
+## Organizations with This Taxonomy
+
+<OrganizationsByTaxonomy code={taxonomy.code} />
+
+## Related Taxonomies
+
+<RelatedTaxonomies
+  grouping={taxonomy.grouping}
+  classification={taxonomy.classification}
+  current={taxonomy.code}
+/>
+
+## License Requirements
+
+<TaxonomyLicenseRequirements code={taxonomy.code} />
+
+## Common Procedures
+
+<ProceduresByTaxonomy code={taxonomy.code} />

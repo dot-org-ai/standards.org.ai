@@ -1,0 +1,511 @@
+---
+layout: Status
+source: W3C/VC
+$type: W3C/VC/Status
+$id: https://standards.org.ai/W3C/VC/Status/{Status.code}
+sameAs: https://standards.org.ai/Status/{Status.code}
+canonical: https://w3.org.ai/VC/Status/{Status.code}
+params:
+  - Status
+schema:
+  Status:
+    code: string
+    type: string
+    description: string
+    statusPurpose: string
+    statusListCredential: string
+    privacyPreserving: boolean
+    bitSize: number
+    encodingScheme: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={Status.type}
+  subtitle="Verifiable Credential Status Type"
+  code={Status.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Purpose: {Status.statusPurpose}</Badge>
+  {Status.privacyPreserving && <Badge variant="success">Privacy Preserving</Badge>}
+  <Badge variant="info">Encoding: {Status.encodingScheme}</Badge>
+</div>
+
+<Description>
+  {Status.description}
+</Description>
+
+{Status.privacyPreserving && (
+  <Alert type="info">
+    This status mechanism is privacy-preserving, meaning verifiers cannot correlate
+    status checks across different credentials or determine which specific credential
+    is being checked within the status list.
+  </Alert>
+)}
+
+## Status Properties
+
+<PropertiesTable
+  properties={{
+    id: {
+      type: 'string (URI)',
+      required: true,
+      description: 'Unique identifier for this status entry',
+      example: 'https://example.com/credentials/status/3#94567'
+    },
+    type: {
+      type: 'string',
+      required: true,
+      description: 'The status type identifier',
+      example: Status.type
+    },
+    statusPurpose: {
+      type: 'string',
+      required: true,
+      description: 'The purpose of the status (e.g., revocation, suspension)',
+      example: Status.statusPurpose
+    },
+    statusListIndex: {
+      type: 'string',
+      required: true,
+      description: 'Index of the status within the status list',
+      example: '94567'
+    },
+    statusListCredential: {
+      type: 'string (URI)',
+      required: true,
+      description: 'URI of the status list credential',
+      example: 'https://example.com/credentials/status/3'
+    }
+  }}
+/>
+
+## Status Purposes
+
+### {Status.statusPurpose}
+
+The `{Status.statusPurpose}` status purpose is used to track whether a credential has been:
+
+{Status.statusPurpose === 'revocation' && (
+  <>
+    - **Revoked**: Permanently invalidated and should not be trusted
+    - Status bit value of `1` indicates the credential is revoked
+    - Status bit value of `0` indicates the credential is valid
+    - Revocation is irreversible once set
+  </>
+)}
+
+{Status.statusPurpose === 'suspension' && (
+  <>
+    - **Suspended**: Temporarily invalidated but may be restored
+    - Status bit value of `1` indicates the credential is suspended
+    - Status bit value of `0` indicates the credential is not suspended
+    - Suspension can be reversed by the issuer
+  </>
+)}
+
+## Examples
+
+### Credential with Status
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/vc/status-list/2021/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456",
+    "claim": "example value"
+  },
+  "credentialStatus": {
+    "id": "https://example.com/credentials/status/3#94567",
+    "type": "${Status.type}",
+    "statusPurpose": "${Status.statusPurpose}",
+    "statusListIndex": "94567",
+    "statusListCredential": "https://example.com/credentials/status/3"
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2025-01-15T00:00:00Z",
+    "verificationMethod": "did:example:issuer123#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z..."
+  }
+}`}
+</CodeExample>
+
+### Status List Credential
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/vc/status-list/2021/v1"
+  ],
+  "id": "https://example.com/credentials/status/3",
+  "type": ["VerifiableCredential", "StatusList2021Credential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "https://example.com/credentials/status/3#list",
+    "type": "StatusList2021",
+    "statusPurpose": "${Status.statusPurpose}",
+    "encodedList": "H4sIAAAAAAAAA-3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAIC3AYbSVKsAQAAA"
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2025-01-15T00:00:00Z",
+    "verificationMethod": "did:example:issuer123#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z..."
+  }
+}`}
+</CodeExample>
+
+### Credential with Multiple Status Entries
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/vc/status-list/2021/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456",
+    "claim": "example value"
+  },
+  "credentialStatus": [
+    {
+      "id": "https://example.com/credentials/status/3#94567",
+      "type": "StatusList2021Entry",
+      "statusPurpose": "revocation",
+      "statusListIndex": "94567",
+      "statusListCredential": "https://example.com/credentials/status/3"
+    },
+    {
+      "id": "https://example.com/credentials/status/4#23891",
+      "type": "StatusList2021Entry",
+      "statusPurpose": "suspension",
+      "statusListIndex": "23891",
+      "statusListCredential": "https://example.com/credentials/status/4"
+    }
+  ],
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2025-01-15T00:00:00Z",
+    "verificationMethod": "did:example:issuer123#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z..."
+  }
+}`}
+</CodeExample>
+
+## Status Checking Process
+
+### Step 1: Extract Status Information
+
+Extract the `credentialStatus` object from the credential being verified.
+
+### Step 2: Retrieve Status List Credential
+
+<CodeExample language="javascript">
+{`async function getStatusListCredential(statusListUrl) {
+  const response = await fetch(statusListUrl);
+  const statusListVC = await response.json();
+
+  // Verify the status list credential
+  const verified = await verifyCredential(statusListVC);
+  if (!verified) {
+    throw new Error('Status list credential is invalid');
+  }
+
+  return statusListVC;
+}`}
+</CodeExample>
+
+### Step 3: Decode Status List
+
+<CodeExample language="javascript">
+{`function decodeStatusList(encodedList) {
+  // Decode from base64
+  const compressed = Buffer.from(encodedList, 'base64');
+
+  // Decompress using GZIP
+  const decompressed = gunzipSync(compressed);
+
+  // Convert to bit array
+  const bitArray = new Uint8Array(decompressed);
+
+  return bitArray;
+}`}
+</CodeExample>
+
+### Step 4: Check Status Bit
+
+<CodeExample language="javascript">
+{`function getStatusBit(bitArray, index) {
+  const byteIndex = Math.floor(index / 8);
+  const bitIndex = index % 8;
+  const byte = bitArray[byteIndex];
+
+  // Extract the bit at the specified position
+  const bit = (byte >> bitIndex) & 1;
+
+  return bit;
+}
+
+async function checkCredentialStatus(credential) {
+  const status = credential.credentialStatus;
+
+  // Retrieve and verify status list credential
+  const statusListVC = await getStatusListCredential(
+    status.statusListCredential
+  );
+
+  // Decode the status list
+  const encodedList = statusListVC.credentialSubject.encodedList;
+  const bitArray = decodeStatusList(encodedList);
+
+  // Check the status bit
+  const index = parseInt(status.statusListIndex);
+  const statusBit = getStatusBit(bitArray, index);
+
+  if (statusBit === 1) {
+    return { valid: false, reason: status.statusPurpose };
+  }
+
+  return { valid: true };
+}`}
+</CodeExample>
+
+## Status List Management
+
+### Creating a Status List
+
+<CodeExample language="javascript">
+{`function createStatusList(size = 131072) {
+  // Create a bit array (default 128KB for 1 million entries)
+  const bitArray = new Uint8Array(size);
+
+  // Compress using GZIP
+  const compressed = gzipSync(bitArray);
+
+  // Encode as base64
+  const encodedList = compressed.toString('base64');
+
+  return encodedList;
+}`}
+</CodeExample>
+
+### Updating Status
+
+<CodeExample language="javascript">
+{`async function updateCredentialStatus(
+  statusListCredential,
+  index,
+  revoked
+) {
+  // Decode the current status list
+  const encodedList = statusListCredential.credentialSubject.encodedList;
+  const bitArray = decodeStatusList(encodedList);
+
+  // Update the bit
+  const byteIndex = Math.floor(index / 8);
+  const bitIndex = index % 8;
+
+  if (revoked) {
+    // Set bit to 1
+    bitArray[byteIndex] |= (1 << bitIndex);
+  } else {
+    // Set bit to 0
+    bitArray[byteIndex] &= ~(1 << bitIndex);
+  }
+
+  // Re-encode the status list
+  const compressed = gzipSync(bitArray);
+  const newEncodedList = compressed.toString('base64');
+
+  // Update the credential
+  statusListCredential.credentialSubject.encodedList = newEncodedList;
+
+  // Re-sign the status list credential
+  const signedVC = await signCredential(statusListCredential);
+
+  return signedVC;
+}`}
+</CodeExample>
+
+### Publishing Status Lists
+
+<CodeExample language="javascript">
+{`// Publish to a static host
+async function publishStatusList(statusListVC, url) {
+  await uploadToStorage(url, statusListVC);
+}
+
+// Or use a dynamic API
+app.get('/credentials/status/:id', async (req, res) => {
+  const statusListVC = await getStatusListFromDB(req.params.id);
+  res.json(statusListVC);
+});`}
+</CodeExample>
+
+## Privacy Considerations
+
+### Correlation Prevention
+
+{Status.privacyPreserving ? (
+  <>
+    This status mechanism uses herd privacy to prevent correlation:
+
+    - Multiple credentials share the same status list credential
+    - Verifiers cannot determine which specific credential is being checked
+    - Status checks do not reveal information about other credentials
+    - Issuers should use appropriately sized status lists (e.g., 100,000+ entries)
+  </>
+) : (
+  <>
+    <Alert type="warning">
+      This status mechanism may allow correlation if not properly implemented.
+      Consider privacy implications when deploying.
+    </Alert>
+  </>
+)}
+
+### Metadata Leakage
+
+- HTTP requests to status list endpoints can leak IP addresses
+- Consider using privacy-preserving proxies or VPNs
+- Implement caching to reduce frequency of status checks
+- Use CDNs to distribute status list credentials
+
+### Timing Attacks
+
+- Ensure status checks have consistent timing regardless of result
+- Implement rate limiting to prevent timing analysis
+- Cache status lists locally when possible
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Status List Integrity
+
+- Always verify the cryptographic proof on status list credentials
+- Ensure the issuer of the status list matches the credential issuer
+- Implement integrity checks on retrieved status lists
+- Use HTTPS for all status list retrievals
+
+### Availability
+
+- Status lists must be highly available for verification to work
+- Implement redundancy and failover mechanisms
+- Consider using CDNs for global distribution
+- Define fallback policies when status lists are unavailable
+
+### Freshness
+
+- Status lists should be updated regularly
+- Implement caching with appropriate TTLs
+- Consider the tradeoff between freshness and privacy
+- Document update frequency for verifiers
+
+### Access Control
+
+- Protect status list management endpoints
+- Implement authentication for status updates
+- Maintain audit logs of all status changes
+- Use secure key management for signing updated status lists
+
+### Denial of Service
+
+- Implement rate limiting on status endpoints
+- Use CDNs to absorb traffic spikes
+- Monitor for unusual access patterns
+- Have incident response plans for DoS attacks
+
+</SecurityConsiderations>
+
+## Implementation Best Practices
+
+### Indexing Strategy
+
+- Use sequential indexing for new credentials
+- Maintain a mapping database of credential ID to status index
+- Implement index allocation algorithms to prevent conflicts
+- Consider pre-allocating index ranges for scalability
+
+### Status List Size
+
+- Balance between privacy (larger lists) and efficiency (smaller lists)
+- Typical sizes: 131,072 bits (16KB) to 8,388,608 bits (1MB)
+- Consider growth projections when choosing initial size
+- Plan for status list archival and rotation
+
+### Caching
+
+<CodeExample language="javascript">
+{`const statusListCache = new Map();
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+async function getCachedStatusList(url) {
+  const cached = statusListCache.get(url);
+
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
+  const statusListVC = await fetchStatusList(url);
+
+  statusListCache.set(url, {
+    data: statusListVC,
+    timestamp: Date.now()
+  });
+
+  return statusListVC;
+}`}
+</CodeExample>
+
+### Monitoring
+
+- Track status check frequency and patterns
+- Monitor status list credential size growth
+- Alert on failed status checks or verification errors
+- Maintain metrics on status update operations
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="CredentialType" href="/W3C/VC/CredentialType/VerifiableCredential">Verifiable Credential</RelatedItem>
+  <RelatedItem type="Term" href="/W3C/VC/Term/credentialStatus">Credential Status Property</RelatedItem>
+  <RelatedItem type="Proof" href="/W3C/VC/Proof/Ed25519Signature2020">Ed25519 Signature Proof</RelatedItem>
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/vc-status-list/">Verifiable Credential Status List</SpecLink>
+  <SpecLink href="https://www.w3.org/community/reports/credentials/CG-FINAL-vc-status-list-2021-20230102/">Status List 2021</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This status mechanism is part of the W3C Verifiable Credentials ecosystem. For more information, visit [w3.org.ai](https://w3.org.ai).*

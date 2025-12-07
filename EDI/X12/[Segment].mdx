@@ -1,0 +1,56 @@
+---
+layout: segment
+source: EDI/X12
+$type: EDI/X12/Segment
+$id: https://standards.org.ai/EDI/X12/Segment/{segment.code}
+sameAs: https://standards.org.ai/X12Segment/{segment.code}
+canonical: https://standards.org.ai/X12/Segment/{segment.code}
+params:
+  - Segment
+schema:
+  segment:
+    code: SegmentID
+    name: SegmentName
+    description: SegmentDescription
+    purpose: SegmentPurpose
+---
+
+# {segment.code} - {segment.name}
+
+<SegmentHeader code={segment.code} name={segment.name} />
+
+## Description
+
+{segment.description}
+
+## Purpose
+
+{segment.purpose}
+
+## Data Elements
+
+<DataElementList segment={segment.code} />
+
+## Element Structure
+
+<SegmentElementStructure segment={segment.code} />
+
+## Usage Notes
+
+<SegmentUsageNotes segment={segment.code} />
+
+## Transaction Sets Using This Segment
+
+<TransactionSetsBySegment segment={segment.code} />
+
+## Segment Diagram
+
+<SegmentDiagram segment={segment.code} />
+
+## Validation Rules
+
+<SegmentValidationRules segment={segment.code} />
+
+## Examples
+
+<SegmentExamples segment={segment.code} />

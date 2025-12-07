@@ -1,0 +1,194 @@
+---
+layout: property
+source: W3C/WoT
+$type: W3C/WoT/Property
+$id: https://standards.org.ai/W3C/WoT/Property/{property.thing}/{property.name}
+sameAs: https://standards.org.ai/Property/{property.thing}/{property.name}
+canonical: https://w3.org.ai/WoT/Property/{property.thing}/{property.name}
+params:
+  - Property
+schema:
+  property:
+    thing: ThingID
+    name: PropertyName
+    title: PropertyTitle
+    description: PropertyDescription
+    type: DataType
+    format: DataFormat
+    unit: Unit
+    minimum: MinValue
+    maximum: MaxValue
+    enum: EnumValues
+    readOnly: ReadOnly
+    writeOnly: WriteOnly
+    observable: Observable
+    forms: Forms
+    uriVariables: URIVariables
+    atType: SemanticType
+    const: ConstValue
+    default: DefaultValue
+    items: ArrayItems
+    properties: ObjectProperties
+    required: RequiredFields
+---
+
+# {property.title}
+
+<PropertyHeader
+  thing={property.thing}
+  name={property.name}
+  title={property.title}
+  type={property.type}
+/>
+
+## Description
+
+{property.description}
+
+## Property Metadata
+
+<PropertyMetadata property={property} />
+
+### Access Characteristics
+
+- **Read Only**: {property.readOnly ? 'Yes' : 'No'}
+- **Write Only**: {property.writeOnly ? 'Yes' : 'No'}
+- **Observable**: {property.observable ? 'Yes' : 'No'}
+
+### Data Schema
+
+```json
+{
+  "type": "{property.type}",
+  "title": "{property.title}",
+  "description": "{property.description}",
+  "readOnly": {property.readOnly},
+  "writeOnly": {property.writeOnly},
+  "observable": {property.observable}
+}
+```
+
+## Data Type
+
+<DataTypeCard
+  type={property.type}
+  format={property.format}
+  unit={property.unit}
+/>
+
+### Type: {property.type}
+
+<TypeDescription type={property.type} />
+
+### Constraints
+
+<PropertyConstraints
+  minimum={property.minimum}
+  maximum={property.maximum}
+  enum={property.enum}
+  const={property.const}
+/>
+
+## Protocol Bindings
+
+<PropertyForms forms={property.forms} />
+
+### Interaction Patterns
+
+<PropertyInteractionPatterns
+  readOnly={property.readOnly}
+  writeOnly={property.writeOnly}
+  observable={property.observable}
+/>
+
+## URI Variables
+
+<PropertyURIVariables uriVariables={property.uriVariables} />
+
+## Semantic Annotations
+
+<PropertySemanticTypes types={property.atType} />
+
+## Usage Examples
+
+### Read Property
+
+```javascript
+// HTTP GET example
+const response = await fetch('https://thing.example.com/properties/{property.name}');
+const value = await response.json();
+console.log('Current value:', value);
+```
+
+```javascript
+// Using WoT Scripting API
+const thing = await WoT.consume(thingDescription);
+const value = await thing.readProperty('{property.name}');
+console.log('Property value:', value);
+```
+
+### Write Property
+
+```javascript
+// HTTP PUT example
+const newValue = {property.default};
+const response = await fetch('https://thing.example.com/properties/{property.name}', {
+  method: 'PUT',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(newValue)
+});
+```
+
+```javascript
+// Using WoT Scripting API
+await thing.writeProperty('{property.name}', newValue);
+```
+
+### Observe Property
+
+```javascript
+// Using WoT Scripting API with observable property
+thing.observeProperty('{property.name}', async (value) => {
+  console.log('Property changed:', value);
+});
+```
+
+```javascript
+// Using Server-Sent Events (SSE)
+const eventSource = new EventSource('https://thing.example.com/properties/{property.name}/observe');
+eventSource.onmessage = (event) => {
+  console.log('Property update:', JSON.parse(event.data));
+};
+```
+
+## Protocol-Specific Examples
+
+### HTTP Binding
+
+<PropertyHTTPExample property={property} />
+
+### CoAP Binding
+
+<PropertyCoAPExample property={property} />
+
+### MQTT Binding
+
+<PropertyMQTTExample property={property} />
+
+## Parent Thing
+
+<ThingLink id={property.thing} />
+
+## Related Properties
+
+<RelatedProperties thing={property.thing} current={property.name} />
+
+## Specification
+
+<SpecificationLink spec="wot-thing-description" section="properties" />
+
+### References
+
+- [WoT Thing Description - Property Affordance](https://www.w3.org/TR/wot-thing-description/#propertyaffordance)
+- [WoT Scripting API - readProperty/writeProperty](https://www.w3.org/TR/wot-scripting-api/)
+- [JSON Schema Data Types](https://json-schema.org/understanding-json-schema/reference/type.html)

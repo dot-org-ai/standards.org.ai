@@ -1,0 +1,74 @@
+---
+layout: relationship
+source: SNOMED
+$type: SNOMED/Relationship
+$id: https://standards.org.ai/SNOMED/Relationship/{relationship.id}
+sameAs: https://standards.org.ai/Relationship/{relationship.id}
+canonical: https://standards.org.ai/SNOMED/Relationship/{relationship.id}
+params:
+  - Relationship
+schema:
+  relationship:
+    id: RelationshipId
+    sourceId: SourceId
+    destinationId: DestinationId
+    typeId: TypeId
+    characteristicTypeId: CharacteristicTypeId
+    modifierId: ModifierId
+    relationshipGroup: RelationshipGroup
+    active: Active
+    effectiveTime: EffectiveTime
+    moduleId: ModuleId
+---
+
+# Relationship {relationship.id}
+
+<RelationshipHeader id={relationship.id} typeId={relationship.typeId} active={relationship.active} />
+
+## Relationship ID
+
+{relationship.id}
+
+## Source Concept
+
+<ConceptLink id={relationship.sourceId} />
+
+## Relationship Type
+
+{relationship.typeId}
+
+## Destination Concept
+
+<ConceptLink id={relationship.destinationId} />
+
+## Characteristic Type
+
+{relationship.characteristicTypeId}
+
+## Modifier
+
+{relationship.modifierId}
+
+## Relationship Group
+
+{relationship.relationshipGroup}
+
+## Status
+
+Active: {relationship.active}
+
+## Effective Time
+
+{relationship.effectiveTime}
+
+## Module
+
+{relationship.moduleId}
+
+## Related Relationships
+
+<RelatedRelationships source={relationship.sourceId} current={relationship.id} />
+
+## Relationship Graph
+
+<RelationshipGraph relationship={relationship.id} />

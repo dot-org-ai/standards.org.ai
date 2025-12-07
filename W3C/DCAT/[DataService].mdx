@@ -1,0 +1,210 @@
+---
+layout: DataService
+source: W3C/DCAT
+$type: W3C/DCAT/DataService
+$id: https://standards.org.ai/W3C/DCAT/DataService/{service.code}
+sameAs: https://standards.org.ai/DataService/{service.code}
+canonical: https://w3.org.ai/DCAT/DataService/{service.code}
+params:
+  - DataService
+schema:
+  service:
+    code: string
+    uri: string
+    title: string
+    description: string
+    endpointURL: string
+    endpointDescription: string
+    servesDataset: array
+    contactPoint: object
+    publisher: object
+    license: string
+    conformsTo: array
+    landingPage: string
+    issued: string
+    modified: string
+---
+
+# {service.title}
+
+<div className="service-header">
+  <div className="service-metadata">
+    <span className="service-uri">{service.uri}</span>
+    {service.issued && <span className="service-issued">Issued: {service.issued}</span>}
+    {service.modified && <span className="service-modified">Updated: {service.modified}</span>}
+  </div>
+</div>
+
+## Description
+
+{service.description}
+
+<section className="service-endpoint">
+  <h2>Service Endpoint</h2>
+
+  {service.endpointURL && (
+    <div className="endpoint-url">
+      <h3>Endpoint URL</h3>
+      <code className="endpoint-code">{service.endpointURL}</code>
+      <a href={service.endpointURL} className="btn-primary">Access Service</a>
+    </div>
+  )}
+
+  {service.endpointDescription && (
+    <div className="endpoint-description">
+      <h3>API Documentation</h3>
+      <p>Full API specification and documentation:</p>
+      <a href={service.endpointDescription} className="btn-secondary">View API Specification</a>
+    </div>
+  )}
+</section>
+
+{service.conformsTo && service.conformsTo.length > 0 && (
+  <section className="standards">
+    <h2>Conforms To</h2>
+    <p>This service conforms to the following standards and specifications:</p>
+    <ul className="standards-list">
+      {service.conformsTo.map((standard, idx) => (
+        <li key={idx}>
+          <a href={standard.uri || standard}>{standard.title || standard}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<div className="service-info-grid">
+  {service.publisher && (
+    <div className="publisher">
+      <h3>Publisher</h3>
+      <div className="publisher-details">
+        <p><strong>{service.publisher.name}</strong></p>
+        {service.publisher.homepage && (
+          <p><a href={service.publisher.homepage}>Homepage</a></p>
+        )}
+      </div>
+    </div>
+  )}
+
+  {service.contactPoint && (
+    <div className="contact">
+      <h3>Contact Point</h3>
+      <div className="contact-details">
+        {service.contactPoint.name && <p><strong>{service.contactPoint.name}</strong></p>}
+        {service.contactPoint.email && (
+          <p>Email: <a href={`mailto:${service.contactPoint.email}`}>{service.contactPoint.email}</a></p>
+        )}
+      </div>
+    </div>
+  )}
+
+  {service.license && (
+    <div className="license">
+      <h3>License</h3>
+      <p><a href={service.license}>{service.license}</a></p>
+    </div>
+  )}
+
+  {service.landingPage && (
+    <div className="landing-page">
+      <h3>Landing Page</h3>
+      <p><a href={service.landingPage}>Service Homepage</a></p>
+    </div>
+  )}
+</div>
+
+{service.servesDataset && service.servesDataset.length > 0 && (
+  <section className="served-datasets">
+    <h2>Serves Datasets</h2>
+    <p>This service provides access to {service.servesDataset.length} dataset{service.servesDataset.length !== 1 ? 's' : ''}:</p>
+    <div className="dataset-list">
+      {service.servesDataset.map((dataset, idx) => (
+        <div key={idx} className="dataset-item">
+          <h4>
+            <a href={dataset.uri || dataset}>{dataset.title || 'Dataset ' + (idx + 1)}</a>
+          </h4>
+          {dataset.description && <p>{dataset.description}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<section className="usage-guide">
+  <h2>Usage Guide</h2>
+
+  <div className="info-box">
+    <h4>About DCAT Data Services</h4>
+    <p>
+      A DCAT Data Service represents a collection of operations that provides access
+      to one or more datasets or data processing functions. Common examples include:
+    </p>
+    <ul>
+      <li><strong>SPARQL Endpoints:</strong> Query RDF datasets using SPARQL</li>
+      <li><strong>REST APIs:</strong> Access datasets via HTTP REST operations</li>
+      <li><strong>Web Services:</strong> SOAP/XML-RPC services for data access</li>
+      <li><strong>OGC Services:</strong> WMS, WFS, WCS for geospatial data</li>
+    </ul>
+  </div>
+
+  <h3>Example Usage</h3>
+
+  {service.conformsTo && service.conformsTo.some(s =>
+    (typeof s === 'string' && s.includes('sparql')) ||
+    (s.uri && s.uri.includes('sparql'))
+  ) && (
+    <div className="sparql-example">
+      <h4>SPARQL Query Example</h4>
+      <pre><code>{`# Query the SPARQL endpoint
+curl -X POST ${service.endpointURL} \\
+  -H "Accept: application/sparql-results+json" \\
+  -H "Content-Type: application/sparql-query" \\
+  --data 'SELECT * WHERE { ?s ?p ?o } LIMIT 10'`}</code></pre>
+    </div>
+  )}
+
+  <div className="rest-example">
+    <h4>HTTP Request Example</h4>
+    <pre><code>{`// Fetch data from the service
+fetch('${service.endpointURL}')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));`}</code></pre>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<${service.uri}> a dcat:DataService ;
+  dcterms:title "${service.title}"@en ;
+  dcterms:description "${service.description}"@en ;${service.endpointURL ? `
+  dcat:endpointURL <${service.endpointURL}> ;` : ''}${service.endpointDescription ? `
+  dcat:endpointDescription <${service.endpointDescription}> ;` : ''}${service.publisher ? `
+  dcterms:publisher [
+    a foaf:Organization ;
+    foaf:name "${service.publisher.name}"
+  ] ;` : ''}${service.license ? `
+  dcterms:license <${service.license}> ;` : ''}${service.conformsTo ? `
+  ${service.conformsTo.map(std => `dcterms:conformsTo <${std.uri || std}>`).join(' ;\n  ')} ;` : ''}${service.servesDataset ? `
+  ${service.servesDataset.map(ds => `dcat:servesDataset <${ds.uri || ds}>`).join(' ;\n  ')} ;` : ''}${service.issued ? `
+  dcterms:issued "${service.issued}"^^xsd:date ;` : ''}${service.modified ? `
+  dcterms:modified "${service.modified}"^^xsd:date ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-query">
+  <h3>Query Service Metadata</h3>
+  <pre><code>{`PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?endpoint ?dataset ?standard
+WHERE {
+  <${service.uri}> dcat:endpointURL ?endpoint .
+  OPTIONAL { <${service.uri}> dcat:servesDataset ?dataset }
+  OPTIONAL { <${service.uri}> dcterms:conformsTo ?standard }
+}`}</code></pre>
+</section>

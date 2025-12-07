@@ -1,0 +1,80 @@
+---
+layout: concept
+source: SNOMED
+$type: SNOMED/Concept
+$id: https://standards.org.ai/SNOMED/Concept/{concept.id}
+sameAs: https://standards.org.ai/Concept/{concept.id}
+canonical: https://standards.org.ai/SNOMED/Concept/{concept.id}
+params:
+  - Concept
+schema:
+  concept:
+    id: ConceptId
+    fsn: FullySpecifiedName
+    term: PreferredTerm
+    definition: Definition
+    active: Active
+    effectiveTime: EffectiveTime
+    moduleId: ModuleId
+    definitionStatusId: DefinitionStatusId
+---
+
+# {concept.term}
+
+<ConceptHeader id={concept.id} fsn={concept.fsn} term={concept.term} active={concept.active} />
+
+## Concept ID
+
+{concept.id}
+
+## Fully Specified Name
+
+{concept.fsn}
+
+## Preferred Term
+
+{concept.term}
+
+## Definition
+
+{concept.definition}
+
+## Status
+
+Active: {concept.active}
+
+## Effective Time
+
+{concept.effectiveTime}
+
+## Descriptions
+
+<DescriptionList concept={concept.id} />
+
+## Relationships
+
+<RelationshipList concept={concept.id} />
+
+## Parent Concepts
+
+<ParentConcepts concept={concept.id} />
+
+## Child Concepts
+
+<ChildConcepts concept={concept.id} />
+
+## Reference Sets
+
+<RefSetList concept={concept.id} />
+
+## Mapped ICD Codes
+
+<ICDByConcept concept={concept.id} />
+
+## Mapped LOINC Codes
+
+<LOINCByConcept concept={concept.id} />
+
+## Clinical Context
+
+<ConceptClinicalContext concept={concept.id} />

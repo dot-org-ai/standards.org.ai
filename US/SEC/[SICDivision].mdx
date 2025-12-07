@@ -1,0 +1,48 @@
+---
+layout: sicDivision
+source: SEC
+$type: SEC/SICDivision
+$id: https://standards.org.ai/SEC/SICDivision/{division.code}
+sameAs: https://standards.org.ai/SICDivision/{division.code}
+canonical: https://us.org.ai/SEC/SICDivision/{division.code}
+params:
+  - SICDivision
+schema:
+  division:
+    code: code
+    name: name
+    description: description
+    majorGroups: majorGroups
+---
+
+# {division.name}
+
+<SICDivisionHeader code={division.code} name={division.name} />
+
+## Division Code
+
+{division.code}
+
+## Description
+
+{division.description}
+
+## Major Groups
+
+<SICMajorGroupList division={division.code} />
+
+## All Industry Groups
+
+<SICIndustryGroupList division={division.code} />
+
+## All SIC Codes
+
+<SICCodeList division={division.code} />
+
+## Companies in Division
+
+<CompaniesByDivision division={division.code} />
+
+## Division Statistics
+
+<DivisionStatistics division={division.code} />

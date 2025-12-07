@@ -1,0 +1,164 @@
+---
+layout: provider
+source: Healthcare/NPI
+$type: Healthcare/NPI/Provider
+$id: https://standards.org.ai/Healthcare/NPI/Provider/{provider.code}
+sameAs: https://standards.org.ai/HealthcareProvider/{provider.code}
+canonical: https://standards.org.ai/NPI/Provider/{provider.code}
+params:
+  - Provider
+schema:
+  provider:
+    code: string
+    npi: string
+    entityType: string
+    firstName: string
+    lastName: string
+    middleName: string
+    prefix: string
+    suffix: string
+    credential: string
+    organizationName: string
+    otherOrganizationName: string
+    gender: string
+    enumerationDate: string
+    lastUpdateDate: string
+    deactivationDate: string
+    reactivationDate: string
+    taxonomy: array
+    licenseNumber: array
+    address: array
+    otherIdentifiers: array
+---
+
+# {provider.entityType === '1' ? `${provider.prefix ? provider.prefix + ' ' : ''}${provider.firstName} ${provider.middleName ? provider.middleName + ' ' : ''}${provider.lastName}${provider.suffix ? ', ' + provider.suffix : ''}${provider.credential ? ', ' + provider.credential : ''}` : provider.organizationName}
+
+<ProviderHeader
+  npi={provider.npi}
+  name={provider.entityType === '1' ? `${provider.firstName} ${provider.lastName}` : provider.organizationName}
+  entityType={provider.entityType}
+/>
+
+## NPI Number
+
+**{provider.npi}**
+
+## Entity Type
+
+<div className="entity-type">
+  {provider.entityType === '1' ? (
+    <span><strong>Individual</strong> - Individual healthcare provider</span>
+  ) : (
+    <span><strong>Organization</strong> - Organizational healthcare provider</span>
+  )}
+</div>
+
+{provider.entityType === '1' && (
+  <section className="individual-details">
+    <h2>Provider Information</h2>
+    <div className="name-details">
+      {provider.prefix && <p><strong>Prefix:</strong> {provider.prefix}</p>}
+      <p><strong>First Name:</strong> {provider.firstName}</p>
+      {provider.middleName && <p><strong>Middle Name:</strong> {provider.middleName}</p>}
+      <p><strong>Last Name:</strong> {provider.lastName}</p>
+      {provider.suffix && <p><strong>Suffix:</strong> {provider.suffix}</p>}
+      {provider.credential && <p><strong>Credential:</strong> {provider.credential}</p>}
+      {provider.gender && <p><strong>Gender:</strong> {provider.gender}</p>}
+    </div>
+  </section>
+)}
+
+{provider.entityType === '2' && (
+  <section className="organization-details">
+    <h2>Organization Information</h2>
+    <div className="org-details">
+      <p><strong>Organization Name:</strong> {provider.organizationName}</p>
+      {provider.otherOrganizationName && (
+        <p><strong>Other Name:</strong> {provider.otherOrganizationName}</p>
+      )}
+    </div>
+  </section>
+)}
+
+## Taxonomy Codes
+
+{provider.taxonomy && provider.taxonomy.length > 0 && (
+  <div className="taxonomy-list">
+    {provider.taxonomy.map((tax, idx) => (
+      <div key={idx} className="taxonomy-item">
+        <TaxonomyLink code={tax.code} primary={tax.primary} />
+        {tax.license && <span className="license">License: {tax.license}</span>}
+        {tax.state && <span className="state">State: {tax.state}</span>}
+      </div>
+    ))}
+  </div>
+)}
+
+## Addresses
+
+{provider.address && provider.address.length > 0 && (
+  <div className="address-list">
+    {provider.address.map((addr, idx) => (
+      <div key={idx} className="address-card">
+        <h3>{addr.type === 'LOCATION' ? 'Practice Location' : 'Mailing Address'}</h3>
+        <address>
+          {addr.line1 && <div>{addr.line1}</div>}
+          {addr.line2 && <div>{addr.line2}</div>}
+          {addr.city && addr.state && addr.postalCode && (
+            <div>{addr.city}, {addr.state} {addr.postalCode}</div>
+          )}
+          {addr.country && <div>{addr.country}</div>}
+          {addr.phone && <div>Phone: {addr.phone}</div>}
+          {addr.fax && <div>Fax: {addr.fax}</div>}
+        </address>
+      </div>
+    ))}
+  </div>
+)}
+
+## NPI Details
+
+<div className="npi-details">
+  {provider.enumerationDate && (
+    <p><strong>Enumeration Date:</strong> {provider.enumerationDate}</p>
+  )}
+  {provider.lastUpdateDate && (
+    <p><strong>Last Update:</strong> {provider.lastUpdateDate}</p>
+  )}
+  {provider.deactivationDate && (
+    <p><strong>Deactivation Date:</strong> {provider.deactivationDate}</p>
+  )}
+  {provider.reactivationDate && (
+    <p><strong>Reactivation Date:</strong> {provider.reactivationDate}</p>
+  )}
+</div>
+
+{provider.licenseNumber && provider.licenseNumber.length > 0 && (
+  <section className="licenses">
+    <h2>Licenses</h2>
+    <ul>
+      {provider.licenseNumber.map((lic, idx) => (
+        <li key={idx}>
+          {lic.state}: {lic.number}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{provider.otherIdentifiers && provider.otherIdentifiers.length > 0 && (
+  <section className="other-identifiers">
+    <h2>Other Identifiers</h2>
+    <ul>
+      {provider.otherIdentifiers.map((id, idx) => (
+        <li key={idx}>
+          <strong>{id.type}:</strong> {id.identifier} {id.state && `(${id.state})`}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+## Related Information
+
+<ProvidersInSameLocation npi={provider.npi} />

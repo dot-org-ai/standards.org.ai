@@ -1,0 +1,143 @@
+---
+layout: element
+source: Education/CEDS
+$type: Education/CEDS/Element
+$id: https://standards.org.ai/Education/CEDS/Element/{element.code}
+sameAs: https://standards.org.ai/DataElement/{element.code}
+canonical: https://standards.org.ai/CEDS/Element/{element.code}
+params:
+  - Element
+schema:
+  element:
+    code: string
+    name: string
+    definition: string
+    dataType: string
+    domain: string
+    entity: string
+    optionSet: string
+    usageNotes: string
+    businessRules: string
+    technicalNotes: string
+    source: string
+    version: string
+    status: string
+---
+
+# {element.name}
+
+<ElementHeader code={element.code} name={element.name} status={element.status} />
+
+## Definition
+
+{element.definition}
+
+<div className="element-metadata">
+  <div className="metadata-grid">
+    <div className="data-type">
+      <h3>Data Type</h3>
+      <p><code>{element.dataType}</code></p>
+    </div>
+
+    {element.domain && (
+      <div className="domain">
+        <h3>Domain</h3>
+        <p><a href={`/Education/CEDS/Domain/${element.domain}`}>{element.domain}</a></p>
+      </div>
+    )}
+
+    {element.entity && (
+      <div className="entity">
+        <h3>Entity</h3>
+        <p><a href={`/Education/CEDS/Entity/${element.entity}`}>{element.entity}</a></p>
+      </div>
+    )}
+
+    {element.optionSet && (
+      <div className="option-set">
+        <h3>Option Set</h3>
+        <p><a href={`/Education/CEDS/Option/${element.optionSet}`}>{element.optionSet}</a></p>
+      </div>
+    )}
+
+    {element.version && (
+      <div className="version">
+        <h3>Version</h3>
+        <p>{element.version}</p>
+      </div>
+    )}
+
+    {element.source && (
+      <div className="source">
+        <h3>Source</h3>
+        <p>{element.source}</p>
+      </div>
+    )}
+  </div>
+</div>
+
+{element.usageNotes && (
+  <section className="usage-notes">
+    <h2>Usage Notes</h2>
+    <div className="notes-content">
+      {element.usageNotes}
+    </div>
+  </section>
+)}
+
+{element.businessRules && (
+  <section className="business-rules">
+    <h2>Business Rules</h2>
+    <div className="rules-content">
+      {element.businessRules}
+    </div>
+  </section>
+)}
+
+{element.technicalNotes && (
+  <section className="technical-notes">
+    <h2>Technical Implementation Notes</h2>
+    <div className="tech-content">
+      {element.technicalNotes}
+    </div>
+  </section>
+)}
+
+## Valid Values
+
+{element.optionSet ? (
+  <OptionSetValues optionSet={element.optionSet} />
+) : (
+  <p>This element uses free-form {element.dataType} values.</p>
+)}
+
+## Related Elements
+
+<RelatedElements element={element.code} domain={element.domain} />
+
+## Implementation Examples
+
+<ImplementationExamples element={element.code} />
+
+## Data Quality Rules
+
+<DataQualityRules element={element.code} />
+
+## Systems Using This Element
+
+<SystemsUsage element={element.code} />
+
+## Mappings
+
+<ElementMappings element={element.code} />
+
+## Resources
+
+<section className="resources">
+  <h3>CEDS Resources</h3>
+  <ul>
+    <li><a href={`https://ceds.ed.gov/element/${element.code}`}>Official CEDS Element Page</a></li>
+    <li><a href="https://ceds.ed.gov/">CEDS Data Standards</a></li>
+    <li><a href="https://ceds.ed.gov/dataModel.aspx">CEDS Data Model</a></li>
+  </ul>
+</section>

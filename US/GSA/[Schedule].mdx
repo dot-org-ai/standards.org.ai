@@ -1,0 +1,49 @@
+---
+layout: schedule
+source: US/GSA
+$type: US/GSA/Schedule
+$id: https://standards.org.ai/US/GSA/Schedule/{schedule.code}
+sameAs: https://standards.org.ai/Schedule/{schedule.code}
+canonical: https://us.org.ai/GSA/Schedule/{schedule.code}
+params:
+  - Schedule
+schema:
+  schedule:
+    code: code
+    name: name
+    description: description
+    sins: sins
+    categories: categories
+---
+
+# {schedule.code} - {schedule.name}
+
+<ScheduleHeader code={schedule.code} name={schedule.name} />
+
+## Description
+
+{schedule.description}
+
+## Special Item Numbers (SINs)
+
+<SINList schedule={schedule.code} />
+
+## Categories
+
+<ScheduleCategoryList schedule={schedule.code} />
+
+## Contract Holders
+
+<ScheduleContractHolders schedule={schedule.code} />
+
+## Ordering Information
+
+<ScheduleOrderingInfo code={schedule.code} />
+
+## Key Benefits
+
+<ScheduleBenefits code={schedule.code} />
+
+## Resources
+
+<ScheduleResources code={schedule.code} />

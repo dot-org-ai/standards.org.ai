@@ -1,0 +1,261 @@
+---
+layout: Term
+source: W3C/DublinCore
+$type: W3C/DublinCore/Term
+$id: https://standards.org.ai/W3C/DublinCore/Term/{term.code}
+sameAs: https://standards.org.ai/Term/{term.code}
+canonical: https://w3.org.ai/DublinCore/Term/{term.code}
+params:
+  - Term
+schema:
+  term:
+    code: string
+    name: string
+    uri: string
+    label: string
+    definition: string
+    comment: string
+    type: string
+    refines: string
+    isDefinedBy: string
+    issued: string
+    modified: string
+    range: string
+    domain: string
+---
+
+# {term.label}
+
+<div className="term-header">
+  <div className="term-metadata">
+    <span className="term-name"><code>dcterms:{term.name}</code></span>
+    <span className="term-uri">{term.uri}</span>
+  </div>
+</div>
+
+<section className="definition">
+  <h2>Definition</h2>
+  <p className="definition-text">{term.definition}</p>
+</section>
+
+{term.comment && (
+  <section className="comment">
+    <h3>Comment</h3>
+    <p>{term.comment}</p>
+  </section>
+)}
+
+{term.refines && (
+  <section className="refinement">
+    <h3>Refines</h3>
+    <p>
+      This term is a refinement of: <a href={term.refines}><code>{term.refines}</code></a>
+    </p>
+    <div className="info-note">
+      <p>
+        A refinement makes the meaning of a property more specific. Using a refined term
+        implies all the semantics of the broader property it refines.
+      </p>
+    </div>
+  </section>
+)}
+
+<section className="metadata">
+  <h2>Term Metadata</h2>
+
+  <div className="metadata-grid">
+    <div className="metadata-item">
+      <strong>Name:</strong>
+      <code>{term.name}</code>
+    </div>
+
+    <div className="metadata-item">
+      <strong>URI:</strong>
+      <code>{term.uri}</code>
+    </div>
+
+    {term.type && (
+      <div className="metadata-item">
+        <strong>Type:</strong>
+        <code>{term.type}</code>
+      </div>
+    )}
+
+    {term.domain && (
+      <div className="metadata-item">
+        <strong>Domain:</strong>
+        <code>{term.domain}</code>
+      </div>
+    )}
+
+    {term.range && (
+      <div className="metadata-item">
+        <strong>Range:</strong>
+        <code>{term.range}</code>
+      </div>
+    )}
+
+    {term.isDefinedBy && (
+      <div className="metadata-item">
+        <strong>Defined By:</strong>
+        <a href={term.isDefinedBy}>{term.isDefinedBy}</a>
+      </div>
+    )}
+
+    {term.issued && (
+      <div className="metadata-item">
+        <strong>Issued:</strong>
+        {term.issued}
+      </div>
+    )}
+
+    {term.modified && (
+      <div className="metadata-item">
+        <strong>Modified:</strong>
+        {term.modified}
+      </div>
+    )}
+  </div>
+</section>
+
+<section className="usage-examples">
+  <h2>Usage Examples</h2>
+
+  <h3>Turtle</h3>
+  <pre><code>{`@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://example.org/resource>
+  dcterms:${term.name} ${term.range && term.range.includes('Literal') ? '"Example value"' : '<http://example.org/value>'} .`}</code></pre>
+
+  <h3>RDF/XML</h3>
+  <pre><code>{`<rdf:Description rdf:about="http://example.org/resource">
+  <dcterms:${term.name}>${term.range && term.range.includes('Literal') ? 'Example value' : '<rdf:Description rdf:about="http://example.org/value"/>'}</dcterms:${term.name}>
+</rdf:Description>`}</code></pre>
+
+  <h3>JSON-LD</h3>
+  <pre><code>{`{
+  "@context": {
+    "dcterms": "http://purl.org/dc/terms/"
+  },
+  "@id": "http://example.org/resource",
+  "dcterms:${term.name}": ${term.range && term.range.includes('Literal') ? '"Example value"' : '{"@id": "http://example.org/value"}'}
+}`}</code></pre>
+</section>
+
+<section className="dcterms-overview">
+  <h2>About Dublin Core Terms</h2>
+  <div className="info-box">
+    <p>
+      <strong>Dublin Core Terms</strong> (dcterms:) extends the original Dublin Core Element Set
+      with additional properties and classes. It provides more specific terms and uses
+      formal domains and ranges.
+    </p>
+    <h4>Key Differences from DC Elements</h4>
+    <ul>
+      <li><strong>Namespace:</strong> Uses http://purl.org/dc/terms/ instead of /elements/1.1/</li>
+      <li><strong>Refinements:</strong> Many terms refine the original 15 elements</li>
+      <li><strong>Typed Values:</strong> Specifies formal ranges (URIs vs. literals)</li>
+      <li><strong>Classes:</strong> Includes class definitions for resource types</li>
+    </ul>
+    <h4>Common Term Categories</h4>
+    <ul>
+      <li><strong>Properties:</strong> Metadata elements (like dcterms:created, dcterms:modified)</li>
+      <li><strong>Classes:</strong> Resource types (like dcterms:Dataset, dcterms:Agent)</li>
+      <li><strong>Vocabulary Encoding Schemes:</strong> Controlled vocabularies</li>
+      <li><strong>Syntax Encoding Schemes:</strong> Format specifications</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Schema Definition</h3>
+  <pre><code>{`@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<${term.uri}> a ${term.type || 'rdf:Property'} ;
+  rdfs:label "${term.label}"@en ;
+  rdfs:comment "${term.definition}"@en ;${term.refines ? `
+  rdfs:subPropertyOf <${term.refines}> ;` : ''}${term.domain ? `
+  rdfs:domain <${term.domain}> ;` : ''}${term.range ? `
+  rdfs:range <${term.range}> ;` : ''}${term.isDefinedBy ? `
+  rdfs:isDefinedBy <${term.isDefinedBy}> ;` : ''}${term.issued ? `
+  dcterms:issued "${term.issued}"^^xsd:date ;` : ''}${term.modified ? `
+  dcterms:modified "${term.modified}"^^xsd:date ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Find all resources using this term</h4>
+  <pre><code>{`PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?resource ?value
+WHERE {
+  ?resource dcterms:${term.name} ?value .
+}
+LIMIT 100`}</code></pre>
+
+  <h4>Find resources with specific term value</h4>
+  <pre><code>{`PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?resource
+WHERE {
+  ?resource dcterms:${term.name} <http://example.org/specific-value> .
+}`}</code></pre>
+
+  {term.refines && (
+    <>
+      <h4>Query using broader property</h4>
+      <pre><code>{`PREFIX dcterms: <http://purl.org/dc/terms/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+SELECT ?resource ?specificValue ?broadValue
+WHERE {
+  OPTIONAL { ?resource dcterms:${term.name} ?specificValue }
+  OPTIONAL { ?resource <${term.refines}> ?broadValue }
+}`}</code></pre>
+    </>
+  )}
+</section>
+
+<section className="best-practices">
+  <h2>Best Practices</h2>
+
+  <div className="practice-box">
+    <h4>Using Dublin Core Terms</h4>
+    <ul>
+      <li>Prefer dcterms: over dc: for new applications</li>
+      <li>Use URI references when the range is a resource (not a literal)</li>
+      <li>Respect the formal domain and range constraints</li>
+      <li>Use refinements when you need more specific semantics</li>
+      <li>Follow ISO 8601 for date/time values</li>
+    </ul>
+  </div>
+
+  <div className="practice-box">
+    <h4>Common Patterns</h4>
+    <ul>
+      <li><strong>Dates:</strong> Use dcterms:created, dcterms:modified, dcterms:issued</li>
+      <li><strong>Agents:</strong> Use dcterms:creator, dcterms:publisher with URIs</li>
+      <li><strong>Identifiers:</strong> Use dcterms:identifier for unambiguous references</li>
+      <li><strong>Descriptions:</strong> Use dcterms:abstract for summaries, dcterms:description for full text</li>
+    </ul>
+  </div>
+
+  {term.range && (
+    <div className="practice-box">
+      <h4>Range Constraint for {term.name}</h4>
+      <p>
+        This term has a range of <code>{term.range}</code>, which means values should be
+        {term.range.includes('Literal') ? ' literal strings' : ' URI references'}.
+      </p>
+      <p>
+        {term.range.includes('Literal')
+          ? 'Use quoted strings for values.'
+          : 'Use URIs to reference resources, not literal strings.'}
+      </p>
+    </div>
+  )}
+</section>

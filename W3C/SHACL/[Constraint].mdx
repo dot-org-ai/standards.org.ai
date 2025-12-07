@@ -1,0 +1,317 @@
+---
+layout: Constraint
+source: W3C/SHACL
+$type: W3C/SHACL/Constraint
+$id: https://standards.org.ai/W3C/SHACL/Constraint/{constraint.code}
+sameAs: https://standards.org.ai/Constraint/{constraint.code}
+canonical: https://w3.org.ai/SHACL/Constraint/{constraint.code}
+params:
+  - Constraint
+schema:
+  constraint:
+    code: string
+    type: string
+    uri: string
+    label: string
+    parameter: string
+    description: string
+    category: string
+    scope: string
+    example: string
+---
+
+# {constraint.label}
+
+<div className="constraint-header">
+  <div className="constraint-metadata">
+    <span className="constraint-type"><code>{constraint.type}</code></span>
+    {constraint.category && (
+      <span className="constraint-category">{constraint.category}</span>
+    )}
+    {constraint.scope && (
+      <span className="constraint-scope">Scope: {constraint.scope}</span>
+    )}
+  </div>
+</div>
+
+<section className="description">
+  <h2>Description</h2>
+  <p>{constraint.description}</p>
+</section>
+
+{constraint.parameter && (
+  <section className="parameter">
+    <h3>Parameter</h3>
+    <code className="parameter-code">{constraint.parameter}</code>
+  </section>
+)}
+
+{constraint.category && (
+  <section className="category-info">
+    <h3>Constraint Category</h3>
+    <div className="category-box">
+      <p><strong>{constraint.category}</strong></p>
+      {constraint.category === 'Cardinality' && (
+        <p>Controls the number of values a property can have.</p>
+      )}
+      {constraint.category === 'Value Type' && (
+        <p>Restricts the type or kind of values.</p>
+      )}
+      {constraint.category === 'Value Range' && (
+        <p>Restricts values to specific ranges or sets.</p>
+      )}
+      {constraint.category === 'String-based' && (
+        <p>Applies constraints to string values.</p>
+      )}
+      {constraint.category === 'Property Pair' && (
+        <p>Compares values of different properties.</p>
+      )}
+      {constraint.category === 'Logical' && (
+        <p>Combines multiple constraints with logical operators.</p>
+      )}
+      {constraint.category === 'Shape-based' && (
+        <p>References other shapes for validation.</p>
+      )}
+    </div>
+  </section>
+)}
+
+<section className="usage">
+  <h2>Usage</h2>
+
+  <h3>Basic Example</h3>
+  <pre><code>{constraint.example || `@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:ExampleShape a sh:NodeShape ;
+  sh:targetClass ex:ExampleClass ;
+  sh:property [
+    sh:path ex:exampleProperty ;
+    ${constraint.type} ${constraint.parameter ? `"${constraint.parameter}"` : 'value'} ;
+  ] .`}</code></pre>
+</section>
+
+{constraint.type === 'sh:minCount' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:minCount</strong> specifies the minimum number of value nodes that satisfy
+      the property shape. The constraint is satisfied if the number of value nodes is
+      greater than or equal to the specified minimum.
+    </p>
+    <h4>Common Values</h4>
+    <ul>
+      <li><code>sh:minCount 0</code> - Optional property (default)</li>
+      <li><code>sh:minCount 1</code> - Required property (at least one value)</li>
+      <li><code>sh:minCount 2</code> - At least two values required</li>
+    </ul>
+  </section>
+)}
+
+{constraint.type === 'sh:maxCount' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:maxCount</strong> specifies the maximum number of value nodes that satisfy
+      the property shape. The constraint is satisfied if the number of value nodes is
+      less than or equal to the specified maximum.
+    </p>
+    <h4>Common Values</h4>
+    <ul>
+      <li><code>sh:maxCount 1</code> - Single-valued property (at most one value)</li>
+      <li><code>sh:maxCount 5</code> - Up to five values allowed</li>
+    </ul>
+  </section>
+)}
+
+{constraint.type === 'sh:datatype' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:datatype</strong> constrains the datatype of literal value nodes. Values
+      must have the specified datatype.
+    </p>
+    <h4>Common Datatypes</h4>
+    <ul>
+      <li><code>xsd:string</code> - Text strings</li>
+      <li><code>xsd:integer</code> - Whole numbers</li>
+      <li><code>xsd:decimal</code> - Decimal numbers</li>
+      <li><code>xsd:boolean</code> - True/false values</li>
+      <li><code>xsd:date</code> - Dates (YYYY-MM-DD)</li>
+      <li><code>xsd:dateTime</code> - Date and time with timezone</li>
+      <li><code>xsd:anyURI</code> - URI references</li>
+    </ul>
+  </section>
+)}
+
+{constraint.type === 'sh:class' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:class</strong> constrains value nodes to be instances of a specified class.
+      Each value must have rdf:type of the specified class or a subclass.
+    </p>
+  </section>
+)}
+
+{constraint.type === 'sh:nodeKind' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:nodeKind</strong> constrains the type of RDF nodes that are allowed as values.
+    </p>
+    <h4>Node Kinds</h4>
+    <ul>
+      <li><code>sh:IRI</code> - Must be an IRI</li>
+      <li><code>sh:BlankNode</code> - Must be a blank node</li>
+      <li><code>sh:Literal</code> - Must be a literal</li>
+      <li><code>sh:BlankNodeOrIRI</code> - Blank node or IRI</li>
+      <li><code>sh:BlankNodeOrLiteral</code> - Blank node or literal</li>
+      <li><code>sh:IRIOrLiteral</code> - IRI or literal</li>
+    </ul>
+  </section>
+)}
+
+{constraint.type === 'sh:pattern' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:pattern</strong> constrains string values to match a regular expression.
+      Optionally use <code>sh:flags</code> for pattern matching flags.
+    </p>
+    <h4>Example Patterns</h4>
+    <ul>
+      <li><code>^[A-Z]</code> - Must start with uppercase letter</li>
+      <li><code>\\d{"{3}"}-\\d{"{2}"}-\\d{"{4}"}</code> - SSN format (XXX-XX-XXXX)</li>
+      <li><code>^https?://</code> - Must be HTTP or HTTPS URL</li>
+      <li><code>@[a-z]{"{2}"}</code> - Must end with language tag</li>
+    </ul>
+  </section>
+)}
+
+{constraint.type === 'sh:minLength' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:minLength</strong> constrains the minimum length of string values.
+      The length is counted in characters.
+    </p>
+  </section>
+)}
+
+{constraint.type === 'sh:maxLength' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:maxLength</strong> constrains the maximum length of string values.
+      The length is counted in characters.
+    </p>
+  </section>
+)}
+
+{constraint.type === 'sh:in' && (
+  <section className="details">
+    <h3>Detailed Information</h3>
+    <p>
+      <strong>sh:in</strong> constrains values to be members of a specified list.
+      Values must exactly match one of the items in the list.
+    </p>
+    <h4>Example</h4>
+    <pre><code>{`sh:property [
+  sh:path ex:status ;
+  sh:in ("draft" "published" "archived") ;
+] .`}</code></pre>
+  </section>
+)}
+
+<section className="validation-examples">
+  <h3>Validation Examples</h3>
+
+  <div className="example-grid">
+    <div className="example-valid">
+      <h4>Valid Data</h4>
+      <pre><code>{`@prefix ex: <http://example.org/> .
+
+ex:validExample
+  ex:property ${
+    constraint.type === 'sh:datatype' ? '"valid value"^^xsd:string' :
+    constraint.type === 'sh:minCount' ? '"value1", "value2"' :
+    constraint.type === 'sh:class' ? '<ex:ValidClass>' :
+    constraint.type === 'sh:nodeKind' ? '<http://example.org/iri>' :
+    '"valid value"'
+  } .`}</code></pre>
+    </div>
+
+    <div className="example-invalid">
+      <h4>Invalid Data</h4>
+      <pre><code>{`@prefix ex: <http://example.org/> .
+
+ex:invalidExample
+  ex:property ${
+    constraint.type === 'sh:datatype' ? '123' :
+    constraint.type === 'sh:minCount' ? '# missing required value' :
+    constraint.type === 'sh:class' ? '"not a resource"' :
+    constraint.type === 'sh:nodeKind' ? '"literal instead of IRI"' :
+    '"invalid value"'
+  } .`}</code></pre>
+    </div>
+  </div>
+</section>
+
+<section className="shacl-overview">
+  <h2>About SHACL Constraints</h2>
+  <div className="info-box">
+    <p>
+      SHACL constraints define the conditions that RDF data must satisfy. They can be
+      applied to property shapes (constraining property values) or node shapes
+      (constraining entire nodes).
+    </p>
+    <h4>Constraint Categories</h4>
+    <ul>
+      <li><strong>Cardinality:</strong> sh:minCount, sh:maxCount</li>
+      <li><strong>Value Type:</strong> sh:class, sh:datatype, sh:nodeKind</li>
+      <li><strong>Value Range:</strong> sh:minInclusive, sh:maxInclusive, sh:minExclusive, sh:maxExclusive, sh:in</li>
+      <li><strong>String:</strong> sh:minLength, sh:maxLength, sh:pattern, sh:languageIn</li>
+      <li><strong>Property Pair:</strong> sh:equals, sh:disjoint, sh:lessThan, sh:lessThanOrEquals</li>
+      <li><strong>Logical:</strong> sh:not, sh:and, sh:or, sh:xone</li>
+      <li><strong>Shape-based:</strong> sh:node, sh:qualifiedValueShape</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>Constraint Definition</h3>
+  <pre><code>{`@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+${constraint.type} a sh:ConstraintComponent ;
+  rdfs:label "${constraint.label}" ;
+  rdfs:comment "${constraint.description}" ;
+  ${constraint.parameter ? `sh:parameter ${constraint.parameter}` : ''} .`}</code></pre>
+</section>
+
+<section className="related-constraints">
+  <h3>Related Constraints</h3>
+  <ul>
+    {constraint.category === 'Cardinality' && (
+      <>
+        <li><a href="/W3C/SHACL/Constraint/minCount">sh:minCount</a> - Minimum cardinality</li>
+        <li><a href="/W3C/SHACL/Constraint/maxCount">sh:maxCount</a> - Maximum cardinality</li>
+      </>
+    )}
+    {constraint.category === 'Value Type' && (
+      <>
+        <li><a href="/W3C/SHACL/Constraint/class">sh:class</a> - Instance of class</li>
+        <li><a href="/W3C/SHACL/Constraint/datatype">sh:datatype</a> - Literal datatype</li>
+        <li><a href="/W3C/SHACL/Constraint/nodeKind">sh:nodeKind</a> - Node type (IRI, literal, etc.)</li>
+      </>
+    )}
+    {constraint.category === 'String-based' && (
+      <>
+        <li><a href="/W3C/SHACL/Constraint/minLength">sh:minLength</a> - Minimum string length</li>
+        <li><a href="/W3C/SHACL/Constraint/maxLength">sh:maxLength</a> - Maximum string length</li>
+        <li><a href="/W3C/SHACL/Constraint/pattern">sh:pattern</a> - Regular expression pattern</li>
+      </>
+    )}
+  </ul>
+</section>

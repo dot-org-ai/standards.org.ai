@@ -1,0 +1,283 @@
+---
+layout: Linkset
+source: W3C/VoID
+$type: W3C/VoID/Linkset
+$id: https://standards.org.ai/W3C/VoID/Linkset/{linkset.code}
+sameAs: https://standards.org.ai/Linkset/{linkset.code}
+canonical: https://w3.org.ai/VoID/Linkset/{linkset.code}
+params:
+  - Linkset
+schema:
+  linkset:
+    code: string
+    uri: string
+    title: string
+    description: string
+    subjectsTarget: object
+    objectsTarget: object
+    linkPredicate: array
+    triples: number
+    dataDump: array
+    homepage: string
+    publisher: object
+---
+
+# {linkset.title}
+
+<div className="linkset-header">
+  <div className="linkset-metadata">
+    <span className="linkset-uri">{linkset.uri}</span>
+    <span className="linkset-type">VoID Linkset</span>
+  </div>
+</div>
+
+{linkset.description && (
+  <section className="description">
+    <h2>Description</h2>
+    <p>{linkset.description}</p>
+  </section>
+)}
+
+<section className="linkset-overview">
+  <h2>Linkset Overview</h2>
+
+  <div className="linkset-diagram">
+    <div className="dataset-box subjects">
+      <h4>Subjects Dataset</h4>
+      {linkset.subjectsTarget && (
+        <>
+          <p className="dataset-name">
+            <a href={linkset.subjectsTarget.uri}>{linkset.subjectsTarget.title || linkset.subjectsTarget.uri}</a>
+          </p>
+          {linkset.subjectsTarget.uriSpace && (
+            <p className="uri-space">URI Space: <code>{linkset.subjectsTarget.uriSpace}</code></p>
+          )}
+        </>
+      )}
+    </div>
+
+    <div className="link-predicates">
+      <h4>Link Predicates</h4>
+      {linkset.linkPredicate && linkset.linkPredicate.length > 0 ? (
+        <ul className="predicate-list">
+          {linkset.linkPredicate.map((pred, idx) => (
+            <li key={idx}>
+              <code><a href={pred}>{pred}</a></code>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>Various predicates</p>
+      )}
+    </div>
+
+    <div className="dataset-box objects">
+      <h4>Objects Dataset</h4>
+      {linkset.objectsTarget && (
+        <>
+          <p className="dataset-name">
+            <a href={linkset.objectsTarget.uri}>{linkset.objectsTarget.title || linkset.objectsTarget.uri}</a>
+          </p>
+          {linkset.objectsTarget.uriSpace && (
+            <p className="uri-space">URI Space: <code>{linkset.objectsTarget.uriSpace}</code></p>
+          )}
+        </>
+      )}
+    </div>
+  </div>
+</section>
+
+{linkset.triples && (
+  <section className="statistics">
+    <h3>Statistics</h3>
+    <div className="stat-card">
+      <div className="stat-value">{linkset.triples.toLocaleString()}</div>
+      <div className="stat-label">Linking Triples</div>
+    </div>
+  </section>
+)}
+
+<div className="linkset-info-grid">
+  {linkset.publisher && (
+    <section className="publisher">
+      <h3>Publisher</h3>
+      <div className="publisher-details">
+        <p><strong>{linkset.publisher.name}</strong></p>
+        {linkset.publisher.homepage && (
+          <p><a href={linkset.publisher.homepage}>Homepage</a></p>
+        )}
+      </div>
+    </section>
+  )}
+
+  {linkset.homepage && (
+    <section className="homepage">
+      <h3>Homepage</h3>
+      <p><a href={linkset.homepage}>{linkset.homepage}</a></p>
+    </section>
+  )}
+</div>
+
+{linkset.linkPredicate && linkset.linkPredicate.length > 0 && (
+  <section className="predicates">
+    <h2>Link Predicates</h2>
+    <p>This linkset uses {linkset.linkPredicate.length} predicate{linkset.linkPredicate.length !== 1 ? 's' : ''} to connect resources:</p>
+    <ul className="predicate-details">
+      {linkset.linkPredicate.map((pred, idx) => (
+        <li key={idx}>
+          <code><a href={pred}>{pred}</a></code>
+          {pred.includes('owl#sameAs') && ' - Indicates that two URIs refer to the same thing'}
+          {pred.includes('rdfs#seeAlso') && ' - Indicates related resources'}
+          {pred.includes('skos/core#closeMatch') && ' - Indicates closely matching concepts'}
+          {pred.includes('skos/core#exactMatch') && ' - Indicates exactly matching concepts'}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{linkset.dataDump && linkset.dataDump.length > 0 && (
+  <section className="data-dumps">
+    <h2>Data Dumps</h2>
+    <p>Download the linkset data:</p>
+    <div className="dump-grid">
+      {linkset.dataDump.map((dump, idx) => (
+        <div key={idx} className="dump-card">
+          <h4>{dump.format || 'Link Data'}</h4>
+          <a href={dump.uri || dump} className="btn-download" download>
+            Download Links
+          </a>
+          {dump.size && <p className="dump-size">Size: {dump.size}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+<section className="void-overview">
+  <h2>About VoID Linksets</h2>
+  <div className="info-box">
+    <p>
+      A <strong>VoID Linkset</strong> is a collection of RDF triples where all subjects are
+      in one dataset and all objects are in another dataset. Linksets describe how
+      datasets are interconnected in the Linked Data cloud.
+    </p>
+    <h4>Key Properties</h4>
+    <ul>
+      <li><strong>void:subjectsTarget:</strong> The dataset containing the subjects</li>
+      <li><strong>void:objectsTarget:</strong> The dataset containing the objects</li>
+      <li><strong>void:linkPredicate:</strong> The predicates used to link resources</li>
+      <li><strong>void:triples:</strong> Number of triples in the linkset</li>
+    </ul>
+    <h4>Common Use Cases</h4>
+    <ul>
+      <li>Linking resources across different datasets</li>
+      <li>Expressing owl:sameAs relationships between datasets</li>
+      <li>Documenting dataset interconnections</li>
+      <li>Facilitating cross-dataset queries</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<${linkset.uri}> a void:Linkset ;
+  dcterms:title "${linkset.title}" ;${linkset.description ? `
+  dcterms:description "${linkset.description}" ;` : ''}${linkset.subjectsTarget ? `
+  void:subjectsTarget <${linkset.subjectsTarget.uri}> ;` : ''}${linkset.objectsTarget ? `
+  void:objectsTarget <${linkset.objectsTarget.uri}> ;` : ''}${linkset.linkPredicate ? `
+  ${linkset.linkPredicate.map(p => `void:linkPredicate <${p}>`).join(' ;\n  ')} ;` : ''}${linkset.triples ? `
+  void:triples ${linkset.triples} ;` : ''}${linkset.publisher ? `
+  dcterms:publisher [
+    a foaf:Organization ;
+    foaf:name "${linkset.publisher.name}"
+  ] ;` : ''}${linkset.dataDump ? `
+  ${linkset.dataDump.map(d => `void:dataDump <${d.uri || d}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Get linkset details</h4>
+  <pre><code>{`PREFIX void: <http://rdfs.org/ns/void#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?title ?subjectsTarget ?objectsTarget ?triples
+WHERE {
+  <${linkset.uri}> dcterms:title ?title ;
+                   void:subjectsTarget ?subjectsTarget ;
+                   void:objectsTarget ?objectsTarget ;
+                   void:triples ?triples .
+}`}</code></pre>
+
+  <h4>Find all link predicates used</h4>
+  <pre><code>{`PREFIX void: <http://rdfs.org/ns/void#>
+
+SELECT ?predicate
+WHERE {
+  <${linkset.uri}> void:linkPredicate ?predicate .
+}`}</code></pre>
+
+  <h4>Query actual links in the linkset</h4>
+  <pre><code>{`# Assuming you have access to the actual data
+PREFIX void: <http://rdfs.org/ns/void#>
+
+SELECT ?subject ?predicate ?object
+WHERE {
+  <${linkset.uri}> void:subjectsTarget ?subjectsDataset ;
+                   void:objectsTarget ?objectsDataset ;
+                   void:linkPredicate ?predicate .
+
+  # Query the actual triples
+  ?subject ?predicate ?object .
+
+  # Filter to only include links matching the linkset definition
+  FILTER(STRSTARTS(STR(?subject), ?subjectsUriSpace))
+  FILTER(STRSTARTS(STR(?object), ?objectsUriSpace))
+}
+LIMIT 100`}</code></pre>
+</section>
+
+<section className="usage-examples">
+  <h3>Creating a Linkset</h3>
+
+  <h4>Define a linkset between two datasets</h4>
+  <pre><code>{`@prefix void: <http://rdfs.org/ns/void#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/linkset/dbpedia-geonames> a void:Linkset ;
+  dcterms:title "DBpedia to GeoNames Links" ;
+  dcterms:description "owl:sameAs links between DBpedia and GeoNames" ;
+  void:subjectsTarget <http://dbpedia.org> ;
+  void:objectsTarget <http://sws.geonames.org> ;
+  void:linkPredicate owl:sameAs ;
+  void:triples 123456 ;
+  void:dataDump <http://example.org/dumps/dbpedia-geonames.nt.gz> .`}</code></pre>
+
+  <h4>Multiple predicates in a linkset</h4>
+  <pre><code>{`<http://example.org/linkset/multi-predicate> a void:Linkset ;
+  dcterms:title "Cross-Dataset Relationships" ;
+  void:subjectsTarget <http://example.org/dataset/A> ;
+  void:objectsTarget <http://example.org/dataset/B> ;
+  void:linkPredicate owl:sameAs ,
+                     rdfs:seeAlso ,
+                     skos:related ;
+  void:triples 50000 .`}</code></pre>
+</section>
+
+<section className="visualization">
+  <h3>Linkset Visualization</h3>
+  <div className="vis-info">
+    <p>
+      This linkset connects resources from <strong>{linkset.subjectsTarget?.title || 'the subjects dataset'}</strong>
+      to resources in <strong>{linkset.objectsTarget?.title || 'the objects dataset'}</strong>
+      {linkset.triples && <span> with <strong>{linkset.triples.toLocaleString()}</strong> links</span>}.
+    </p>
+  </div>
+</section>

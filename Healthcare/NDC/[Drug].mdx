@@ -1,0 +1,133 @@
+---
+layout: drug
+source: Healthcare/NDC
+$type: Healthcare/NDC/Drug
+$id: https://standards.org.ai/Healthcare/NDC/Drug/{drug.code}
+sameAs: https://standards.org.ai/Drug/{drug.code}
+canonical: https://standards.org.ai/NDC/Drug/{drug.code}
+params:
+  - Drug
+schema:
+  drug:
+    code: string
+    productNDC: string
+    proprietaryName: string
+    nonProprietaryName: string
+    dosageForm: string
+    routeOfAdministration: array
+    labeler: string
+    substanceName: array
+    strengthNumber: array
+    strengthUnit: array
+    activeIngredient: array
+    marketingCategory: string
+    applicationNumber: string
+    startMarketingDate: string
+    endMarketingDate: string
+    status: string
+---
+
+# {drug.proprietaryName}
+
+<DrugHeader
+  code={drug.productNDC}
+  proprietaryName={drug.proprietaryName}
+  nonProprietaryName={drug.nonProprietaryName}
+/>
+
+## NDC Code
+
+**{drug.productNDC}**
+
+## Drug Names
+
+<div className="drug-names">
+  <div className="proprietary-name">
+    <strong>Proprietary (Brand) Name:</strong> {drug.proprietaryName}
+  </div>
+  {drug.nonProprietaryName && (
+    <div className="non-proprietary-name">
+      <strong>Non-Proprietary (Generic) Name:</strong> {drug.nonProprietaryName}
+    </div>
+  )}
+</div>
+
+## Active Ingredients
+
+{drug.activeIngredient && drug.activeIngredient.length > 0 && (
+  <div className="active-ingredients">
+    <ul>
+      {drug.activeIngredient.map((ingredient, idx) => (
+        <li key={idx}>
+          <strong>{ingredient}</strong>
+          {drug.strengthNumber && drug.strengthNumber[idx] && (
+            <span> - {drug.strengthNumber[idx]} {drug.strengthUnit && drug.strengthUnit[idx]}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
+## Dosage Information
+
+<div className="dosage-info">
+  {drug.dosageForm && (
+    <div className="dosage-form">
+      <strong>Dosage Form:</strong> {drug.dosageForm}
+    </div>
+  )}
+  {drug.routeOfAdministration && drug.routeOfAdministration.length > 0 && (
+    <div className="route">
+      <strong>Route of Administration:</strong> {drug.routeOfAdministration.join(', ')}
+    </div>
+  )}
+</div>
+
+## Labeler
+
+{drug.labeler && (
+  <LabelerLink code={drug.labeler} />
+)}
+
+## Marketing Information
+
+<div className="marketing-info">
+  {drug.marketingCategory && (
+    <div className="marketing-category">
+      <strong>Marketing Category:</strong> {drug.marketingCategory}
+    </div>
+  )}
+  {drug.applicationNumber && (
+    <div className="application-number">
+      <strong>Application Number:</strong> {drug.applicationNumber}
+    </div>
+  )}
+  {drug.startMarketingDate && (
+    <div className="start-date">
+      <strong>Marketing Start Date:</strong> {drug.startMarketingDate}
+    </div>
+  )}
+  {drug.endMarketingDate && (
+    <div className="end-date">
+      <strong>Marketing End Date:</strong> {drug.endMarketingDate}
+    </div>
+  )}
+  {drug.status && (
+    <div className="status">
+      <strong>Status:</strong> {drug.status}
+    </div>
+  )}
+</div>
+
+## Package Codes
+
+<PackageList productNDC={drug.productNDC} />
+
+## RxNorm Mapping
+
+<NDCToRxNorm ndcCode={drug.productNDC} />
+
+## Related Drugs
+
+<RelatedDrugs labeler={drug.labeler} current={drug.productNDC} />

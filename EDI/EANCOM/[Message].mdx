@@ -1,0 +1,65 @@
+---
+layout: message
+source: EDI/EANCOM
+$type: EDI/EANCOM/Message
+$id: https://standards.org.ai/EDI/EANCOM/Message/{message.code}
+sameAs: https://standards.org.ai/EANCOMMessage/{message.code}
+canonical: https://standards.org.ai/EANCOM/Message/{message.code}
+params:
+  - Message
+schema:
+  message:
+    code: MessageCode
+    name: MessageName
+    description: MessageDescription
+    version: MessageVersion
+    edifactType: EDIFACTType
+---
+
+# {message.code} - {message.name}
+
+<MessageHeader code={message.code} name={message.name} version={message.version} />
+
+## Description
+
+{message.description}
+
+## EDIFACT Message Type
+
+{message.edifactType}
+
+## Version
+
+{message.version}
+
+## Message Structure
+
+<MessageStructure code={message.code} />
+
+## Segments
+
+<SegmentList message={message.code} />
+
+## Business Scenarios
+
+<BusinessScenarios message={message.code} />
+
+## GS1 Implementation Guidelines
+
+<GS1Guidelines message={message.code} />
+
+## Sample Messages
+
+<MessageExamples code={message.code} />
+
+## Related Messages
+
+<RelatedMessages code={message.code} />
+
+## Industry-Specific Subsets
+
+<IndustrySubsets message={message.code} />
+
+## Mapping to Other Standards
+
+<MessageMappings message={message.code} />

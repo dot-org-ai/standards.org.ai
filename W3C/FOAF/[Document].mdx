@@ -1,0 +1,229 @@
+---
+layout: Document
+source: W3C/FOAF
+$type: W3C/FOAF/Document
+$id: https://standards.org.ai/W3C/FOAF/Document/{document.code}
+sameAs: https://standards.org.ai/Document/{document.code}
+canonical: https://w3.org.ai/FOAF/Document/{document.code}
+params:
+  - Document
+schema:
+  document:
+    code: string
+    uri: string
+    title: string
+    description: string
+    maker: object
+    primaryTopic: string
+    topic: array
+    sha1: string
+    homepage: string
+    depiction: string
+    created: string
+    modified: string
+---
+
+# {document.title}
+
+<div className="document-header">
+  <div className="document-metadata">
+    <span className="document-uri">{document.uri}</span>
+    <span className="document-type">FOAF Document</span>
+  </div>
+</div>
+
+{document.description && (
+  <section className="description">
+    <h2>Description</h2>
+    <p>{document.description}</p>
+  </section>
+)}
+
+<div className="document-info">
+  {document.created && (
+    <div className="info-item">
+      <strong>Created:</strong> {document.created}
+    </div>
+  )}
+
+  {document.modified && (
+    <div className="info-item">
+      <strong>Modified:</strong> {document.modified}
+    </div>
+  )}
+
+  {document.sha1 && (
+    <div className="info-item">
+      <strong>SHA-1:</strong> <code>{document.sha1}</code>
+    </div>
+  )}
+
+  {document.homepage && (
+    <div className="info-item">
+      <strong>Homepage:</strong> <a href={document.homepage}>{document.homepage}</a>
+    </div>
+  )}
+</div>
+
+{document.maker && (
+  <section className="maker">
+    <h2>Maker</h2>
+    <div className="maker-card">
+      {document.maker.img && (
+        <img src={document.maker.img} alt={document.maker.name} className="maker-photo" />
+      )}
+      <div className="maker-info">
+        <h3>
+          <a href={document.maker.uri || document.maker}>
+            {document.maker.name || document.maker}
+          </a>
+        </h3>
+        {document.maker.mbox && (
+          <p><a href={`mailto:${document.maker.mbox}`}>{document.maker.mbox}</a></p>
+        )}
+        {document.maker.homepage && (
+          <p><a href={document.maker.homepage}>Homepage</a></p>
+        )}
+      </div>
+    </div>
+  </section>
+)}
+
+{document.primaryTopic && (
+  <section className="primary-topic">
+    <h2>Primary Topic</h2>
+    <p>
+      This document's primary topic is: <a href={document.primaryTopic}>{document.primaryTopic}</a>
+    </p>
+    <div className="info-note">
+      <p>
+        The primary topic is the main thing this document is about. This relationship
+        is the inverse of <code>foaf:isPrimaryTopicOf</code>.
+      </p>
+    </div>
+  </section>
+)}
+
+{document.topic && document.topic.length > 0 && (
+  <section className="topics">
+    <h2>Topics</h2>
+    <p>This document discusses the following topics:</p>
+    <ul className="topic-list">
+      {document.topic.map((topic, idx) => (
+        <li key={idx}>
+          <a href={topic.uri || topic}>{topic.label || topic.name || topic}</a>
+          {topic.description && <p className="topic-description">{topic.description}</p>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{document.depiction && (
+  <section className="depiction">
+    <h3>Depiction</h3>
+    <img src={document.depiction} alt={document.title} className="document-image" />
+  </section>
+)}
+
+<section className="foaf-overview">
+  <h2>About FOAF Documents</h2>
+  <div className="info-box">
+    <p>
+      <strong>FOAF Documents</strong> represent web documents, files, or other information
+      resources. They can have makers (creators), topics, and other metadata.
+    </p>
+    <h4>Key Properties</h4>
+    <ul>
+      <li><strong>foaf:maker:</strong> The person or agent who created the document</li>
+      <li><strong>foaf:primaryTopic:</strong> The main subject of the document</li>
+      <li><strong>foaf:topic:</strong> Things the document is about</li>
+      <li><strong>foaf:sha1:</strong> SHA-1 hash of the document for verification</li>
+    </ul>
+    <h4>Use Cases</h4>
+    <ul>
+      <li>Describing web pages and their creators</li>
+      <li>Linking documents to their subjects</li>
+      <li>Building knowledge graphs of information resources</li>
+      <li>Tracking document provenance and authorship</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+<${document.uri}> a foaf:Document ;
+  dc:title "${document.title}" ;${document.description ? `
+  dc:description "${document.description}" ;` : ''}${document.maker ? `
+  foaf:maker <${document.maker.uri || document.maker}> ;` : ''}${document.primaryTopic ? `
+  foaf:primaryTopic <${document.primaryTopic}> ;` : ''}${document.topic ? `
+  ${document.topic.map(t => `foaf:topic <${t.uri || t}>`).join(' ;\n  ')} ;` : ''}${document.sha1 ? `
+  foaf:sha1 "${document.sha1}" ;` : ''}${document.created ? `
+  dc:created "${document.created}" ;` : ''}${document.modified ? `
+  dc:modified "${document.modified}" ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Find all documents by maker</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+SELECT ?document ?title
+WHERE {
+  ?document a foaf:Document ;
+            foaf:maker <${document.maker?.uri || 'http://example.org/person'}> ;
+            dc:title ?title .
+}
+ORDER BY DESC(?created)`}</code></pre>
+
+  <h4>Find documents about a topic</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+SELECT ?document ?title ?maker
+WHERE {
+  ?document a foaf:Document ;
+            foaf:topic <${document.topic?.[0]?.uri || 'http://example.org/topic'}> ;
+            dc:title ?title .
+  OPTIONAL { ?document foaf:maker ?maker }
+}`}</code></pre>
+
+  <h4>Find primary topic document</h4>
+  <pre><code>{`PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+
+SELECT ?topic ?description
+WHERE {
+  <${document.uri}> foaf:primaryTopic ?topic .
+  OPTIONAL { ?topic foaf:isPrimaryTopicOf <${document.uri}> }
+}`}</code></pre>
+</section>
+
+<section className="usage-examples">
+  <h3>Usage Examples</h3>
+
+  <h4>Create a FOAF document</h4>
+  <pre><code>{`@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+<http://example.org/document/my-article> a foaf:Document ;
+  dc:title "Understanding Semantic Web" ;
+  dc:description "An introduction to linked data concepts" ;
+  foaf:maker <http://example.org/person/jane> ;
+  foaf:primaryTopic <http://dbpedia.org/resource/Semantic_Web> ;
+  foaf:topic <http://dbpedia.org/resource/RDF> ,
+             <http://dbpedia.org/resource/SPARQL> .`}</code></pre>
+
+  <h4>Link person to their documents</h4>
+  <pre><code>{`@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<http://example.org/person/jane> a foaf:Person ;
+  foaf:name "Jane Doe" ;
+  foaf:made <http://example.org/document/my-article> ,
+            <http://example.org/document/another-article> .`}</code></pre>
+</section>

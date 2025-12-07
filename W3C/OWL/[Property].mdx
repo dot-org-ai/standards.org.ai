@@ -1,0 +1,518 @@
+---
+layout: property
+source: W3C/OWL
+$type: W3C/OWL/Property
+$id: https://standards.org.ai/W3C/OWL/Property/{Property.code}
+sameAs: https://standards.org.ai/Property/{Property.code}
+canonical: https://w3.org.ai/OWL/Property/{Property.code}
+params:
+  - Property
+schema:
+  Property:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    type: string
+    domain: array
+    range: array
+    inverseOf: string
+    subPropertyOf: array
+---
+
+import { PropertyHeader } from '@/components/semantic-web/PropertyHeader'
+import { PropertySignature } from '@/components/semantic-web/PropertySignature'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<PropertyHeader
+  uri={Property.uri}
+  label={Property.label}
+  type={Property.type || "OWL Property"}
+/>
+
+## Description
+
+{Property.comment}
+
+This property is part of an OWL (Web Ontology Language) ontology and is defined as a **{Property.type || "property"}**, providing rich semantics for expressing relationships in knowledge graphs.
+
+## Property Type
+
+{Property.type === 'owl:ObjectProperty' && (
+  <div className="bg-blue-50 p-4 rounded">
+    <p><strong>Object Property</strong>: This property relates individuals to other individuals.</p>
+  </div>
+)}
+
+{Property.type === 'owl:DatatypeProperty' && (
+  <div className="bg-green-50 p-4 rounded">
+    <p><strong>Datatype Property</strong>: This property relates individuals to literal values (strings, numbers, dates, etc.).</p>
+  </div>
+)}
+
+{Property.type === 'owl:AnnotationProperty' && (
+  <div className="bg-purple-50 p-4 rounded">
+    <p><strong>Annotation Property</strong>: This property is used for adding metadata and documentation to ontology elements.</p>
+  </div>
+)}
+
+## Property Signature
+
+<PropertySignature
+  domain={Property.domain}
+  range={Property.range}
+  subPropertyOf={Property.subPropertyOf}
+  inverseOf={Property.inverseOf}
+/>
+
+### Domain
+
+{Property.domain && Property.domain.length > 0 ? (
+  <>
+    <p>This property should be used with subjects of the following types:</p>
+    <ul>
+      {Property.domain.map((d) => (
+        <li key={d}>
+          <code>{d}</code>
+          <p className="text-sm text-gray-600">If a resource uses this property, it is inferred to be of type {d}</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This property has no domain restriction. It can be used with individuals of any class (implicitly <code>owl:Thing</code>).</p>
+)}
+
+### Range
+
+{Property.range && Property.range.length > 0 ? (
+  <>
+    <p>Values of this property should be of the following types:</p>
+    <ul>
+      {Property.range.map((r) => (
+        <li key={r}>
+          <code>{r}</code>
+          <p className="text-sm text-gray-600">Objects of this property are inferred to be of type {r}</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This property has no range restriction. Values can be of any type.</p>
+)}
+
+### Inverse Property
+
+{Property.inverseOf ? (
+  <div className="bg-yellow-50 p-4 rounded">
+    <p>This property has an inverse: <code>{Property.inverseOf}</code></p>
+    <p className="text-sm">If <code>A {Property.uri} B</code>, then <code>B {Property.inverseOf} A</code></p>
+  </div>
+) : (
+  <p>No inverse property is defined.</p>
+)}
+
+### Property Hierarchy
+
+{Property.subPropertyOf && Property.subPropertyOf.length > 0 ? (
+  <>
+    <p>This property is a specialization of:</p>
+    <ul>
+      {Property.subPropertyOf.map((parent) => (
+        <li key={parent}><code>{parent}</code></li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This is a top-level property with no super-properties.</p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Usage in Turtle
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ex: <http://example.org/> .
+
+# Property definition
+{Property.uri} a {Property.type || 'owl:ObjectProperty'} ;
+    rdfs:label "{Property.label}"@en ;
+    rdfs:comment "{Property.comment}"@en .
+
+# Basic usage
+ex:subject {Property.uri} ex:object .
+
+{Property.type === 'owl:DatatypeProperty' ? `
+# With literal value
+ex:resource {Property.uri} "example value"^^xsd:string .
+ex:resource {Property.uri} 42 .
+ex:resource {Property.uri} "2024-01-01"^^xsd:date .
+` : `
+# Linking individuals
+ex:person1 {Property.uri} ex:person2 .
+`}
+
+# Multiple values
+ex:multiValue {Property.uri} ex:value1 ,
+                            ex:value2 ,
+                            ex:value3 .
+```
+
+### Property with Characteristics
+
+```turtle
+{Property.uri} a owl:ObjectProperty ;
+    rdfs:label "{Property.label}"@en ;
+    rdfs:domain ex:DomainClass ;
+    rdfs:range ex:RangeClass ;
+
+    # Functional: at most one value per subject
+    a owl:FunctionalProperty ;
+
+    # Inverse functional: values uniquely identify subjects
+    a owl:InverseFunctionalProperty ;
+
+    # Transitive: if A→B and B→C then A→C
+    a owl:TransitiveProperty ;
+
+    # Symmetric: if A→B then B→A
+    a owl:SymmetricProperty ;
+
+    # Asymmetric: if A→B then not B→A
+    a owl:AsymmetricProperty ;
+
+    # Reflexive: every individual relates to itself
+    a owl:ReflexiveProperty ;
+
+    # Irreflexive: no individual relates to itself
+    a owl:IrreflexiveProperty .
+```
+
+### Inverse Property Example
+
+{Property.inverseOf && `
+\`\`\`turtle
+{Property.uri} owl:inverseOf {Property.inverseOf} .
+
+ex:alice {Property.uri} ex:bob .
+# Inferred: ex:bob {Property.inverseOf} ex:alice .
+\`\`\`
+`}
+
+### Property Chain
+
+```turtle
+ex:hasGrandparent a owl:ObjectProperty ;
+    owl:propertyChainAxiom ({Property.uri} ex:hasParent) .
+
+ex:child {Property.uri} ex:parent .
+ex:parent ex:hasParent ex:grandparent .
+# Inferred: ex:child ex:hasGrandparent ex:grandparent .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:ex="http://example.org/">
+  <{Property.type || 'owl:ObjectProperty'} rdf:about="{Property.uri}">
+    <rdfs:label xml:lang="en">{Property.label}</rdfs:label>
+    <rdfs:comment xml:lang="en">{Property.comment}</rdfs:comment>
+  </{Property.type || 'owl:ObjectProperty'}>
+
+  <rdf:Description rdf:about="http://example.org/subject">
+    <{Property.uri} rdf:resource="http://example.org/object"/>
+  </rdf:Description>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "ex": "http://example.org/"
+  },
+  "@id": "ex:subject",
+  "{Property.uri}": {
+    "@id": "ex:object"
+  }
+}
+```
+
+### SPARQL Queries
+
+```sparql
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Find all uses of this property
+SELECT ?subject ?value
+WHERE {
+  ?subject {Property.uri} ?value .
+}
+
+# Query with property path (including sub-properties)
+SELECT ?subject ?value
+WHERE {
+  ?subject {Property.uri}+ ?value .
+}
+
+{Property.inverseOf && `
+# Query using inverse
+SELECT ?subject ?value
+WHERE {
+  ?value {Property.inverseOf} ?subject .
+  # Equivalent to: ?subject {Property.uri} ?value .
+}
+`}
+
+# Count property usage by class
+SELECT ?class (COUNT(?instance) AS ?count)
+WHERE {
+  ?instance {Property.uri} ?value .
+  ?instance rdf:type ?class .
+}
+GROUP BY ?class
+ORDER BY DESC(?count)
+```
+
+</UsageExamples>
+
+## Property Characteristics
+
+This property may have the following characteristics:
+
+### Functional Property
+
+{Property.functional ? (
+  <div className="bg-blue-50 p-4 rounded">
+    <p>✓ This is a <strong>functional property</strong>: Each subject can have at most one value.</p>
+    <code>If A {Property.uri} B and A {Property.uri} C, then B = C</code>
+  </div>
+) : (
+  <p>This property is not functional (can have multiple values per subject).</p>
+)}
+
+### Inverse Functional Property
+
+{Property.inverseFunctional ? (
+  <div className="bg-blue-50 p-4 rounded">
+    <p>✓ This is an <strong>inverse functional property</strong>: Each value uniquely identifies its subject.</p>
+    <code>If A {Property.uri} C and B {Property.uri} C, then A = B</code>
+  </div>
+) : (
+  <p>This property is not inverse functional (multiple subjects can share the same value).</p>
+)}
+
+### Transitive Property
+
+{Property.transitive ? (
+  <div className="bg-green-50 p-4 rounded">
+    <p>✓ This is a <strong>transitive property</strong>:</p>
+    <code>If A {Property.uri} B and B {Property.uri} C, then A {Property.uri} C</code>
+  </div>
+) : (
+  <p>This property is not transitive.</p>
+)}
+
+### Symmetric Property
+
+{Property.symmetric ? (
+  <div className="bg-purple-50 p-4 rounded">
+    <p>✓ This is a <strong>symmetric property</strong>:</p>
+    <code>If A {Property.uri} B, then B {Property.uri} A</code>
+  </div>
+) : (
+  <p>This property is not symmetric.</p>
+)}
+
+### Asymmetric Property
+
+{Property.asymmetric ? (
+  <div className="bg-red-50 p-4 rounded">
+    <p>✓ This is an <strong>asymmetric property</strong>:</p>
+    <code>If A {Property.uri} B, then NOT B {Property.uri} A</code>
+  </div>
+) : (
+  <p>This property is not asymmetric.</p>
+)}
+
+### Reflexive Property
+
+{Property.reflexive ? (
+  <div className="bg-yellow-50 p-4 rounded">
+    <p>✓ This is a <strong>reflexive property</strong>:</p>
+    <code>For all A, A {Property.uri} A</code>
+  </div>
+) : (
+  <p>This property is not reflexive.</p>
+)}
+
+### Irreflexive Property
+
+{Property.irreflexive ? (
+  <div className="bg-orange-50 p-4 rounded">
+    <p>✓ This is an <strong>irreflexive property</strong>:</p>
+    <code>For all A, NOT A {Property.uri} A</code>
+  </div>
+) : (
+  <p>This property is not irreflexive.</p>
+)}
+
+## OWL Reasoning
+
+### Inference Rules
+
+Reasoners apply the following inferences:
+
+1. **Domain Inference**: If `x {Property.uri} y`, then `x` is of type `domain`
+2. **Range Inference**: If `x {Property.uri} y`, then `y` is of type `range`
+3. **Sub-Property Inference**: If `P ⊆ {Property.uri}` and `x P y`, then `x {Property.uri} y`
+4. **Inverse Inference**: If defined, `x {Property.uri} y` implies `y {Property.inverseOf} x`
+
+## Property Restrictions
+
+### Universal Restriction (allValuesFrom)
+
+```turtle
+ex:RestrictedClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty {Property.uri} ;
+        owl:allValuesFrom ex:TargetClass
+    ] .
+# All values of this property must be of TargetClass
+```
+
+### Existential Restriction (someValuesFrom)
+
+```turtle
+ex:SomeValuesClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty {Property.uri} ;
+        owl:someValuesFrom ex:TargetClass
+    ] .
+# At least one value must be of TargetClass
+```
+
+### Cardinality Restrictions
+
+```turtle
+ex:CardinalityClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty {Property.uri} ;
+        owl:minCardinality 1 ;
+        owl:maxCardinality 5
+    ] .
+```
+
+### Qualified Cardinality
+
+```turtle
+ex:QualifiedClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty {Property.uri} ;
+        owl:qualifiedCardinality 2 ;
+        owl:onClass ex:TargetClass
+    ] .
+```
+
+### Value Restriction (hasValue)
+
+```turtle
+ex:HasValueClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty {Property.uri} ;
+        owl:hasValue ex:specificValue
+    ] .
+```
+
+## Best Practices
+
+When using `{Property.label}`:
+
+1. **Type Safety**: Ensure subjects and objects match domain and range
+2. **Characteristics**: Declare functional, symmetric, transitive properties appropriately
+3. **Inverse Properties**: Define inverses to enable bidirectional queries
+4. **Documentation**: Provide comprehensive labels, comments, and examples
+5. **Validation**: Use reasoners to check consistency
+6. **Performance**: Consider materialization vs. on-demand reasoning
+7. **Modularity**: Group related properties in coherent modules
+
+## Validation
+
+### Consistency Checking
+
+Use reasoners to detect:
+
+- Domain/range violations
+- Cardinality conflicts
+- Functional property violations
+- Disjointness violations
+
+### SHACL Validation
+
+```turtle
+ex:PropertyShape a sh:PropertyShape ;
+    sh:path {Property.uri} ;
+    sh:class ex:ExpectedClass ;
+    sh:minCount 1 ;
+    sh:maxCount 1 .
+```
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2002/07/owl#ObjectProperty', label: 'owl:ObjectProperty' },
+    { uri: 'http://www.w3.org/2002/07/owl#DatatypeProperty', label: 'owl:DatatypeProperty' },
+    { uri: 'http://www.w3.org/2002/07/owl#FunctionalProperty', label: 'owl:FunctionalProperty' },
+    { uri: 'http://www.w3.org/2002/07/owl#inverseOf', label: 'owl:inverseOf' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf', label: 'rdfs:subPropertyOf' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="OWL 2 Web Ontology Language Structural Specification and Functional-Style Syntax"
+  url="https://www.w3.org/TR/owl2-syntax/"
+  section="properties"
+/>
+
+### Normative References
+
+- [OWL 2 Web Ontology Language Document Overview](https://www.w3.org/TR/owl2-overview/)
+- [OWL 2 Web Ontology Language Primer](https://www.w3.org/TR/owl2-primer/)
+- [OWL 2 Web Ontology Language Profiles](https://www.w3.org/TR/owl2-profiles/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/2002/07/owl#`
+- **URI**: `{Property.uri}`
+- **Property Type**: `{Property.type || 'owl:ObjectProperty'}`
+- **Status**: W3C Recommendation
+- **Version**: OWL 2
+
+## Additional Resources
+
+- [OWL 2 Primer](https://www.w3.org/TR/owl2-primer/)
+- [Property Characteristics Guide](https://www.w3.org/TR/owl2-primer/#Property_Characteristics)
+- [Protégé Documentation](https://protege.stanford.edu/publications.php)

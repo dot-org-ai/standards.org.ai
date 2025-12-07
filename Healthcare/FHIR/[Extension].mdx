@@ -1,0 +1,123 @@
+---
+layout: extension
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/Extension
+$id: https://standards.org.ai/Healthcare/FHIR/Extension/{extension.code}
+sameAs: https://standards.org.ai/Extension/{extension.code}
+canonical: https://standards.org.ai/FHIR/Extension/{extension.code}
+params:
+  - Extension
+schema:
+  extension:
+    code: id
+    name: name
+    title: title
+    description: description
+    status: status
+    kind: kind
+    abstract: boolean
+    context: array
+    contextInvariant: array
+    type: type
+    baseDefinition: url
+    derivation: string
+    experimental: boolean
+    publisher: string
+    purpose: string
+    copyright: string
+    fhirVersion: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRExtensionHeader } from '@/components/healthcare/fhir/ExtensionHeader'
+import { FHIRExtensionContext } from '@/components/healthcare/fhir/ExtensionContext'
+import { FHIRExtensionStructure } from '@/components/healthcare/fhir/ExtensionStructure'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIRExtensionHeader
+  code={extension.code}
+  name={extension.name}
+  title={extension.title}
+  status={extension.status}
+/>
+
+<Description content={extension.description} />
+
+## Extension Information
+
+- **Status**: <StatusBadge status={extension.status} />
+- **Kind**: {extension.kind}
+- **Type**: {extension.type}
+- **FHIR Version**: {extension.fhirVersion}
+- **Experimental**: {extension.experimental ? 'Yes' : 'No'}
+- **Publisher**: {extension.publisher || 'HL7 International'}
+
+{extension.purpose && (
+  <>
+    ## Purpose
+
+    {extension.purpose}
+  </>
+)}
+
+## Context
+
+This extension can be used in the following contexts:
+
+<FHIRExtensionContext
+  context={extension.context}
+  contextInvariant={extension.contextInvariant}
+/>
+
+## Structure
+
+<FHIRExtensionStructure
+  extensionUrl={extension.url}
+  structure={extension.snapshot || extension.differential}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`Using ${extension.name} Extension`}
+  language="json"
+  code={extension.examples?.usage}
+/>
+
+<CodeExample
+  title="Extension Definition"
+  language="json"
+  code={extension.examples?.definition}
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR Extensions',
+      url: 'https://www.hl7.org/fhir/extensibility.html'
+    },
+    {
+      name: 'This Extension Definition',
+      url: extension.url
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Extensibility](https://www.hl7.org/fhir/extensibility.html)
+- [Defining Extensions](https://www.hl7.org/fhir/defining-extensions.html)
+{extension.copyright && (
+  <>
+
+    ## Copyright
+
+    {extension.copyright}
+  </>
+)}

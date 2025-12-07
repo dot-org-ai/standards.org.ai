@@ -1,0 +1,67 @@
+---
+layout: refset
+source: SNOMED
+$type: SNOMED/RefSet
+$id: https://standards.org.ai/SNOMED/RefSet/{refset.id}
+sameAs: https://standards.org.ai/RefSet/{refset.id}
+canonical: https://standards.org.ai/SNOMED/RefSet/{refset.id}
+params:
+  - RefSet
+schema:
+  refset:
+    id: RefSetId
+    name: RefSetName
+    description: RefSetDescription
+    type: RefSetType
+    moduleId: ModuleId
+    active: Active
+    effectiveTime: EffectiveTime
+---
+
+# {refset.name}
+
+<RefSetHeader id={refset.id} name={refset.name} type={refset.type} active={refset.active} />
+
+## Reference Set ID
+
+{refset.id}
+
+## Name
+
+{refset.name}
+
+## Description
+
+{refset.description}
+
+## Type
+
+{refset.type}
+
+## Status
+
+Active: {refset.active}
+
+## Effective Time
+
+{refset.effectiveTime}
+
+## Module
+
+{refset.moduleId}
+
+## Members
+
+<RefSetMembers refset={refset.id} />
+
+## Member Concepts
+
+<RefSetConcepts refset={refset.id} />
+
+## Usage in Clinical Systems
+
+<RefSetUsage refset={refset.id} />
+
+## Related Reference Sets
+
+<RelatedRefSets refset={refset.id} />

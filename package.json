@@ -15,7 +15,12 @@
     "generate:advancecte": "bun run .scripts/advancecte.ts",
     "generate:iso": "bun run .scripts/iso.ts",
     "generate:un": "bun run .scripts/un.ts",
-    "generate:iana": "bun run .scripts/iana.ts"
+    "generate:iana": "bun run .scripts/iana.ts",
+    "generate:census": "bun run .scripts/us-census.ts",
+    "generate:w3c": "bun run .scripts/w3c-semantic.ts",
+    "generate:w3c-css": "bun run .scripts/w3c-css.ts",
+    "generate:w3c-accessibility": "bun run .scripts/w3c-accessibility.ts",
+    "generate:w3c-html": "bun run .scripts/w3c-html.ts"
   },
   "devDependencies": {
     "bun-types": "latest"

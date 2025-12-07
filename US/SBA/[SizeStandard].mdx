@@ -1,0 +1,55 @@
+---
+layout: sizeStandard
+source: US/SBA
+$type: US/SBA/SizeStandard
+$id: https://standards.org.ai/US/SBA/SizeStandard/{sizeStandard.naicsCode}
+sameAs: https://standards.org.ai/SBA/SizeStandard/{sizeStandard.naicsCode}
+canonical: https://us.org.ai/SBA/SizeStandard/{sizeStandard.naicsCode}
+params:
+  - SizeStandard
+schema:
+  sizeStandard:
+    naicsCode: NAICSCode
+    naicsTitle: NAICSTitle
+    sizeStandard: SizeStandard
+    sizeType: SizeType
+    footnotes: Footnotes
+---
+
+# {sizeStandard.naicsTitle}
+
+<SizeStandardHeader naicsCode={sizeStandard.naicsCode} naicsTitle={sizeStandard.naicsTitle} />
+
+## NAICS Code
+
+{sizeStandard.naicsCode}
+
+## Size Standard
+
+{sizeStandard.sizeStandard}
+
+## Size Type
+
+{sizeStandard.sizeType}
+
+## Related NAICS Industry
+
+<NAICSIndustryLink code={sizeStandard.naicsCode} />
+
+## Footnotes
+
+{sizeStandard.footnotes && (
+  <FootnotesList footnotes={sizeStandard.footnotes} />
+)}
+
+## Applicable Business Certifications
+
+<BusinessTypesBySizeStandard naicsCode={sizeStandard.naicsCode} />
+
+## Federal Contract Set-Asides
+
+<ContractTypesByIndustry naicsCode={sizeStandard.naicsCode} />
+
+## Industry Exceptions
+
+<ExceptionCodesByIndustry naicsCode={sizeStandard.naicsCode} />

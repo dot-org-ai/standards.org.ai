@@ -1,0 +1,207 @@
+---
+layout: keyword
+source: W3C/SPARQL
+$type: W3C/SPARQL/Keyword
+$id: https://standards.org.ai/W3C/SPARQL/Keyword/{keyword.code}
+sameAs: https://standards.org.ai/Keyword/{keyword.code}
+canonical: https://w3.org.ai/SPARQL/Keyword/{keyword.code}
+params:
+  - Keyword
+schema:
+  keyword:
+    code: string
+    name: string
+    category: string
+    syntax: string
+    description: string
+    specification: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Syntax } from '@/components/standards/Syntax'
+import { Description } from '@/components/standards/Description'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { RelatedItems } from '@/components/standards/RelatedItems'
+import { SpecificationLink } from '@/components/standards/SpecificationLink'
+import { Metadata } from '@/components/standards/Metadata'
+
+<Header
+  title={keyword.name}
+  category={keyword.category}
+  type="SPARQL Keyword"
+  standard="W3C SPARQL 1.1"
+/>
+
+<Metadata
+  items={[
+    { label: 'Category', value: keyword.category },
+    { label: 'Type', value: 'Query Keyword' },
+    { label: 'Standard', value: 'SPARQL 1.1' },
+    { label: 'Status', value: 'W3C Recommendation' }
+  ]}
+/>
+
+## Syntax
+
+<Syntax language="sparql">
+{keyword.syntax}
+</Syntax>
+
+## Description
+
+<Description>
+{keyword.description}
+</Description>
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="sparql" title="Basic Example">
+{`# Example query using ${keyword.name}
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+${keyword.category === 'QueryForm' ? `
+${keyword.name.toUpperCase()} ?title ?author
+WHERE {
+  ?book dc:title ?title ;
+        dc:creator ?author .
+}
+` : keyword.category === 'Clause' ? `
+SELECT ?person ?name
+WHERE {
+  ?person a foaf:Person .
+  ${keyword.name.toUpperCase()} { ?person foaf:name ?name }
+}
+` : keyword.category === 'Modifier' ? `
+SELECT ?person ?name
+WHERE {
+  ?person a foaf:Person ;
+          foaf:name ?name .
+}
+${keyword.name.toUpperCase()}
+` : `
+SELECT ?s ?p ?o
+WHERE {
+  ?s ?p ?o .
+  ${keyword.name.toUpperCase()} (?s != <http://example.org/excluded>)
+}
+`}`}
+</CodeExample>
+
+### Advanced Usage
+
+<CodeExample language="sparql" title="Advanced Example">
+{`# Advanced query demonstrating ${keyword.name} with multiple features
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+
+${keyword.category === 'QueryForm' ? `
+${keyword.name.toUpperCase()} ?subject ?predicate ?object
+WHERE {
+  ?subject ?predicate ?object .
+  FILTER(?predicate != rdf:type)
+}
+LIMIT 100
+` : keyword.category === 'Clause' ? `
+SELECT ?item ?label ?description
+WHERE {
+  ?item rdfs:label ?label .
+  ${keyword.name.toUpperCase()} {
+    ?item rdfs:comment ?description
+    FILTER(LANG(?description) = "en")
+  }
+}
+ORDER BY ?label
+` : keyword.category === 'Modifier' ? `
+SELECT DISTINCT ?type (COUNT(?instance) AS ?count)
+WHERE {
+  ?instance a ?type .
+}
+GROUP BY ?type
+${keyword.name.toUpperCase()}
+HAVING(?count > 5)
+` : `
+SELECT ?resource ?property
+WHERE {
+  ?resource ?property ?value .
+  ${keyword.name.toUpperCase()} (isIRI(?value))
+}
+`}`}
+</CodeExample>
+
+## Use Cases
+
+### Common Patterns
+
+- **Data Retrieval**: Use {keyword.name} to {keyword.category === 'QueryForm' ? 'retrieve and return data from the RDF graph' : keyword.category === 'Clause' ? 'add optional graph patterns to your query' : keyword.category === 'Modifier' ? 'modify query results' : 'add constraints to your query'}
+- **Query Optimization**: Leverage {keyword.name} for {keyword.category === 'QueryForm' ? 'efficient result set construction' : keyword.category === 'Clause' ? 'flexible pattern matching' : keyword.category === 'Modifier' ? 'result set refinement' : 'precise filtering'}
+- **Integration**: Combine with other SPARQL keywords for complex semantic queries
+
+### Best Practices
+
+1. **Performance**: {keyword.category === 'QueryForm' ? 'Choose the appropriate query form for your use case' : keyword.category === 'Clause' ? 'Place OPTIONAL clauses after required patterns' : keyword.category === 'Modifier' ? 'Apply modifiers after filtering for better performance' : 'Use FILTER with bound variables when possible'}
+2. **Readability**: Structure your queries with clear indentation
+3. **Compatibility**: Test queries across different SPARQL endpoints
+4. **Error Handling**: Validate query syntax before execution
+
+## Related Keywords
+
+<RelatedItems
+  items={[
+    keyword.category === 'QueryForm' ? { type: 'Keyword', code: 'ASK', label: 'ASK - Test pattern existence' } :
+    keyword.category === 'Clause' ? { type: 'Keyword', code: 'FILTER', label: 'FILTER - Add constraints' } :
+    keyword.category === 'Modifier' ? { type: 'Keyword', code: 'LIMIT', label: 'LIMIT - Restrict results' } :
+    { type: 'Keyword', code: 'WHERE', label: 'WHERE - Define graph pattern' },
+
+    keyword.category === 'QueryForm' ? { type: 'Keyword', code: 'CONSTRUCT', label: 'CONSTRUCT - Build RDF graph' } :
+    keyword.category === 'Clause' ? { type: 'Keyword', code: 'UNION', label: 'UNION - Alternative patterns' } :
+    keyword.category === 'Modifier' ? { type: 'Keyword', code: 'OFFSET', label: 'OFFSET - Skip results' } :
+    { type: 'Keyword', code: 'BIND', label: 'BIND - Assign variables' },
+
+    { type: 'Function', code: 'BOUND', label: 'BOUND() - Test variable binding' },
+    { type: 'Operator', code: 'AND', label: '&& - Logical AND operator' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="SPARQL 1.1 Query Language"
+  url="https://www.w3.org/TR/sparql11-query/"
+  section={keyword.specification}
+  organization="W3C"
+/>
+
+### Additional Resources
+
+- [SPARQL 1.1 Overview](https://www.w3.org/TR/sparql11-overview/)
+- [SPARQL Working Group](https://www.w3.org/2009/sparql/)
+- [SPARQL Query Validator](https://sparql.org/query-validator.html)
+- [SPARQL Examples and Tutorials](https://www.w3.org/2009/sparql/wiki/Main_Page)
+
+## Notes
+
+### Implementation Notes
+
+{keyword.category === 'QueryForm' ? `
+The ${keyword.name} query form is fundamental to SPARQL query processing. Different SPARQL endpoints may have varying levels of optimization for this query form. Always test performance with your specific dataset and endpoint configuration.
+` : keyword.category === 'Clause' ? `
+The ${keyword.name} clause affects query evaluation order and can significantly impact performance. Understanding its interaction with other clauses is essential for writing efficient SPARQL queries.
+` : keyword.category === 'Modifier' ? `
+The ${keyword.name} modifier is applied after the WHERE clause evaluation. Proper use of modifiers can greatly improve query performance and result quality.
+` : `
+The ${keyword.name} keyword is part of the core SPARQL graph pattern matching syntax. It should be used in conjunction with other pattern matching constructs for effective data retrieval.
+`}
+
+### Browser Support
+
+SPARQL queries are executed server-side by SPARQL endpoints. Client-side JavaScript libraries like SPARQL.js can be used to construct and execute queries from web applications.
+
+### Version History
+
+- **SPARQL 1.0** (2008): Initial specification
+- **SPARQL 1.1** (2013): Enhanced features and functions
+- **Future**: SPARQL 1.2 in development with community feedback

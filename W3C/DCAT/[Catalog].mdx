@@ -1,0 +1,254 @@
+---
+layout: Catalog
+source: W3C/DCAT
+$type: W3C/DCAT/Catalog
+$id: https://standards.org.ai/W3C/DCAT/Catalog/{catalog.code}
+sameAs: https://standards.org.ai/Catalog/{catalog.code}
+canonical: https://w3.org.ai/DCAT/Catalog/{catalog.code}
+params:
+  - Catalog
+schema:
+  catalog:
+    code: string
+    uri: string
+    title: string
+    description: string
+    publisher: object
+    dataset: array
+    service: array
+    catalog: array
+    homepage: string
+    issued: string
+    modified: string
+    language: array
+    license: string
+    rights: string
+    spatial: string
+    themes: array
+    themeTaxonomy: array
+---
+
+# {catalog.title}
+
+<div className="catalog-header">
+  <div className="catalog-metadata">
+    <span className="catalog-uri">{catalog.uri}</span>
+    {catalog.issued && <span className="catalog-issued">Issued: {catalog.issued}</span>}
+    {catalog.modified && <span className="catalog-modified">Updated: {catalog.modified}</span>}
+  </div>
+</div>
+
+## Description
+
+{catalog.description}
+
+<div className="catalog-info-grid">
+  {catalog.publisher && (
+    <div className="publisher">
+      <h3>Publisher</h3>
+      <div className="publisher-details">
+        <p><strong>{catalog.publisher.name}</strong></p>
+        {catalog.publisher.homepage && (
+          <p><a href={catalog.publisher.homepage}>Homepage</a></p>
+        )}
+        {catalog.publisher.type && (
+          <p>Type: {catalog.publisher.type}</p>
+        )}
+      </div>
+    </div>
+  )}
+
+  {catalog.homepage && (
+    <div className="homepage">
+      <h3>Catalog Homepage</h3>
+      <p><a href={catalog.homepage}>{catalog.homepage}</a></p>
+    </div>
+  )}
+
+  {catalog.license && (
+    <div className="license">
+      <h3>License</h3>
+      <p><a href={catalog.license}>{catalog.license}</a></p>
+    </div>
+  )}
+
+  {catalog.language && catalog.language.length > 0 && (
+    <div className="languages">
+      <h3>Languages</h3>
+      <ul>
+        {catalog.language.map((lang, idx) => (
+          <li key={idx}>{lang}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {catalog.spatial && (
+    <div className="spatial">
+      <h3>Geographic Coverage</h3>
+      <p>{catalog.spatial}</p>
+    </div>
+  )}
+</div>
+
+{catalog.themeTaxonomy && catalog.themeTaxonomy.length > 0 && (
+  <section className="theme-taxonomy">
+    <h2>Theme Taxonomy</h2>
+    <p>This catalog uses the following theme taxonomies for dataset classification:</p>
+    <ul>
+      {catalog.themeTaxonomy.map((taxonomy, idx) => (
+        <li key={idx}>
+          <a href={taxonomy.uri || taxonomy}>{taxonomy.title || taxonomy}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{catalog.dataset && catalog.dataset.length > 0 && (
+  <section className="datasets">
+    <h2>Datasets</h2>
+    <p>This catalog contains {catalog.dataset.length} dataset{catalog.dataset.length !== 1 ? 's' : ''}:</p>
+    <div className="dataset-grid">
+      {catalog.dataset.map((ds, idx) => (
+        <div key={idx} className="dataset-card">
+          <h3>
+            <a href={ds.uri || ds}>{ds.title || 'Dataset ' + (idx + 1)}</a>
+          </h3>
+          {ds.description && <p className="dataset-description">{ds.description}</p>}
+          {ds.keyword && ds.keyword.length > 0 && (
+            <div className="dataset-keywords">
+              {ds.keyword.map((kw, kidx) => (
+                <span key={kidx} className="keyword-tag">{kw}</span>
+              ))}
+            </div>
+          )}
+          {ds.modified && (
+            <p className="dataset-modified">Updated: {ds.modified}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{catalog.service && catalog.service.length > 0 && (
+  <section className="services">
+    <h2>Data Services</h2>
+    <p>This catalog provides {catalog.service.length} data service{catalog.service.length !== 1 ? 's' : ''}:</p>
+    <div className="service-grid">
+      {catalog.service.map((svc, idx) => (
+        <div key={idx} className="service-card">
+          <h3>
+            <a href={svc.uri || svc}>{svc.title || 'Service ' + (idx + 1)}</a>
+          </h3>
+          {svc.description && <p className="service-description">{svc.description}</p>}
+          {svc.endpointURL && (
+            <p className="service-endpoint">
+              <strong>Endpoint:</strong> <a href={svc.endpointURL}>{svc.endpointURL}</a>
+            </p>
+          )}
+          {svc.endpointDescription && (
+            <p className="service-spec">
+              <a href={svc.endpointDescription}>View API Specification</a>
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{catalog.catalog && catalog.catalog.length > 0 && (
+  <section className="sub-catalogs">
+    <h2>Sub-Catalogs</h2>
+    <p>This catalog includes {catalog.catalog.length} sub-catalog{catalog.catalog.length !== 1 ? 's' : ''}:</p>
+    <ul>
+      {catalog.catalog.map((subcat, idx) => (
+        <li key={idx}>
+          <a href={subcat.uri || subcat}>{subcat.title || subcat}</a>
+          {subcat.description && <p>{subcat.description}</p>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="catalog-usage">
+  <h2>Using This Catalog</h2>
+  <div className="info-box">
+    <h4>About DCAT Catalogs</h4>
+    <p>
+      A DCAT Catalog is a curated collection of metadata about datasets and data services.
+      Catalogs help users discover and access data resources.
+    </p>
+    <ul>
+      <li>Browse datasets by theme, keyword, or publisher</li>
+      <li>Access data services through standard endpoints</li>
+      <li>Use SPARQL queries to search catalog metadata</li>
+      <li>Subscribe to catalog updates for new datasets</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<${catalog.uri}> a dcat:Catalog ;
+  dcterms:title "${catalog.title}"@en ;
+  dcterms:description "${catalog.description}"@en ;${catalog.publisher ? `
+  dcterms:publisher [
+    a foaf:Organization ;
+    foaf:name "${catalog.publisher.name}"
+  ] ;` : ''}${catalog.homepage ? `
+  foaf:homepage <${catalog.homepage}> ;` : ''}${catalog.issued ? `
+  dcterms:issued "${catalog.issued}"^^xsd:date ;` : ''}${catalog.modified ? `
+  dcterms:modified "${catalog.modified}"^^xsd:date ;` : ''}${catalog.language ? `
+  ${catalog.language.map(lang => `dcterms:language "${lang}"`).join(' ;\n  ')} ;` : ''}${catalog.license ? `
+  dcterms:license <${catalog.license}> ;` : ''}${catalog.dataset ? `
+  ${catalog.dataset.map(ds => `dcat:dataset <${ds.uri || ds}>`).join(' ;\n  ')} ;` : ''}${catalog.service ? `
+  ${catalog.service.map(svc => `dcat:service <${svc.uri || svc}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>List all datasets in this catalog</h4>
+  <pre><code>{`PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?dataset ?title ?description
+WHERE {
+  <${catalog.uri}> dcat:dataset ?dataset .
+  ?dataset dcterms:title ?title .
+  OPTIONAL { ?dataset dcterms:description ?description }
+}
+ORDER BY ?title`}</code></pre>
+
+  <h4>Find datasets by keyword</h4>
+  <pre><code>{`PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?dataset ?title
+WHERE {
+  <${catalog.uri}> dcat:dataset ?dataset .
+  ?dataset dcterms:title ?title ;
+           dcat:keyword ?keyword .
+  FILTER(CONTAINS(LCASE(?keyword), "your-search-term"))
+}`}</code></pre>
+
+  <h4>List all data services</h4>
+  <pre><code>{`PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?service ?title ?endpoint
+WHERE {
+  <${catalog.uri}> dcat:service ?service .
+  ?service dcterms:title ?title ;
+           dcat:endpointURL ?endpoint .
+}`}</code></pre>
+</section>

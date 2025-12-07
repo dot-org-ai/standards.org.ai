@@ -1,0 +1,132 @@
+---
+layout: codeSystem
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/CodeSystem
+$id: https://standards.org.ai/Healthcare/FHIR/CodeSystem/{codeSystem.code}
+sameAs: https://standards.org.ai/CodeSystem/{codeSystem.code}
+canonical: https://standards.org.ai/FHIR/CodeSystem/{codeSystem.code}
+params:
+  - CodeSystem
+schema:
+  codeSystem:
+    code: id
+    name: name
+    title: title
+    description: description
+    status: status
+    experimental: boolean
+    publisher: string
+    purpose: string
+    copyright: string
+    caseSensitive: boolean
+    valueSet: url
+    hierarchyMeaning: string
+    compositional: boolean
+    versionNeeded: boolean
+    content: string
+    count: number
+    concepts: array
+    properties: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRCodeSystemHeader } from '@/components/healthcare/fhir/CodeSystemHeader'
+import { FHIRConceptsHierarchy } from '@/components/healthcare/fhir/ConceptsHierarchy'
+import { FHIRCodeSystemProperties } from '@/components/healthcare/fhir/CodeSystemProperties'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIRCodeSystemHeader
+  code={codeSystem.code}
+  name={codeSystem.name}
+  title={codeSystem.title}
+  status={codeSystem.status}
+/>
+
+<Description content={codeSystem.description} />
+
+## CodeSystem Information
+
+- **Status**: <StatusBadge status={codeSystem.status} />
+- **Case Sensitive**: {codeSystem.caseSensitive ? 'Yes' : 'No'}
+- **Compositional**: {codeSystem.compositional ? 'Yes' : 'No'}
+- **Version Needed**: {codeSystem.versionNeeded ? 'Yes' : 'No'}
+- **Content**: {codeSystem.content}
+- **Concept Count**: {codeSystem.count}
+- **Hierarchy Meaning**: {codeSystem.hierarchyMeaning || 'is-a'}
+- **Publisher**: {codeSystem.publisher || 'HL7 International'}
+
+{codeSystem.purpose && (
+  <>
+    ## Purpose
+
+    {codeSystem.purpose}
+  </>
+)}
+
+## Properties
+
+<FHIRCodeSystemProperties
+  properties={codeSystem.properties}
+/>
+
+## Concepts
+
+<FHIRConceptsHierarchy
+  concepts={codeSystem.concepts}
+  hierarchyMeaning={codeSystem.hierarchyMeaning}
+  caseSensitive={codeSystem.caseSensitive}
+/>
+
+## Usage Example
+
+<CodeExample
+  title={`${codeSystem.name} CodeSystem Definition`}
+  language="json"
+  code={codeSystem.examples?.definition}
+/>
+
+<CodeExample
+  title="Concept Lookup"
+  language="json"
+  code={codeSystem.examples?.lookup}
+/>
+
+{codeSystem.valueSet && (
+  <>
+    ## Associated ValueSet
+
+    This CodeSystem has an associated ValueSet: [{codeSystem.valueSet}]({codeSystem.valueSet})
+  </>
+)}
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR CodeSystem Resource',
+      url: 'https://www.hl7.org/fhir/codesystem.html'
+    },
+    {
+      name: 'This CodeSystem Definition',
+      url: codeSystem.url
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Terminology Service](https://www.hl7.org/fhir/terminology-service.html)
+- [FHIR CodeSystem Resource](https://www.hl7.org/fhir/codesystem.html)
+{codeSystem.copyright && (
+  <>
+
+    ## Copyright
+
+    {codeSystem.copyright}
+  </>
+)}

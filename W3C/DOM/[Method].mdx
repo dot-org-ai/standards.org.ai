@@ -1,0 +1,159 @@
+---
+layout: method
+source: W3C/DOM
+$type: W3C/DOM/Method
+$id: https://standards.org.ai/W3C/DOM/Method/{method.code}
+sameAs: https://standards.org.ai/Method/{method.code}
+canonical: https://w3.org.ai/DOM/Method/{method.code}
+params:
+  - Method
+schema:
+  method:
+    code: name
+    name: name
+    interface: string
+    parameters: array
+    returnType: string
+    description: string
+    throws: array
+    async: boolean
+    static: boolean
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { MethodSignature } from '@/components/w3c/dom/MethodSignature'
+import { ParametersTable } from '@/components/w3c/dom/ParametersTable'
+import { ReturnValue } from '@/components/w3c/dom/ReturnValue'
+import { ExceptionsTable } from '@/components/w3c/dom/ExceptionsTable'
+import { RelatedMethods } from '@/components/w3c/dom/RelatedMethods'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+
+<Header
+  type="DOM Method"
+  code={method.name}
+  name={`${method.interface}.${method.name}()`}
+  standard="W3C DOM"
+/>
+
+<Description content={method.description} />
+
+## Method Signature
+
+<MethodSignature
+  method={method.name}
+  interface={method.interface}
+  parameters={method.parameters}
+  returnType={method.returnType}
+  static={method.static}
+  async={method.async}
+/>
+
+## Parameters
+
+<ParametersTable
+  parameters={method.parameters}
+/>
+
+## Return Value
+
+<ReturnValue
+  type={method.returnType}
+  description={method.returnDescription}
+/>
+
+{method.throws && method.throws.length > 0 && (
+  <>
+    ## Exceptions
+
+    <ExceptionsTable
+      exceptions={method.throws}
+    />
+  </>
+)}
+
+## Usage Examples
+
+<CodeExample
+  title={`Basic usage of ${method.name}()`}
+  language="javascript"
+  code={method.examples?.basic}
+/>
+
+{method.examples?.withParameters && method.parameters.length > 0 && (
+  <CodeExample
+    title="With parameters"
+    language="javascript"
+    code={method.examples.withParameters}
+  />
+)}
+
+{method.examples?.errorHandling && method.throws && (
+  <CodeExample
+    title="Error handling"
+    language="javascript"
+    code={method.examples.errorHandling}
+  />
+)}
+
+{method.examples?.advanced && (
+  <CodeExample
+    title="Advanced usage"
+    language="javascript"
+    code={method.examples.advanced}
+  />
+)}
+
+## Common Use Cases
+
+{method.useCases?.map((useCase, index) => (
+  <div key={index} className="use-case">
+    <h3>{useCase.title}</h3>
+    <p>{useCase.description}</p>
+    {useCase.example && (
+      <CodeExample
+        language="javascript"
+        code={useCase.example}
+      />
+    )}
+  </div>
+))}
+
+## Notes
+
+{method.notes?.map((note, index) => (
+  <div key={index} className="note">
+    <p>{note}</p>
+  </div>
+))}
+
+## Related Methods
+
+<RelatedMethods
+  interface={method.interface}
+  currentMethod={method.name}
+  related={method.relatedMethods}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`api.${method.interface}.${method.name}`}
+  standard="W3C DOM"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={method.specifications}
+  standard="DOM"
+/>
+
+## See Also
+
+- [DOM Living Standard: {method.interface}.{method.name}](https://dom.spec.whatwg.org/#{method.interface.toLowerCase()})
+- [MDN Web Docs: {method.interface}.{method.name}()](https://developer.mozilla.org/en-US/docs/Web/API/{method.interface}/{method.name})
+- [{method.interface} interface](/W3C/DOM/Interface/{method.interface})

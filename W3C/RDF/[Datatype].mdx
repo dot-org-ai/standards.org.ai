@@ -1,0 +1,248 @@
+---
+layout: datatype
+source: W3C/RDF
+$type: W3C/RDF/Datatype
+$id: https://standards.org.ai/W3C/RDF/Datatype/{Datatype.code}
+sameAs: https://standards.org.ai/Datatype/{Datatype.code}
+canonical: https://w3.org.ai/RDF/Datatype/{Datatype.code}
+params:
+  - Datatype
+schema:
+  Datatype:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    base: string
+    pattern: string
+---
+
+import { DatatypeHeader } from '@/components/semantic-web/DatatypeHeader'
+import { DatatypeDetails } from '@/components/semantic-web/DatatypeDetails'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<DatatypeHeader
+  uri={Datatype.uri}
+  label={Datatype.label}
+  type="RDF Datatype"
+/>
+
+## Description
+
+{Datatype.comment}
+
+This datatype is used in RDF to specify the type of literal values, ensuring proper interpretation and validation of data values in the semantic web.
+
+## Datatype Details
+
+<DatatypeDetails
+  base={Datatype.base}
+  pattern={Datatype.pattern}
+/>
+
+### Base Datatype
+
+{Datatype.base ? (
+  <p>This datatype is derived from: <code>{Datatype.base}</code></p>
+) : (
+  <p>This is a primitive datatype with no base type.</p>
+)}
+
+### Pattern Constraint
+
+{Datatype.pattern ? (
+  <>
+    <p>Values must match the following pattern:</p>
+    <code>{Datatype.pattern}</code>
+  </>
+) : (
+  <p>No specific pattern constraint is defined for this datatype.</p>
+)}
+
+## Value Space
+
+The value space of `{Datatype.label}` consists of all valid values that conform to this datatype's definition, including:
+
+- Format requirements
+- Range constraints
+- Precision and scale limitations
+- Encoding specifications
+
+## Lexical Space
+
+The lexical space defines the valid string representations for values of this datatype. Each value in the value space may have one or more lexical representations.
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Usage in Turtle
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ex: <http://example.org/> .
+
+# Explicit datatype
+ex:resource ex:property "example value"^^{Datatype.uri} .
+
+# With language tag (for string types)
+ex:resource ex:label "Example"@en .
+
+# Multiple typed literals
+ex:data ex:value1 "value1"^^{Datatype.uri} ;
+        ex:value2 "value2"^^{Datatype.uri} .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:ex="http://example.org/">
+  <rdf:Description rdf:about="http://example.org/resource">
+    <ex:property rdf:datatype="{Datatype.uri}">example value</ex:property>
+  </rdf:Description>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "ex": "http://example.org/",
+    "property": {
+      "@id": "ex:property",
+      "@type": "{Datatype.uri}"
+    }
+  },
+  "@id": "ex:resource",
+  "property": "example value"
+}
+```
+
+### SPARQL Filter Example
+
+```sparql
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX ex: <http://example.org/>
+
+SELECT ?resource ?value
+WHERE {
+  ?resource ex:property ?value .
+  FILTER(datatype(?value) = {Datatype.uri})
+}
+```
+
+</UsageExamples>
+
+## Type Casting
+
+RDF provides mechanisms for casting between compatible datatypes:
+
+```sparql
+# SPARQL type casting
+BIND(xsd:string(?value) AS ?stringValue)
+BIND({Datatype.uri}(?input) AS ?typedValue)
+```
+
+## Validation
+
+### Valid Examples
+
+Examples of valid literal values for this datatype:
+
+```turtle
+# Add specific valid examples based on the datatype
+ex:example1 ex:prop "valid-value-1"^^{Datatype.uri} .
+ex:example2 ex:prop "valid-value-2"^^{Datatype.uri} .
+```
+
+### Invalid Examples
+
+Common errors to avoid:
+
+```turtle
+# Examples of invalid usage (will cause validation errors)
+# ex:invalid ex:prop "wrong-format"^^{Datatype.uri} .
+```
+
+## Comparison and Ordering
+
+When comparing values of this datatype:
+
+1. **Equality**: Values are equal if they represent the same value in the value space
+2. **Ordering**: {Datatype.ordered ? 'This datatype has a defined ordering' : 'This datatype has no inherent ordering'}
+3. **Collation**: String-based datatypes may use specific collation rules
+
+## Best Practices
+
+When using `{Datatype.label}`:
+
+1. **Explicit Typing**: Always specify the datatype explicitly to avoid ambiguity
+2. **Validation**: Validate literal values against the datatype's constraints
+3. **Canonicalization**: Use canonical forms for consistent representation
+4. **Precision**: Be aware of precision limitations for numeric types
+5. **Internationalization**: Consider language tags for human-readable strings
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#Datatype', label: 'rdfs:Datatype' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#Literal', label: 'rdfs:Literal' },
+    { uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString', label: 'rdf:langString' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="RDF 1.1 Concepts and Abstract Syntax"
+  url="https://www.w3.org/TR/rdf11-concepts/"
+  section="datatypes"
+/>
+
+### Normative References
+
+- [RDF 1.1 Concepts and Abstract Syntax](https://www.w3.org/TR/rdf11-concepts/)
+- [XML Schema Part 2: Datatypes](https://www.w3.org/TR/xmlschema-2/)
+- [RDF 1.1 Semantics](https://www.w3.org/TR/rdf11-mt/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/1999/02/22-rdf-syntax-ns#` or `http://www.w3.org/2001/XMLSchema#`
+- **URI**: `{Datatype.uri}`
+- **Status**: W3C Recommendation
+- **Version**: RDF 1.1
+
+## Implementation Notes
+
+### Programming Language Mappings
+
+Different programming languages map this datatype to native types:
+
+- **JavaScript/TypeScript**: Native type mapping
+- **Python**: RDFLib datatype handling
+- **Java**: Apache Jena typed literals
+- **C#**: dotNetRDF literal nodes
+
+### Serialization Formats
+
+This datatype is supported across all RDF serialization formats:
+
+- **Turtle/N-Triples**: `"value"^^datatype`
+- **RDF/XML**: `rdf:datatype` attribute
+- **JSON-LD**: `@type` in context or explicit
+- **N-Quads**: Same as N-Triples with graph support
+
+## Additional Resources
+
+- [RDF 1.1 Primer](https://www.w3.org/TR/rdf11-primer/)
+- [XSD Datatypes Reference](https://www.w3.org/TR/xmlschema-2/)
+- [RDF Validation](https://www.w3.org/2001/sw/wiki/RDF/Validation)

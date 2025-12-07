@@ -1,0 +1,49 @@
+---
+layout: place
+source: Census/Geographic
+$type: Census/Place
+$id: https://standards.org.ai/Census/Place/{place.fips}
+sameAs: https://standards.org.ai/Place/{place.fips}
+canonical: https://us.org.ai/Census/Place/{place.fips}
+params:
+  - Place
+schema:
+  place:
+    fips: fips
+    name: name
+    state: state
+    type: type
+    population: population
+---
+
+# {place.name}, {place.state}
+
+<PlaceHeader fips={place.fips} name={place.name} state={place.state} type={place.type} />
+
+## FIPS Code
+
+{place.fips}
+
+## Type
+
+{place.type}
+
+## State
+
+<StateLink state={place.state} />
+
+## Population
+
+{place.population}
+
+## Demographics
+
+<PlaceDemographics fips={place.fips} />
+
+## Economy
+
+<PlaceEconomy fips={place.fips} />
+
+## Metropolitan Area
+
+<PlaceCBSA fips={place.fips} />

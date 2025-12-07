@@ -1,0 +1,57 @@
+---
+layout: state
+source: Census/Geographic
+$type: Census/State
+$id: https://standards.org.ai/Census/State/{state.fips}
+sameAs: https://standards.org.ai/State/{state.fips}
+canonical: https://us.org.ai/Census/State/{state.fips}
+params:
+  - State
+schema:
+  state:
+    fips: fips
+    name: name
+    abbreviation: abbreviation
+    region: region
+    division: division
+---
+
+# {state.name}
+
+<StateHeader fips={state.fips} name={state.name} abbreviation={state.abbreviation} />
+
+## FIPS Code
+
+{state.fips}
+
+## Abbreviation
+
+{state.abbreviation}
+
+## Census Region
+
+<RegionLink region={state.region} />
+
+## Census Division
+
+<DivisionLink division={state.division} />
+
+## Counties
+
+<CountyList state={state.fips} />
+
+## Places
+
+<PlaceList state={state.fips} />
+
+## Metropolitan Areas
+
+<CBSAList state={state.fips} />
+
+## Demographics
+
+<StateDemographics fips={state.fips} />
+
+## Economy
+
+<StateEconomy fips={state.fips} />

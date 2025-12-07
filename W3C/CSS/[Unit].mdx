@@ -1,0 +1,711 @@
+---
+layout: unit
+source: W3C/CSS
+$type: W3C/CSS/Unit
+$id: https://standards.org.ai/W3C/CSS/Unit/{unit.code}
+sameAs: https://standards.org.ai/Unit/{unit.code}
+canonical: https://w3.org.ai/CSS/Unit/{unit.code}
+params:
+  - Unit
+schema:
+  unit:
+    code: string
+    name: string
+    type: string
+    relativeTo: string
+    description: string
+    specification: string
+    category: string
+    conversion: string
+    examples: array
+---
+
+import { UnitHeader } from '@/components/css/UnitHeader'
+import { UnitConverter } from '@/components/css/UnitConverter'
+import { CodeExample } from '@/components/css/CodeExample'
+import { BrowserCompatibility } from '@/components/css/BrowserCompatibility'
+import { RelatedUnits } from '@/components/css/RelatedUnits'
+import { SpecificationLinks } from '@/components/css/SpecificationLinks'
+import { UnitTable } from '@/components/css/UnitTable'
+
+<UnitHeader
+  name={unit.name}
+  code={unit.code}
+  description={unit.description}
+/>
+
+## Description
+
+{unit.description}
+
+## Unit Information
+
+<UnitTable>
+  <UnitRow label="Unit Symbol" value={<code>{unit.code}</code>} />
+  <UnitRow label="Unit Name" value={unit.name} />
+  <UnitRow label="Type" value={unit.type} />
+  <UnitRow label="Category" value={unit.category} />
+  {unit.relativeTo && <UnitRow label="Relative To" value={unit.relativeTo} />}
+  <UnitRow label="Specification" value={unit.specification} />
+</UnitTable>
+
+## Type Classification
+
+**{unit.type === 'absolute' ? 'Absolute Unit' : 'Relative Unit'}**
+
+{unit.type === 'absolute' ? `
+Absolute units are fixed and do not change based on other elements or viewport properties. They represent physical measurements or fixed pixel values.
+
+**Characteristics:**
+- Fixed size regardless of context
+- Predictable across different environments
+- Best for print media and fixed layouts
+- ${unit.code} is defined as: ${unit.conversion || unit.description}
+` : `
+Relative units are computed based on other values, making them flexible and responsive to different contexts.
+
+**Characteristics:**
+- Size depends on {unit.relativeTo || 'context'}
+- Adapts to user preferences and viewport
+- Ideal for responsive and accessible designs
+- Computed at render time based on: {unit.relativeTo}
+`}
+
+## Conversion
+
+{unit.conversion ? `
+**Conversion Formula:** ${unit.conversion}
+
+<UnitConverter unit={unit.code} type={unit.type} />
+` : `
+This unit's value is computed dynamically based on ${unit.relativeTo || 'context'}.
+`}
+
+{unit.code === 'px' && `
+### Pixel Density
+
+- 1px = 1/96th of 1 inch (CSS reference pixel)
+- On high-DPI displays, 1 CSS pixel may equal multiple device pixels
+- Device Pixel Ratio (DPR) affects how px units render
+- Modern displays often have DPR of 2x or 3x
+`}
+
+{unit.code === 'em' && `
+### Calculation Examples
+
+\`\`\`
+Parent font-size: 16px
+1em = 16px
+2em = 32px
+0.5em = 8px
+
+Nested element with parent font-size: 20px
+1em = 20px (relative to immediate parent)
+\`\`\`
+
+### Compounding Effect
+
+em units compound when nested:
+- Parent: 1.2em of 16px = 19.2px
+- Child: 1.2em of 19.2px = 23.04px
+- Grandchild: 1.2em of 23.04px = 27.65px
+`}
+
+{unit.code === 'rem' && `
+### Calculation Examples
+
+\`\`\`
+Root font-size: 16px (default)
+1rem = 16px
+2rem = 32px
+0.5rem = 8px
+
+Root font-size: 20px (custom)
+1rem = 20px
+1.5rem = 30px
+\`\`\`
+
+### No Compounding
+
+Unlike em, rem always refers to root font-size:
+- All levels: 1rem = same value throughout document
+- Predictable and easier to maintain
+- Preferred for spacing systems
+`}
+
+{unit.code === 'vw' && `
+### Viewport Width Calculation
+
+\`\`\`
+Viewport width: 1200px
+1vw = 12px
+50vw = 600px (half viewport)
+100vw = 1200px (full viewport)
+
+Viewport width: 375px (mobile)
+1vw = 3.75px
+50vw = 187.5px
+\`\`\`
+`}
+
+{unit.code === 'vh' && `
+### Viewport Height Calculation
+
+\`\`\`
+Viewport height: 800px
+1vh = 8px
+50vh = 400px (half viewport)
+100vh = 800px (full viewport)
+
+Mobile viewport (without URL bar): 667px
+1vh = 6.67px
+100vh = 667px
+\`\`\`
+
+### Mobile Browser Considerations
+
+Mobile browsers may change viewport height when UI elements (address bar, toolbars) show/hide. Consider using dvh (dynamic viewport height) for more stable behavior.
+`}
+
+{unit.code === '%' && `
+### Percentage Calculation Context
+
+Percentages resolve differently based on the property:
+
+\`\`\`
+width: 50%        → 50% of parent's width
+height: 50%       → 50% of parent's height
+font-size: 150%   → 150% of parent's font-size
+line-height: 120% → 120% of element's font-size
+padding: 10%      → 10% of parent's WIDTH (yes, even for padding-top/bottom)
+margin: 5%        → 5% of parent's WIDTH
+transform: translate(50%, 50%) → 50% of element's own width/height
+\`\`\`
+`}
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="css">
+{`/* Using ${unit.code} unit */
+.element {
+  ${unit.category === 'length' ? `width: 200${unit.code};` : ''}
+  ${unit.category === 'length' ? `padding: 1${unit.code};` : ''}
+  ${unit.category === 'length' ? `margin: 2${unit.code};` : ''}
+  ${unit.category === 'angle' ? `transform: rotate(45${unit.code});` : ''}
+  ${unit.category === 'time' ? `transition-duration: 300${unit.code};` : ''}
+  ${unit.category === 'resolution' ? `/* Use in media queries */` : ''}
+}
+`}
+</CodeExample>
+
+### Common Patterns
+
+{unit.examples && unit.examples.map((example, idx) => (
+  <section key={idx}>
+    <h4>{example.title}</h4>
+
+    <CodeExample language="css">
+{example.css}
+    </CodeExample>
+
+    <p>{example.description}</p>
+  </section>
+))}
+
+### Practical Examples
+
+<CodeExample language="css">
+{`/* Real-world usage of ${unit.code} */
+
+${unit.category === 'length' && unit.type === 'relative' ? `
+/* Responsive Typography */
+.heading {
+  font-size: 2${unit.code};
+  line-height: 1.2;
+  margin-bottom: 1${unit.code};
+}
+
+/* Responsive Spacing System */
+.container {
+  padding: 2${unit.code};
+  gap: 1${unit.code};
+}
+
+.section {
+  margin-top: 4${unit.code};
+  margin-bottom: 3${unit.code};
+}
+` : ''}
+
+${unit.category === 'length' && unit.type === 'absolute' ? `
+/* Fixed Sizing */
+.icon {
+  width: 24${unit.code};
+  height: 24${unit.code};
+}
+
+/* Precise Measurements */
+.border {
+  border: 1${unit.code} solid #ddd;
+}
+
+.divider {
+  height: 2${unit.code};
+  background: #000;
+}
+` : ''}
+
+${unit.code === 'vw' || unit.code === 'vh' ? `
+/* Full Viewport Sections */
+.hero {
+  height: 100vh;
+  width: 100vw;
+}
+
+/* Responsive Typography */
+.title {
+  font-size: calc(2rem + 2vw);
+}
+
+/* Maintaining Aspect Ratio */
+.square {
+  width: 50vw;
+  height: 50vw;
+}
+` : ''}
+
+${unit.code === '%' ? `
+/* Flexible Layouts */
+.sidebar {
+  width: 25%;
+  float: left;
+}
+
+.main {
+  width: 75%;
+  float: left;
+}
+
+/* Responsive Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Transparency */
+.overlay {
+  background: rgba(0, 0, 0, 50%);
+}
+` : ''}
+
+${unit.category === 'angle' ? `
+/* Rotations */
+.card {
+  transform: rotate(5${unit.code});
+}
+
+/* Gradients */
+.background {
+  background: linear-gradient(45${unit.code}, red, blue);
+}
+
+/* Skew Effects */
+.slant {
+  transform: skew(10${unit.code});
+}
+` : ''}
+
+${unit.category === 'time' ? `
+/* Smooth Transitions */
+.button {
+  transition: all 300${unit.code} ease;
+}
+
+/* Animation Timing */
+.loader {
+  animation: spin 1${unit.code === 's' ? '000ms' : 's'} linear infinite;
+}
+
+/* Delayed Effects */
+.fade-in {
+  animation-delay: 500${unit.code};
+}
+` : ''}
+`}
+</CodeExample>
+
+### Interactive Demo
+
+<CodeExample language="html" live>
+{`<div class="demo">
+  <div class="element">
+    <div class="content">
+      ${unit.code} Unit Demo
+    </div>
+  </div>
+  <div class="info">
+    Resize the window to see ${unit.type === 'relative' ? 'how this unit adapts' : 'this unit in action'}
+  </div>
+</div>
+
+<style>
+.demo {
+  padding: 2rem;
+  background: #f5f5f5;
+  min-height: 200px;
+}
+
+.element {
+  background: white;
+  border: 2px solid #2196f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${unit.category === 'length' ? `
+  width: 20${unit.code};
+  height: 10${unit.code};
+  padding: 2${unit.code};
+  ` : ''}
+
+  ${unit.category === 'angle' ? `
+  width: 150px;
+  height: 150px;
+  transform: rotate(15${unit.code});
+  ` : ''}
+
+  ${unit.category === 'time' ? `
+  width: 200px;
+  height: 100px;
+  transition: background 500${unit.code};
+  ` : ''}
+}
+
+${unit.category === 'time' ? `
+.element:hover {
+  background: #e3f2fd;
+}
+` : ''}
+
+.content {
+  ${unit.code === 'em' || unit.code === 'rem' ? `
+  font-size: 1.5${unit.code};
+  ` : ''}
+  font-weight: 600;
+  text-align: center;
+}
+
+.info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  font-size: 14px;
+}
+</style>
+`}
+</CodeExample>
+
+## Use Cases
+
+Common scenarios where `{unit.code}` is most appropriate:
+
+{unit.type === 'relative' && `
+### Responsive Design
+- Creating fluid layouts that adapt to different screen sizes
+- Scaling typography proportionally
+- Building flexible spacing systems
+- Supporting user font-size preferences
+- Maintaining consistent proportions across viewports
+
+### Accessibility
+- Respecting user zoom and font-size settings
+- Creating scalable interfaces
+- Supporting different device capabilities
+- Enhancing readability across devices
+`}
+
+{unit.type === 'absolute' && `
+### Fixed Layouts
+- Precise control over element dimensions
+- Print stylesheets and media
+- Icons and graphics with specific sizes
+- Borders and thin lines
+- Fixed-width layouts
+
+### Design Precision
+- Matching exact design specifications
+- Creating pixel-perfect layouts
+- Consistent sizing across browsers
+- Print media preparation
+`}
+
+{unit.code === 'px' && `
+### Ideal For:
+- Border widths (1px, 2px)
+- Box shadows and offsets
+- Small icons (16px, 24px, 32px)
+- Media queries (min-width: 768px)
+- Image dimensions when exact size needed
+`}
+
+{unit.code === 'em' && `
+### Ideal For:
+- Component-scoped spacing
+- Padding and margins relative to font-size
+- Creating self-contained, scalable components
+- Typography-based sizing
+- Nested component styling
+`}
+
+{unit.code === 'rem' && `
+### Ideal For:
+- Global spacing systems
+- Consistent sizing across the site
+- Font-size declarations
+- Breaking the compounding cascade
+- Predictable spacing patterns
+`}
+
+{unit.code === 'vw' || unit.code === 'vh' ? `
+### Ideal For:
+- Full-screen sections and heroes
+- Responsive typography (with calc)
+- Aspect ratio preservation
+- Viewport-based layouts
+- Fluid sizing without media queries
+`}
+
+{unit.code === '%' ? `
+### Ideal For:
+- Flexible layouts and columns
+- Responsive images (max-width: 100%)
+- Proportional sizing
+- Grid and flexbox systems
+- Parent-relative positioning
+`}
+
+## Browser Compatibility
+
+<BrowserCompatibility unit={unit.code} />
+
+## Specifications
+
+<SpecificationLinks specifications={[
+  {
+    name: unit.specification,
+    url: `https://www.w3.org/TR/${unit.specification}/#${unit.category}-units`,
+    status: 'Recommendation'
+  }
+]} />
+
+## Related Units
+
+<RelatedUnits unit={unit.code} category={unit.category} type={unit.type} />
+
+{unit.category === 'length' && `
+### Length Unit Comparison
+
+| Unit | Type | Relative To | Use Case |
+|------|------|-------------|----------|
+| px | Absolute | N/A | Borders, small fixed sizes |
+| em | Relative | Parent font-size | Component spacing |
+| rem | Relative | Root font-size | Global spacing system |
+| % | Relative | Parent dimension | Flexible layouts |
+| vw | Relative | Viewport width | Responsive sizing |
+| vh | Relative | Viewport height | Full-height sections |
+| vmin | Relative | Smaller viewport dimension | Square elements |
+| vmax | Relative | Larger viewport dimension | Adaptive sizing |
+`}
+
+{unit.category === 'angle' && `
+### Angle Unit Conversion
+
+| Unit | Full Circle | Quarter Circle | Common Use |
+|------|-------------|----------------|------------|
+| deg | 360deg | 90deg | Gradients, rotations |
+| rad | 6.2832rad (2π) | 1.5708rad (π/2) | Mathematical transforms |
+| grad | 400grad | 100grad | European surveys |
+| turn | 1turn | 0.25turn | Full rotations |
+`}
+
+{unit.category === 'time' && `
+### Time Unit Conversion
+
+| Unit | In Milliseconds | Common Use |
+|------|-----------------|------------|
+| s | 1s = 1000ms | Longer animations (1s, 2s) |
+| ms | 1ms | Precise timing (250ms, 500ms) |
+`}
+
+## Best Practices
+
+{unit.type === 'relative' ? `
+### Using ${unit.code} Effectively
+
+- Embrace the flexible nature for responsive designs
+- Set a consistent root value for predictable scaling
+- Use in spacing systems for consistency
+- Combine with CSS custom properties for maintainability
+- Test across different viewport sizes and zoom levels
+` : `
+### Using ${unit.code} Effectively
+
+- Use for elements that need fixed sizing
+- Consider if relative units would be more appropriate
+- Test on high-DPI displays
+- Provide fallbacks for critical layouts
+- Document when fixed sizing is intentional
+`}
+
+{unit.code === 'px' && `
+- Avoid using px for font-size (limits user zoom)
+- Good for: borders (1px), small icons, media query breakpoints
+- Use rem or em for most spacing and typography
+- Remember that CSS px ≠ device pixels on high-DPI screens
+`}
+
+{unit.code === 'em' && `
+- Be aware of compounding in nested elements
+- Use for component-specific spacing
+- Good for padding/margin related to local font-size
+- Can make components harder to predict in deep nesting
+- Consider rem for non-component-scoped values
+`}
+
+{unit.code === 'rem' && `
+- Excellent for global spacing systems (0.5rem, 1rem, 2rem)
+- Set html font-size to 62.5% for easy calculation (1rem = 10px)
+- Use for consistent typography scale
+- Respects user font-size preferences
+- Easier to maintain than em in complex layouts
+`}
+
+{unit.code === 'vw' || unit.code === 'vh' ? `
+- Watch for horizontal scrollbars with 100vw
+- Mobile browsers may change vh when UI shows/hides
+- Combine with calc() for responsive typography: calc(1rem + 1vw)
+- Use dvh/lvh/svh for better mobile support
+- Test on actual mobile devices, not just browser DevTools
+`}
+
+{unit.code === '%' && `
+- Remember: padding/margin % is based on parent WIDTH
+- Use for fluid layouts and responsive images
+- Parent must have defined dimension for % to work
+- Good for: max-width, opacity, transform translate
+- Can create circular dependencies if not careful
+`}
+
+## Common Mistakes
+
+- Using {unit.code} where another unit would be more appropriate
+{unit.type === 'relative' ? '- Not considering the reference value (what it\'s relative to)' : '- Not considering responsive design needs'}
+{unit.type === 'relative' ? '- Forgetting that the value changes based on context' : '- Using in contexts where flexibility would be beneficial'}
+- Missing browser compatibility considerations
+- Not testing across different viewport sizes and zoom levels
+
+{unit.code === 'em' && `
+- Unexpected compounding in nested elements
+- Using em for margins when rem would be clearer
+- Not documenting the expected parent font-size
+- Creating overly complex nested em calculations
+`}
+
+{unit.code === 'rem' && `
+- Assuming rem always equals 16px (users can change root size)
+- Not setting a consistent root font-size
+- Using px for root font-size (should use %)
+- Forgetting rem doesn't work in media queries in some browsers
+`}
+
+{unit.code === 'vw' || unit.code === 'vh' ? `
+- Not accounting for scrollbars in 100vw
+- Relying on 100vh for mobile without testing
+- Using vw/vh in ways that cause content to shrink too much
+- Not providing fallbacks for older browsers
+`}
+
+{unit.code === '%' && `
+- Assuming % always refers to parent dimension
+- Using % height without parent height defined
+- Forgetting padding % is based on WIDTH, not height
+- Creating circular references with %
+`}
+
+## Performance Considerations
+
+{unit.type === 'relative' ? `
+- Relative units require calculation at render time
+- Can trigger reflows if reference values change
+- Generally negligible impact on modern browsers
+- Use CSS custom properties to avoid repeated calculations
+` : `
+- Absolute units are computed once
+- Simpler for browsers to calculate
+- May perform slightly better in complex layouts
+- Differences are typically imperceptible
+`}
+
+{unit.code === 'vw' || unit.code === 'vh' ? `
+- Viewport units recalculate on resize
+- Can cause performance issues if overused
+- Be cautious with vw/vh in animations
+- Use CSS containment to limit reflow scope
+`}
+
+## Accessibility Considerations
+
+{unit.type === 'relative' ? `
+### ${unit.code} and Accessibility
+
+- **Excellent for accessibility** - respects user preferences
+- Users can zoom and adjust font sizes
+- Scales proportionally with user settings
+- Maintains readability across zoom levels
+- Supports users with vision impairments
+` : `
+### ${unit.code} and Accessibility
+
+- Fixed units don't scale with user zoom (in some cases)
+- May break layouts when users increase font size
+- Consider using relative units for better accessibility
+- Ensure content remains readable at 200% zoom
+- Test with browser zoom and font-size preferences
+`}
+
+{unit.code === 'px' && `
+**Warning:** Using px for font-size can limit accessibility. When users increase browser font size, px values don't scale, making text harder to read. Use rem or em for font-size instead.
+`}
+
+{unit.code === 'rem' || unit.code === 'em' ? `
+**Recommended:** ${unit.code} units are excellent for accessibility as they respect user font-size preferences and zoom settings. This is crucial for users with vision impairments.
+`}
+
+## Tools and Calculators
+
+- [PX to ${unit.code.toUpperCase()} Converter](#)
+{unit.type === 'relative' && `- [${unit.name} Calculator](#)`}
+- CSS Unit Converter Browser Extensions
+- Browser DevTools for computed value inspection
+- Responsive design testing tools
+
+## See Also
+
+- MDN Web Docs: [CSS Values and Units](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Values_and_Units)
+- [CSS Values and Units Module Level 4](https://www.w3.org/TR/css-values-4/)
+- [Understanding sizing units](https://web.dev/learn/css/sizing/)
+
+## Further Reading
+
+- When to use {unit.code} vs other units
+- {unit.code} in responsive design patterns
+- Accessibility implications of unit choices
+- Cross-browser compatibility considerations
+- Performance impact of different unit types
+
+---
+
+*Part of the W3C CSS Units Specifications. Last updated from [{unit.specification}].*

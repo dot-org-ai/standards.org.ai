@@ -1,0 +1,82 @@
+---
+layout: specialprogram
+source: US/USITC
+$type: US/USITC/SpecialProgram
+$id: https://standards.org.ai/US/USITC/SpecialProgram/{program.code}
+sameAs: https://standards.org.ai/SpecialProgram/{program.code}
+canonical: https://us.org.ai/USITC/SpecialProgram/{program.code}
+params:
+  - SpecialProgram
+schema:
+  program:
+    code: code
+    name: name
+    description: description
+    countries: countries
+    eligibility: eligibility
+---
+
+# {program.name} ({program.code})
+
+<SpecialProgramHeader code={program.code} name={program.name} />
+
+## Description
+
+{program.description}
+
+## Program Code
+
+{program.code}
+
+## Eligible Countries/Regions
+
+{program.countries}
+
+<EligibleCountriesList program={program.code} />
+
+## Eligibility Requirements
+
+{program.eligibility}
+
+## HTS Codes with This Program
+
+<HTSCodesByProgram program={program.code} />
+
+## Duty Rate Benefits
+
+<DutyRateBenefits program={program.code} />
+
+## Program Details
+
+### Common Special Program Codes:
+- **A** - Generalized System of Preferences (GSP)
+- **A+** - GSP for Least Developed Beneficiary Countries
+- **AU** - US-Australia Free Trade Agreement
+- **B** - Automotive Products Trade Act
+- **BH** - US-Bahrain Free Trade Agreement
+- **CA** - USMCA (formerly NAFTA) - Canada
+- **CL** - US-Chile Free Trade Agreement
+- **CO** - Andean Trade Preference Act (ATPA)
+- **D** - African Growth and Opportunity Act (AGOA)
+- **E** - Caribbean Basin Economic Recovery Act (CBERA)
+- **IL** - US-Israel Free Trade Agreement
+- **J** - Andean Trade Promotion and Drug Eradication Act (ATPDEA)
+- **JO** - US-Jordan Free Trade Agreement
+- **K** - US-Singapore Free Trade Agreement
+- **L** - Civil Aircraft Agreement
+- **MA** - US-Morocco Free Trade Agreement
+- **MX** - USMCA (formerly NAFTA) - Mexico
+- **OM** - US-Oman Free Trade Agreement
+- **P** - US-Peru Trade Promotion Agreement
+- **PA** - US-Panama Trade Promotion Agreement
+- **PE** - US-Peru Trade Promotion Agreement
+- **R** - US-Korea Free Trade Agreement
+- **SG** - US-Singapore Free Trade Agreement
+
+## Trade Statistics
+
+<TradeByProgram program={program.code} />
+
+## Related Programs
+
+<RelatedSpecialPrograms current={program.code} />

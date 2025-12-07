@@ -1,0 +1,199 @@
+---
+layout: filter
+source: W3C/SVG
+$type: W3C/SVG/Filter
+$id: https://standards.org.ai/W3C/SVG/Filter/{filter.code}
+sameAs: https://standards.org.ai/Filter/{filter.code}
+canonical: https://w3.org.ai/SVG/Filter/{filter.code}
+params:
+  - Filter
+schema:
+  filter:
+    code: name
+    name: name
+    inputs: array
+    outputs: array
+    description: string
+    category: string
+    attributes: array
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FilterInfo } from '@/components/w3c/svg/FilterInfo'
+import { InputsOutputsTable } from '@/components/w3c/svg/InputsOutputsTable'
+import { AttributesList } from '@/components/w3c/svg/AttributesList'
+import { RelatedFilters } from '@/components/w3c/svg/RelatedFilters'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { LiveSVGPreview } from '@/components/w3c/svg/LiveSVGPreview'
+import { FilterDiagram } from '@/components/w3c/svg/FilterDiagram'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+
+<Header
+  type="SVG Filter Primitive"
+  code={filter.name}
+  name={filter.name}
+  standard="W3C SVG"
+/>
+
+<Description content={filter.description} />
+
+## Filter Information
+
+<FilterInfo
+  category={filter.category}
+  inputs={filter.inputs}
+  outputs={filter.outputs}
+/>
+
+## Filter Diagram
+
+<FilterDiagram
+  filter={filter.name}
+  inputs={filter.inputs}
+  outputs={filter.outputs}
+  operation={filter.operation}
+/>
+
+## Inputs and Outputs
+
+<InputsOutputsTable
+  inputs={filter.inputs}
+  outputs={filter.outputs}
+/>
+
+## Attributes
+
+<AttributesList
+  attributes={filter.attributes}
+  elementTag={filter.name}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`Basic ${filter.name} usage`}
+  language="xml"
+  code={filter.examples?.basic}
+/>
+
+{filter.examples?.basic && (
+  <LiveSVGPreview
+    code={filter.examples.basic}
+    title={`Live preview: ${filter.name}`}
+  />
+)}
+
+{filter.examples?.advanced && (
+  <>
+    <CodeExample
+      title="Advanced filter effect"
+      language="xml"
+      code={filter.examples.advanced}
+    />
+    <LiveSVGPreview
+      code={filter.examples.advanced}
+      title="Live preview: Advanced"
+    />
+  </>
+)}
+
+{filter.examples?.combined && (
+  <>
+    <CodeExample
+      title="Combined with other filters"
+      language="xml"
+      code={filter.examples.combined}
+    />
+    <LiveSVGPreview
+      code={filter.examples.combined}
+      title="Live preview: Combined filters"
+    />
+  </>
+)}
+
+{filter.examples?.animated && (
+  <>
+    <CodeExample
+      title="Animated filter"
+      language="xml"
+      code={filter.examples.animated}
+    />
+    <LiveSVGPreview
+      code={filter.examples.animated}
+      title="Live preview: Animation"
+    />
+  </>
+)}
+
+## Common Use Cases
+
+{filter.useCases?.map((useCase, index) => (
+  <div key={index} className="use-case">
+    <h3>{useCase.title}</h3>
+    <p>{useCase.description}</p>
+    {useCase.example && (
+      <>
+        <CodeExample
+          language="xml"
+          code={useCase.example}
+        />
+        <LiveSVGPreview
+          code={useCase.example}
+          title={useCase.title}
+        />
+      </>
+    )}
+  </div>
+))}
+
+## Input Sources
+
+The `in` and `in2` attributes can accept the following input sources:
+
+- **SourceGraphic**: The original element that the filter is applied to
+- **SourceAlpha**: The alpha channel of the source graphic
+- **BackgroundImage**: The background image at the filter region
+- **BackgroundAlpha**: The alpha channel of the background image
+- **FillPaint**: The fill paint of the element
+- **StrokePaint**: The stroke paint of the element
+- Previous filter primitive results (referenced by their `result` attribute)
+
+## Performance Considerations
+
+{filter.performance?.map((note, index) => (
+  <div key={index} className="performance-note">
+    <p>{note}</p>
+  </div>
+))}
+
+## Related Filter Primitives
+
+<RelatedFilters
+  category={filter.category}
+  currentFilter={filter.name}
+  related={filter.relatedFilters}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`svg.elements.${filter.name}`}
+  standard="W3C SVG"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={filter.specifications}
+  standard="SVG"
+/>
+
+## See Also
+
+- [SVG 2 Specification: Filter Effects](https://www.w3.org/TR/SVG2/filters.html)
+- [MDN Web Docs: {filter.name}](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/{filter.name})
+- [SVG Filter Effects Module](https://www.w3.org/TR/filter-effects-1/)
+- [CSS Filter Effects](https://developer.mozilla.org/en-US/docs/Web/CSS/filter)

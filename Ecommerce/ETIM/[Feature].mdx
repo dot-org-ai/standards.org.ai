@@ -1,0 +1,88 @@
+---
+layout: feature
+source: Ecommerce/ETIM
+$type: ETIM/Feature
+$id: https://standards.org.ai/Ecommerce/ETIM/Feature/{feature.code}
+sameAs: https://standards.org.ai/Feature/{feature.code}
+canonical: https://standards.org.ai/ETIM/Feature/{feature.code}
+params:
+  - Feature
+schema:
+  feature:
+    code: FeatureCode
+    name: FeatureName
+    description: FeatureDescription
+    type: FeatureType
+    unit: Unit
+    version: Version
+    eclassPropertyMapping: string
+---
+
+# {feature.name}
+
+<Header
+  type="ETIM Feature"
+  code={feature.code}
+  name={feature.name}
+  standard="ETIM International"
+/>
+
+## Description
+
+{feature.description}
+
+## ETIM Code
+
+{feature.code}
+
+## Feature Details
+
+<FeatureDetails
+  type={feature.type}
+  unit={feature.unit}
+  code={feature.code}
+/>
+
+## Feature Type
+
+{feature.type}
+
+{feature.unit && (
+  <>
+    ## Unit of Measurement
+
+    <UnitLink code={feature.unit} />
+  </>
+)}
+
+## Allowed Values
+
+<FeatureValueList feature={feature.code} />
+
+## Used in Classes
+
+<ClassesByFeature feature={feature.code} />
+
+## Related Features
+
+<RelatedFeatures feature={feature.code} />
+
+## eCl@ss Property Mapping
+
+{feature.eclassPropertyMapping && (
+  <EclassPropertyLink code={feature.eclassPropertyMapping} />
+)}
+
+## Multilingual Names
+
+<FeatureTranslations feature={feature.code} />
+
+## Version
+
+ETIM {feature.version || 'Latest'}
+
+## See Also
+
+- [ETIM International](https://www.etim-international.com/)
+- [Classes using this Feature](#used-in-classes)
+- [Values for this Feature](#allowed-values)

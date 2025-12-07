@@ -15,6 +15,8 @@
  * - iso.org.ai - ISO standards (countries, currencies, languages)
  * - un.org.ai - UN standards (LOCODE, M49 regions, EDIFACT)
  * - iana.org.ai - IANA timezone database
+ * - w3.org.ai - W3C web standards (HTML, CSS, Semantic Web, Accessibility, Credentials, WoT)
+ * - fhir.org.ai - HL7 FHIR healthcare interoperability standards
  * - standards.org.ai - All other standards (BLS, NAPCS, UNSPSC, AdvanceCTE)
  *
  * ID Format: Wikipedia_Style_Names (Title case with underscores)
@@ -31,6 +33,16 @@ import { transformAdvanceCTE } from './advancecte'
 import { transformISO } from './iso'
 import { transformUN } from './un'
 import { transformIANA } from './iana'
+import { transformW3CHTML } from './w3c-html'
+import { transformW3CCSS } from './w3c-css'
+import { transformW3CSemantic } from './w3c-semantic'
+import { transformW3CAccessibility } from './w3c-accessibility'
+import { transformW3CCredentials } from './w3c-credentials'
+import { transformW3CWoT } from './w3c-wot'
+import { transformHealthcareFHIR } from './healthcare-fhir'
+import { transformFinance } from './finance'
+import { transformEducation } from './education'
+import { transformCensus } from './us-census'
 import { ensureOutputDirs } from './utils'
 
 async function main(): Promise<void> {
@@ -62,6 +74,16 @@ async function main(): Promise<void> {
     { name: 'iso', fn: transformISO, condition: runAll || sources.has('iso') },
     { name: 'un', fn: transformUN, condition: runAll || sources.has('un') },
     { name: 'iana', fn: transformIANA, condition: runAll || sources.has('iana') },
+    { name: 'finance', fn: transformFinance, condition: runAll || sources.has('finance') },
+    { name: 'education', fn: transformEducation, condition: runAll || sources.has('education') },
+    { name: 'census', fn: transformCensus, condition: runAll || sources.has('census') || sources.has('us-census') },
+    { name: 'w3c-html', fn: transformW3CHTML, condition: runAll || sources.has('w3c') || sources.has('w3c-html') },
+    { name: 'w3c-css', fn: transformW3CCSS, condition: runAll || sources.has('w3c') || sources.has('w3c-css') },
+    { name: 'w3c-semantic', fn: transformW3CSemantic, condition: runAll || sources.has('w3c') || sources.has('w3c-semantic') },
+    { name: 'w3c-accessibility', fn: transformW3CAccessibility, condition: runAll || sources.has('w3c') || sources.has('w3c-accessibility') },
+    { name: 'w3c-credentials', fn: transformW3CCredentials, condition: runAll || sources.has('w3c') || sources.has('w3c-credentials') },
+    { name: 'w3c-wot', fn: transformW3CWoT, condition: runAll || sources.has('w3c') || sources.has('w3c-wot') },
+    { name: 'healthcare-fhir', fn: transformHealthcareFHIR, condition: runAll || sources.has('healthcare') || sources.has('fhir') || sources.has('healthcare-fhir') },
   ]
 
   let successCount = 0
@@ -109,21 +131,37 @@ Options:
   --help, -h  Show this help message
 
 Sources:
-  onet        O*NET occupational data
-  apqc        APQC process classification framework
-  gs1         GS1 product/location standards (GPC, EPCIS, CBV, Digital Link)
-  naics       NAICS industry classification
-  napcs       NAPCS product classification
-  unspsc      UNSPSC product/service codes
-  bls         BLS employment statistics and industry data
-  advancecte  AdvanceCTE career cluster crosswalks
-  iso         ISO standards (countries, currencies, languages)
-  un          UN standards (LOCODE, M49 regions, EDIFACT)
-  iana        IANA timezone database
+  onet              O*NET occupational data
+  apqc              APQC process classification framework
+  gs1               GS1 product/location standards (GPC, EPCIS, CBV, Digital Link)
+  naics             NAICS industry classification
+  napcs             NAPCS product classification
+  unspsc            UNSPSC product/service codes
+  bls               BLS employment statistics and industry data
+  advancecte        AdvanceCTE career cluster crosswalks
+  iso               ISO standards (countries, currencies, languages)
+  un                UN standards (LOCODE, M49 regions, EDIFACT)
+  iana              IANA timezone database
+  finance           Financial standards (ISO 20022, LEI, ISIN, MCC, SWIFT)
+  education         Education standards (ISCED, CEDS, CASE)
+  census            US Census Bureau geographic and business standards
+  us-census         Alias for census
+  w3c               All W3C web standards (runs all w3c-* modules)
+  w3c-html          W3C HTML elements and attributes
+  w3c-css           W3C CSS properties and values
+  w3c-semantic      W3C Semantic Web vocabularies (RDF, OWL, SKOS)
+  w3c-accessibility W3C Web Accessibility standards (WCAG, ARIA, ATAG)
+  w3c-credentials   W3C Verifiable Credentials and DID
+  w3c-wot           W3C Web of Things (Thing Descriptions, protocols)
+  healthcare-fhir   HL7 FHIR healthcare interoperability standards
+  healthcare        All Healthcare standards (runs all healthcare-* modules)
+  fhir              Alias for healthcare-fhir
 
 Examples:
   bun run .scripts/generate.ts                    # Transform all sources
   bun run .scripts/generate.ts onet naics         # Transform only ONET and NAICS
+  bun run .scripts/generate.ts w3c                # Transform all W3C standards
+  bun run .scripts/generate.ts w3c-html w3c-css   # Transform only W3C HTML and CSS
   bun run .scripts/generate.ts --all              # Transform all sources
 `)
   process.exit(0)

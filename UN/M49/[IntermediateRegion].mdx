@@ -1,0 +1,35 @@
+---
+layout: intermediateRegion
+source: UN/M49
+$type: UN/M49/IntermediateRegion
+$id: https://standards.org.ai/UN/M49/IntermediateRegion/{intermediateRegion.code}
+sameAs: https://standards.org.ai/IntermediateRegion/{intermediateRegion.code}
+canonical: https://un.org.ai/M49/IntermediateRegion/{intermediateRegion.code}
+params:
+  - IntermediateRegion
+schema:
+  intermediateRegion:
+    code: IntermediateRegionCode
+    name: IntermediateRegionName
+    subRegion: SubRegionCode
+---
+
+# {intermediateRegion.name}
+
+<IntermediateRegionHeader code={intermediateRegion.code} name={intermediateRegion.name} />
+
+## M49 Code
+
+{intermediateRegion.code}
+
+## Parent Sub-Region
+
+<SubRegionLink code={intermediateRegion.subRegion} />
+
+## Countries
+
+<CountriesByIntermediateRegion intermediateRegionCode={intermediateRegion.code} />
+
+## Statistics
+
+<IntermediateRegionStats code={intermediateRegion.code} />

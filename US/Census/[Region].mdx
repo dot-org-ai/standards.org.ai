@@ -1,0 +1,40 @@
+---
+layout: region
+source: Census/Geographic
+$type: Census/Region
+$id: https://standards.org.ai/Census/Region/{region.code}
+sameAs: https://standards.org.ai/Region/{region.code}
+canonical: https://us.org.ai/Census/Region/{region.code}
+params:
+  - Region
+schema:
+  region:
+    code: code
+    name: name
+    divisions: divisions
+    states: states
+---
+
+# {region.name}
+
+<RegionHeader code={region.code} name={region.name} />
+
+## Region Code
+
+{region.code}
+
+## Census Divisions
+
+<DivisionList region={region.code} divisions={region.divisions} />
+
+## States
+
+<StateList region={region.code} states={region.states} />
+
+## Demographics
+
+<RegionDemographics code={region.code} />
+
+## Economy
+
+<RegionEconomy code={region.code} />

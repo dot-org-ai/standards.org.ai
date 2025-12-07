@@ -1,0 +1,63 @@
+---
+layout: category
+source: ICD
+$type: ICD/Category
+$id: https://standards.org.ai/ICD/Category/{category.code}
+sameAs: https://standards.org.ai/Category/{category.code}
+canonical: https://standards.org.ai/ICD/Category/{category.code}
+params:
+  - Category
+schema:
+  category:
+    code: CategoryCode
+    title: CategoryTitle
+    block: BlockCode
+    chapter: ChapterCode
+    description: CategoryDescription
+    includes: Includes
+    excludes: Excludes
+---
+
+# {category.title}
+
+<CategoryHeader code={category.code} title={category.title} />
+
+## Category Code
+
+{category.code}
+
+## Description
+
+{category.description}
+
+## Parent Block
+
+<BlockLink code={category.block} />
+
+## Parent Chapter
+
+<ChapterLink code={category.chapter} />
+
+## Includes
+
+{category.includes}
+
+## Excludes
+
+{category.excludes}
+
+## Diagnosis Codes
+
+<CodeList category={category.code} />
+
+## Related SNOMED Concepts
+
+<SNOMEDByCategory category={category.code} />
+
+## Related LOINC Tests
+
+<LOINCByCategory category={category.code} />
+
+## Clinical Documentation
+
+<CategoryClinicalDocumentation category={category.code} />

@@ -1,0 +1,97 @@
+---
+layout: enumerationmember
+source: Ecommerce/SchemaOrg
+$type: SchemaOrg/EnumerationMember
+$id: https://standards.org.ai/Ecommerce/SchemaOrg/EnumerationMember/{member.id}
+sameAs: https://schema.org/{member.id}
+canonical: https://schema.org.ai/EnumerationMember/{member.id}
+params:
+  - EnumerationMember
+schema:
+  member:
+    id: MemberId
+    name: MemberName
+    description: MemberDescription
+    enumeration: EnumerationId
+    version: Version
+---
+
+# {member.name}
+
+<Header
+  type="Schema.org Enumeration Member"
+  code={member.id}
+  name={member.name}
+  standard="Schema.org"
+/>
+
+## Description
+
+{member.description}
+
+## Schema.org ID
+
+{member.id}
+
+## Parent Enumeration
+
+<EnumerationLink enumeration={member.enumeration} />
+
+## Full URI
+
+`https://schema.org/{member.id}`
+
+## JSON-LD Usage
+
+<CodeExample
+  title={`Using ${member.name} in JSON-LD`}
+  language="json"
+  code={`{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "availability": "https://schema.org/${member.id}"
+}`}
+/>
+
+## Microdata Usage
+
+<CodeExample
+  title={`Using ${member.name} in Microdata`}
+  language="html"
+  code={`<div itemscope itemtype="https://schema.org/Product">
+  <link itemprop="availability" href="https://schema.org/${member.id}" />
+  <meta itemprop="availability" content="${member.id}" />
+</div>`}
+/>
+
+## RDFa Usage
+
+<CodeExample
+  title={`Using ${member.name} in RDFa`}
+  language="html"
+  code={`<div vocab="https://schema.org/" typeof="Product">
+  <link property="availability" href="https://schema.org/${member.id}" />
+</div>`}
+/>
+
+## Usage in Properties
+
+<PropertiesByEnumerationMember member={member.id} />
+
+## Common Use Cases
+
+<UseCasesByEnumerationMember member={member.id} />
+
+## Sibling Members
+
+<SiblingMembers enumeration={member.enumeration} current={member.id} />
+
+## Version
+
+Schema.org {member.version || 'Latest'}
+
+## See Also
+
+- [Schema.org Official Documentation](https://schema.org/{member.id})
+- [Parent Enumeration](/Ecommerce/SchemaOrg/Enumeration/{member.enumeration})
+- [Google Rich Results Test](https://search.google.com/test/rich-results)

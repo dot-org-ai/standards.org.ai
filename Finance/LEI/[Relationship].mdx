@@ -1,0 +1,65 @@
+---
+layout: relationship
+source: Finance/LEI
+$type: Finance/LEI/Relationship
+$id: https://standards.org.ai/Finance/LEI/Relationship/{relationship.id}
+sameAs: https://standards.org.ai/Relationship/{relationship.id}
+canonical: https://standards.org.ai/LEI/Relationship/{relationship.id}
+params:
+  - Relationship
+schema:
+  relationship:
+    id: id
+    startNode: startNode
+    endNode: endNode
+    relationshipType: relationshipType
+    relationshipStatus: relationshipStatus
+    relationshipPeriod: relationshipPeriod
+    validationDocuments: validationDocuments
+---
+
+# LEI Relationship: {relationship.relationshipType}
+
+<RelationshipHeader
+  id={relationship.id}
+  type={relationship.relationshipType}
+  status={relationship.relationshipStatus}
+/>
+
+## Relationship Details
+
+### Start Entity
+
+<EntityLink lei={relationship.startNode} />
+
+### End Entity
+
+<EntityLink lei={relationship.endNode} />
+
+## Relationship Type
+
+{relationship.relationshipType}
+
+## Status
+
+{relationship.relationshipStatus}
+
+## Period
+
+{relationship.relationshipPeriod}
+
+## Validation Documents
+
+{relationship.validationDocuments}
+
+## Relationship History
+
+<RelationshipHistory relationshipId={relationship.id} />
+
+## Related Relationships
+
+<RelatedRelationships
+  startNode={relationship.startNode}
+  endNode={relationship.endNode}
+  current={relationship.id}
+/>

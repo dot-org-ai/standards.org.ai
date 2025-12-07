@@ -1,0 +1,40 @@
+---
+layout: cpc-subclass
+source: US/USPTO
+$type: US/USPTO/CPCSubclass
+$id: https://standards.org.ai/US/USPTO/CPCSubclass/{subclass.code}
+sameAs: https://standards.org.ai/CPCSubclass/{subclass.code}
+canonical: https://us.org.ai/USPTO/CPCSubclass/{subclass.code}
+params:
+  - CPCSubclass
+schema:
+  subclass:
+    code: code
+    name: name
+    class: class
+    groups: groups
+---
+
+# CPC Subclass {subclass.code}: {subclass.name}
+
+<CPCSubclassHeader code={subclass.code} name={subclass.name} class={subclass.class} />
+
+## Overview
+
+CPC Subclass {subclass.code} is part of Class {subclass.class} and covers {subclass.name}.
+
+## Main Groups
+
+<CPCMainGroupList subclass={subclass.code} />
+
+## Subgroups
+
+<CPCSubgroupList subclass={subclass.code} />
+
+## Patent Statistics
+
+<CPCSubclassStats subclass={subclass.code} />
+
+## Related Technologies
+
+<RelatedTechnologies subclass={subclass.code} />

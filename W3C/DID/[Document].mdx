@@ -1,0 +1,781 @@
+---
+layout: Document
+source: W3C/DID
+$type: W3C/DID/Document
+$id: https://standards.org.ai/W3C/DID/Document/{Document.code}
+sameAs: https://standards.org.ai/Document/{Document.code}
+canonical: https://w3.org.ai/DID/Document/{Document.code}
+params:
+  - Document
+schema:
+  Document:
+    code: string
+    property: string
+    type: string
+    description: string
+    required: boolean
+    cardinality: string
+    range: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={Document.property}
+  subtitle="DID Document Property"
+  code={Document.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Type: {Document.type}</Badge>
+  {Document.required && <Badge variant="warning">Required</Badge>}
+  <Badge variant="info">Cardinality: {Document.cardinality}</Badge>
+</div>
+
+{Document.required && (
+  <Alert type="warning">
+    This property is REQUIRED in all DID documents. DID documents missing this property are invalid.
+  </Alert>
+)}
+
+<Description>
+  {Document.description}
+</Description>
+
+## Property Specification
+
+**Property Name:** `{Document.property}`
+
+**Data Type:** {Document.type}
+
+**Cardinality:** {Document.cardinality}
+
+{Document.range && `**Value Range:** ${Document.range}`}
+
+**Required:** {Document.required ? 'Yes' : 'No'}
+
+## Examples
+
+{Document.property === 'id' && (
+  <>
+    ### Basic DID Identifier
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi"
+}`}
+    </CodeExample>
+
+    ### Different DID Methods
+
+    <CodeExample language="json">
+{`{
+  "id": "did:web:example.com"
+}
+
+{
+  "id": "did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"
+}
+
+{
+  "id": "did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38wfw"
+}`}
+    </CodeExample>
+
+    <Alert type="info">
+      The 'id' property MUST match the DID that was resolved. This is the DID subject.
+    </Alert>
+  </>
+)}
+
+{Document.property === 'controller' && (
+  <>
+    ### Single Controller
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "controller": "did:example:owner123"
+}`}
+    </CodeExample>
+
+    ### Multiple Controllers
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "controller": [
+    "did:example:owner123",
+    "did:example:owner456",
+    "did:example:owner789"
+  ]
+}`}
+    </CodeExample>
+
+    ### Self-Controlled DID
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "controller": "did:example:123456789abcdefghi"
+}`}
+    </CodeExample>
+
+    <Alert type="info">
+      If the 'controller' property is omitted, the DID subject is assumed to be the controller.
+    </Alert>
+  </>
+)}
+
+{Document.property === 'verificationMethod' && (
+  <>
+    ### Basic Verification Method
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ]
+}`}
+    </CodeExample>
+
+    ### Multiple Verification Methods
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1",
+    "https://w3id.org/security/suites/x25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    },
+    {
+      "id": "did:example:123456789abcdefghi#key-2",
+      "type": "X25519KeyAgreementKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc"
+    },
+    {
+      "id": "did:example:123456789abcdefghi#key-3",
+      "type": "JsonWebKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyJwk": {
+        "kty": "EC",
+        "crv": "P-256",
+        "x": "38M1FDts7Oea7urmseiugGW7tWc3mLpJh6rKe7xINZ8",
+        "y": "nDQW6XZ7b_u2Sy9slofYLlG03sOEoug3I0aAPQ0exs4"
+      }
+    }
+  ]
+}`}
+    </CodeExample>
+
+    ### Verification Method with Different Controller
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:other-controller",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'authentication' && (
+  <>
+    ### Authentication by Reference
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ],
+  "authentication": [
+    "did:example:123456789abcdefghi#key-1"
+  ]
+}`}
+    </CodeExample>
+
+    ### Authentication by Embedding
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "authentication": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ]
+}`}
+    </CodeExample>
+
+    ### Mixed Reference and Embedding
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ],
+  "authentication": [
+    "did:example:123456789abcdefghi#key-1",
+    {
+      "id": "did:example:123456789abcdefghi#key-2",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc"
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'assertionMethod' && (
+  <>
+    ### Assertion Method for Credentials
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ],
+  "assertionMethod": [
+    "did:example:123456789abcdefghi#key-1"
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'keyAgreement' && (
+  <>
+    ### Key Agreement for Encryption
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/x25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-agreement-1",
+      "type": "X25519KeyAgreementKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc"
+    }
+  ],
+  "keyAgreement": [
+    "did:example:123456789abcdefghi#key-agreement-1"
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'capabilityInvocation' && (
+  <>
+    ### Capability Invocation
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ],
+  "capabilityInvocation": [
+    "did:example:123456789abcdefghi#key-1"
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'capabilityDelegation' && (
+  <>
+    ### Capability Delegation
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    }
+  ],
+  "capabilityDelegation": [
+    "did:example:123456789abcdefghi#key-1"
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'service' && (
+  <>
+    ### Basic Service Endpoint
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "service": [
+    {
+      "id": "did:example:123456789abcdefghi#service-1",
+      "type": "LinkedDomains",
+      "serviceEndpoint": "https://example.com"
+    }
+  ]
+}`}
+    </CodeExample>
+
+    ### Multiple Services
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "service": [
+    {
+      "id": "did:example:123456789abcdefghi#linked-domain",
+      "type": "LinkedDomains",
+      "serviceEndpoint": "https://example.com"
+    },
+    {
+      "id": "did:example:123456789abcdefghi#didcomm",
+      "type": "DIDCommMessaging",
+      "serviceEndpoint": "https://example.com/didcomm"
+    },
+    {
+      "id": "did:example:123456789abcdefghi#hub",
+      "type": "IdentityHub",
+      "serviceEndpoint": {
+        "instances": ["https://hub.example.com", "https://backup-hub.example.com"]
+      }
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Document.property === 'alsoKnownAs' && (
+  <>
+    ### Alternate Identifiers
+
+    <CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "alsoKnownAs": [
+    "did:web:example.com",
+    "https://example.com/users/alice"
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+## Complete DID Document Example
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1",
+    "https://w3id.org/security/suites/x25519-2020/v1"
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "controller": "did:example:123456789abcdefghi",
+  "alsoKnownAs": ["did:web:example.com"],
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "zH3C2AVvLMv6gmMNam3uVAjZpfkcJCwDwnZn6z3wXmqPV"
+    },
+    {
+      "id": "did:example:123456789abcdefghi#key-2",
+      "type": "X25519KeyAgreementKey2020",
+      "controller": "did:example:123456789abcdefghi",
+      "publicKeyMultibase": "z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc"
+    }
+  ],
+  "authentication": [
+    "did:example:123456789abcdefghi#key-1"
+  ],
+  "assertionMethod": [
+    "did:example:123456789abcdefghi#key-1"
+  ],
+  "keyAgreement": [
+    "did:example:123456789abcdefghi#key-2"
+  ],
+  "capabilityInvocation": [
+    "did:example:123456789abcdefghi#key-1"
+  ],
+  "capabilityDelegation": [
+    "did:example:123456789abcdefghi#key-1"
+  ],
+  "service": [
+    {
+      "id": "did:example:123456789abcdefghi#linked-domain",
+      "type": "LinkedDomains",
+      "serviceEndpoint": "https://example.com"
+    },
+    {
+      "id": "did:example:123456789abcdefghi#didcomm",
+      "type": "DIDCommMessaging",
+      "serviceEndpoint": "https://example.com/didcomm"
+    }
+  ]
+}`}
+</CodeExample>
+
+## Validation Rules
+
+### Property-Specific Validation
+
+{Document.property === 'id' && (
+  <>
+    1. MUST be a valid DID conforming to the DID syntax specification
+    2. MUST match the DID that was resolved
+    3. MUST NOT contain fragment identifiers
+    4. MUST be a string value
+  </>
+)}
+
+{Document.property === 'verificationMethod' && (
+  <>
+    1. Each verification method MUST have an 'id' property
+    2. Each verification method MUST have a 'type' property
+    3. Each verification method MUST have a 'controller' property
+    4. Each verification method MUST include exactly one verification material property (publicKeyJwk, publicKeyMultibase, etc.)
+    5. The 'id' property MUST be a DID URL that can be dereferenced
+    6. The 'controller' property MUST be a valid DID
+  </>
+)}
+
+{Document.property === 'authentication' && (
+  <>
+    1. Can contain either verification method references (strings) or embedded verification methods (objects)
+    2. Referenced verification methods MUST exist in the 'verificationMethod' array or be resolvable
+    3. Embedded verification methods MUST conform to verification method requirements
+    4. MUST be used to authenticate the DID subject
+  </>
+)}
+
+{Document.property === 'service' && (
+  <>
+    1. Each service MUST have an 'id' property
+    2. Each service MUST have a 'type' property
+    3. Each service MUST have a 'serviceEndpoint' property
+    4. The 'id' property MUST be a DID URL
+    5. The 'serviceEndpoint' can be a URI string, map, or set
+  </>
+)}
+
+### General Validation
+
+<CodeExample language="javascript">
+{`function validateDIDDocument(doc) {
+  // Check required properties
+  if (!doc.id) {
+    throw new Error('DID document missing required "id" property');
+  }
+
+  // Validate DID syntax
+  if (!isValidDID(doc.id)) {
+    throw new Error('Invalid DID format in "id" property');
+  }
+
+  // Validate @context
+  if (!doc['@context']) {
+    throw new Error('DID document missing @context');
+  }
+
+  // Ensure @context includes DID v1 context
+  const contexts = Array.isArray(doc['@context'])
+    ? doc['@context']
+    : [doc['@context']];
+
+  if (!contexts.includes('https://www.w3.org/ns/did/v1')) {
+    throw new Error('DID document @context must include https://www.w3.org/ns/did/v1');
+  }
+
+  // Validate verification methods
+  if (doc.verificationMethod) {
+    doc.verificationMethod.forEach(vm => {
+      if (!vm.id || !vm.type || !vm.controller) {
+        throw new Error('Invalid verification method structure');
+      }
+    });
+  }
+
+  return true;
+}`}
+</CodeExample>
+
+## Processing Rules
+
+### Dereferencing
+
+When dereferencing a DID URL that references this property:
+
+<CodeExample language="javascript">
+{`// Dereference a verification method
+const didUrl = 'did:example:123#key-1';
+const result = await dereference(didUrl);
+
+// Result contains the verification method
+console.log(result.contentStream);
+// {
+//   "id": "did:example:123#key-1",
+//   "type": "Ed25519VerificationKey2020",
+//   "controller": "did:example:123",
+//   "publicKeyMultibase": "z..."
+// }`}
+</CodeExample>
+
+### Resolution
+
+When resolving a DID document, this property is processed as follows:
+
+1. Parse the property value according to its data type
+2. Validate the property structure
+3. Verify all references (for verification relationships)
+4. Resolve any embedded contexts
+5. Return the processed property value
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+{Document.property === 'verificationMethod' && (
+  <>
+    ### Key Management
+    - Protect private keys corresponding to public keys in verification methods
+    - Implement key rotation policies
+    - Use hardware security modules for high-value keys
+    - Never include private key material in DID documents
+
+    ### Verification Method Security
+    - Ensure verification methods use strong cryptographic algorithms
+    - Validate that verification method controllers are authorized
+    - Check that key types are appropriate for their intended use
+    - Monitor for compromised keys and update documents accordingly
+  </>
+)}
+
+{Document.property === 'authentication' && (
+  <>
+    ### Authentication Security
+    - Use challenge-response protocols to prevent replay attacks
+    - Implement proper proof of control mechanisms
+    - Never use the same key for authentication and other purposes without careful consideration
+    - Rotate authentication keys regularly
+  </>
+)}
+
+{Document.property === 'service' && (
+  <>
+    ### Service Endpoint Security
+    - Verify service endpoints use secure protocols (HTTPS)
+    - Validate service endpoint URLs before use
+    - Implement access controls for sensitive services
+    - Monitor service endpoints for availability and security
+    - Be aware of privacy implications of exposing service endpoints
+  </>
+)}
+
+{Document.property === 'controller' && (
+  <>
+    ### Controller Security
+    - Verify controller authorization before allowing updates
+    - Implement multi-signature schemes for shared control
+    - Monitor for unauthorized controller changes
+    - Document the trust model for controller relationships
+  </>
+)}
+
+### General Security
+
+- Always validate property values against the specification
+- Implement proper error handling for invalid values
+- Use secure channels for DID document retrieval
+- Verify cryptographic proofs on retrieved documents
+- Monitor for unauthorized document modifications
+
+</SecurityConsiderations>
+
+## Implementation Guidelines
+
+### Creating Documents
+
+<CodeExample language="javascript">
+{`// Create a new DID document
+const didDocument = {
+  '@context': [
+    'https://www.w3.org/ns/did/v1',
+    'https://w3id.org/security/suites/ed25519-2020/v1'
+  ],
+  id: 'did:example:123456789abcdefghi',
+  verificationMethod: [{
+    id: 'did:example:123456789abcdefghi#key-1',
+    type: 'Ed25519VerificationKey2020',
+    controller: 'did:example:123456789abcdefghi',
+    publicKeyMultibase: 'z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH'
+  }],
+  authentication: ['did:example:123456789abcdefghi#key-1']
+};
+
+// Validate before publishing
+validateDIDDocument(didDocument);`}
+</CodeExample>
+
+### Updating Documents
+
+<CodeExample language="javascript">
+{`// Update a DID document property
+async function updateDIDDocument(did, updates) {
+  // Retrieve current document
+  const current = await resolveDID(did);
+
+  // Apply updates
+  const updated = {
+    ...current.didDocument,
+    ...updates
+  };
+
+  // Validate updated document
+  validateDIDDocument(updated);
+
+  // Publish update
+  await publishDIDDocument(did, updated);
+
+  return updated;
+}`}
+</CodeExample>
+
+### Best Practices
+
+1. **Minimal Disclosure**: Only include necessary information in DID documents
+2. **Key Hygiene**: Use separate keys for different verification relationships
+3. **Regular Updates**: Keep DID documents current with active keys and services
+4. **Validation**: Always validate documents before use
+5. **Privacy**: Consider correlation risks when using public DID documents
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Method" href="/W3C/DID/Method/web">DID Methods</RelatedItem>
+  <RelatedItem type="VerificationMethod" href="/W3C/DID/VerificationMethod/Ed25519VerificationKey2020">Verification Method Types</RelatedItem>
+  <RelatedItem type="Service" href="/W3C/DID/Service/LinkedDomains">Service Types</RelatedItem>
+  <RelatedItem type="VC" href="/W3C/VC/CredentialType/VerifiableCredential">Verifiable Credentials</RelatedItem>
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs) v1.0</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-core/#did-document-properties">DID Document Properties</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-spec-registries/">DID Specification Registries</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This property is part of the W3C DID Core specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

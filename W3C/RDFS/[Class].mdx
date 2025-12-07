@@ -1,0 +1,270 @@
+---
+layout: class
+source: W3C/RDFS
+$type: W3C/RDFS/Class
+$id: https://standards.org.ai/W3C/RDFS/Class/{Class.code}
+sameAs: https://standards.org.ai/Class/{Class.code}
+canonical: https://w3.org.ai/RDFS/Class/{Class.code}
+params:
+  - Class
+schema:
+  Class:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    subClassOf: array
+---
+
+import { ClassHeader } from '@/components/semantic-web/ClassHeader'
+import { ClassHierarchy } from '@/components/semantic-web/ClassHierarchy'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<ClassHeader
+  uri={Class.uri}
+  label={Class.label}
+  type="RDFS Class"
+/>
+
+## Description
+
+{Class.comment}
+
+This class is part of the RDFS (RDF Schema) vocabulary, which extends RDF with mechanisms for describing groups of related resources and the relationships between them.
+
+## Class Hierarchy
+
+<ClassHierarchy
+  current={Class.uri}
+  superClasses={Class.subClassOf}
+  namespace="rdfs"
+/>
+
+### Superclasses
+
+{Class.subClassOf && Class.subClassOf.length > 0 ? (
+  <>
+    <p>This class is a subclass of:</p>
+    <ul>
+      {Class.subClassOf.map((parent) => (
+        <li key={parent}>
+          <code>{parent}</code>
+          <p className="text-sm text-gray-600">Instances of this class are also instances of {parent}</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This is a top-level class with no explicit superclasses (except <code>rdfs:Resource</code>).</p>
+)}
+
+## Instance Characteristics
+
+Resources that are instances of `{Class.label}` have the following characteristics:
+
+- They can be subjects, predicates, or objects in RDF triples
+- They inherit properties from all superclasses
+- They can be described using RDFS properties like `rdfs:label` and `rdfs:comment`
+
+## Usage Examples
+
+<UsageExamples>
+
+### Defining an Instance in Turtle
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+ex:myInstance a {Class.uri} ;
+    rdfs:label "My Instance"@en ;
+    rdfs:comment "An example instance of {Class.label}"@en .
+```
+
+### Creating a Subclass
+
+```turtle
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+ex:MyClass a rdfs:Class ;
+    rdfs:label "My Custom Class"@en ;
+    rdfs:subClassOf {Class.uri} ;
+    rdfs:comment "A specialized type of {Class.label}"@en .
+
+# Instances of MyClass are automatically instances of {Class.label}
+ex:example a ex:MyClass .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:ex="http://example.org/">
+  <{Class.uri} rdf:about="http://example.org/myInstance">
+    <rdfs:label xml:lang="en">My Instance</rdfs:label>
+    <rdfs:comment xml:lang="en">An example instance of {Class.label}</rdfs:comment>
+  </{Class.uri}>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ex": "http://example.org/"
+  },
+  "@id": "ex:myInstance",
+  "@type": "{Class.uri}",
+  "rdfs:label": {
+    "@value": "My Instance",
+    "@language": "en"
+  },
+  "rdfs:comment": {
+    "@value": "An example instance of {Class.label}",
+    "@language": "en"
+  }
+}
+```
+
+### SPARQL Queries
+
+```sparql
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Find all instances of this class
+SELECT ?instance ?label
+WHERE {
+  ?instance a {Class.uri} .
+  OPTIONAL { ?instance rdfs:label ?label }
+}
+
+# Find all subclasses
+SELECT ?subclass ?label
+WHERE {
+  ?subclass rdfs:subClassOf {Class.uri} .
+  OPTIONAL { ?subclass rdfs:label ?label }
+}
+
+# Find the complete class hierarchy
+SELECT ?class ?superclass
+WHERE {
+  ?class rdfs:subClassOf+ {Class.uri} .
+  ?class rdfs:subClassOf ?superclass .
+}
+```
+
+</UsageExamples>
+
+## Inference and Reasoning
+
+RDFS reasoning engines apply the following inferences for this class:
+
+### Subclass Transitivity
+
+If `A rdfs:subClassOf B` and `B rdfs:subClassOf {Class.uri}`, then `A rdfs:subClassOf {Class.uri}`.
+
+### Type Propagation
+
+If `x rdf:type A` and `A rdfs:subClassOf {Class.uri}`, then `x rdf:type {Class.uri}`.
+
+### Domain and Range Inference
+
+Properties with domain or range restrictions involving this class will propagate type information to their subjects and objects.
+
+## Common Properties
+
+Properties frequently used with instances of this class:
+
+- `rdfs:label` - Human-readable name
+- `rdfs:comment` - Description or explanation
+- `rdfs:seeAlso` - Related resources
+- `rdfs:isDefinedBy` - Source vocabulary or ontology
+- `owl:sameAs` - Equivalent resources (when using OWL)
+
+## Best Practices
+
+When working with `{Class.label}`:
+
+1. **Documentation**: Always provide `rdfs:label` and `rdfs:comment` in multiple languages
+2. **Hierarchy Design**: Create focused, single-inheritance hierarchies when possible
+3. **Disjointness**: Use OWL to specify when classes are disjoint
+4. **Open World**: Remember RDF operates under open-world assumption
+5. **Validation**: Use SHACL or ShEx for structural validation beyond RDFS
+
+## Design Patterns
+
+### Enumeration Pattern
+
+```turtle
+ex:Status a rdfs:Class ;
+    rdfs:label "Status"@en .
+
+ex:Active a {Class.uri} ;
+    rdfs:label "Active"@en .
+
+ex:Inactive a {Class.uri} ;
+    rdfs:label "Inactive"@en .
+```
+
+### Composition Pattern
+
+```turtle
+ex:compositeProperty a rdf:Property ;
+    rdfs:domain {Class.uri} ;
+    rdfs:range ex:Component .
+```
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#Resource', label: 'rdfs:Resource' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#Class', label: 'rdfs:Class' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#subClassOf', label: 'rdfs:subClassOf' },
+    { uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', label: 'rdf:type' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="RDF Schema 1.1"
+  url="https://www.w3.org/TR/rdf-schema/"
+  section={Class.code}
+/>
+
+### Normative References
+
+- [RDF Schema 1.1](https://www.w3.org/TR/rdf-schema/)
+- [RDF 1.1 Concepts and Abstract Syntax](https://www.w3.org/TR/rdf11-concepts/)
+- [RDF 1.1 Semantics](https://www.w3.org/TR/rdf11-mt/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/2000/01/rdf-schema#`
+- **URI**: `{Class.uri}`
+- **Status**: W3C Recommendation
+- **Version**: RDFS 1.1
+
+## Reasoning Support
+
+Different triple stores and reasoners provide varying levels of RDFS support:
+
+- **Apache Jena**: Full RDFS reasoning
+- **RDF4J**: Configurable RDFS inferencing
+- **GraphDB**: RDFS-Plus reasoning
+- **Stardog**: RDFS reasoning with OWL extensions
+
+## Additional Resources
+
+- [RDFS Primer](https://www.w3.org/TR/rdf-schema/)
+- [Semantic Web for the Working Ontologist](http://workingontologist.org/)
+- [LOV (Linked Open Vocabularies)](https://lov.linkeddata.es/)

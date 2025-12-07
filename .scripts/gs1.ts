@@ -87,6 +87,22 @@ interface GLNFunctionalTypeRow {
   description: string
 }
 
+interface LocationRelationshipRow {
+  id: string
+  label: string
+  description: string
+  sourceType: string
+  targetType: string
+}
+
+interface SchemaRow {
+  id: string
+  name: string
+  version: string
+  description: string
+  url: string
+}
+
 function transformGPCHierarchy(): void {
   console.log('Transforming GS1 GPC Hierarchy...')
   const data = parseTSV<GPCSchemaRow>(join(SOURCE_DIR, 'GS1.Schema.tsv'))
@@ -426,6 +442,64 @@ function transformGLNFunctionalTypes(): void {
   }
 }
 
+function transformLocationRelationships(): void {
+  console.log('Transforming GS1 Location Relationships...')
+  const sourceFile = join(SOURCE_DIR, 'GS1.Location.Relationships.tsv')
+
+  if (!existsSync(sourceFile)) {
+    console.log('GS1.Location.Relationships.tsv not found, skipping...')
+    return
+  }
+
+  try {
+    const data = parseTSV<LocationRelationshipRow>(sourceFile)
+
+    const records: StandardRecord[] = data
+      .filter(row => row.id && row.label)
+      .map(row => ({
+        ns: NS,
+        type: 'LocationRelationship',
+        id: toWikipediaStyleId(row.label),
+        name: row.label,
+        description: cleanDescription(row.description || ''),
+        code: row.id,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'GS1.LocationRelationships.tsv'), records)
+  } catch (e) {
+    console.log('Error processing location relationships:', e)
+  }
+}
+
+function transformSchemas(): void {
+  console.log('Transforming GS1 Schemas...')
+  const sourceFile = join(SOURCE_DIR, 'GS1.Schemas.tsv')
+
+  if (!existsSync(sourceFile)) {
+    console.log('GS1.Schemas.tsv not found, skipping...')
+    return
+  }
+
+  try {
+    const data = parseTSV<SchemaRow>(sourceFile)
+
+    const records: StandardRecord[] = data
+      .filter(row => row.id && row.name)
+      .map(row => ({
+        ns: NS,
+        type: 'Schema',
+        id: toWikipediaStyleId(row.name),
+        name: row.name,
+        description: cleanDescription(`${row.description || ''} Version: ${row.version || ''} URL: ${row.url || ''}`),
+        code: row.id,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'GS1.Schemas.tsv'), records)
+  } catch (e) {
+    console.log('Error processing schemas:', e)
+  }
+}
+
 export async function transformGS1(): Promise<void> {
   console.log('=== GS1 Transformation ===')
   ensureOutputDirs()
@@ -437,6 +511,8 @@ export async function transformGS1(): Promise<void> {
   transformDispositions()
   transformIdentifiers()
   transformGLNFunctionalTypes()
+  transformLocationRelationships()
+  transformSchemas()
 
   console.log('=== GS1 Transformation Complete ===\n')
 }

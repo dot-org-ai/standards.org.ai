@@ -1,0 +1,53 @@
+---
+layout: category
+source: Healthcare/CPT
+$type: Healthcare/CPT/Category
+$id: https://standards.org.ai/Healthcare/CPT/Category/{category.code}
+sameAs: https://standards.org.ai/CPTCategory/{category.code}
+canonical: https://standards.org.ai/CPT/Category/{category.code}
+params:
+  - Category
+schema:
+  category:
+    code: string
+    title: string
+    description: string
+    rangeStart: string
+    rangeEnd: string
+---
+
+# {category.title}
+
+<CategoryHeader code={category.code} title={category.title} />
+
+## Category Code
+
+**{category.code}**
+
+## Description
+
+{category.description}
+
+## Code Range
+
+{category.rangeStart && category.rangeEnd && (
+  <div className="code-range">
+    <strong>Codes:</strong> {category.rangeStart} - {category.rangeEnd}
+  </div>
+)}
+
+## Procedure Codes
+
+<CPTCodeList category={category.code} />
+
+## Common Modifiers
+
+<ModifiersByCategory category={category.code} />
+
+## Usage Statistics
+
+<CategoryStatistics category={category.code} />
+
+## Guidelines
+
+<CategoryGuidelines category={category.code} />

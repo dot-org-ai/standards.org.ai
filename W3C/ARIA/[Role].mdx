@@ -1,0 +1,748 @@
+---
+layout: role
+source: W3C/ARIA
+$type: W3C/ARIA/Role
+$id: https://standards.org.ai/W3C/ARIA/Role/{role.name}
+sameAs: https://standards.org.ai/Role/{role.name}
+canonical: https://w3.org.ai/ARIA/Role/{role.name}
+params:
+  - Role
+schema:
+  role:
+    name: string
+    type: string
+    description: string
+    requiredStates: array
+    supportedStates: array
+    requiredContext: array
+    requiredOwnedElements: array
+    nameFrom: array
+    accessibleNameRequired: boolean
+    childrenPresentational: boolean
+    implicitValueForRole: object
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { RoleTypeBadge } from '@/components/aria/RoleTypeBadge'
+import { CodeExample } from '@/components/CodeExample'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { RelatedItems } from '@/components/RelatedItems'
+import { StatePropertyList } from '@/components/aria/StatePropertyList'
+import { AccessibleNameInfo } from '@/components/aria/AccessibleNameInfo'
+
+<Header
+  title={`${role.name} (role)`}
+  type="ARIA Role"
+  code={role.name}
+  badge={<RoleTypeBadge type={role.type} />}
+/>
+
+## Role Type
+
+<RoleTypeBadge type={role.type} detailed />
+
+This is a **{role.type}** role in WAI-ARIA {role.version}.
+
+{role.type === 'widget' && (
+  <p>
+    Widget roles are interactive components that users can interact with.
+    They typically require keyboard support and appropriate state management.
+  </p>
+)}
+
+{role.type === 'landmark' && (
+  <p>
+    Landmark roles identify regions of the page, helping users navigate to
+    important sections. Screen readers provide shortcuts to jump between landmarks.
+  </p>
+)}
+
+{role.type === 'structure' && (
+  <p>
+    Structure roles describe the organization of content in the document.
+    They help assistive technologies understand the page structure and relationships.
+  </p>
+)}
+
+{role.type === 'window' && (
+  <p>
+    Window roles act as containers for dialogs and other modal windows.
+    They typically trap focus and require explicit dismiss actions.
+  </p>
+)}
+
+{role.type === 'live region' && (
+  <p>
+    Live region roles announce dynamic content changes to screen reader users
+    without requiring them to navigate to the updated content.
+  </p>
+)}
+
+## Description
+
+<Description>
+  {role.description}
+</Description>
+
+## Accessible Name
+
+<AccessibleNameInfo
+  nameFrom={role.nameFrom}
+  required={role.accessibleNameRequired}
+/>
+
+{role.accessibleNameRequired && (
+  <div className="requirement-notice">
+    **Required**: This role MUST have an accessible name provided via:
+    {role.nameFrom.map(method => (
+      <div key={method}>- {method}</div>
+    ))}
+  </div>
+)}
+
+{!role.accessibleNameRequired && (
+  <p>
+    An accessible name is optional for this role, but recommended when it
+    improves clarity for users of assistive technologies.
+  </p>
+)}
+
+## Required States and Properties
+
+<StatePropertyList items={role.requiredStates} type="required" />
+
+{role.requiredStates.length > 0 ? (
+  <>
+    The following ARIA attributes MUST be present when using this role:
+
+    {role.requiredStates.map((state) => (
+      <div key={state.name} className="required-attribute">
+        ### {state.name}
+
+        **Type**: {state.type}
+
+        {state.description}
+
+        ```html
+        <div role="{role.name}" {state.name}="{state.defaultValue}">
+          <!-- Content -->
+        </div>
+        ```
+      </div>
+    ))}
+  </>
+) : (
+  <p>This role has no required states or properties.</p>
+)}
+
+## Supported States and Properties
+
+<StatePropertyList items={role.supportedStates} type="supported" />
+
+{role.supportedStates.length > 0 && (
+  <>
+    The following ARIA attributes are supported and commonly used with this role:
+
+    {role.supportedStates.map((state) => (
+      <div key={state.name} className="supported-attribute">
+        - **[{state.name}](/W3C/ARIA/{state.type}/{state.name})**: {state.description}
+      </div>
+    ))}
+  </>
+)}
+
+## Context and Ownership
+
+### Required Context
+
+{role.requiredContext.length > 0 ? (
+  <>
+    This role MUST be contained within one of the following roles:
+
+    {role.requiredContext.map((context) => (
+      <div key={context}>
+        - **[{context}](/W3C/ARIA/Role/{context})**
+      </div>
+    ))}
+
+    ```html
+    <div role="{role.requiredContext[0]}">
+      <div role="{role.name}">
+        <!-- This is valid context -->
+      </div>
+    </div>
+    ```
+  </>
+) : (
+  <p>This role has no required context. It can be used in any valid container.</p>
+)}
+
+### Required Owned Elements
+
+{role.requiredOwnedElements.length > 0 ? (
+  <>
+    This role MUST contain the following child roles:
+
+    {role.requiredOwnedElements.map((child) => (
+      <div key={child}>
+        - **[{child}](/W3C/ARIA/Role/{child})**
+      </div>
+    ))}
+
+    ```html
+    <div role="{role.name}">
+      <div role="{role.requiredOwnedElements[0]}">
+        <!-- Required child -->
+      </div>
+    </div>
+    ```
+  </>
+) : (
+  <p>This role has no required child elements. Any valid content is allowed.</p>
+)}
+
+### Children Presentational
+
+{role.childrenPresentational ? (
+  <div className="warning-notice">
+    **Warning**: This role has `childrenPresentational: true`. All child elements
+    are presentational and will be ignored by assistive technologies. Do not
+    include semantic content within this element.
+
+    ```html
+    <!-- Incorrect: Semantic children ignored -->
+    <div role="{role.name}">
+      <h2>This heading is ignored</h2>
+      <p>This text is ignored</p>
+    </div>
+
+    <!-- Correct: Text content only -->
+    <div role="{role.name}">
+      Plain text content only
+    </div>
+    ```
+  </div>
+) : (
+  <p>
+    This role preserves the semantics of child elements. Nested content
+    maintains its accessibility tree structure.
+  </p>
+)}
+
+## Implementation Examples
+
+### Basic HTML
+
+```html
+<!-- Basic implementation of role="{role.name}" -->
+<div
+  role="{role.name}"
+  {role.accessibleNameRequired ? 'aria-label="Descriptive label"' : ''}
+  {role.requiredStates.map(s => `${s.name}="${s.defaultValue}"`).join('\n  ')}
+>
+  {role.childrenPresentational ? 'Content text' : '<!-- Semantic content -->'}
+</div>
+```
+
+### Semantic HTML Alternative
+
+{role.implicitValueForRole && (
+  <div className="semantic-alternative">
+    **Recommended**: Use semantic HTML when possible. The following elements
+    have an implicit role of `{role.name}`:
+
+    ```html
+    {role.implicitValueForRole.elements.map(el => `<${el}></${el}>`).join('\n')}
+    ```
+
+    Only use `role="{role.name}"` when semantic HTML is not available or appropriate.
+  </div>
+)}
+
+### Complete Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{role.name} Role Example</title>
+  <style>
+    .{role.name}-container {
+      /* Styles for {role.name} */
+    }
+
+    .{role.name}-container:focus {
+      outline: 2px solid #005fcc;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div
+    role="{role.name}"
+    {role.accessibleNameRequired ? 'aria-label="Main ' + role.name + '"' : ''}
+    {role.requiredStates.map(s => `${s.name}="${s.defaultValue}"`).join('\n    ')}
+    class="{role.name}-container"
+    {role.type === 'widget' ? 'tabindex="0"' : ''}
+  >
+    {role.requiredOwnedElements.length > 0 && (
+      role.requiredOwnedElements.map(child => `
+    <div role="${child}">
+      <!-- ${child} content -->
+    </div>`).join('\n')
+    )}
+    {!role.childrenPresentational && '<!-- Content goes here -->'}
+    {role.childrenPresentational && 'Text content only'}
+  </div>
+
+  <script>
+    // JavaScript for {role.name} role
+    const element = document.querySelector('[role="{role.name}"]')
+
+    {role.type === 'widget' && `
+    // Widget interaction handling
+    element.addEventListener('keydown', (e) => {
+      // Handle keyboard interactions
+      switch(e.key) {
+        case 'Enter':
+        case ' ':
+          // Activate
+          break
+        // Add other key handlers
+      }
+    })
+
+    element.addEventListener('click', () => {
+      // Handle click interactions
+    })
+    `}
+
+    {role.type === 'live region' && `
+    // Live region update
+    function updateLiveRegion(message) {
+      element.textContent = message
+      // Screen reader will announce the change
+    }
+    `}
+  </script>
+</body>
+</html>
+```
+
+### React Component
+
+```jsx
+import React, { useRef, useEffect, useId } from 'react'
+
+const {role.name.charAt(0).toUpperCase() + role.name.slice(1)}Component = ({
+  label,
+  children,
+  ...props
+}) => {
+  const elementRef = useRef(null)
+  const id = useId()
+
+  useEffect(() => {
+    {role.type === 'widget' && `
+    const element = elementRef.current
+    if (!element) return
+
+    // Setup keyboard interactions
+    const handleKeyDown = (e) => {
+      switch(e.key) {
+        case 'Enter':
+        case ' ':
+          e.preventDefault()
+          // Handle activation
+          break
+        // Additional key handlers
+      }
+    }
+
+    element.addEventListener('keydown', handleKeyDown)
+    return () => element.removeEventListener('keydown', handleKeyDown)
+    `}
+  }, [])
+
+  return (
+    <div
+      ref={elementRef}
+      role="{role.name}"
+      {role.accessibleNameRequired && `aria-label={label}`}
+      {role.requiredStates.map(s => `${s.name}="${s.defaultValue}"`).join('\n      ')}
+      {role.type === 'widget' && 'tabIndex={0}'}
+      {...props}
+    >
+      {children}
+    </div>
+  )
+}
+
+// Usage
+<{role.name.charAt(0).toUpperCase() + role.name.slice(1)}Component
+  {role.accessibleNameRequired && 'label="Descriptive label"'}
+>
+  {!role.childrenPresentational && 'Content'}
+  {role.childrenPresentational && 'Text only'}
+</{role.name.charAt(0).toUpperCase() + role.name.slice(1)}Component>
+```
+
+### Vue Component
+
+```vue
+<template>
+  <div
+    ref="elementRef"
+    role="{role.name}"
+    {role.accessibleNameRequired && ':aria-label="label"'}
+    {role.requiredStates.map(s => `:${s.name}="${s.name}Value"`).join('\n    ')}
+    {role.type === 'widget' && 'tabindex="0"'}
+    @keydown="handleKeyDown"
+  >
+    <slot />
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const props = defineProps({
+  {role.accessibleNameRequired && `label: { type: String, required: true },`}
+  {role.requiredStates.map(s => `${s.name}Value: { type: String, default: '${s.defaultValue}' }`).join(',\n  ')}
+})
+
+const elementRef = ref(null)
+
+{role.type === 'widget' && `
+const handleKeyDown = (event) => {
+  switch(event.key) {
+    case 'Enter':
+    case ' ':
+      event.preventDefault()
+      // Handle activation
+      break
+    // Additional key handlers
+  }
+}
+`}
+
+onMounted(() => {
+  // Component initialization for {role.name}
+  if (elementRef.value) {
+    // Setup code
+  }
+})
+</script>
+```
+
+### Angular Component
+
+```typescript
+import { Component, Input, ElementRef, ViewChild, AfterViewInit } from '@angular/core'
+
+@Component({
+  selector: 'app-{role.name}',
+  template: `
+    <div
+      #element
+      role="{role.name}"
+      {role.accessibleNameRequired && '[attr.aria-label]="label"'}
+      {role.requiredStates.map(s => `[attr.${s.name}]="${s.name}Value"`).join('\n      ')}
+      {role.type === 'widget' && 'tabindex="0"'}
+      {role.type === 'widget' && '(keydown)="handleKeyDown($event)"'}
+    >
+      <ng-content></ng-content>
+    </div>
+  `,
+  styles: [`
+    :host {
+      display: block;
+    }
+  `]
+})
+export class {role.name.charAt(0).toUpperCase() + role.name.slice(1)}Component implements AfterViewInit {
+  @ViewChild('element') elementRef: ElementRef
+
+  {role.accessibleNameRequired && `@Input() label!: string`}
+  {role.requiredStates.map(s => `@Input() ${s.name}Value = '${s.defaultValue}'`).join('\n  ')}
+
+  ngAfterViewInit(): void {
+    {role.type === 'widget' && `
+    // Setup widget interactions
+    const element = this.elementRef.nativeElement
+    // Additional setup
+    `}
+  }
+
+  {role.type === 'widget' && `
+  handleKeyDown(event: KeyboardEvent): void {
+    switch(event.key) {
+      case 'Enter':
+      case ' ':
+        event.preventDefault()
+        // Handle activation
+        break
+      // Additional key handlers
+    }
+  }
+  `}
+}
+```
+
+## Keyboard Interactions
+
+{role.type === 'widget' && (
+  <div className="keyboard-support">
+    ### Required Keyboard Support
+
+    | Key | Function |
+    |-----|----------|
+    | Tab | Move focus to/from the {role.name} |
+    | Enter | Activate the {role.name} (if applicable) |
+    | Space | Activate the {role.name} (if applicable) |
+    | Escape | Close/dismiss (if applicable) |
+
+    ### Additional Keys
+
+    Depending on the specific implementation, other keys may be appropriate:
+    - Arrow keys for navigation
+    - Home/End for first/last item
+    - Page Up/Page Down for scrolling
+    - Letter keys for type-ahead
+
+    ### Focus Management
+
+    ```javascript
+    // Proper focus management for {role.name}
+    const element = document.querySelector('[role="{role.name}"]')
+
+    // Make focusable if interactive
+    if (isInteractive) {
+      element.setAttribute('tabindex', '0')
+    }
+
+    // Focus element programmatically
+    element.focus()
+
+    // Handle focus trap (for modal-like roles)
+    function trapFocus(containerElement) {
+      const focusableElements = containerElement.querySelectorAll(
+        'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      )
+      const firstElement = focusableElements[0]
+      const lastElement = focusableElements[focusableElements.length - 1]
+
+      containerElement.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault()
+            lastElement.focus()
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault()
+            firstElement.focus()
+          }
+        }
+      })
+    }
+    ```
+  </div>
+)}
+
+## Testing
+
+### Automated Testing
+
+```javascript
+// Jest + Testing Library
+import { render } from '@testing-library/react'
+import { axe } from 'jest-axe'
+
+describe('{role.name} role', () => {
+  it('should have no accessibility violations', async () => {
+    const { container } = render(
+      <div role="{role.name}" {role.accessibleNameRequired && 'aria-label="Test"'}>
+        Content
+      </div>
+    )
+
+    const results = await axe(container)
+    expect(results).toHaveNoViolations()
+  })
+
+  it('should have correct role', () => {
+    const { getByRole } = render(
+      <div role="{role.name}" {role.accessibleNameRequired && 'aria-label="Test"'}>
+        Content
+      </div>
+    )
+
+    expect(getByRole('{role.name}')).toBeInTheDocument()
+  })
+
+  {role.accessibleNameRequired && `
+  it('should have accessible name', () => {
+    const { getByRole } = render(
+      <div role="{role.name}" aria-label="Test Label">
+        Content
+      </div>
+    )
+
+    expect(getByRole('{role.name}')).toHaveAccessibleName('Test Label')
+  })
+  `}
+})
+```
+
+### Manual Testing Checklist
+
+- [ ] Role is applied correctly to appropriate elements
+- [ ] {role.accessibleNameRequired ? 'Accessible name is provided' : 'Accessible name is appropriate'}
+- [ ] All required states/properties are present
+- [ ] {role.requiredContext.length > 0 ? 'Element is in correct context role' : 'Context is appropriate'}
+- [ ] {role.requiredOwnedElements.length > 0 ? 'Required child roles are present' : 'Child elements are appropriate'}
+- [ ] {role.type === 'widget' ? 'Keyboard navigation works correctly' : 'Navigation is logical'}
+- [ ] Screen reader announces role and name correctly
+- [ ] Focus indicator is visible
+- [ ] Works across different browsers
+- [ ] Compatible with major screen readers
+
+### Screen Reader Testing
+
+#### Expected Announcements
+
+**NVDA**: "{role.accessibleNameRequired ? '[Name], ' : ''}{role.name}"
+
+**JAWS**: "{role.accessibleNameRequired ? '[Name], ' : ''}{role.name}"
+
+**VoiceOver**: "{role.accessibleNameRequired ? '[Name], ' : ''}{role.name}"
+
+**TalkBack**: "{role.accessibleNameRequired ? '[Name], ' : ''}{role.name}"
+
+## Common Mistakes
+
+### Mistake 1: Missing Required Attributes
+
+```html
+<!-- Incorrect: Missing required attributes -->
+<div role="{role.name}">
+  Content
+</div>
+
+<!-- Correct: All required attributes present -->
+<div
+  role="{role.name}"
+  {role.accessibleNameRequired && 'aria-label="Descriptive name"'}
+  {role.requiredStates.map(s => `${s.name}="${s.defaultValue}"`).join('\n  ')}
+>
+  Content
+</div>
+```
+
+### Mistake 2: Incorrect Context
+
+{role.requiredContext.length > 0 && `
+\`\`\`html
+<!-- Incorrect: Wrong parent context -->
+<div role="navigation">
+  <div role="${role.name}">
+    Content
+  </div>
+</div>
+
+<!-- Correct: Proper parent context -->
+<div role="${role.requiredContext[0]}">
+  <div role="${role.name}">
+    Content
+  </div>
+</div>
+\`\`\`
+`}
+
+### Mistake 3: Using When Native HTML Exists
+
+```html
+<!-- Incorrect: Using role when native HTML available -->
+<div role="button" tabindex="0" onclick="doSomething()">
+  Click me
+</div>
+
+<!-- Correct: Use native HTML element -->
+<button type="button" onclick="doSomething()">
+  Click me
+</button>
+```
+
+### Mistake 4: Overriding Implicit Semantics
+
+```html
+<!-- Incorrect: Overriding native semantics unnecessarily -->
+<button role="link">
+  This is confusing
+</button>
+
+<!-- Correct: Use appropriate element -->
+<a href="/page">
+  This is a link
+</a>
+```
+
+## Browser and AT Support
+
+| Platform | Browser | Screen Reader | Support |
+|----------|---------|---------------|---------|
+| Windows | Chrome | NVDA | Full |
+| Windows | Firefox | NVDA | Full |
+| Windows | Edge | JAWS | Full |
+| macOS | Safari | VoiceOver | Full |
+| iOS | Safari | VoiceOver | Full |
+| Android | Chrome | TalkBack | Full |
+
+### Known Issues
+
+- **Issue**: Specific browser/AT combination behavior
+  - **Affected**: Browser X with AT Y
+  - **Workaround**: Use alternative approach
+  - **Status**: Fixed in version Z
+
+## Related Roles
+
+<RelatedItems
+  items={role.relatedRoles}
+  title="Related Roles"
+  description="Other ARIA roles commonly used with or similar to this role"
+/>
+
+## Specification
+
+<SpecificationLink
+  href={`https://www.w3.org/TR/wai-aria-${role.version.replace('.', '')}/#${role.name}`}
+  title={`WAI-ARIA ${role.version} - ${role.name} role`}
+  organization="W3C"
+  standard="ARIA"
+  version={role.version}
+/>
+
+### Additional Resources
+
+- [ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
+- [Using ARIA](https://www.w3.org/TR/using-aria/)
+- [MDN ARIA Roles Reference](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles)
+
+## Quick Reference
+
+| Property | Value |
+|----------|-------|
+| Role Name | {role.name} |
+| Role Type | {role.type} |
+| Accessible Name | {role.accessibleNameRequired ? 'Required' : 'Optional'} |
+| Children Presentational | {role.childrenPresentational ? 'Yes' : 'No'} |
+| Required States | {role.requiredStates.length} |
+| Supported States | {role.supportedStates.length} |
+| ARIA Version | {role.version} |
+
+---
+
+*Always prefer semantic HTML over ARIA. Use `role="{role.name}"` only when no native HTML element provides the needed semantics.*

@@ -1,0 +1,66 @@
+---
+layout: package
+source: Healthcare/NDC
+$type: Healthcare/NDC/Package
+$id: https://standards.org.ai/Healthcare/NDC/Package/{package.code}
+sameAs: https://standards.org.ai/DrugPackage/{package.code}
+canonical: https://standards.org.ai/NDC/Package/{package.code}
+params:
+  - Package
+schema:
+  package:
+    code: string
+    packageNDC: string
+    productNDC: string
+    packageDescription: string
+    packageType: string
+    packageQuantity: number
+    samplePackage: boolean
+---
+
+# {package.packageDescription}
+
+<PackageHeader
+  code={package.packageNDC}
+  description={package.packageDescription}
+  productNDC={package.productNDC}
+/>
+
+## Package NDC
+
+**{package.packageNDC}**
+
+## Product NDC
+
+<DrugLink code={package.productNDC} />
+
+## Package Details
+
+<div className="package-details">
+  <div className="description">
+    <strong>Description:</strong> {package.packageDescription}
+  </div>
+  {package.packageType && (
+    <div className="type">
+      <strong>Package Type:</strong> {package.packageType}
+    </div>
+  )}
+  {package.packageQuantity && (
+    <div className="quantity">
+      <strong>Quantity:</strong> {package.packageQuantity}
+    </div>
+  )}
+  {package.samplePackage !== undefined && (
+    <div className="sample">
+      <strong>Sample Package:</strong> {package.samplePackage ? 'Yes' : 'No'}
+    </div>
+  )}
+</div>
+
+## Parent Product
+
+<ProductDetails productNDC={package.productNDC} />
+
+## Related Packages
+
+<RelatedPackages productNDC={package.productNDC} current={package.packageNDC} />

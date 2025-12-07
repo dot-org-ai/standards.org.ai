@@ -1,0 +1,53 @@
+---
+layout: cbsa
+source: Census/Metropolitan
+$type: Census/CBSA
+$id: https://standards.org.ai/Census/CBSA/{cbsa.code}
+sameAs: https://standards.org.ai/CBSA/{cbsa.code}
+canonical: https://us.org.ai/Census/CBSA/{cbsa.code}
+params:
+  - CBSA
+schema:
+  cbsa:
+    code: code
+    name: name
+    type: type
+    counties: counties
+    principalCity: principalCity
+---
+
+# {cbsa.name}
+
+<CBSAHeader code={cbsa.code} name={cbsa.name} type={cbsa.type} />
+
+## CBSA Code
+
+{cbsa.code}
+
+## Type
+
+{cbsa.type}
+
+## Principal City
+
+{cbsa.principalCity}
+
+## Counties
+
+<CountyList cbsa={cbsa.code} counties={cbsa.counties} />
+
+## Combined Statistical Area
+
+<CSALink cbsa={cbsa.code} />
+
+## Demographics
+
+<CBSADemographics code={cbsa.code} />
+
+## Economy
+
+<CBSAEconomy code={cbsa.code} />
+
+## Related Places
+
+<PlaceList cbsa={cbsa.code} />

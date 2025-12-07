@@ -1,0 +1,127 @@
+---
+layout: type
+source: Ecommerce/SchemaOrg
+$type: SchemaOrg/Type
+$id: https://standards.org.ai/Ecommerce/SchemaOrg/Type/{type.id}
+sameAs: https://schema.org/{type.id}
+canonical: https://schema.org.ai/Type/{type.id}
+params:
+  - Type
+schema:
+  type:
+    id: TypeId
+    name: TypeName
+    description: TypeDescription
+    parents: array
+    children: array
+    layer: string
+    version: Version
+---
+
+# {type.name}
+
+<Header
+  type="Schema.org Type"
+  code={type.id}
+  name={type.name}
+  standard="Schema.org"
+/>
+
+## Description
+
+{type.description}
+
+## Schema.org ID
+
+{type.id}
+
+{type.layer && (
+  <>
+    ## Layer
+
+    {type.layer}
+  </>
+)}
+
+## Parent Types
+
+{type.parents && type.parents.length > 0 ? (
+  <ParentTypesList parents={type.parents} />
+) : (
+  <p>This is a root type (Thing)</p>
+)}
+
+## Child Types
+
+{type.children && type.children.length > 0 ? (
+  <ChildTypesList children={type.children} />
+) : (
+  <p>No child types</p>
+)}
+
+## Properties
+
+<PropertyList type={type.id} />
+
+## Inherited Properties
+
+<InheritedPropertyList type={type.id} parents={type.parents} />
+
+## JSON-LD Example
+
+<CodeExample
+  title={`${type.name} JSON-LD Example`}
+  language="json"
+  code={`{
+  "@context": "https://schema.org",
+  "@type": "${type.id}",
+  "name": "Example ${type.name}",
+  "description": "An example of ${type.name}"
+}`}
+/>
+
+## Microdata Example
+
+<CodeExample
+  title={`${type.name} Microdata Example`}
+  language="html"
+  code={`<div itemscope itemtype="https://schema.org/${type.id}">
+  <span itemprop="name">Example ${type.name}</span>
+  <span itemprop="description">An example of ${type.name}</span>
+</div>`}
+/>
+
+## RDFa Example
+
+<CodeExample
+  title={`${type.name} RDFa Example`}
+  language="html"
+  code={`<div vocab="https://schema.org/" typeof="${type.id}">
+  <span property="name">Example ${type.name}</span>
+  <span property="description">An example of ${type.name}</span>
+</div>`}
+/>
+
+## Usage Statistics
+
+<SchemaOrgUsageStats type={type.id} />
+
+## Related Types
+
+<RelatedTypes type={type.id} />
+
+## E-commerce Product Types
+
+{(type.id === 'Product' || type.parents?.includes('Product')) && (
+  <ProductTypeExtensions type={type.id} />
+)}
+
+## Version
+
+Schema.org {type.version || 'Latest'}
+
+## See Also
+
+- [Schema.org Official Documentation](https://schema.org/{type.id})
+- [Google Structured Data Testing Tool](https://search.google.com/test/rich-results)
+- [Schema.org Validator](https://validator.schema.org/)

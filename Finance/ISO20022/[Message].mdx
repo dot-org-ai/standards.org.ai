@@ -1,0 +1,53 @@
+---
+layout: message
+source: Finance/ISO20022
+$type: Finance/ISO20022/Message
+$id: https://standards.org.ai/Finance/ISO20022/Message/{message.code}
+sameAs: https://standards.org.ai/Message/{message.code}
+canonical: https://standards.org.ai/ISO20022/Message/{message.code}
+params:
+  - Message
+schema:
+  message:
+    code: code
+    name: name
+    businessArea: businessArea
+    definition: definition
+    messageSet: messageSet
+---
+
+# {message.name}
+
+<MessageHeader code={message.code} name={message.name} businessArea={message.businessArea} />
+
+## Definition
+
+{message.definition}
+
+## Business Area
+
+<BusinessAreaLink code={message.businessArea} />
+
+## Message Set
+
+{message.messageSet}
+
+## Message Structure
+
+<MessageStructure messageCode={message.code} />
+
+## Data Elements
+
+<MessageDataElements messageCode={message.code} />
+
+## Usage Guidelines
+
+<MessageUsageGuidelines messageCode={message.code} />
+
+## Related Messages
+
+<RelatedMessages businessArea={message.businessArea} current={message.code} />
+
+## Implementation Examples
+
+<MessageExamples messageCode={message.code} />

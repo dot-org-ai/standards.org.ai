@@ -71,6 +71,67 @@ interface JobZone {
   domainSource: string
 }
 
+interface TaskData {
+  oNETSOCCode: string
+  taskID: string
+  task: string
+  taskType: string
+  incumbents: string
+  date: string
+  domainSource: string
+}
+
+interface ReportedTitle {
+  oNETSOCCode: string
+  reportedJobTitle: string
+}
+
+interface ToolData {
+  oNETSOCCode: string
+  commodity: string
+  commodityCode: string
+}
+
+interface DWAData {
+  oNETSOCCode: string
+  elementID: string
+  elementName: string
+  scaleID: string
+  dataValue: string
+  n: string
+  standardError: string
+  lowerCIBound: string
+  upperCIBound: string
+  recommendSuppress: string
+  notRelevant: string
+  date: string
+  domainSource: string
+}
+
+interface WorkContextData {
+  oNETSOCCode: string
+  elementID: string
+  elementName: string
+  scaleID: string
+  category: string
+  dataValue: string
+  n: string
+  standardError: string
+  lowerCIBound: string
+  upperCIBound: string
+  recommendSuppress: string
+  notRelevant: string
+  date: string
+  domainSource: string
+}
+
+interface EducationData {
+  oNETSOCCode: string
+  educationLevel: string
+  category: string
+  dataValue: string
+}
+
 function transformOccupations(): void {
   console.log('Transforming ONET Occupations...')
   const data = parseTSV<OccupationData>(join(SOURCE_DIR, 'ONET.OccupationData.tsv'))
@@ -557,6 +618,425 @@ function transformAlternateTitles(): void {
   writeStandardTSV(join(DATA_DIR, 'ONET.AlternateTitles.tsv'), records)
 }
 
+function transformTasks(): void {
+  console.log('Transforming ONET Tasks...')
+  const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.Tasks.tsv'))
+
+  const records: StandardRecord[] = data
+    .filter(row => row.taskID && row.task)
+    .map(row => ({
+      ns: NS,
+      type: 'Task',
+      id: row.taskID,
+      name: row.task.substring(0, 100) + (row.task.length > 100 ? '...' : ''),
+      description: cleanDescription(row.task),
+      code: row.taskID,
+    }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.Tasks.tsv'), records)
+
+  // Write occupation-task relationships
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.taskID && row.oNETSOCCode)
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'Occupation',
+      fromCode: row.oNETSOCCode,
+      toNs: NS,
+      toType: 'Task',
+      toCode: row.taskID,
+      relationshipType: 'performs_task',
+      taskType: row.taskType || '',
+    }))
+
+  writeTSV(
+    join(REL_DIR, 'ONET.Occupation.Task.tsv'),
+    relationships,
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'taskType']
+  )
+}
+
+function transformReportedTitles(): void {
+  console.log('Transforming ONET Reported Titles...')
+  const data = parseTSV<ReportedTitle>(join(SOURCE_DIR, 'ONET.ReportedTitles.tsv'))
+
+  const records: StandardRecord[] = data
+    .filter(row => row.reportedJobTitle)
+    .map(row => ({
+      ns: NS,
+      type: 'ReportedTitle',
+      id: toWikipediaStyleId(row.reportedJobTitle),
+      name: row.reportedJobTitle,
+      description: '',
+      code: row.oNETSOCCode,
+    }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.ReportedTitles.tsv'), records)
+}
+
+function transformTools(): void {
+  console.log('Transforming ONET Tools...')
+  const data = parseTSV<ToolData>(join(SOURCE_DIR, 'ONET.Tools.tsv'))
+
+  // Get unique tools
+  const toolsMap = new Map<string, ToolData>()
+  for (const row of data) {
+    if (row.commodity && !toolsMap.has(row.commodity)) {
+      toolsMap.set(row.commodity, row)
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(toolsMap.values()).map(t => ({
+    ns: NS,
+    type: 'Tool',
+    id: toWikipediaStyleId(t.commodity),
+    name: t.commodity,
+    description: '',
+    code: t.commodityCode,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.Tools.tsv'), records)
+
+  // Write occupation-tool relationships
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.commodity && row.oNETSOCCode)
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'Occupation',
+      fromCode: row.oNETSOCCode,
+      toNs: NS,
+      toType: 'Tool',
+      toId: toWikipediaStyleId(row.commodity),
+      relationshipType: 'uses_tool',
+    }))
+
+  writeTSV(
+    join(REL_DIR, 'ONET.Occupation.Tool.tsv'),
+    relationships,
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType']
+  )
+}
+
+function transformDWA(): void {
+  console.log('Transforming ONET Detailed Work Activities...')
+  const data = parseTSV<DWAData>(join(SOURCE_DIR, 'ONET.DWA.tsv'))
+
+  // Get unique DWAs
+  const dwaMap = new Map<string, { id: string; name: string }>()
+  for (const row of data) {
+    if (!dwaMap.has(row.elementID)) {
+      dwaMap.set(row.elementID, {
+        id: row.elementID,
+        name: row.elementName,
+      })
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(dwaMap.values()).map(dwa => ({
+    ns: NS,
+    type: 'DWA',
+    id: toWikipediaStyleId(dwa.name),
+    name: dwa.name,
+    description: '',
+    code: dwa.id,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.DWA.tsv'), records)
+
+  // Write occupation-DWA relationships
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.scaleID === 'IM')
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'Occupation',
+      fromCode: row.oNETSOCCode,
+      toNs: NS,
+      toType: 'DWA',
+      toCode: row.elementID,
+      relationshipType: 'performs_dwa',
+      importance: row.dataValue,
+    }))
+
+  writeTSV(
+    join(REL_DIR, 'ONET.Occupation.DWA.tsv'),
+    relationships,
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+  )
+}
+
+function transformIWA(): void {
+  console.log('Transforming ONET Intermediate Work Activities...')
+  const data = parseTSV<DWAData>(join(SOURCE_DIR, 'ONET.IWA.tsv'))
+
+  // Get unique IWAs
+  const iwaMap = new Map<string, { id: string; name: string }>()
+  for (const row of data) {
+    if (!iwaMap.has(row.elementID)) {
+      iwaMap.set(row.elementID, {
+        id: row.elementID,
+        name: row.elementName,
+      })
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(iwaMap.values()).map(iwa => ({
+    ns: NS,
+    type: 'IWA',
+    id: toWikipediaStyleId(iwa.name),
+    name: iwa.name,
+    description: '',
+    code: iwa.id,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.IWA.tsv'), records)
+
+  // Write occupation-IWA relationships
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.scaleID === 'IM')
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'Occupation',
+      fromCode: row.oNETSOCCode,
+      toNs: NS,
+      toType: 'IWA',
+      toCode: row.elementID,
+      relationshipType: 'performs_iwa',
+      importance: row.dataValue,
+    }))
+
+  writeTSV(
+    join(REL_DIR, 'ONET.Occupation.IWA.tsv'),
+    relationships,
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+  )
+}
+
+function transformWorkContext(): void {
+  console.log('Transforming ONET Work Context...')
+  const data = parseTSV<WorkContextData>(join(SOURCE_DIR, 'ONET.WorkContext.tsv'))
+
+  // Get unique work context elements
+  const contextMap = new Map<string, { id: string; name: string; category: string }>()
+  const categorySet = new Set<string>()
+
+  for (const row of data) {
+    if (!contextMap.has(row.elementID)) {
+      contextMap.set(row.elementID, {
+        id: row.elementID,
+        name: row.elementName,
+        category: row.category,
+      })
+    }
+    if (row.category) {
+      categorySet.add(row.category)
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(contextMap.values()).map(ctx => ({
+    ns: NS,
+    type: 'WorkContext',
+    id: toWikipediaStyleId(ctx.name),
+    name: ctx.name,
+    description: `Category: ${ctx.category}`,
+    code: ctx.id,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.WorkContext.tsv'), records)
+
+  // Write work context categories
+  const categoryRecords: StandardRecord[] = Array.from(categorySet).map(cat => ({
+    ns: NS,
+    type: 'WorkContextCategory',
+    id: toWikipediaStyleId(cat),
+    name: cat,
+    description: '',
+    code: cat.toLowerCase().replace(/\s+/g, '-'),
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.WorkContextCategories.tsv'), categoryRecords)
+
+  // Write occupation-work context relationships
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.scaleID === 'CX')
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'Occupation',
+      fromCode: row.oNETSOCCode,
+      toNs: NS,
+      toType: 'WorkContext',
+      toCode: row.elementID,
+      relationshipType: 'has_context',
+      context: row.dataValue,
+    }))
+
+  writeTSV(
+    join(REL_DIR, 'ONET.Occupation.WorkContext.tsv'),
+    relationships,
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'context']
+  )
+}
+
+function transformEducation(): void {
+  console.log('Transforming ONET Education...')
+  const data = parseTSV<EducationData>(join(SOURCE_DIR, 'ONET.Education.tsv'))
+
+  // Get unique education levels
+  const eduSet = new Set<string>()
+  for (const row of data) {
+    if (row.educationLevel) {
+      eduSet.add(row.educationLevel)
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(eduSet).map(edu => ({
+    ns: NS,
+    type: 'Education',
+    id: toWikipediaStyleId(edu),
+    name: edu,
+    description: '',
+    code: edu.toLowerCase().replace(/\s+/g, '-'),
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.Education.tsv'), records)
+
+  // Write occupation-education relationships
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.educationLevel && row.oNETSOCCode)
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'Occupation',
+      fromCode: row.oNETSOCCode,
+      toNs: NS,
+      toType: 'Education',
+      toId: toWikipediaStyleId(row.educationLevel),
+      relationshipType: 'requires_education',
+      category: row.category || '',
+      value: row.dataValue || '',
+    }))
+
+  writeTSV(
+    join(REL_DIR, 'ONET.Occupation.Education.tsv'),
+    relationships,
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType', 'category', 'value']
+  )
+}
+
+function transformScales(): void {
+  console.log('Transforming ONET Scales...')
+
+  // Define common ONET scales
+  const scales = [
+    { id: 'IM', name: 'Importance', description: 'How important is this element to the occupation?' },
+    { id: 'LV', name: 'Level', description: 'What level of this element is needed to perform this occupation?' },
+    { id: 'EX', name: 'Extent', description: 'To what extent does this element apply to the occupation?' },
+    { id: 'RL', name: 'Relevance', description: 'How relevant is this element to the occupation?' },
+    { id: 'CX', name: 'Context', description: 'Work context frequency or importance' },
+    { id: 'OI', name: 'Occupational Interest', description: 'Occupational interest profile' },
+  ]
+
+  const records: StandardRecord[] = scales.map(scale => ({
+    ns: NS,
+    type: 'Scale',
+    id: scale.id,
+    name: scale.name,
+    description: cleanDescription(scale.description),
+    code: scale.id,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.Scales.tsv'), records)
+}
+
+function transformRIASEC(): void {
+  console.log('Transforming ONET RIASEC...')
+
+  // RIASEC personality types
+  const riasec = [
+    { code: 'R', name: 'Realistic', description: 'Practical, physical, hands-on, tool-oriented' },
+    { code: 'I', name: 'Investigative', description: 'Analytical, intellectual, scientific, explorative' },
+    { code: 'A', name: 'Artistic', description: 'Creative, original, independent, chaotic' },
+    { code: 'S', name: 'Social', description: 'Cooperative, supporting, helping, healing/nurturing' },
+    { code: 'E', name: 'Enterprising', description: 'Competitive, leadership, persuasive, status-oriented' },
+    { code: 'C', name: 'Conventional', description: 'Detail-oriented, organized, clerical' },
+  ]
+
+  const records: StandardRecord[] = riasec.map(type => ({
+    ns: NS,
+    type: 'RIASEC',
+    id: type.name,
+    name: type.name,
+    description: cleanDescription(type.description),
+    code: type.code,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.RIASEC.tsv'), records)
+}
+
+function transformTaskCategories(): void {
+  console.log('Transforming ONET Task Categories...')
+  const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.Tasks.tsv'))
+
+  // Get unique task types
+  const categorySet = new Set<string>()
+  for (const row of data) {
+    if (row.taskType) {
+      categorySet.add(row.taskType)
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(categorySet).map(cat => ({
+    ns: NS,
+    type: 'TaskCategory',
+    id: toWikipediaStyleId(cat),
+    name: cat,
+    description: '',
+    code: cat.toLowerCase().replace(/\s+/g, '-'),
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'ONET.TaskCategories.tsv'), records)
+}
+
+function transformEmergingTasks(): void {
+  console.log('Transforming ONET Emerging Tasks...')
+
+  try {
+    const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.EmergingTasks.tsv'))
+
+    const records: StandardRecord[] = data
+      .filter(row => row.taskID && row.task)
+      .map(row => ({
+        ns: NS,
+        type: 'EmergingTask',
+        id: row.taskID,
+        name: row.task.substring(0, 100) + (row.task.length > 100 ? '...' : ''),
+        description: cleanDescription(row.task),
+        code: row.taskID,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'ONET.EmergingTasks.tsv'), records)
+
+    // Write occupation-emerging task relationships
+    const relationships: Record<string, string>[] = data
+      .filter(row => row.taskID && row.oNETSOCCode)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'Occupation',
+        fromCode: row.oNETSOCCode,
+        toNs: NS,
+        toType: 'EmergingTask',
+        toCode: row.taskID,
+        relationshipType: 'has_emerging_task',
+      }))
+
+    writeTSV(
+      join(REL_DIR, 'ONET.Occupation.EmergingTask.tsv'),
+      relationships,
+      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    )
+  } catch (e) {
+    console.log('Emerging tasks file not found, skipping...')
+  }
+}
+
 export async function transformONET(): Promise<void> {
   console.log('=== ONET Transformation ===')
   ensureOutputDirs()
@@ -573,6 +1053,17 @@ export async function transformONET(): Promise<void> {
   transformJobZones()
   transformRelatedOccupations()
   transformAlternateTitles()
+  transformTasks()
+  transformReportedTitles()
+  transformTools()
+  transformDWA()
+  transformIWA()
+  transformWorkContext()
+  transformEducation()
+  transformScales()
+  transformRIASEC()
+  transformTaskCategories()
+  transformEmergingTasks()
 
   console.log('=== ONET Transformation Complete ===\n')
 }

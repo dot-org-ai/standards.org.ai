@@ -1,0 +1,569 @@
+---
+layout: Term
+source: W3C/VC
+$type: W3C/VC/Term
+$id: https://standards.org.ai/W3C/VC/Term/{Term.code}
+sameAs: https://standards.org.ai/Term/{Term.code}
+canonical: https://w3.org.ai/VC/Term/{Term.code}
+params:
+  - Term
+schema:
+  Term:
+    code: string
+    name: string
+    uri: string
+    description: string
+    type: string
+    range: string
+    domain: string
+    required: boolean
+    deprecated: boolean
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={Term.name}
+  subtitle="Verifiable Credentials Vocabulary Term"
+  code={Term.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Type: {Term.type}</Badge>
+  {Term.required && <Badge variant="warning">Required</Badge>}
+  {Term.deprecated && <Badge variant="danger">Deprecated</Badge>}
+</div>
+
+{Term.deprecated && (
+  <Alert type="warning">
+    This term is deprecated and should not be used in new implementations.
+    Please refer to the specification for recommended alternatives.
+  </Alert>
+)}
+
+<Description>
+  {Term.description}
+</Description>
+
+## Term Details
+
+**URI:** `{Term.uri}`
+
+**Name:** `{Term.name}`
+
+**Type:** {Term.type}
+
+{Term.range && `**Range:** ${Term.range}`}
+
+{Term.domain && `**Domain:** ${Term.domain}`}
+
+## Usage in JSON-LD Context
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    {
+      "${Term.name}": "${Term.uri}"
+    }
+  ]
+}`}
+</CodeExample>
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "${Term.name}": ${
+    Term.type === 'Property'
+      ? `"example-value"`
+      : Term.type === 'Class'
+      ? `"${Term.name}"`
+      : `"example-value"`
+  }
+}`}
+</CodeExample>
+
+{Term.name === 'credentialSubject' && (
+  <>
+    ### Credential Subject Examples
+
+    #### Single Subject
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456",
+    "name": "Alice Smith",
+    "degree": {
+      "type": "BachelorDegree",
+      "name": "Bachelor of Science"
+    }
+  }
+}`}
+    </CodeExample>
+
+    #### Multiple Subjects
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": [
+    {
+      "id": "did:example:subject456",
+      "name": "Alice Smith"
+    },
+    {
+      "id": "did:example:subject789",
+      "name": "Bob Jones"
+    }
+  ]
+}`}
+    </CodeExample>
+
+    #### Subject Without ID
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "hasPermit": true,
+    "permitType": "Fishing License",
+    "validUntil": "2025-12-31"
+  }
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Term.name === 'issuer' && (
+  <>
+    ### Issuer Examples
+
+    #### Simple Issuer (DID)
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  }
+}`}
+    </CodeExample>
+
+    #### Issuer with Profile
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": {
+    "id": "did:example:issuer123",
+    "name": "Example University",
+    "url": "https://example.edu",
+    "image": "https://example.edu/logo.png"
+  },
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  }
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Term.name === 'proof' && (
+  <>
+    ### Proof Examples
+
+    #### Single Proof
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  },
+  "proof": {
+    "type": "Ed25519Signature2020",
+    "created": "2025-01-15T00:00:00Z",
+    "verificationMethod": "did:example:issuer123#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z..."
+  }
+}`}
+    </CodeExample>
+
+    #### Multiple Proofs
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  },
+  "proof": [
+    {
+      "type": "Ed25519Signature2020",
+      "created": "2025-01-15T00:00:00Z",
+      "verificationMethod": "did:example:issuer123#key-1",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "z..."
+    },
+    {
+      "type": "JsonWebSignature2020",
+      "created": "2025-01-15T00:00:01Z",
+      "verificationMethod": "did:example:issuer123#key-2",
+      "proofPurpose": "assertionMethod",
+      "jws": "eyJ..."
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Term.name === 'credentialStatus' && (
+  <>
+    ### Credential Status Examples
+
+    #### Status List Entry
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/vc/status-list/2021/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  },
+  "credentialStatus": {
+    "id": "https://example.com/credentials/status/3#94567",
+    "type": "StatusList2021Entry",
+    "statusPurpose": "revocation",
+    "statusListIndex": "94567",
+    "statusListCredential": "https://example.com/credentials/status/3"
+  }
+}`}
+    </CodeExample>
+
+    #### Multiple Status Entries
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/vc/status-list/2021/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  },
+  "credentialStatus": [
+    {
+      "id": "https://example.com/credentials/status/3#94567",
+      "type": "StatusList2021Entry",
+      "statusPurpose": "revocation",
+      "statusListIndex": "94567",
+      "statusListCredential": "https://example.com/credentials/status/3"
+    },
+    {
+      "id": "https://example.com/credentials/status/4#23891",
+      "type": "StatusList2021Entry",
+      "statusPurpose": "suspension",
+      "statusListIndex": "23891",
+      "statusListCredential": "https://example.com/credentials/status/4"
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Term.name === 'type' && (
+  <>
+    ### Type Examples
+
+    #### Basic Type
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"]
+}`}
+    </CodeExample>
+
+    #### Multiple Types
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://example.org/credentials/v1"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "UniversityDegreeCredential"
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Term.name === 'issuanceDate' && (
+  <>
+    ### Issuance Date Example
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  }
+}`}
+    </CodeExample>
+
+    <Alert type="info">
+      The issuanceDate must be an ISO 8601 formatted date-time string with timezone information.
+      It represents when the credential becomes valid.
+    </Alert>
+  </>
+)}
+
+{Term.name === 'expirationDate' && (
+  <>
+    ### Expiration Date Example
+
+    <CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "expirationDate": "2026-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456"
+  }
+}`}
+    </CodeExample>
+
+    <Alert type="info">
+      The expirationDate must be an ISO 8601 formatted date-time string with timezone information.
+      After this date, the credential is no longer valid.
+    </Alert>
+  </>
+)}
+
+## Semantic Definition
+
+### RDF/Turtle
+
+<CodeExample language="turtle">
+{`@prefix vc: <https://www.w3.org/2018/credentials#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<${Term.uri}>
+  a ${Term.type === 'Property' ? 'rdf:Property' : 'rdfs:Class'} ;
+  rdfs:label "${Term.name}" ;
+  rdfs:comment "${Term.description}" ;${
+    Term.domain ? `\n  rdfs:domain ${Term.domain} ;` : ''
+  }${
+    Term.range ? `\n  rdfs:range ${Term.range} ;` : ''
+  }
+  rdfs:isDefinedBy <https://www.w3.org/2018/credentials#> .`}
+</CodeExample>
+
+## Processing Rules
+
+{Term.required && (
+  <Alert type="warning">
+    <strong>Required Property:</strong> This property MUST be present in all instances of its domain class.
+    Processors MUST reject documents that omit this property.
+  </Alert>
+)}
+
+### Validation
+
+Implementers should validate this term according to these rules:
+
+1. **Type Checking**: Ensure the value conforms to the expected type ({Term.range || Term.type})
+2. **Domain Validation**: Verify the term is used in the appropriate context
+3. **Cardinality**: Check if the property allows single or multiple values
+4. **Format Validation**: Apply any format-specific validation rules
+
+### Processing
+
+When processing this term:
+
+1. Parse the value according to its type
+2. Apply any normalization rules
+3. Validate against schema constraints
+4. Handle any special semantics defined for this term
+
+## Implementation Notes
+
+### Data Types
+
+{Term.range === 'xsd:string' && 'This property accepts string values.'}
+{Term.range === 'xsd:dateTime' && 'This property accepts ISO 8601 date-time strings with timezone information.'}
+{Term.range === 'xsd:anyURI' && 'This property accepts URI/URL values. Ensure proper URI encoding.'}
+{Term.range === 'xsd:boolean' && 'This property accepts boolean values (true/false).'}
+
+### Common Mistakes
+
+<Alert type="error">
+
+Common implementation errors with this term:
+
+{Term.name === 'issuanceDate' && (
+  <>
+    - Missing timezone information (use 'Z' for UTC or specify offset)
+    - Using local time instead of UTC
+    - Incorrect date format (must be ISO 8601)
+  </>
+)}
+
+{Term.name === 'issuer' && (
+  <>
+    - Using an HTTP URL instead of a DID or other supported identifier
+    - Missing the 'id' property when using object form
+    - Inconsistent issuer between credential and proof
+  </>
+)}
+
+{Term.name === 'credentialSubject' && (
+  <>
+    - Confusing subject ID with holder ID
+    - Not including claims in the credentialSubject object
+    - Using credentialSubject for metadata instead of claims
+  </>
+)}
+
+{Term.name === 'type' && (
+  <>
+    - Not including "VerifiableCredential" as a base type
+    - Using a single string instead of an array
+    - Missing required context for custom types
+  </>
+)}
+
+</Alert>
+
+### Best Practices
+
+{Term.name === 'credentialSubject' && (
+  <>
+    - Always include an 'id' property when the subject is identifiable
+    - Use clear, semantic property names for claims
+    - Group related claims in nested objects
+    - Document the expected structure of credentialSubject
+  </>
+)}
+
+{Term.name === 'issuer' && (
+  <>
+    - Use DIDs for maximum interoperability
+    - Include human-readable issuer information when using object form
+    - Ensure issuer can be resolved to a DID document
+    - Use the same issuer identifier in the proof
+  </>
+)}
+
+{Term.name === 'proof' && (
+  <>
+    - Always verify proofs before trusting credentials
+    - Support multiple proof types for compatibility
+    - Use appropriate proof purposes for different use cases
+    - Keep proof verification methods up to date
+  </>
+)}
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="CredentialType" href="/W3C/VC/CredentialType/VerifiableCredential">Verifiable Credential</RelatedItem>
+  {Term.name === 'proof' && (
+    <RelatedItem type="Proof" href="/W3C/VC/Proof/Ed25519Signature2020">Ed25519 Signature Proof</RelatedItem>
+  )}
+  {Term.name === 'credentialStatus' && (
+    <RelatedItem type="Status" href="/W3C/VC/Status/StatusList2021Entry">Status List 2021 Entry</RelatedItem>
+  )}
+  {Term.name === 'issuer' && (
+    <RelatedItem type="DID" href="/W3C/DID/Method/web">DID Web Method</RelatedItem>
+  )}
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</SpecLink>
+  <SpecLink href="https://www.w3.org/2018/credentials/v2">Verifiable Credentials Vocabulary v2.0</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/json-ld11/">JSON-LD 1.1</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This term is part of the W3C Verifiable Credentials vocabulary. For more information, visit [w3.org.ai](https://w3.org.ai).*

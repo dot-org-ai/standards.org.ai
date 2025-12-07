@@ -1,0 +1,621 @@
+---
+layout: technique
+source: W3C/WCAG
+$type: W3C/WCAG/Technique
+$id: https://standards.org.ai/W3C/WCAG/Technique/{technique.id}
+sameAs: https://standards.org.ai/Technique/{technique.id}
+canonical: https://w3.org.ai/WCAG/Technique/{technique.id}
+params:
+  - Technique
+schema:
+  technique:
+    id: string
+    title: string
+    type: string
+    technology: string
+    description: string
+    applicability: string
+    procedure: array
+    examples: array
+    relatedSuccessCriteria: array
+    relatedTechniques: array
+    tests: array
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { TechniqueBadge } from '@/components/wcag/TechniqueBadge'
+import { CodeExample } from '@/components/CodeExample'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { RelatedItems } from '@/components/RelatedItems'
+import { TestProcedure } from '@/components/wcag/TestProcedure'
+import { Breadcrumb } from '@/components/Breadcrumb'
+
+<Breadcrumb
+  items={[
+    { label: 'WCAG', href: '/W3C/WCAG' },
+    { label: 'Techniques', href: '/W3C/WCAG/Techniques' },
+    { label: technique.id, href: `/W3C/WCAG/Technique/${technique.id}` }
+  ]}
+/>
+
+<Header
+  title={`${technique.id}: ${technique.title}`}
+  type="WCAG Technique"
+  code={technique.id}
+  badge={<TechniqueBadge type={technique.type} />}
+/>
+
+## Technique Type
+
+<TechniqueBadge type={technique.type} detailed />
+
+This is a **{technique.type}** technique for WCAG {technique.version}.
+
+{technique.type === 'Sufficient' && (
+  <p>
+    This technique is a reliable way to meet one or more WCAG success criteria.
+    When implemented correctly, it provides conformance with the associated criteria.
+  </p>
+)}
+
+{technique.type === 'Advisory' && (
+  <p>
+    This technique goes beyond WCAG requirements but improves accessibility.
+    Advisory techniques are suggested best practices that enhance the user experience.
+  </p>
+)}
+
+{technique.type === 'Failure' && (
+  <p className="warning">
+    This describes a common mistake that causes content to fail WCAG success criteria.
+    Avoid this practice to maintain accessibility conformance.
+  </p>
+)}
+
+## Description
+
+<Description>
+  {technique.description}
+</Description>
+
+## Technology
+
+**{technique.technology}**
+
+This technique applies to:
+- {technique.technology} applications and websites
+- Modern browsers with {technique.technology} support
+- Assistive technologies compatible with {technique.technology}
+
+## When to Use This Technique
+
+### Applicability
+
+{technique.applicability}
+
+### Best Suited For
+
+This technique is particularly effective when:
+
+- Building new features from scratch
+- Refactoring existing code for accessibility
+- Working with {technique.technology} technology stack
+- Need a proven approach to meet WCAG requirements
+- Targeting modern browsers and assistive technologies
+
+### Not Recommended When
+
+Consider alternative techniques if:
+
+- Using older browsers without adequate support
+- Technology stack doesn't support {technique.technology}
+- Simpler techniques can achieve the same goal
+- Context-specific requirements dictate a different approach
+
+## Implementation Procedure
+
+{technique.procedure.map((step, index) => (
+  <div key={index} className="procedure-step">
+    ### Step {index + 1}: {step.title}
+
+    {step.description}
+
+    {step.code && (
+      <CodeExample
+        title={step.codeTitle || `Implementation for Step ${index + 1}`}
+        code={step.code}
+        language={step.language || 'html'}
+      />
+    )}
+
+    {step.notes && (
+      <div className="step-notes">
+        **Note**: {step.notes}
+      </div>
+    )}
+  </div>
+))}
+
+## Examples
+
+{technique.examples.map((example, index) => (
+  <div key={index} className="example-section">
+    ### Example {index + 1}: {example.title}
+
+    {example.description}
+
+    <CodeExample
+      title={example.title}
+      code={example.code}
+      language={example.language || 'html'}
+    />
+
+    {example.explanation && (
+      <div className="example-explanation">
+        **Explanation**: {example.explanation}
+      </div>
+    )}
+
+    {example.liveDemo && (
+      <div className="live-demo">
+        [View Live Demo]({example.liveDemo})
+      </div>
+    )}
+  </div>
+))}
+
+### Complete Implementation Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{technique.title} - Complete Example</title>
+  <style>
+    /* Styles supporting {technique.id} */
+    .accessible-element {
+      /* Implementation-specific styles */
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{technique.title}</h1>
+
+    <!-- Full implementation of technique {technique.id} -->
+    <section aria-labelledby="section-title">
+      <h2 id="section-title">Accessible Section</h2>
+      <!-- Content following technique guidelines -->
+    </section>
+  </main>
+
+  <script>
+    // JavaScript supporting {technique.id}
+    document.addEventListener('DOMContentLoaded', () => {
+      // Implementation code
+      console.log('Technique {technique.id} initialized')
+    })
+  </script>
+</body>
+</html>
+```
+
+### Framework-Specific Examples
+
+#### React
+
+```jsx
+import React, { useId, useRef, useEffect } from 'react'
+
+const AccessibleComponent = ({ content, onAction }) => {
+  const id = useId()
+  const elementRef = useRef(null)
+
+  useEffect(() => {
+    // Implementation of technique {technique.id}
+    if (elementRef.current) {
+      // Setup accessible behavior
+    }
+  }, [])
+
+  return (
+    <div
+      ref={elementRef}
+      role="region"
+      aria-labelledby={id}
+    >
+      <h2 id={id}>{technique.title}</h2>
+      {/* Accessible content following {technique.id} */}
+      {content}
+
+      <button
+        onClick={onAction}
+        type="button"
+        aria-label="Action following technique {technique.id}"
+      >
+        Accessible Action
+      </button>
+    </div>
+  )
+}
+
+export default AccessibleComponent
+```
+
+#### Vue
+
+```vue
+<template>
+  <div
+    role="region"
+    :aria-labelledby="headingId"
+    ref="container"
+  >
+    <h2 :id="headingId">{{ title }}</h2>
+
+    <!-- Implementation of technique {technique.id} -->
+    <slot />
+
+    <button
+      @click="handleAction"
+      type="button"
+      :aria-label="actionLabel"
+    >
+      {{ buttonText }}
+    </button>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue'
+
+const props = defineProps({
+  title: String,
+  buttonText: String,
+  actionLabel: String
+})
+
+const headingId = ref(`heading-${Math.random().toString(36).substr(2, 9)}`)
+const container = ref(null)
+
+onMounted(() => {
+  // Initialize technique {technique.id}
+  if (container.value) {
+    // Setup code
+  }
+})
+
+const handleAction = () => {
+  // Accessible action implementation
+  console.log('Action performed following {technique.id}')
+}
+</script>
+```
+
+#### Angular
+
+```typescript
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core'
+
+@Component({
+  selector: 'app-accessible-component',
+  template: `
+    <div
+      #container
+      role="region"
+      [attr.aria-labelledby]="headingId"
+    >
+      <h2 [id]="headingId">{{ title }}</h2>
+
+      <ng-content></ng-content>
+
+      <button
+        (click)="performAction()"
+        type="button"
+        [attr.aria-label]="actionLabel"
+      >
+        {{ buttonText }}
+      </button>
+    </div>
+  `,
+  styles: [`
+    /* Styles supporting technique {technique.id} */
+  `]
+})
+export class AccessibleComponent implements OnInit {
+  @ViewChild('container') container: ElementRef
+
+  headingId = `heading-${Math.random().toString(36).substr(2, 9)}`
+  title = '{technique.title}'
+  buttonText = 'Accessible Action'
+  actionLabel = 'Action following technique {technique.id}'
+
+  ngOnInit(): void {
+    // Initialize technique {technique.id}
+    if (this.container) {
+      // Setup code
+    }
+  }
+
+  performAction(): void {
+    // Accessible action implementation
+    console.log('Action performed following {technique.id}')
+  }
+}
+```
+
+## Testing This Technique
+
+<TestProcedure steps={technique.tests} />
+
+### Automated Testing
+
+```javascript
+// Jest + React Testing Library
+import { render, screen } from '@testing-library/react'
+import { axe, toHaveNoViolations } from 'jest-axe'
+
+expect.extend(toHaveNoViolations)
+
+describe('Technique {technique.id}', () => {
+  it('should have no accessibility violations', async () => {
+    const { container } = render(<AccessibleComponent />)
+    const results = await axe(container)
+
+    expect(results).toHaveNoViolations()
+  })
+
+  it('should implement technique correctly', () => {
+    render(<AccessibleComponent />)
+
+    // Test specific aspects of technique {technique.id}
+    const element = screen.getByRole('region')
+    expect(element).toBeInTheDocument()
+    expect(element).toHaveAccessibleName()
+  })
+})
+```
+
+### Manual Testing Checklist
+
+- [ ] Verify technique is applied correctly to all relevant elements
+- [ ] Test with keyboard navigation (Tab, Enter, Space, Arrow keys)
+- [ ] Test with screen reader (NVDA, JAWS, VoiceOver, TalkBack)
+- [ ] Verify in different browsers (Chrome, Firefox, Safari, Edge)
+- [ ] Test with browser zoom at 200%
+- [ ] Check in high contrast mode
+- [ ] Verify on mobile devices (iOS and Android)
+- [ ] Test with voice control software
+- [ ] Validate HTML markup
+- [ ] Run automated accessibility scanner
+
+### Screen Reader Testing
+
+#### NVDA (Windows)
+
+1. Start NVDA (Insert + N)
+2. Navigate to the element (Arrow keys or Tab)
+3. Verify announced information is correct
+4. Test all interactive elements (Enter/Space)
+5. Check that relationships are clear
+
+#### VoiceOver (Mac)
+
+1. Enable VoiceOver (Cmd + F5)
+2. Navigate with VO keys (Control + Option + Arrow)
+3. Verify rotor categories (VO + U)
+4. Test interactions (VO + Space)
+5. Check announcements are appropriate
+
+#### JAWS (Windows)
+
+1. Start JAWS
+2. Use virtual cursor (Arrow keys)
+3. Test forms mode if applicable (Enter on form field)
+4. Verify element list (Insert + F3)
+5. Check heading navigation (H key)
+
+### Browser Testing
+
+| Browser | Version | Status | Notes |
+|---------|---------|--------|-------|
+| Chrome | Latest | Supported | Full support for technique |
+| Firefox | Latest | Supported | Full support for technique |
+| Safari | Latest | Supported | Full support for technique |
+| Edge | Latest | Supported | Full support for technique |
+| Chrome Mobile | Latest | Supported | Touch interaction verified |
+| Safari iOS | Latest | Supported | VoiceOver compatible |
+
+## Common Issues and Solutions
+
+### Issue 1: Incomplete Implementation
+
+**Problem**: Technique partially implemented, missing key aspects.
+
+**Solution**:
+```javascript
+// Incorrect - Missing required attributes
+<div>
+  <button>Click me</button>
+</div>
+
+// Correct - Full implementation of {technique.id}
+<div role="region" aria-label="Interactive controls">
+  <button
+    type="button"
+    aria-label="Descriptive action label"
+  >
+    Click me
+  </button>
+</div>
+```
+
+### Issue 2: Browser Compatibility
+
+**Problem**: Technique not supported in older browsers.
+
+**Solution**: Provide progressive enhancement or polyfill:
+
+```javascript
+// Feature detection and fallback
+if ('attribute' in element) {
+  // Modern implementation
+  element.setAttribute('aria-label', 'Modern approach')
+} else {
+  // Fallback for older browsers
+  element.title = 'Fallback approach'
+}
+```
+
+### Issue 3: Dynamic Content
+
+**Problem**: Technique doesn't work with dynamically added content.
+
+**Solution**:
+```javascript
+// Use MutationObserver to handle dynamic content
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.type === 'childList') {
+      // Reapply technique {technique.id} to new elements
+      applyTechnique(mutation.addedNodes)
+    }
+  })
+})
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+})
+```
+
+## Related Success Criteria
+
+<RelatedItems
+  items={technique.relatedSuccessCriteria}
+  title="Success Criteria"
+  description="This technique helps meet the following success criteria"
+/>
+
+{technique.relatedSuccessCriteria.map((sc) => (
+  <div key={sc.number} className="related-sc">
+    - **[{sc.number} {sc.name}](/W3C/WCAG/SuccessCriterion/{sc.code})** (Level {sc.level})
+  </div>
+))}
+
+## Related Techniques
+
+<RelatedItems
+  items={technique.relatedTechniques}
+  title="Related Techniques"
+  description="These techniques can be used in combination or as alternatives"
+/>
+
+### Complementary Techniques
+
+{technique.relatedTechniques
+  .filter(t => t.relationship === 'complementary')
+  .map((t) => (
+    <div key={t.id}>
+      - **[{t.id}: {t.title}](/W3C/WCAG/Technique/{t.id})**
+    </div>
+  ))}
+
+### Alternative Techniques
+
+{technique.relatedTechniques
+  .filter(t => t.relationship === 'alternative')
+  .map((t) => (
+    <div key={t.id}>
+      - **[{t.id}: {t.title}](/W3C/WCAG/Technique/{t.id})**
+    </div>
+  ))}
+
+## Browser and Assistive Technology Support
+
+### Supported Combinations
+
+| OS | Browser | Screen Reader | Support Level |
+|----|---------|---------------|---------------|
+| Windows | Chrome | NVDA | Full |
+| Windows | Firefox | NVDA | Full |
+| Windows | Edge | JAWS | Full |
+| macOS | Safari | VoiceOver | Full |
+| iOS | Safari | VoiceOver | Full |
+| Android | Chrome | TalkBack | Full |
+
+### Known Issues
+
+- **Issue Description**: Specific browser/AT combination issue
+  - **Affected**: Browser/AT version
+  - **Workaround**: Alternative approach
+  - **Status**: Fixed in version X.X
+
+## Resources
+
+### Official Documentation
+
+<SpecificationLink
+  href={`https://www.w3.org/WAI/WCAG${technique.version.replace('.', '')}/Techniques/${technique.technology.toLowerCase()}/${technique.id}`}
+  title={`${technique.id}: ${technique.title}`}
+  organization="W3C"
+  standard="WCAG"
+  version={technique.version}
+/>
+
+### Additional Resources
+
+- [Understanding Techniques for WCAG {technique.version}](https://www.w3.org/WAI/WCAG{technique.version.replace('.', '')}/Techniques/)
+- [How to Meet WCAG - Quick Reference](https://www.w3.org/WAI/WCAG{technique.version.replace('.', '')}/quickref/)
+- [{technique.technology} Accessibility Documentation](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
+
+### Code Examples and Demos
+
+- [WAI-ARIA Authoring Practices Guide](https://www.w3.org/WAI/ARIA/apg/)
+- [Inclusive Components](https://inclusive-components.design/)
+- [A11y Style Guide](https://a11y-style-guide.com/)
+
+## Quick Reference
+
+| Property | Value |
+|----------|-------|
+| Technique ID | {technique.id} |
+| Technique Title | {technique.title} |
+| Type | {technique.type} |
+| Technology | {technique.technology} |
+| WCAG Version | {technique.version} |
+| Success Criteria | {technique.relatedSuccessCriteria.length} |
+| Status | W3C Technique |
+
+## Implementation Checklist
+
+- [ ] Review all procedure steps
+- [ ] Implement code following examples
+- [ ] Test with keyboard navigation
+- [ ] Verify with screen reader
+- [ ] Run automated tests
+- [ ] Check browser compatibility
+- [ ] Validate against success criteria
+- [ ] Document any customizations
+- [ ] Add to project accessibility documentation
+- [ ] Schedule regular conformance reviews
+
+---
+
+*This technique is part of the WCAG {technique.version} Techniques documentation. For complete accessibility conformance, combine with other appropriate techniques.*

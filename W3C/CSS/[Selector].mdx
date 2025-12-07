@@ -1,0 +1,238 @@
+---
+layout: selector
+source: W3C/CSS
+$type: W3C/CSS/Selector
+$id: https://standards.org.ai/W3C/CSS/Selector/{selector.code}
+sameAs: https://standards.org.ai/Selector/{selector.code}
+canonical: https://w3.org.ai/CSS/Selector/{selector.code}
+params:
+  - Selector
+schema:
+  selector:
+    code: string
+    name: string
+    pattern: string
+    type: string
+    specificity: string
+    description: string
+    syntax: string
+    version: string
+    specification: string
+    examples: array
+---
+
+import { SelectorHeader } from '@/components/css/SelectorHeader'
+import { SpecificityBadge } from '@/components/css/SpecificityBadge'
+import { CodeExample } from '@/components/css/CodeExample'
+import { BrowserCompatibility } from '@/components/css/BrowserCompatibility'
+import { RelatedSelectors } from '@/components/css/RelatedSelectors'
+import { SpecificationLinks } from '@/components/css/SpecificationLinks'
+import { SelectorTable } from '@/components/css/SelectorTable'
+
+<SelectorHeader
+  name={selector.name}
+  pattern={selector.pattern}
+  description={selector.description}
+/>
+
+## Description
+
+{selector.description}
+
+## Selector Information
+
+<SelectorTable>
+  <SelectorRow label="Pattern" value={<code>{selector.pattern}</code>} />
+  <SelectorRow label="Type" value={selector.type} />
+  <SelectorRow label="Specificity" value={<SpecificityBadge value={selector.specificity} />} />
+  <SelectorRow label="CSS Version" value={selector.version} />
+</SelectorTable>
+
+## Syntax
+
+<FormalSyntax syntax={selector.syntax} />
+
+```css
+{selector.pattern} {
+  /* CSS declarations */
+}
+```
+
+## Specificity
+
+<SpecificityBadge value={selector.specificity} detailed />
+
+The specificity of `{selector.pattern}` is **{selector.specificity}**.
+
+{selector.type === 'pseudo-class' && `
+Pseudo-classes have a specificity of (0, 1, 0), equivalent to a class selector.
+`}
+
+{selector.type === 'pseudo-element' && `
+Pseudo-elements have a specificity of (0, 0, 1), equivalent to an element selector.
+`}
+
+{selector.type === 'id' && `
+ID selectors have a specificity of (1, 0, 0), the highest specificity for regular selectors.
+`}
+
+{selector.type === 'class' && `
+Class selectors have a specificity of (0, 1, 0).
+`}
+
+{selector.type === 'element' && `
+Element selectors have a specificity of (0, 0, 1), the lowest specificity.
+`}
+
+{selector.type === 'attribute' && `
+Attribute selectors have a specificity of (0, 1, 0), equivalent to a class selector.
+`}
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="css">
+{`/* Basic ${selector.name} selector */
+${selector.pattern} {
+  color: #333;
+  font-size: 16px;
+}
+`}
+</CodeExample>
+
+### Common Patterns
+
+{selector.examples && selector.examples.map((example, idx) => (
+  <section key={idx}>
+    <h4>{example.title}</h4>
+
+    <CodeExample language="css">
+{example.css}
+    </CodeExample>
+
+    {example.html && (
+      <CodeExample language="html">
+{example.html}
+      </CodeExample>
+    )}
+
+    <p>{example.description}</p>
+  </section>
+))}
+
+### Combining with Other Selectors
+
+<CodeExample language="css">
+{`/* Combining ${selector.pattern} with other selectors */
+
+/* With descendant combinator */
+.parent ${selector.pattern} {
+  /* styles */
+}
+
+/* With child combinator */
+.parent > ${selector.pattern} {
+  /* styles */
+}
+
+/* With adjacent sibling */
+.sibling + ${selector.pattern} {
+  /* styles */
+}
+
+/* With general sibling */
+.sibling ~ ${selector.pattern} {
+  /* styles */
+}
+
+/* Multiple selectors */
+${selector.pattern}.class-name {
+  /* styles */
+}
+`}
+</CodeExample>
+
+### Practical Example
+
+<CodeExample language="html" live>
+{`<div class="demo">
+  <div class="target">This element is targeted by the selector</div>
+  <div>This element is not targeted</div>
+  <div class="target">Another targeted element</div>
+</div>
+
+<style>
+.demo {
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.demo > div {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  background: white;
+  border: 1px solid #ddd;
+}
+
+${selector.pattern} {
+  background: #e3f2fd;
+  border-color: #2196f3;
+  font-weight: 600;
+}
+</style>
+`}
+</CodeExample>
+
+## Use Cases
+
+Common scenarios where `{selector.pattern}` is useful:
+
+- Targeting specific elements based on their {selector.type}
+- Creating interactive UI states
+- Styling form elements in different states
+- Implementing responsive design patterns
+- Enhancing accessibility with visual feedback
+
+## Browser Compatibility
+
+<BrowserCompatibility selector={selector.code} />
+
+## Specifications
+
+<SpecificationLinks specifications={[
+  {
+    name: selector.specification,
+    url: `https://www.w3.org/TR/${selector.specification}/#${selector.code}`,
+    status: 'Recommendation'
+  }
+]} />
+
+## Related Selectors
+
+<RelatedSelectors selector={selector.code} type={selector.type} />
+
+## Best Practices
+
+- Use selectors with appropriate specificity to avoid specificity wars
+- Prefer class selectors over ID selectors for reusability
+- Combine selectors efficiently to target elements precisely
+- Consider performance implications of complex selector chains
+- Use semantic selectors that reflect content structure
+
+## Common Mistakes
+
+- Over-qualifying selectors (e.g., `div.class` instead of `.class`)
+- Creating overly specific selectors that are hard to override
+- Using inefficient descendant selectors in large DOMs
+- Not considering selector specificity in cascade conflicts
+
+## See Also
+
+- MDN Web Docs: [CSS Selectors](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Selectors)
+- [CSS Specificity Calculator](https://specificity.keegan.st/)
+- [Selectors Level 4 Specification](https://www.w3.org/TR/selectors-4/)
+
+---
+
+*Part of the W3C CSS Selectors Specifications. Last updated from [{selector.specification}].*

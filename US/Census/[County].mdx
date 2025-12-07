@@ -1,0 +1,53 @@
+---
+layout: county
+source: Census/Geographic
+$type: Census/County
+$id: https://standards.org.ai/Census/County/{county.fips}
+sameAs: https://standards.org.ai/County/{county.fips}
+canonical: https://us.org.ai/Census/County/{county.fips}
+params:
+  - County
+schema:
+  county:
+    fips: fips
+    name: name
+    state: state
+    stateFips: stateFips
+    classCode: classCode
+---
+
+# {county.name}, {county.state}
+
+<CountyHeader fips={county.fips} name={county.name} state={county.state} />
+
+## FIPS Code
+
+{county.fips}
+
+## State
+
+<StateLink fips={county.stateFips} name={county.state} />
+
+## Classification Code
+
+{county.classCode}
+
+## Places
+
+<PlaceList county={county.fips} />
+
+## Metropolitan Areas
+
+<CBSAList county={county.fips} />
+
+## Demographics
+
+<CountyDemographics fips={county.fips} />
+
+## Economy
+
+<CountyEconomy fips={county.fips} />
+
+## Business Patterns
+
+<CountyBusinessPatterns fips={county.fips} />

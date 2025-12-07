@@ -1,0 +1,860 @@
+/**
+ * W3C Web of Things Transformation Script
+ * Transforms W3C WoT Thing Description data into standard TSV format
+ */
+
+import { join } from 'path'
+import {
+  StandardRecord,
+  RelationshipRecord,
+  writeStandardTSV,
+  writeRelationshipTSV,
+  toWikipediaStyleId,
+  cleanDescription,
+  getDataPath,
+  getRelationshipsPath,
+  ensureOutputDirs,
+} from './utils'
+
+const NS = 'w3c.org.ai'
+const DATA_DIR = getDataPath()
+const REL_DIR = getRelationshipsPath()
+
+/**
+ * Transform WoT Thing Description vocabulary
+ * Source: https://www.w3.org/TR/wot-thing-description/
+ */
+function transformTDVocabulary(): void {
+  console.log('Transforming WoT Thing Description vocabulary...')
+
+  // Core TD Vocabulary Terms
+  const tdVocab: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Id',
+      name: 'id',
+      description: 'Identifier of the Thing in form of a URI',
+      code: 'id',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Title',
+      name: 'title',
+      description: 'Human-readable title of the Thing',
+      code: 'title',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Titles',
+      name: 'titles',
+      description: 'Multi-language map of human-readable titles',
+      code: 'titles',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Description',
+      name: 'description',
+      description: 'Human-readable description of the Thing',
+      code: 'description',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Descriptions',
+      name: 'descriptions',
+      description: 'Multi-language map of human-readable descriptions',
+      code: 'descriptions',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Version',
+      name: 'version',
+      description: 'Version information of the Thing Description',
+      code: 'version',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Created',
+      name: 'created',
+      description: 'Creation timestamp of the Thing Description',
+      code: 'created',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Modified',
+      name: 'modified',
+      description: 'Last modification timestamp of the Thing Description',
+      code: 'modified',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Support',
+      name: 'support',
+      description: 'URI for support or maintenance contact',
+      code: 'support',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Base',
+      name: 'base',
+      description: 'Base URI for all relative URIs in the TD',
+      code: 'base',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Properties',
+      name: 'properties',
+      description: 'Map of Property Affordances',
+      code: 'properties',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Actions',
+      name: 'actions',
+      description: 'Map of Action Affordances',
+      code: 'actions',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Events',
+      name: 'events',
+      description: 'Map of Event Affordances',
+      code: 'events',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Links',
+      name: 'links',
+      description: 'Array of web links to other resources',
+      code: 'links',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Forms',
+      name: 'forms',
+      description: 'Set of form hypermedia controls for operations',
+      code: 'forms',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Security',
+      name: 'security',
+      description: 'Security scheme names to be used for the Thing',
+      code: 'security',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'SecurityDefinitions',
+      name: 'securityDefinitions',
+      description: 'Set of named security scheme definitions',
+      code: 'securityDefinitions',
+    },
+    {
+      ns: NS,
+      type: 'TDProperty',
+      id: 'Profile',
+      name: 'profile',
+      description: 'Profile URIs indicating which specifications this TD conforms to',
+      code: 'profile',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.TDVocabulary.tsv'), tdVocab)
+}
+
+/**
+ * Transform WoT Property Affordances
+ */
+function transformPropertyAffordances(): void {
+  console.log('Transforming WoT Property Affordances...')
+
+  const propertyTerms: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'Observable',
+      name: 'observable',
+      description: 'Indicates if the property is observable for value changes',
+      code: 'observable',
+    },
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'Type',
+      name: 'type',
+      description: 'JSON Schema type of the property value',
+      code: 'type',
+    },
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'ReadOnly',
+      name: 'readOnly',
+      description: 'Indicates if the property is read-only',
+      code: 'readOnly',
+    },
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'WriteOnly',
+      name: 'writeOnly',
+      description: 'Indicates if the property is write-only',
+      code: 'writeOnly',
+    },
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'Unit',
+      name: 'unit',
+      description: 'Unit of measurement for the property value',
+      code: 'unit',
+    },
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'Minimum',
+      name: 'minimum',
+      description: 'Minimum value constraint',
+      code: 'minimum',
+    },
+    {
+      ns: NS,
+      type: 'PropertyAffordance',
+      id: 'Maximum',
+      name: 'maximum',
+      description: 'Maximum value constraint',
+      code: 'maximum',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.PropertyAffordances.tsv'), propertyTerms)
+}
+
+/**
+ * Transform WoT Action Affordances
+ */
+function transformActionAffordances(): void {
+  console.log('Transforming WoT Action Affordances...')
+
+  const actionTerms: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'ActionAffordance',
+      id: 'Input',
+      name: 'input',
+      description: 'Data schema for action input parameters',
+      code: 'input',
+    },
+    {
+      ns: NS,
+      type: 'ActionAffordance',
+      id: 'Output',
+      name: 'output',
+      description: 'Data schema for action output data',
+      code: 'output',
+    },
+    {
+      ns: NS,
+      type: 'ActionAffordance',
+      id: 'Safe',
+      name: 'safe',
+      description: 'Indicates if the action is safe (no side effects)',
+      code: 'safe',
+    },
+    {
+      ns: NS,
+      type: 'ActionAffordance',
+      id: 'Idempotent',
+      name: 'idempotent',
+      description: 'Indicates if the action is idempotent',
+      code: 'idempotent',
+    },
+    {
+      ns: NS,
+      type: 'ActionAffordance',
+      id: 'Synchronous',
+      name: 'synchronous',
+      description: 'Indicates if the action completes synchronously',
+      code: 'synchronous',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.ActionAffordances.tsv'), actionTerms)
+}
+
+/**
+ * Transform WoT Event Affordances
+ */
+function transformEventAffordances(): void {
+  console.log('Transforming WoT Event Affordances...')
+
+  const eventTerms: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'EventAffordance',
+      id: 'Subscription',
+      name: 'subscription',
+      description: 'Data schema for event subscription request',
+      code: 'subscription',
+    },
+    {
+      ns: NS,
+      type: 'EventAffordance',
+      id: 'Data',
+      name: 'data',
+      description: 'Data schema for event notification payload',
+      code: 'data',
+    },
+    {
+      ns: NS,
+      type: 'EventAffordance',
+      id: 'Cancellation',
+      name: 'cancellation',
+      description: 'Data schema for event cancellation request',
+      code: 'cancellation',
+    },
+    {
+      ns: NS,
+      type: 'EventAffordance',
+      id: 'DataResponse',
+      name: 'dataResponse',
+      description: 'Data schema for event subscription response',
+      code: 'dataResponse',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.EventAffordances.tsv'), eventTerms)
+}
+
+/**
+ * Transform WoT Protocol Bindings
+ */
+function transformProtocolBindings(): void {
+  console.log('Transforming WoT Protocol Bindings...')
+
+  const protocolBindings: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'HTTP',
+      name: 'HTTP',
+      description: 'Hypertext Transfer Protocol binding',
+      code: 'http',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'HTTPS',
+      name: 'HTTPS',
+      description: 'HTTP over TLS/SSL',
+      code: 'https',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'CoAP',
+      name: 'CoAP',
+      description: 'Constrained Application Protocol binding',
+      code: 'coap',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'CoAPS',
+      name: 'CoAPS',
+      description: 'CoAP over DTLS',
+      code: 'coaps',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'MQTT',
+      name: 'MQTT',
+      description: 'Message Queuing Telemetry Transport protocol binding',
+      code: 'mqtt',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'MQTTS',
+      name: 'MQTTS',
+      description: 'MQTT over TLS/SSL',
+      code: 'mqtts',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'WebSocket',
+      name: 'WebSocket',
+      description: 'WebSocket protocol binding',
+      code: 'ws',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'WebSocket_Secure',
+      name: 'WebSocket Secure',
+      description: 'WebSocket over TLS/SSL',
+      code: 'wss',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'Modbus',
+      name: 'Modbus',
+      description: 'Modbus protocol binding for industrial systems',
+      code: 'modbus',
+    },
+    {
+      ns: NS,
+      type: 'ProtocolBinding',
+      id: 'OPC_UA',
+      name: 'OPC UA',
+      description: 'OPC Unified Architecture protocol binding',
+      code: 'opcua',
+    },
+  ]
+
+  // Protocol Operation Types
+  const operationTypes: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'ReadProperty',
+      name: 'readproperty',
+      description: 'Operation to read a property value',
+      code: 'readproperty',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'WriteProperty',
+      name: 'writeproperty',
+      description: 'Operation to write a property value',
+      code: 'writeproperty',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'ObserveProperty',
+      name: 'observeproperty',
+      description: 'Operation to observe property value changes',
+      code: 'observeproperty',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'UnobserveProperty',
+      name: 'unobserveproperty',
+      description: 'Operation to stop observing property changes',
+      code: 'unobserveproperty',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'InvokeAction',
+      name: 'invokeaction',
+      description: 'Operation to invoke an action',
+      code: 'invokeaction',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'SubscribeEvent',
+      name: 'subscribeevent',
+      description: 'Operation to subscribe to events',
+      code: 'subscribeevent',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'UnsubscribeEvent',
+      name: 'unsubscribeevent',
+      description: 'Operation to unsubscribe from events',
+      code: 'unsubscribeevent',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'ReadAllProperties',
+      name: 'readallproperties',
+      description: 'Operation to read all property values',
+      code: 'readallproperties',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'WriteAllProperties',
+      name: 'writeallproperties',
+      description: 'Operation to write all property values',
+      code: 'writeallproperties',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'ReadMultipleProperties',
+      name: 'readmultipleproperties',
+      description: 'Operation to read multiple property values',
+      code: 'readmultipleproperties',
+    },
+    {
+      ns: NS,
+      type: 'OperationType',
+      id: 'WriteMultipleProperties',
+      name: 'writemultipleproperties',
+      description: 'Operation to write multiple property values',
+      code: 'writemultipleproperties',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.ProtocolBindings.tsv'), protocolBindings)
+  writeStandardTSV(join(DATA_DIR, 'W3C.OperationTypes.tsv'), operationTypes)
+}
+
+/**
+ * Transform WoT Security Schemes
+ */
+function transformSecuritySchemes(): void {
+  console.log('Transforming WoT Security Schemes...')
+
+  const securitySchemes: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'NoSec',
+      name: 'nosec',
+      description: 'No security mechanism required',
+      code: 'nosec',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'Auto',
+      name: 'auto',
+      description: 'Automatic selection of security mechanism',
+      code: 'auto',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'Combo',
+      name: 'combo',
+      description: 'Combination of multiple security schemes',
+      code: 'combo',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'Basic',
+      name: 'basic',
+      description: 'HTTP Basic Authentication',
+      code: 'basic',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'Digest',
+      name: 'digest',
+      description: 'HTTP Digest Authentication',
+      code: 'digest',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'Bearer',
+      name: 'bearer',
+      description: 'Bearer token authentication',
+      code: 'bearer',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'APIKey',
+      name: 'apikey',
+      description: 'API key authentication',
+      code: 'apikey',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'OAuth2',
+      name: 'oauth2',
+      description: 'OAuth 2.0 authentication and authorization',
+      code: 'oauth2',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'PSK',
+      name: 'psk',
+      description: 'Pre-shared key authentication',
+      code: 'psk',
+    },
+    {
+      ns: NS,
+      type: 'SecurityScheme',
+      id: 'Public',
+      name: 'public',
+      description: 'Public key infrastructure authentication',
+      code: 'public',
+    },
+  ]
+
+  // OAuth2 Flow Types
+  const oauth2Flows: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'OAuth2Flow',
+      id: 'Code',
+      name: 'code',
+      description: 'OAuth 2.0 authorization code flow',
+      code: 'code',
+    },
+    {
+      ns: NS,
+      type: 'OAuth2Flow',
+      id: 'Client',
+      name: 'client',
+      description: 'OAuth 2.0 client credentials flow',
+      code: 'client',
+    },
+    {
+      ns: NS,
+      type: 'OAuth2Flow',
+      id: 'Device',
+      name: 'device',
+      description: 'OAuth 2.0 device authorization flow',
+      code: 'device',
+    },
+  ]
+
+  // Security Location Types
+  const securityLocations: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'SecurityLocation',
+      id: 'Header',
+      name: 'header',
+      description: 'Security credentials in HTTP header',
+      code: 'header',
+    },
+    {
+      ns: NS,
+      type: 'SecurityLocation',
+      id: 'Query',
+      name: 'query',
+      description: 'Security credentials in query parameters',
+      code: 'query',
+    },
+    {
+      ns: NS,
+      type: 'SecurityLocation',
+      id: 'Body',
+      name: 'body',
+      description: 'Security credentials in message body',
+      code: 'body',
+    },
+    {
+      ns: NS,
+      type: 'SecurityLocation',
+      id: 'Cookie',
+      name: 'cookie',
+      description: 'Security credentials in HTTP cookie',
+      code: 'cookie',
+    },
+    {
+      ns: NS,
+      type: 'SecurityLocation',
+      id: 'Uri',
+      name: 'uri',
+      description: 'Security credentials in URI',
+      code: 'uri',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.SecuritySchemes.tsv'), securitySchemes)
+  writeStandardTSV(join(DATA_DIR, 'W3C.OAuth2Flows.tsv'), oauth2Flows)
+  writeStandardTSV(join(DATA_DIR, 'W3C.SecurityLocations.tsv'), securityLocations)
+}
+
+/**
+ * Transform WoT Data Schema types
+ */
+function transformDataSchemas(): void {
+  console.log('Transforming WoT Data Schemas...')
+
+  const dataTypes: StandardRecord[] = [
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'Boolean',
+      name: 'boolean',
+      description: 'Boolean value (true or false)',
+      code: 'boolean',
+    },
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'Integer',
+      name: 'integer',
+      description: 'Integer numeric value',
+      code: 'integer',
+    },
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'Number',
+      name: 'number',
+      description: 'Floating point numeric value',
+      code: 'number',
+    },
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'String',
+      name: 'string',
+      description: 'String text value',
+      code: 'string',
+    },
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'Object',
+      name: 'object',
+      description: 'JSON object with properties',
+      code: 'object',
+    },
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'Array',
+      name: 'array',
+      description: 'JSON array of items',
+      code: 'array',
+    },
+    {
+      ns: NS,
+      type: 'DataType',
+      id: 'Null',
+      name: 'null',
+      description: 'Null value',
+      code: 'null',
+    },
+  ]
+
+  writeStandardTSV(join(DATA_DIR, 'W3C.DataTypes.tsv'), dataTypes)
+}
+
+/**
+ * Create relationships between WoT entities
+ */
+function createRelationships(): void {
+  console.log('Creating relationships...')
+
+  const relationships: RelationshipRecord[] = [
+    // Protocol Bindings support Operation Types
+    {
+      fromNs: NS,
+      fromType: 'ProtocolBinding',
+      fromId: 'HTTP',
+      toNs: NS,
+      toType: 'OperationType',
+      toId: 'ReadProperty',
+      relationshipType: 'supports',
+    },
+    {
+      fromNs: NS,
+      fromType: 'ProtocolBinding',
+      fromId: 'HTTP',
+      toNs: NS,
+      toType: 'OperationType',
+      toId: 'WriteProperty',
+      relationshipType: 'supports',
+    },
+    {
+      fromNs: NS,
+      fromType: 'ProtocolBinding',
+      fromId: 'MQTT',
+      toNs: NS,
+      toType: 'OperationType',
+      toId: 'ObserveProperty',
+      relationshipType: 'supports',
+    },
+    {
+      fromNs: NS,
+      fromType: 'ProtocolBinding',
+      fromId: 'WebSocket',
+      toNs: NS,
+      toType: 'OperationType',
+      toId: 'SubscribeEvent',
+      relationshipType: 'supports',
+    },
+    // Security Schemes use Security Locations
+    {
+      fromNs: NS,
+      fromType: 'SecurityScheme',
+      fromId: 'Basic',
+      toNs: NS,
+      toType: 'SecurityLocation',
+      toId: 'Header',
+      relationshipType: 'uses',
+    },
+    {
+      fromNs: NS,
+      fromType: 'SecurityScheme',
+      fromId: 'APIKey',
+      toNs: NS,
+      toType: 'SecurityLocation',
+      toId: 'Header',
+      relationshipType: 'uses',
+    },
+    {
+      fromNs: NS,
+      fromType: 'SecurityScheme',
+      fromId: 'APIKey',
+      toNs: NS,
+      toType: 'SecurityLocation',
+      toId: 'Query',
+      relationshipType: 'uses',
+    },
+  ]
+
+  writeRelationshipTSV(join(REL_DIR, 'W3C.WoT.relationships.tsv'), relationships)
+}
+
+export async function transformW3CWoT(): Promise<void> {
+  console.log('=== W3C Web of Things Transformation ===\n')
+  ensureOutputDirs()
+
+  transformTDVocabulary()
+  transformPropertyAffordances()
+  transformActionAffordances()
+  transformEventAffordances()
+  transformProtocolBindings()
+  transformSecuritySchemes()
+  transformDataSchemas()
+  createRelationships()
+
+  console.log('\n=== W3C WoT Transformation Complete ===')
+}
+
+// Run if called directly
+if (import.meta.main) {
+  transformW3CWoT().catch(console.error)
+}

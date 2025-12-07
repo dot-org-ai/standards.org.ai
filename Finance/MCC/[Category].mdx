@@ -1,0 +1,48 @@
+---
+layout: category
+source: Finance/MCC
+$type: Finance/MCC/Category
+$id: https://standards.org.ai/Finance/MCC/Category/{category.code}
+sameAs: https://standards.org.ai/MCC/Category/{category.code}
+canonical: https://standards.org.ai/MCC/Category/{category.code}
+params:
+  - Category
+schema:
+  category:
+    code: code
+    name: name
+    description: description
+    range: range
+---
+
+# {category.name}
+
+<CategoryHeader code={category.code} name={category.name} range={category.range} />
+
+## Description
+
+{category.description}
+
+## Code Range
+
+{category.range}
+
+## MCC Codes in this Category
+
+<MCCCodesByCategory categoryCode={category.code} />
+
+## Common Merchants
+
+<MerchantsByCategory categoryCode={category.code} />
+
+## Industry Association
+
+<IndustryAssociation categoryCode={category.code} />
+
+## Interchange Rates
+
+<InterchangeRatesByCategory categoryCode={category.code} />
+
+## Compliance Requirements
+
+<CategoryCompliance categoryCode={category.code} />

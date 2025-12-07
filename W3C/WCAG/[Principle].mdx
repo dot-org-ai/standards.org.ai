@@ -1,0 +1,192 @@
+---
+layout: principle
+source: W3C/WCAG
+$type: W3C/WCAG/Principle
+$id: https://standards.org.ai/W3C/WCAG/Principle/{principle.code}
+sameAs: https://standards.org.ai/Principle/{principle.code}
+canonical: https://w3.org.ai/WCAG/Principle/{principle.code}
+params:
+  - Principle
+schema:
+  principle:
+    code: string
+    number: string
+    name: string
+    description: string
+    guidelines: array
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { Guidelines } from '@/components/wcag/Guidelines'
+import { ConformanceInfo } from '@/components/wcag/ConformanceInfo'
+
+<Header
+  title={`Principle ${principle.number}: ${principle.name}`}
+  type="WCAG Principle"
+  code={principle.code}
+/>
+
+## Overview
+
+<Description>
+  {principle.description}
+</Description>
+
+## Purpose
+
+The {principle.name} principle ensures that web content is accessible to all users, regardless of their abilities or disabilities. This is one of the four foundational principles of web accessibility defined in WCAG {principle.version}.
+
+### Key Objectives
+
+Understanding this principle is essential for:
+
+- **Designing Inclusive Interfaces**: Creating user experiences that work for everyone
+- **Meeting Legal Requirements**: Complying with accessibility regulations worldwide
+- **Expanding User Base**: Ensuring your content reaches the widest possible audience
+- **Building Better Products**: Improved accessibility often leads to better usability for all
+
+## Guidelines Under This Principle
+
+<Guidelines principles={[principle.code]} />
+
+This principle contains {principle.guidelines.length} guidelines that provide specific objectives for making content {principle.name.toLowerCase()}. Each guideline contains testable success criteria organized by conformance level (A, AA, AAA).
+
+## Implementation Approach
+
+### Development Workflow
+
+1. **Review Guidelines**: Understand all guidelines under this principle
+2. **Identify Requirements**: Determine which success criteria apply to your content
+3. **Implement Solutions**: Apply appropriate techniques for each criterion
+4. **Test Thoroughly**: Verify conformance using assistive technologies
+5. **Document Compliance**: Maintain records of accessibility decisions
+
+### Best Practices
+
+```jsx
+// Example: Implementing {principle.name} principle
+const AccessibleComponent = () => {
+  return (
+    <div role="main" aria-label="Main content">
+      {/* Component implementation following {principle.name} guidelines */}
+      <h1>Accessible Content</h1>
+      <p>
+        This component is designed following WCAG {principle.version}
+        Principle {principle.number}: {principle.name}
+      </p>
+    </div>
+  )
+}
+```
+
+## Testing Considerations
+
+### Manual Testing
+
+- Review content against each guideline under this principle
+- Test with assistive technologies (screen readers, magnification, voice control)
+- Verify with users who have disabilities when possible
+- Check across different devices and platforms
+
+### Automated Testing
+
+```javascript
+// Example automated test for {principle.name}
+describe('{principle.name} Principle', () => {
+  it('should meet guidelines under principle {principle.number}', () => {
+    // Use axe-core or similar tool
+    cy.checkA11y(null, {
+      rules: {
+        // Configure rules specific to {principle.name}
+      }
+    })
+  })
+})
+```
+
+### Testing Tools
+
+- **Automated Scanners**: WAVE, axe DevTools, Lighthouse
+- **Screen Readers**: NVDA, JAWS, VoiceOver, TalkBack
+- **Manual Checks**: Keyboard navigation, color contrast analyzers
+- **User Testing**: Include people with disabilities in testing process
+
+## Conformance Levels
+
+<ConformanceInfo>
+  All success criteria under this principle are organized into three conformance levels:
+
+  - **Level A**: Minimum level of conformance (essential for basic accessibility)
+  - **Level AA**: Mid-range conformance (recommended for most websites)
+  - **Level AAA**: Highest level of conformance (optimal accessibility)
+
+  Most organizations target Level AA conformance, which includes all Level A and AA success criteria.
+</ConformanceInfo>
+
+## Common Challenges
+
+### Typical Issues
+
+1. **Incomplete Implementation**: Missing some guidelines while focusing on others
+2. **Technology Limitations**: Platform or framework constraints
+3. **Content Complexity**: Rich media or interactive elements
+4. **Legacy Systems**: Updating older code to meet current standards
+5. **Knowledge Gaps**: Team members unfamiliar with accessibility requirements
+
+### Solutions
+
+- Provide comprehensive team training on WCAG principles
+- Use accessibility-first component libraries
+- Conduct regular accessibility audits
+- Build accessibility into the design process from the start
+- Maintain an accessibility statement and roadmap
+
+## Related Resources
+
+<RelatedItems
+  items={principle.guidelines}
+  title="Guidelines"
+  description="Specific guidelines under this principle"
+/>
+
+### Additional Reading
+
+- [Understanding WCAG {principle.version} - Principle {principle.number}](https://www.w3.org/WAI/WCAG{principle.version.replace('.', '')}/Understanding/)
+- [How to Meet WCAG - Quick Reference](https://www.w3.org/WAI/WCAG{principle.version.replace('.', '')}/quickref/)
+- [WCAG {principle.version} Techniques](https://www.w3.org/WAI/WCAG{principle.version.replace('.', '')}/Techniques/)
+
+## Specification
+
+<SpecificationLink
+  href={`https://www.w3.org/TR/WCAG{principle.version.replace('.', '')}/#${principle.code}`}
+  title={`WCAG ${principle.version} - Principle ${principle.number}: ${principle.name}`}
+  organization="W3C"
+  standard="WCAG"
+  version={principle.version}
+/>
+
+## Version History
+
+- **WCAG 2.0** (2008): Original definition
+- **WCAG 2.1** (2018): Enhanced with additional success criteria
+- **WCAG 2.2** (2023): Further refinements and additions
+- **WCAG 3.0** (Draft): Future direction under development
+
+## Quick Reference
+
+| Aspect | Details |
+|--------|---------|
+| Principle Number | {principle.number} |
+| Principle Name | {principle.name} |
+| Guidelines Count | {principle.guidelines.length} |
+| First Introduced | WCAG 1.0 (1999) |
+| Current Version | WCAG {principle.version} |
+| Status | W3C Recommendation |
+
+---
+
+*This page is part of the WCAG {principle.version} documentation. For complete accessibility guidance, review all four principles and their associated guidelines.*

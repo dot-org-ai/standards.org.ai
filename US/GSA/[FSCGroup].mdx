@@ -1,0 +1,31 @@
+---
+layout: fscGroup
+source: US/GSA
+$type: US/GSA/FSCGroup
+$id: https://standards.org.ai/US/GSA/FSCGroup/{group.code}
+sameAs: https://standards.org.ai/FSCGroup/{group.code}
+canonical: https://us.org.ai/GSA/FSCGroup/{group.code}
+params:
+  - FSCGroup
+schema:
+  group:
+    code: code
+    name: name
+    classes: classes
+---
+
+# {group.code} - {group.name}
+
+<FSCGroupHeader code={group.code} name={group.name} />
+
+## Federal Supply Classes
+
+<FSCList group={group.code} />
+
+## Statistics
+
+<FSCGroupStats code={group.code} />
+
+## Procurement Volume
+
+<FSCGroupProcurementVolume code={group.code} />

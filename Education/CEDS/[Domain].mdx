@@ -1,0 +1,127 @@
+---
+layout: domain
+source: Education/CEDS
+$type: Education/CEDS/Domain
+$id: https://standards.org.ai/Education/CEDS/Domain/{domain.code}
+sameAs: https://standards.org.ai/DataDomain/{domain.code}
+canonical: https://standards.org.ai/CEDS/Domain/{domain.code}
+params:
+  - Domain
+schema:
+  domain:
+    code: string
+    name: string
+    description: string
+    category: string
+    entities: array
+    elements: array
+    version: string
+---
+
+# {domain.name}
+
+<DomainHeader code={domain.code} name={domain.name} category={domain.category} />
+
+## Description
+
+{domain.description}
+
+<div className="domain-overview">
+  {domain.category && (
+    <div className="category">
+      <h3>Category</h3>
+      <p>{domain.category}</p>
+    </div>
+  )}
+
+  {domain.entities && domain.entities.length > 0 && (
+    <div className="entity-count">
+      <h3>Entities</h3>
+      <p>{domain.entities.length} entities in this domain</p>
+    </div>
+  )}
+
+  {domain.elements && domain.elements.length > 0 && (
+    <div className="element-count">
+      <h3>Data Elements</h3>
+      <p>{domain.elements.length} data elements in this domain</p>
+    </div>
+  )}
+</div>
+
+## Purpose and Scope
+
+<DomainPurpose domain={domain.code} />
+
+## Entities in This Domain
+
+{domain.entities && domain.entities.length > 0 ? (
+  <section className="entities-list">
+    <div className="entities-grid">
+      {domain.entities.map((entity, idx) => (
+        <div key={idx} className="entity-card">
+          <h4><a href={`/Education/CEDS/Entity/${entity.code || entity}`}>{entity.name || entity}</a></h4>
+          {entity.description && <p>{entity.description}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+) : (
+  <EntitiesByDomain domain={domain.code} />
+)}
+
+## Data Elements in This Domain
+
+{domain.elements && domain.elements.length > 0 ? (
+  <section className="elements-list">
+    <table className="elements-table">
+      <thead>
+        <tr>
+          <th>Element Name</th>
+          <th>Data Type</th>
+          <th>Entity</th>
+          <th>Definition</th>
+        </tr>
+      </thead>
+      <tbody>
+        {domain.elements.map((element, idx) => (
+          <tr key={idx}>
+            <td><a href={`/Education/CEDS/Element/${element.code || element}`}>{element.name || element}</a></td>
+            <td>{element.dataType && <code>{element.dataType}</code>}</td>
+            <td>{element.entity}</td>
+            <td>{element.definition && element.definition.substring(0, 100) + '...'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+) : (
+  <ElementsByDomain domain={domain.code} />
+)}
+
+## Domain Relationships
+
+<DomainRelationships domain={domain.code} />
+
+## Implementation Guidance
+
+<ImplementationGuidance domain={domain.code} />
+
+## Common Use Cases
+
+<UseCases domain={domain.code} />
+
+## Data Model
+
+<DataModelDiagram domain={domain.code} />
+
+## Resources
+
+<section className="resources">
+  <h3>CEDS Resources</h3>
+  <ul>
+    <li><a href={`https://ceds.ed.gov/domain/${domain.code}`}>Official CEDS Domain Page</a></li>
+    <li><a href="https://ceds.ed.gov/dataModel.aspx">CEDS Data Model</a></li>
+    <li><a href="https://ceds.ed.gov/">CEDS Data Standards</a></li>
+  </ul>
+</section>

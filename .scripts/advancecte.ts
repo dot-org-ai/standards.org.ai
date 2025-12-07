@@ -193,13 +193,13 @@ function transformCIPCareerClusterCrosswalk(): void {
 
     const cipRecords: StandardRecord[] = Array.from(cipMap.values()).map(row => ({
       ns: NS,
-      type: 'CIPProgram',
+      type: 'CIP',
       id: toWikipediaStyleId(row['cIPTitle2020)'] || ''),
       name: row['cIPTitle2020)'] || '',
       description: '',
       code: row['cIPCode2020)'],
     }))
-    writeStandardTSV(join(DATA_DIR, 'AdvanceCTE.CIPPrograms.tsv'), cipRecords)
+    writeStandardTSV(join(DATA_DIR, 'AdvanceCTE.CIP.tsv'), cipRecords)
 
     // Write CIP -> CareerCluster relationships
     const cipClusterRels: Record<string, string>[] = []
@@ -214,7 +214,7 @@ function transformCIPCareerClusterCrosswalk(): void {
         seenCIPCluster.add(key)
         cipClusterRels.push({
           fromNs: NS,
-          fromType: 'CIPProgram',
+          fromType: 'CIP',
           fromCode: cipCode,
           toNs: NS,
           toType: 'CareerCluster',
@@ -243,7 +243,7 @@ function transformCIPCareerClusterCrosswalk(): void {
         seenCIPSubCluster.add(key)
         cipSubClusterRels.push({
           fromNs: NS,
-          fromType: 'CIPProgram',
+          fromType: 'CIP',
           fromCode: cipCode,
           toNs: NS,
           toType: 'SubCluster',
@@ -285,7 +285,7 @@ function transformFullCrosswalk(): void {
           fromType: 'Occupation',
           fromCode: row.sOCCode,
           toNs: NS,
-          toType: 'CIPProgram',
+          toType: 'CIP',
           toCode: cipCode,
           relationshipType: 'trained_by',
         })

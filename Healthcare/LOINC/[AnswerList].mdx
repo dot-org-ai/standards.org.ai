@@ -1,0 +1,61 @@
+---
+layout: answerlist
+source: LOINC
+$type: LOINC/AnswerList
+$id: https://standards.org.ai/LOINC/AnswerList/{answerlist.id}
+sameAs: https://standards.org.ai/AnswerList/{answerlist.id}
+canonical: https://standards.org.ai/LOINC/AnswerList/{answerlist.id}
+params:
+  - AnswerList
+schema:
+  answerlist:
+    id: AnswerListId
+    name: AnswerListName
+    description: Description
+    type: AnswerListType
+    externalCode: ExternalCode
+---
+
+# {answerlist.name}
+
+<AnswerListHeader id={answerlist.id} name={answerlist.name} type={answerlist.type} />
+
+## Answer List ID
+
+{answerlist.id}
+
+## Name
+
+{answerlist.name}
+
+## Description
+
+{answerlist.description}
+
+## Type
+
+{answerlist.type}
+
+## External Code
+
+{answerlist.externalCode}
+
+## Answers
+
+<AnswerListAnswers answerlist={answerlist.id} />
+
+## LOINC Codes Using This Answer List
+
+<CodesByAnswerList answerlist={answerlist.id} />
+
+## Mapped Value Sets
+
+<ValueSetsByAnswerList answerlist={answerlist.id} />
+
+## Related SNOMED Concepts
+
+<SNOMEDByAnswerList answerlist={answerlist.id} />
+
+## Usage in Forms
+
+<AnswerListFormUsage answerlist={answerlist.id} />

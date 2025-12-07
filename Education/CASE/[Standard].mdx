@@ -1,0 +1,189 @@
+---
+layout: standard
+source: Education/CASE
+$type: Education/CASE/Standard
+$id: https://standards.org.ai/Education/CASE/Standard/{standard.code}
+sameAs: https://standards.org.ai/AcademicStandard/{standard.code}
+canonical: https://standards.org.ai/CASE/Standard/{standard.code}
+params:
+  - Standard
+schema:
+  standard:
+    code: string
+    uri: string
+    identifier: string
+    humanCodingScheme: string
+    listEnumeration: string
+    fullStatement: string
+    abbreviatedStatement: string
+    conceptKeywords: array
+    language: string
+    educationLevel: array
+    subject: string
+    framework: string
+    parent: string
+    children: array
+    notes: string
+---
+
+# {standard.humanCodingScheme}: {standard.fullStatement}
+
+<StandardHeader
+  code={standard.code}
+  humanCodingScheme={standard.humanCodingScheme}
+  framework={standard.framework}
+/>
+
+## Standard Statement
+
+<div className="standard-statement">
+  <div className="full-statement">
+    <h3>Full Statement</h3>
+    <p className="statement-text">{standard.fullStatement}</p>
+  </div>
+
+  {standard.abbreviatedStatement && (
+    <div className="abbreviated-statement">
+      <h3>Abbreviated Statement</h3>
+      <p className="statement-text-abbr">{standard.abbreviatedStatement}</p>
+    </div>
+  )}
+</div>
+
+<div className="standard-metadata">
+  <div className="metadata-grid">
+    {standard.identifier && (
+      <div className="identifier">
+        <h3>Identifier</h3>
+        <p><code>{standard.identifier}</code></p>
+      </div>
+    )}
+
+    {standard.uri && (
+      <div className="uri">
+        <h3>Standard URI</h3>
+        <p><a href={standard.uri}>{standard.uri}</a></p>
+      </div>
+    )}
+
+    {standard.humanCodingScheme && (
+      <div className="coding-scheme">
+        <h3>Coding Scheme</h3>
+        <p><code>{standard.humanCodingScheme}</code></p>
+      </div>
+    )}
+
+    {standard.listEnumeration && (
+      <div className="enumeration">
+        <h3>List Enumeration</h3>
+        <p>{standard.listEnumeration}</p>
+      </div>
+    )}
+
+    {standard.framework && (
+      <div className="framework">
+        <h3>Framework</h3>
+        <p><a href={`/Education/CASE/Framework/${standard.framework}`}>{standard.framework}</a></p>
+      </div>
+    )}
+
+    {standard.subject && (
+      <div className="subject">
+        <h3>Subject</h3>
+        <p>{standard.subject}</p>
+      </div>
+    )}
+
+    {standard.language && (
+      <div className="language">
+        <h3>Language</h3>
+        <p>{standard.language}</p>
+      </div>
+    )}
+  </div>
+</div>
+
+{standard.educationLevel && standard.educationLevel.length > 0 && (
+  <section className="education-levels">
+    <h2>Education Levels</h2>
+    <div className="level-tags">
+      {standard.educationLevel.map((level, idx) => (
+        <span key={idx} className="level-tag">{level}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+{standard.conceptKeywords && standard.conceptKeywords.length > 0 && (
+  <section className="keywords">
+    <h2>Concept Keywords</h2>
+    <div className="keyword-tags">
+      {standard.conceptKeywords.map((keyword, idx) => (
+        <span key={idx} className="keyword-tag">{keyword}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+## Hierarchy
+
+<StandardHierarchy
+  standard={standard.code}
+  parent={standard.parent}
+  children={standard.children}
+/>
+
+{standard.parent && (
+  <section className="parent-standard">
+    <h3>Parent Standard</h3>
+    <ParentStandard parent={standard.parent} />
+  </section>
+)}
+
+{standard.children && standard.children.length > 0 && (
+  <section className="child-standards">
+    <h3>Child Standards</h3>
+    <ChildStandards children={standard.children} />
+  </section>
+)}
+
+## Related Competencies
+
+<RelatedCompetencies standard={standard.code} />
+
+## Associations
+
+<StandardAssociations standard={standard.code} />
+
+## Alignments
+
+<StandardAlignments standard={standard.code} />
+
+## Teaching Resources
+
+<TeachingResources standard={standard.code} />
+
+## Assessment Examples
+
+<AssessmentExamples standard={standard.code} />
+
+{standard.notes && (
+  <section className="notes">
+    <h2>Notes</h2>
+    <div className="notes-content">
+      {standard.notes}
+    </div>
+  </section>
+)}
+
+## Resources
+
+<section className="resources">
+  <h3>CASE Standard Resources</h3>
+  <ul>
+    {standard.uri && (
+      <li><a href={standard.uri}>Official Standard URI</a></li>
+    )}
+    <li><a href="https://www.imsglobal.org/activity/case">IMS Global CASE Specification</a></li>
+  </ul>
+</section>

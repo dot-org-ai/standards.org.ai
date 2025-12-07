@@ -1,0 +1,51 @@
+---
+layout: dataType
+source: Finance/ISO20022
+$type: Finance/ISO20022/DataType
+$id: https://standards.org.ai/Finance/ISO20022/DataType/{dataType.code}
+sameAs: https://standards.org.ai/DataType/{dataType.code}
+canonical: https://standards.org.ai/ISO20022/DataType/{dataType.code}
+params:
+  - DataType
+schema:
+  dataType:
+    code: code
+    name: name
+    description: description
+    baseType: baseType
+    pattern: pattern
+    minLength: minLength
+    maxLength: maxLength
+---
+
+# {dataType.name}
+
+<DataTypeHeader code={dataType.code} name={dataType.name} baseType={dataType.baseType} />
+
+## Description
+
+{dataType.description}
+
+## Base Type
+
+{dataType.baseType}
+
+## Constraints
+
+<DataTypeConstraints
+  pattern={dataType.pattern}
+  minLength={dataType.minLength}
+  maxLength={dataType.maxLength}
+/>
+
+## Usage in Messages
+
+<MessagesUsingDataType dataTypeCode={dataType.code} />
+
+## Examples
+
+<DataTypeExamples dataTypeCode={dataType.code} />
+
+## Related Data Types
+
+<RelatedDataTypes dataTypeCode={dataType.code} />

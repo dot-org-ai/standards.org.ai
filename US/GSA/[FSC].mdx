@@ -1,0 +1,44 @@
+---
+layout: fsc
+source: US/GSA
+$type: US/GSA/FSC
+$id: https://standards.org.ai/US/GSA/FSC/{fsc.code}
+sameAs: https://standards.org.ai/FSC/{fsc.code}
+canonical: https://us.org.ai/GSA/FSC/{fsc.code}
+params:
+  - FSC
+schema:
+  fsc:
+    code: code
+    name: name
+    group: group
+    class: class
+---
+
+# {fsc.code} - {fsc.name}
+
+<FSCHeader code={fsc.code} name={fsc.name} group={fsc.group} class={fsc.class} />
+
+## FSC Group
+
+<FSCGroupLink code={fsc.group} />
+
+## Classification
+
+Class: {fsc.class}
+
+## Related Codes
+
+<RelatedFSCs code={fsc.code} />
+
+## Supply Items
+
+<SupplyItemsByFSC code={fsc.code} />
+
+## Contract Vehicles
+
+<ContractVehiclesByFSC code={fsc.code} />
+
+## Standards and Specifications
+
+<FSCStandards code={fsc.code} />

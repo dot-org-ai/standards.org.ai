@@ -1,0 +1,61 @@
+---
+layout: part
+source: LOINC
+$type: LOINC/Part
+$id: https://standards.org.ai/LOINC/Part/{part.num}
+sameAs: https://standards.org.ai/Part/{part.num}
+canonical: https://standards.org.ai/LOINC/Part/{part.num}
+params:
+  - Part
+schema:
+  part:
+    num: PartNumber
+    name: PartName
+    type: PartType
+    status: Status
+    description: Description
+---
+
+# {part.name}
+
+<PartHeader num={part.num} name={part.name} type={part.type} status={part.status} />
+
+## Part Number
+
+{part.num}
+
+## Part Name
+
+{part.name}
+
+## Part Type
+
+{part.type}
+
+## Status
+
+{part.status}
+
+## Description
+
+{part.description}
+
+## LOINC Codes Using This Part
+
+<CodesByPart part={part.num} />
+
+## Related Parts
+
+<RelatedParts part={part.num} />
+
+## Part Hierarchy
+
+<PartHierarchy part={part.num} />
+
+## Mapped Terms
+
+<MappedTermsByPart part={part.num} />
+
+## Usage Statistics
+
+<PartUsageStats part={part.num} />

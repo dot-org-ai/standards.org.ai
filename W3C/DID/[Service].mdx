@@ -1,0 +1,705 @@
+---
+layout: Service
+source: W3C/DID
+$type: W3C/DID/Service
+$id: https://standards.org.ai/W3C/DID/Service/{Service.code}
+sameAs: https://standards.org.ai/Service/{Service.code}
+canonical: https://w3.org.ai/DID/Service/{Service.code}
+params:
+  - Service
+schema:
+  Service:
+    code: string
+    type: string
+    description: string
+    serviceEndpoint: string | object
+    endpointType: string
+    protocol: string
+    authentication: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={Service.type}
+  subtitle="DID Service Type"
+  code={Service.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Protocol: {Service.protocol}</Badge>
+  <Badge variant="info">Endpoint Type: {Service.endpointType}</Badge>
+  {Service.authentication && <Badge variant="warning">Authentication Required</Badge>}
+</div>
+
+<Description>
+  {Service.description}
+</Description>
+
+## Service Properties
+
+<PropertiesTable
+  properties={{
+    id: {
+      type: 'string (DID URL)',
+      required: true,
+      description: 'Unique identifier for the service',
+      example: `did:example:123#${Service.code}`
+    },
+    type: {
+      type: 'string',
+      required: true,
+      description: 'The service type identifier',
+      example: Service.type
+    },
+    serviceEndpoint: {
+      type: Service.endpointType,
+      required: true,
+      description: 'The service endpoint location',
+      example: typeof Service.serviceEndpoint === 'string' ? Service.serviceEndpoint : JSON.stringify(Service.serviceEndpoint)
+    }
+  }}
+/>
+
+## Examples
+
+### Basic Service Entry
+
+<CodeExample language="json">
+{`{
+  "@context": ["https://www.w3.org/ns/did/v1"],
+  "id": "did:example:123456789abcdefghi",
+  "service": [
+    {
+      "id": "did:example:123456789abcdefghi#${Service.code}",
+      "type": "${Service.type}",
+      "serviceEndpoint": ${typeof Service.serviceEndpoint === 'string' ? `"${Service.serviceEndpoint}"` : JSON.stringify(Service.serviceEndpoint, null, 6)}
+    }
+  ]
+}`}
+</CodeExample>
+
+{Service.type === 'LinkedDomains' && (
+  <>
+    ### Single Linked Domain
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#linked-domain",
+  "type": "LinkedDomains",
+  "serviceEndpoint": "https://example.com"
+}`}
+    </CodeExample>
+
+    ### Multiple Linked Domains
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#linked-domains",
+  "type": "LinkedDomains",
+  "serviceEndpoint": [
+    "https://example.com",
+    "https://www.example.com",
+    "https://app.example.com"
+  ]
+}`}
+    </CodeExample>
+
+    ### Domain with Well-Known DID Configuration
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#linked-domain",
+  "type": "LinkedDomains",
+  "serviceEndpoint": "https://example.com"
+}
+
+// Corresponding well-known DID configuration at:
+// https://example.com/.well-known/did-configuration.json
+{
+  "@context": "https://identity.foundation/.well-known/did-configuration/v1",
+  "linked_dids": [
+    {
+      "@context": "https://www.w3.org/ns/credentials/v2",
+      "type": ["VerifiableCredential", "DomainLinkageCredential"],
+      "issuer": "did:example:123",
+      "issuanceDate": "2025-01-15T00:00:00Z",
+      "expirationDate": "2026-01-15T00:00:00Z",
+      "credentialSubject": {
+        "id": "did:example:123",
+        "origin": "https://example.com"
+      },
+      "proof": {
+        "type": "Ed25519Signature2020",
+        "created": "2025-01-15T00:00:00Z",
+        "verificationMethod": "did:example:123#key-1",
+        "proofPurpose": "assertionMethod",
+        "proofValue": "z..."
+      }
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'DIDCommMessaging' && (
+  <>
+    ### DIDComm v2 Messaging Service
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#didcomm",
+  "type": "DIDCommMessaging",
+  "serviceEndpoint": "https://example.com/didcomm"
+}`}
+    </CodeExample>
+
+    ### DIDComm with Accept and Routing Keys
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#didcomm",
+  "type": "DIDCommMessaging",
+  "serviceEndpoint": {
+    "uri": "https://example.com/didcomm",
+    "accept": [
+      "didcomm/v2",
+      "didcomm/aip2;env=rfc587"
+    ],
+    "routingKeys": [
+      "did:example:mediator#key-1"
+    ]
+  }
+}`}
+    </CodeExample>
+
+    ### Multiple DIDComm Endpoints
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#didcomm",
+  "type": "DIDCommMessaging",
+  "serviceEndpoint": [
+    {
+      "uri": "https://example.com/didcomm",
+      "accept": ["didcomm/v2"],
+      "routingKeys": []
+    },
+    {
+      "uri": "wss://example.com/ws",
+      "accept": ["didcomm/v2"],
+      "routingKeys": []
+    }
+  ]
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'IdentityHub' && (
+  <>
+    ### Single Identity Hub Instance
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#hub",
+  "type": "IdentityHub",
+  "serviceEndpoint": {
+    "instances": ["https://hub.example.com"]
+  }
+}`}
+    </CodeExample>
+
+    ### Multiple Identity Hub Instances (Redundancy)
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#hub",
+  "type": "IdentityHub",
+  "serviceEndpoint": {
+    "instances": [
+      "https://hub.example.com",
+      "https://backup-hub.example.com",
+      "https://hub.provider.com/user/123"
+    ]
+  }
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'VerifiableCredentialService' && (
+  <>
+    ### Credential Issuance Service
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#vc-service",
+  "type": "VerifiableCredentialService",
+  "serviceEndpoint": "https://example.com/credentials/issue"
+}`}
+    </CodeExample>
+
+    ### Credential Service with Multiple Operations
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#vc-service",
+  "type": "VerifiableCredentialService",
+  "serviceEndpoint": {
+    "issue": "https://example.com/credentials/issue",
+    "verify": "https://example.com/credentials/verify",
+    "status": "https://example.com/credentials/status"
+  }
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'CredentialRegistry' && (
+  <>
+    ### Credential Registry Service
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#registry",
+  "type": "CredentialRegistry",
+  "serviceEndpoint": "https://example.com/registry"
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'MessagingService' && (
+  <>
+    ### General Messaging Service
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#messaging",
+  "type": "MessagingService",
+  "serviceEndpoint": "https://example.com/messages"
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'SocialWebInboxService' && (
+  <>
+    ### ActivityPub Inbox
+
+    <CodeExample language="json">
+{`{
+  "id": "did:example:123#inbox",
+  "type": "SocialWebInboxService",
+  "serviceEndpoint": "https://social.example.com/users/alice/inbox"
+}`}
+    </CodeExample>
+  </>
+)}
+
+## Usage
+
+### Discovering Services
+
+<CodeExample language="javascript">
+{`// Resolve DID and find service endpoints
+async function findService(did, serviceType) {
+  const result = await resolveDID(did);
+
+  if (!result.didDocument) {
+    throw new Error('Failed to resolve DID');
+  }
+
+  const services = result.didDocument.service || [];
+  return services.filter(s => s.type === serviceType);
+}
+
+// Find all ${Service.type} services
+const services = await findService(
+  'did:example:123',
+  '${Service.type}'
+);
+
+console.log(services);`}
+</CodeExample>
+
+### Connecting to Service
+
+<CodeExample language="javascript">
+{`// Connect to a service endpoint
+async function connectToService(did, serviceId) {
+  // Dereference the service
+  const result = await dereference(\`\${did}#\${serviceId}\`);
+
+  if (!result.contentStream) {
+    throw new Error('Service not found');
+  }
+
+  const service = result.contentStream;
+  const endpoint = typeof service.serviceEndpoint === 'string'
+    ? service.serviceEndpoint
+    : service.serviceEndpoint.uri || service.serviceEndpoint[0];
+
+  // Connect to the endpoint
+  const response = await fetch(endpoint);
+  return response;
+}
+
+// Connect to ${Service.type} service
+const connection = await connectToService(
+  'did:example:123',
+  '${Service.code}'
+);`}
+</CodeExample>
+
+{Service.type === 'DIDCommMessaging' && (
+  <>
+    ### Sending DIDComm Messages
+
+    <CodeExample language="javascript">
+{`// Send a DIDComm message
+async function sendDIDCommMessage(toDID, message) {
+  // Find DIDComm service
+  const services = await findService(toDID, 'DIDCommMessaging');
+
+  if (services.length === 0) {
+    throw new Error('No DIDComm service found');
+  }
+
+  const service = services[0];
+  const endpoint = typeof service.serviceEndpoint === 'string'
+    ? service.serviceEndpoint
+    : service.serviceEndpoint.uri || service.serviceEndpoint[0].uri;
+
+  // Pack the message
+  const packed = await packMessage(message, toDID);
+
+  // Send to endpoint
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/didcomm-encrypted+json' },
+    body: JSON.stringify(packed)
+  });
+
+  return response;
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Service.type === 'LinkedDomains' && (
+  <>
+    ### Verifying Domain Linkage
+
+    <CodeExample language="javascript">
+{`// Verify domain linkage
+async function verifyDomainLinkage(did, domain) {
+  // Get LinkedDomains services from DID
+  const services = await findService(did, 'LinkedDomains');
+
+  const linkedDomains = services.flatMap(s =>
+    Array.isArray(s.serviceEndpoint)
+      ? s.serviceEndpoint
+      : [s.serviceEndpoint]
+  );
+
+  if (!linkedDomains.includes(domain)) {
+    return false;
+  }
+
+  // Fetch well-known DID configuration
+  const configUrl = \`\${domain}/.well-known/did-configuration.json\`;
+  const response = await fetch(configUrl);
+  const config = await response.json();
+
+  // Verify linkage credentials
+  for (const credential of config.linked_dids) {
+    if (credential.issuer === did && credential.credentialSubject.origin === domain) {
+      const valid = await verifyCredential(credential);
+      if (valid) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}`}
+    </CodeExample>
+  </>
+)}
+
+## Service Endpoint Types
+
+### String Endpoint
+
+The simplest form - a single URI string:
+
+<CodeExample language="json">
+{`{
+  "serviceEndpoint": "https://example.com/service"
+}`}
+</CodeExample>
+
+### Array of Endpoints
+
+Multiple endpoint URIs:
+
+<CodeExample language="json">
+{`{
+  "serviceEndpoint": [
+    "https://example.com/service",
+    "https://backup.example.com/service"
+  ]
+}`}
+</CodeExample>
+
+### Object Endpoint
+
+Structured endpoint with additional properties:
+
+<CodeExample language="json">
+{`{
+  "serviceEndpoint": {
+    "uri": "https://example.com/service",
+    "accept": ["application/json"],
+    "routingKeys": ["did:example:mediator#key-1"]
+  }
+}`}
+</CodeExample>
+
+### Set of Objects
+
+Multiple structured endpoints:
+
+<CodeExample language="json">
+{`{
+  "serviceEndpoint": [
+    {
+      "uri": "https://example.com/service",
+      "accept": ["application/json"]
+    },
+    {
+      "uri": "wss://example.com/ws",
+      "accept": ["application/json"]
+    }
+  ]
+}`}
+</CodeExample>
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Endpoint Validation
+
+- Always validate service endpoint URLs before use
+- Verify that endpoints use secure protocols (HTTPS, WSS)
+- Check for proper SSL/TLS certificates
+- Implement timeout and retry logic for unreliable endpoints
+
+### Authentication and Authorization
+
+{Service.authentication ? (
+  <>
+    This service type requires authentication:
+    - {Service.authentication}
+    - Implement proper authentication before accessing the service
+    - Use appropriate credentials or proofs of control
+    - Protect authentication secrets and tokens
+  </>
+) : (
+  <>
+    - Determine if the service requires authentication
+    - Implement appropriate access controls
+    - Use DID authentication when possible
+    - Protect sensitive service endpoints
+  </>
+)}
+
+### Privacy
+
+- Be aware that service endpoints may be publicly discoverable
+- Consider correlation risks when using public services
+- Use different DIDs for different contexts when privacy is a concern
+- Implement service endpoint rotation if needed
+
+### Availability
+
+- Implement redundancy with multiple service endpoints
+- Monitor service availability and performance
+- Have fallback strategies for unreachable endpoints
+- Consider geographic distribution for global services
+
+### Trust
+
+- Verify that the DID controller authorized the service endpoint
+- Check service endpoint ownership and control
+- Implement reputation systems for service providers
+- Monitor for unauthorized service endpoint changes
+
+### Data Protection
+
+- Encrypt sensitive data before sending to service endpoints
+- Implement proper data retention policies
+- Follow privacy regulations (GDPR, CCPA, etc.)
+- Use secure communication channels
+
+</SecurityConsiderations>
+
+## Implementation Best Practices
+
+### Service Registration
+
+<CodeExample language="javascript">
+{`// Add service to DID document
+async function addService(did, service) {
+  // Validate service structure
+  if (!service.id || !service.type || !service.serviceEndpoint) {
+    throw new Error('Invalid service structure');
+  }
+
+  // Get current DID document
+  const result = await resolveDID(did);
+  const doc = result.didDocument;
+
+  // Add service
+  doc.service = doc.service || [];
+  doc.service.push(service);
+
+  // Update DID document
+  await updateDIDDocument(did, doc);
+}`}
+</CodeExample>
+
+### Service Discovery
+
+<CodeExample language="javascript">
+{`// Discover services by type
+async function discoverServices(did, types) {
+  const result = await resolveDID(did);
+
+  if (!result.didDocument || !result.didDocument.service) {
+    return [];
+  }
+
+  const typeArray = Array.isArray(types) ? types : [types];
+
+  return result.didDocument.service.filter(s =>
+    typeArray.includes(s.type)
+  );
+}`}
+</CodeExample>
+
+### Endpoint Selection
+
+<CodeExample language="javascript">
+{`// Select best endpoint from service
+function selectEndpoint(service, preferences = {}) {
+  let endpoints = service.serviceEndpoint;
+
+  // Normalize to array
+  if (typeof endpoints === 'string') {
+    return endpoints;
+  }
+
+  if (Array.isArray(endpoints)) {
+    // Filter by preferences
+    if (preferences.protocol) {
+      endpoints = endpoints.filter(e => {
+        const uri = typeof e === 'string' ? e : e.uri;
+        return uri.startsWith(preferences.protocol);
+      });
+    }
+
+    // Return first match
+    const endpoint = endpoints[0];
+    return typeof endpoint === 'string' ? endpoint : endpoint.uri;
+  }
+
+  // Object with uri property
+  return endpoints.uri;
+}`}
+</CodeExample>
+
+### Error Handling
+
+<CodeExample language="javascript">
+{`// Robust service access with error handling
+async function accessService(did, serviceType) {
+  try {
+    // Find services
+    const services = await findService(did, serviceType);
+
+    if (services.length === 0) {
+      throw new Error(\`No \${serviceType} service found\`);
+    }
+
+    // Try each service endpoint
+    for (const service of services) {
+      const endpoints = Array.isArray(service.serviceEndpoint)
+        ? service.serviceEndpoint
+        : [service.serviceEndpoint];
+
+      for (const endpoint of endpoints) {
+        const uri = typeof endpoint === 'string' ? endpoint : endpoint.uri;
+
+        try {
+          const response = await fetch(uri, { timeout: 5000 });
+          if (response.ok) {
+            return response;
+          }
+        } catch (err) {
+          console.error(\`Failed to access \${uri}:\`, err);
+          continue;
+        }
+      }
+    }
+
+    throw new Error('All service endpoints failed');
+  } catch (err) {
+    console.error('Service access error:', err);
+    throw err;
+  }
+}`}
+</CodeExample>
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Document" href="/W3C/DID/Document/service">DID Document Service Property</RelatedItem>
+  <RelatedItem type="Method" href="/W3C/DID/Method/web">DID Methods</RelatedItem>
+  {Service.type === 'LinkedDomains' && (
+    <RelatedItem type="VC" href="/W3C/VC/CredentialType/DomainLinkageCredential">Domain Linkage Credential</RelatedItem>
+  )}
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs) v1.0</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-core/#services">DID Core Services</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-spec-registries/#service-types">DID Service Type Registry</SpecLink>
+  {Service.type === 'DIDCommMessaging' && (
+    <SpecLink href="https://identity.foundation/didcomm-messaging/spec/">DIDComm Messaging v2</SpecLink>
+  )}
+  {Service.type === 'LinkedDomains' && (
+    <SpecLink href="https://identity.foundation/.well-known/resources/did-configuration/">Well-Known DID Configuration</SpecLink>
+  )}
+  {Service.type === 'IdentityHub' && (
+    <SpecLink href="https://identity.foundation/identity-hub/spec/">Identity Hub Specification</SpecLink>
+  )}
+</SpecificationLinks>
+
+---
+
+*This service type is part of the W3C DID Core specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

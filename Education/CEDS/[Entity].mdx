@@ -1,0 +1,144 @@
+---
+layout: entity
+source: Education/CEDS
+$type: Education/CEDS/Entity
+$id: https://standards.org.ai/Education/CEDS/Entity/{entity.code}
+sameAs: https://standards.org.ai/DataEntity/{entity.code}
+canonical: https://standards.org.ai/CEDS/Entity/{entity.code}
+params:
+  - Entity
+schema:
+  entity:
+    code: string
+    name: string
+    definition: string
+    domain: string
+    attributes: array
+    relationships: array
+    primaryKey: string
+    version: string
+---
+
+# {entity.name}
+
+<EntityHeader code={entity.code} name={entity.name} domain={entity.domain} />
+
+## Definition
+
+{entity.definition}
+
+<div className="entity-metadata">
+  {entity.domain && (
+    <div className="domain">
+      <h3>Domain</h3>
+      <p><a href={`/Education/CEDS/Domain/${entity.domain}`}>{entity.domain}</a></p>
+    </div>
+  )}
+
+  {entity.primaryKey && (
+    <div className="primary-key">
+      <h3>Primary Key</h3>
+      <p><code>{entity.primaryKey}</code></p>
+    </div>
+  )}
+
+  {entity.attributes && entity.attributes.length > 0 && (
+    <div className="attribute-count">
+      <h3>Attributes</h3>
+      <p>{entity.attributes.length} data elements</p>
+    </div>
+  )}
+</div>
+
+## Purpose
+
+<EntityPurpose entity={entity.code} />
+
+## Attributes
+
+{entity.attributes && entity.attributes.length > 0 ? (
+  <section className="attributes">
+    <table className="attributes-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Data Type</th>
+          <th>Required</th>
+          <th>Definition</th>
+        </tr>
+      </thead>
+      <tbody>
+        {entity.attributes.map((attr, idx) => (
+          <tr key={idx} className={attr.required ? 'required' : ''}>
+            <td>
+              <a href={`/Education/CEDS/Element/${attr.code || attr.name}`}>
+                {attr.name}
+              </a>
+            </td>
+            <td><code>{attr.dataType}</code></td>
+            <td>{attr.required ? 'Yes' : 'No'}</td>
+            <td>{attr.definition}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+) : (
+  <AttributesByEntity entity={entity.code} />
+)}
+
+## Relationships
+
+{entity.relationships && entity.relationships.length > 0 ? (
+  <section className="relationships">
+    <h3>Entity Relationships</h3>
+    <div className="relationships-diagram">
+      <ul className="relationship-list">
+        {entity.relationships.map((rel, idx) => (
+          <li key={idx} className={`relationship-${rel.type}`}>
+            <strong>{rel.type}:</strong> {entity.name} {rel.cardinality}
+            <a href={`/Education/CEDS/Entity/${rel.relatedEntity}`}>{rel.relatedEntity}</a>
+            {rel.description && <span className="rel-description"> - {rel.description}</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+) : (
+  <RelationshipsByEntity entity={entity.code} />
+)}
+
+## Entity Diagram
+
+<EntityDiagram entity={entity.code} />
+
+## Implementation Examples
+
+<ImplementationExamples entity={entity.code} />
+
+## SQL Schema
+
+<SQLSchema entity={entity.code} />
+
+## JSON Schema
+
+<JSONSchema entity={entity.code} />
+
+## XML Schema
+
+<XMLSchema entity={entity.code} />
+
+## Business Rules
+
+<BusinessRules entity={entity.code} />
+
+## Resources
+
+<section className="resources">
+  <h3>CEDS Resources</h3>
+  <ul>
+    <li><a href={`https://ceds.ed.gov/entity/${entity.code}`}>Official CEDS Entity Page</a></li>
+    <li><a href="https://ceds.ed.gov/dataModel.aspx">CEDS Data Model</a></li>
+    <li><a href="https://ceds.ed.gov/">CEDS Data Standards</a></li>
+  </ul>
+</section>

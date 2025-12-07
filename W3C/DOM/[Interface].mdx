@@ -1,0 +1,172 @@
+---
+layout: interface
+source: W3C/DOM
+$type: W3C/DOM/Interface
+$id: https://standards.org.ai/W3C/DOM/Interface/{interface.code}
+sameAs: https://standards.org.ai/Interface/{interface.code}
+canonical: https://w3.org.ai/DOM/Interface/{interface.code}
+params:
+  - Interface
+schema:
+  interface:
+    code: name
+    name: name
+    inherits: string
+    specification: string
+    description: string
+    mixin: boolean
+    namespace: string
+    methods: array
+    properties: array
+    events: array
+    implements: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { InheritanceChain } from '@/components/w3c/dom/InheritanceChain'
+import { MethodsList } from '@/components/w3c/dom/MethodsList'
+import { PropertiesList } from '@/components/w3c/dom/PropertiesList'
+import { EventsList } from '@/components/w3c/dom/EventsList'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { InterfaceDiagram } from '@/components/w3c/dom/InterfaceDiagram'
+
+<Header
+  type="DOM Interface"
+  code={interface.name}
+  name={interface.name}
+  standard="W3C DOM"
+/>
+
+<Description content={interface.description} />
+
+{interface.mixin && (
+  <div className="mixin-notice">
+    This is a mixin interface that is implemented by other interfaces.
+  </div>
+)}
+
+## Interface Hierarchy
+
+<InheritanceChain
+  interface={interface.name}
+  inherits={interface.inherits}
+  implements={interface.implements}
+/>
+
+## Interface Diagram
+
+<InterfaceDiagram
+  interface={interface.name}
+  properties={interface.properties}
+  methods={interface.methods}
+  events={interface.events}
+/>
+
+## Properties
+
+<PropertiesList
+  properties={interface.properties}
+  interfaceName={interface.name}
+/>
+
+## Methods
+
+<MethodsList
+  methods={interface.methods}
+  interfaceName={interface.name}
+/>
+
+{interface.events && interface.events.length > 0 && (
+  <>
+    ## Events
+
+    <EventsList
+      events={interface.events}
+      interfaceName={interface.name}
+    />
+  </>
+)}
+
+## Usage Examples
+
+<CodeExample
+  title={`Creating and using ${interface.name}`}
+  language="javascript"
+  code={interface.examples?.basic}
+/>
+
+{interface.examples?.advanced && (
+  <CodeExample
+    title="Advanced usage"
+    language="javascript"
+    code={interface.examples.advanced}
+  />
+)}
+
+{interface.examples?.inheritance && interface.inherits && (
+  <CodeExample
+    title="Using inherited methods"
+    language="javascript"
+    code={interface.examples.inheritance}
+  />
+)}
+
+## Common Patterns
+
+{interface.patterns?.map((pattern, index) => (
+  <div key={index} className="pattern">
+    <h3>{pattern.title}</h3>
+    <p>{pattern.description}</p>
+    <CodeExample
+      language="javascript"
+      code={pattern.code}
+    />
+  </div>
+))}
+
+## Constructor
+
+{interface.constructor ? (
+  <>
+    <CodeExample
+      title="Constructor syntax"
+      language="javascript"
+      code={interface.constructor.syntax}
+    />
+
+    ### Parameters
+
+    {interface.constructor.parameters?.map((param, index) => (
+      <div key={index}>
+        - **{param.name}** ({param.type}): {param.description}
+      </div>
+    ))}
+  </>
+) : (
+  <p>This interface cannot be instantiated directly.</p>
+)}
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`api.${interface.name}`}
+  standard="W3C DOM"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[interface.specification]}
+  standard="DOM"
+/>
+
+## See Also
+
+- [DOM Living Standard: {interface.name}](https://dom.spec.whatwg.org/#{interface.name.toLowerCase()})
+- [MDN Web Docs: {interface.name}](https://developer.mozilla.org/en-US/docs/Web/API/{interface.name})
+{interface.inherits && (
+  <li>[{interface.inherits}](/W3C/DOM/Interface/{interface.inherits})</li>
+)}

@@ -1,0 +1,144 @@
+---
+layout: resource
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/Resource
+$id: https://standards.org.ai/Healthcare/FHIR/Resource/{resource.code}
+sameAs: https://standards.org.ai/Resource/{resource.code}
+canonical: https://standards.org.ai/FHIR/Resource/{resource.code}
+params:
+  - Resource
+schema:
+  resource:
+    code: id
+    name: name
+    title: title
+    description: description
+    status: status
+    kind: kind
+    abstract: boolean
+    type: type
+    baseDefinition: url
+    derivation: string
+    experimental: boolean
+    publisher: string
+    purpose: string
+    copyright: string
+    elements: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRResourceHeader } from '@/components/healthcare/fhir/ResourceHeader'
+import { FHIRElementsList } from '@/components/healthcare/fhir/ElementsList'
+import { FHIRSearchParameters } from '@/components/healthcare/fhir/SearchParameters'
+import { FHIRExamples } from '@/components/healthcare/fhir/Examples'
+import { FHIROperations } from '@/components/healthcare/fhir/Operations'
+import { FHIRConstraints } from '@/components/healthcare/fhir/Constraints'
+import { RelatedResources } from '@/components/healthcare/fhir/RelatedResources'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIRResourceHeader
+  code={resource.code}
+  name={resource.name}
+  title={resource.title}
+  status={resource.status}
+  kind={resource.kind}
+  abstract={resource.abstract}
+/>
+
+<Description content={resource.description} />
+
+## Resource Information
+
+- **Resource Type**: {resource.type}
+- **Status**: <StatusBadge status={resource.status} />
+- **Kind**: {resource.kind}
+- **Abstract**: {resource.abstract ? 'Yes' : 'No'}
+- **Experimental**: {resource.experimental ? 'Yes' : 'No'}
+- **Publisher**: {resource.publisher || 'HL7 International'}
+
+{resource.purpose && (
+  <>
+    ## Purpose
+
+    {resource.purpose}
+  </>
+)}
+
+## Elements
+
+<FHIRElementsList
+  resourceType={resource.type}
+  elements={resource.elements}
+/>
+
+## Search Parameters
+
+<FHIRSearchParameters
+  resourceType={resource.type}
+/>
+
+## Operations
+
+<FHIROperations
+  resourceType={resource.type}
+/>
+
+## Constraints and Invariants
+
+<FHIRConstraints
+  resourceType={resource.type}
+/>
+
+## Examples
+
+<FHIRExamples
+  resourceType={resource.type}
+/>
+
+### JSON Example
+
+<CodeExample
+  title={`${resource.name} JSON Example`}
+  language="json"
+  code={resource.examples?.json}
+/>
+
+### XML Example
+
+<CodeExample
+  title={`${resource.name} XML Example`}
+  language="xml"
+  code={resource.examples?.xml}
+/>
+
+## Related Resources
+
+<RelatedResources
+  resourceType={resource.type}
+  baseDefinition={resource.baseDefinition}
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR R4',
+      url: `https://www.hl7.org/fhir/R4/${resource.type.toLowerCase()}.html`
+    },
+    {
+      name: 'FHIR R5',
+      url: `https://www.hl7.org/fhir/R5/${resource.type.toLowerCase()}.html`
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Resource Definition](https://www.hl7.org/fhir/{resource.type.toLowerCase()}.html)
+- [FHIR Resource StructureDefinition](https://www.hl7.org/fhir/{resource.type.toLowerCase()}.profile.json)
+- [HL7 FHIR Specification](https://www.hl7.org/fhir/)

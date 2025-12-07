@@ -1,0 +1,196 @@
+---
+layout: event
+source: W3C/DOM
+$type: W3C/DOM/Event
+$id: https://standards.org.ai/W3C/DOM/Event/{event.code}
+sameAs: https://standards.org.ai/Event/{event.code}
+canonical: https://w3.org.ai/DOM/Event/{event.code}
+params:
+  - Event
+schema:
+  event:
+    code: name
+    name: name
+    interface: string
+    target: string
+    bubbles: boolean
+    cancelable: boolean
+    composed: boolean
+    description: string
+    eventPhase: string
+    defaultAction: string
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { EventPropertiesTable } from '@/components/w3c/dom/EventPropertiesTable'
+import { EventFlowDiagram } from '@/components/w3c/dom/EventFlowDiagram'
+import { RelatedEvents } from '@/components/w3c/dom/RelatedEvents'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+
+<Header
+  type="DOM Event"
+  code={event.name}
+  name={event.name}
+  standard="W3C DOM"
+/>
+
+<Description content={event.description} />
+
+## Event Properties
+
+<EventPropertiesTable
+  interface={event.interface}
+  target={event.target}
+  bubbles={event.bubbles}
+  cancelable={event.cancelable}
+  composed={event.composed}
+  eventPhase={event.eventPhase}
+  defaultAction={event.defaultAction}
+/>
+
+## Event Flow
+
+<EventFlowDiagram
+  bubbles={event.bubbles}
+  cancelable={event.cancelable}
+  composed={event.composed}
+  target={event.target}
+/>
+
+## Event Interface
+
+The `{event.name}` event implements the **{event.interface}** interface.
+
+{event.interfaceProperties && (
+  <>
+    ### Interface Properties
+
+    {event.interfaceProperties.map((prop, index) => (
+      <div key={index} className="interface-property">
+        - **{prop.name}** ({prop.type}, {prop.readOnly ? 'read-only' : 'read-write'}): {prop.description}
+      </div>
+    ))}
+  </>
+)}
+
+## Usage Examples
+
+<CodeExample
+  title={`Listening for ${event.name} event`}
+  language="javascript"
+  code={event.examples?.addEventListener}
+/>
+
+{event.examples?.capturing && (
+  <CodeExample
+    title="Using capture phase"
+    language="javascript"
+    code={event.examples.capturing}
+  />
+)}
+
+{event.cancelable && event.examples?.preventDefault && (
+  <CodeExample
+    title="Preventing default action"
+    language="javascript"
+    code={event.examples.preventDefault}
+  />
+)}
+
+{event.bubbles && event.examples?.stopPropagation && (
+  <CodeExample
+    title="Stopping propagation"
+    language="javascript"
+    code={event.examples.stopPropagation}
+  />
+)}
+
+{event.examples?.dispatch && (
+  <CodeExample
+    title="Dispatching custom event"
+    language="javascript"
+    code={event.examples.dispatch}
+  />
+)}
+
+## Event Targets
+
+{event.targets && (
+  <div className="event-targets">
+    <p>This event can be dispatched on the following targets:</p>
+    <ul>
+      {event.targets.map((target, index) => (
+        <li key={index}>{target}</li>
+      ))}
+    </ul>
+  </div>
+)}
+
+## Event Phases
+
+The event goes through the following phases:
+
+1. **Capture Phase**: Event travels from the window down to the target
+2. **Target Phase**: Event reaches the target element
+3. **Bubble Phase**: {event.bubbles ? 'Event bubbles up from target to window' : 'This event does not bubble'}
+
+## Common Use Cases
+
+{event.useCases?.map((useCase, index) => (
+  <div key={index} className="use-case">
+    <h3>{useCase.title}</h3>
+    <p>{useCase.description}</p>
+    {useCase.example && (
+      <CodeExample
+        language="javascript"
+        code={useCase.example}
+      />
+    )}
+  </div>
+))}
+
+## Default Action
+
+{event.defaultAction ? (
+  <p>{event.defaultAction}</p>
+) : (
+  <p>This event has no default action.</p>
+)}
+
+{event.cancelable && (
+  <div className="cancelable-notice">
+    This event is cancelable. Use <code>event.preventDefault()</code> to prevent the default action.
+  </div>
+)}
+
+## Related Events
+
+<RelatedEvents
+  currentEvent={event.name}
+  interface={event.interface}
+  related={event.relatedEvents}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`api.${event.interface}`}
+  standard="W3C DOM"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={event.specifications}
+  standard="DOM"
+/>
+
+## See Also
+
+- [DOM Living Standard: Events](https://dom.spec.whatwg.org/#events)
+- [MDN Web Docs: {event.name}](https://developer.mozilla.org/en-US/docs/Web/API/{event.target}/{event.name}_event)
+- [{event.interface} interface](/W3C/DOM/Interface/{event.interface})

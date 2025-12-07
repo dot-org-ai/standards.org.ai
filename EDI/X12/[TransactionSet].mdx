@@ -1,0 +1,56 @@
+---
+layout: transaction-set
+source: EDI/X12
+$type: EDI/X12/TransactionSet
+$id: https://standards.org.ai/EDI/X12/TransactionSet/{transactionSet.code}
+sameAs: https://standards.org.ai/TransactionSet/{transactionSet.code}
+canonical: https://standards.org.ai/X12/TransactionSet/{transactionSet.code}
+params:
+  - TransactionSet
+schema:
+  transactionSet:
+    code: TransactionSetCode
+    name: TransactionSetName
+    description: TransactionSetDescription
+    functionalGroup: FunctionalGroupCode
+---
+
+# {transactionSet.code} - {transactionSet.name}
+
+<TransactionSetHeader code={transactionSet.code} name={transactionSet.name} />
+
+## Description
+
+{transactionSet.description}
+
+## Functional Group
+
+<FunctionalGroupLink code={transactionSet.functionalGroup} />
+
+## Structure
+
+<TransactionSetStructure code={transactionSet.code} />
+
+## Segments
+
+<SegmentList transactionSet={transactionSet.code} />
+
+## Implementation Guidelines
+
+<ImplementationGuidelines transactionSet={transactionSet.code} />
+
+## Common Trading Partner Variations
+
+<TradingPartnerVariations transactionSet={transactionSet.code} />
+
+## Usage Examples
+
+<TransactionSetExamples code={transactionSet.code} />
+
+## Related Transaction Sets
+
+<RelatedTransactionSets code={transactionSet.code} />
+
+## Industry Usage
+
+<IndustryUsage transactionSet={transactionSet.code} />

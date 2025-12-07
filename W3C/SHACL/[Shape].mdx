@@ -1,0 +1,317 @@
+---
+layout: Shape
+source: W3C/SHACL
+$type: W3C/SHACL/Shape
+$id: https://standards.org.ai/W3C/SHACL/Shape/{shape.code}
+sameAs: https://standards.org.ai/Shape/{shape.code}
+canonical: https://w3.org.ai/SHACL/Shape/{shape.code}
+params:
+  - Shape
+schema:
+  shape:
+    code: string
+    uri: string
+    label: string
+    description: string
+    targetClass: array
+    targetNode: array
+    targetSubjectsOf: array
+    targetObjectsOf: array
+    property: array
+    closed: boolean
+    ignoredProperties: array
+    message: string
+    severity: string
+    deactivated: boolean
+---
+
+# {shape.label}
+
+<div className="shape-header">
+  <div className="shape-metadata">
+    <span className="shape-uri">{shape.uri}</span>
+    <span className="shape-type">SHACL Shape</span>
+    {shape.severity && (
+      <span className={`severity-badge severity-${shape.severity.toLowerCase()}`}>
+        {shape.severity}
+      </span>
+    )}
+    {shape.deactivated && (
+      <span className="status-badge deactivated">Deactivated</span>
+    )}
+  </div>
+</div>
+
+{shape.description && (
+  <section className="description">
+    <h2>Description</h2>
+    <p>{shape.description}</p>
+  </section>
+)}
+
+{shape.message && (
+  <div className="shape-message">
+    <strong>Validation Message:</strong> {shape.message}
+  </div>
+)}
+
+<section className="targets">
+  <h2>Shape Targets</h2>
+  <p>This shape applies to:</p>
+
+  <div className="targets-grid">
+    {shape.targetClass && shape.targetClass.length > 0 && (
+      <div className="target-section">
+        <h4>Target Classes</h4>
+        <p>All instances of these classes:</p>
+        <ul>
+          {shape.targetClass.map((cls, idx) => (
+            <li key={idx}>
+              <code><a href={cls}>{cls}</a></code>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {shape.targetNode && shape.targetNode.length > 0 && (
+      <div className="target-section">
+        <h4>Target Nodes</h4>
+        <p>These specific nodes:</p>
+        <ul>
+          {shape.targetNode.map((node, idx) => (
+            <li key={idx}>
+              <code><a href={node}>{node}</a></code>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {shape.targetSubjectsOf && shape.targetSubjectsOf.length > 0 && (
+      <div className="target-section">
+        <h4>Target Subjects Of</h4>
+        <p>Subjects that have these properties:</p>
+        <ul>
+          {shape.targetSubjectsOf.map((prop, idx) => (
+            <li key={idx}>
+              <code>{prop}</code>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    {shape.targetObjectsOf && shape.targetObjectsOf.length > 0 && (
+      <div className="target-section">
+        <h4>Target Objects Of</h4>
+        <p>Objects of these properties:</p>
+        <ul>
+          {shape.targetObjectsOf.map((prop, idx) => (
+            <li key={idx}>
+              <code>{prop}</code>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+</section>
+
+{shape.property && shape.property.length > 0 && (
+  <section className="property-constraints">
+    <h2>Property Constraints</h2>
+    <p>This shape defines {shape.property.length} property constraint{shape.property.length !== 1 ? 's' : ''}:</p>
+
+    <div className="constraints-list">
+      {shape.property.map((propShape, idx) => (
+        <div key={idx} className="constraint-card">
+          <h4>
+            <code>{propShape.path}</code>
+            {propShape.name && ` - ${propShape.name}`}
+          </h4>
+
+          {propShape.description && (
+            <p className="constraint-description">{propShape.description}</p>
+          )}
+
+          <div className="constraint-details">
+            {propShape.minCount !== undefined && (
+              <div className="constraint-item">
+                <strong>Min Count:</strong> {propShape.minCount}
+              </div>
+            )}
+
+            {propShape.maxCount !== undefined && (
+              <div className="constraint-item">
+                <strong>Max Count:</strong> {propShape.maxCount}
+              </div>
+            )}
+
+            {propShape.datatype && (
+              <div className="constraint-item">
+                <strong>Datatype:</strong> <code>{propShape.datatype}</code>
+              </div>
+            )}
+
+            {propShape.class && (
+              <div className="constraint-item">
+                <strong>Class:</strong> <code>{propShape.class}</code>
+              </div>
+            )}
+
+            {propShape.nodeKind && (
+              <div className="constraint-item">
+                <strong>Node Kind:</strong> <code>{propShape.nodeKind}</code>
+              </div>
+            )}
+
+            {propShape.pattern && (
+              <div className="constraint-item">
+                <strong>Pattern:</strong> <code>{propShape.pattern}</code>
+              </div>
+            )}
+
+            {propShape.minLength !== undefined && (
+              <div className="constraint-item">
+                <strong>Min Length:</strong> {propShape.minLength}
+              </div>
+            )}
+
+            {propShape.maxLength !== undefined && (
+              <div className="constraint-item">
+                <strong>Max Length:</strong> {propShape.maxLength}
+              </div>
+            )}
+
+            {propShape.minInclusive !== undefined && (
+              <div className="constraint-item">
+                <strong>Min (Inclusive):</strong> {propShape.minInclusive}
+              </div>
+            )}
+
+            {propShape.maxInclusive !== undefined && (
+              <div className="constraint-item">
+                <strong>Max (Inclusive):</strong> {propShape.maxInclusive}
+              </div>
+            )}
+
+            {propShape.in && propShape.in.length > 0 && (
+              <div className="constraint-item">
+                <strong>Allowed Values:</strong>
+                <ul className="value-list">
+                  {propShape.in.map((val, vidx) => (
+                    <li key={vidx}><code>{val}</code></li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {propShape.message && (
+              <div className="constraint-message">
+                <strong>Message:</strong> {propShape.message}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{shape.closed && (
+  <section className="closed-shape">
+    <h3>Closed Shape</h3>
+    <div className="info-box warning">
+      <p>
+        This is a <strong>closed shape</strong>, meaning target nodes may only have properties
+        that are explicitly defined in the shape's constraints.
+      </p>
+      {shape.ignoredProperties && shape.ignoredProperties.length > 0 && (
+        <>
+          <p>The following properties are ignored (allowed but not constrained):</p>
+          <ul>
+            {shape.ignoredProperties.map((prop, idx) => (
+              <li key={idx}><code>{prop}</code></li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+  </section>
+)}
+
+<section className="shacl-overview">
+  <h2>About SHACL Shapes</h2>
+  <div className="info-box">
+    <p>
+      <strong>SHACL (Shapes Constraint Language)</strong> is used to validate RDF graphs
+      against a set of conditions. Shapes define constraints that RDF data must satisfy.
+    </p>
+    <h4>Key Concepts</h4>
+    <ul>
+      <li><strong>Targets:</strong> Define which nodes in the graph the shape applies to</li>
+      <li><strong>Constraints:</strong> Define conditions that must be met</li>
+      <li><strong>Property Shapes:</strong> Constraints on specific properties</li>
+      <li><strong>Node Shapes:</strong> Constraints on entire nodes</li>
+      <li><strong>Severity:</strong> Violation, Warning, or Info</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<${shape.uri}> a sh:NodeShape ;${shape.label ? `
+  rdfs:label "${shape.label}" ;` : ''}${shape.description ? `
+  rdfs:comment "${shape.description}" ;` : ''}${shape.targetClass ? `
+  ${shape.targetClass.map(cls => `sh:targetClass <${cls}>`).join(' ;\n  ')} ;` : ''}${shape.targetNode ? `
+  ${shape.targetNode.map(node => `sh:targetNode <${node}>`).join(' ;\n  ')} ;` : ''}${shape.closed ? `
+  sh:closed ${shape.closed} ;` : ''}${shape.ignoredProperties ? `
+  sh:ignoredProperties (${shape.ignoredProperties.map(p => `<${p}>`).join(' ')}) ;` : ''}${shape.severity ? `
+  sh:severity sh:${shape.severity} ;` : ''}${shape.message ? `
+  sh:message "${shape.message}" ;` : ''}${shape.property ? `
+  ${shape.property.map(p => `sh:property [
+    sh:path <${p.path}> ;${p.minCount !== undefined ? `
+    sh:minCount ${p.minCount} ;` : ''}${p.maxCount !== undefined ? `
+    sh:maxCount ${p.maxCount} ;` : ''}${p.datatype ? `
+    sh:datatype <${p.datatype}> ;` : ''}${p.class ? `
+    sh:class <${p.class}> ;` : ''}
+  ]`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="validation-example">
+  <h3>Validation Example</h3>
+
+  <h4>Valid Data</h4>
+  <pre><code>{`@prefix ex: <http://example.org/> .
+
+ex:validResource a ${shape.targetClass?.[0] || 'ex:ExampleClass'} ;${shape.property?.map(p => `
+  <${p.path}> ${p.datatype ? `"example value"^^<${p.datatype}>` : '<http://example.org/value>'}`).join(' ;') || ''} .`}</code></pre>
+
+  <h4>Validate with SHACL</h4>
+  <pre><code>{`# Using Apache Jena's SHACL validator
+shacl validate --shapes=shapes.ttl --data=data.ttl
+
+# Using pySHACL (Python)
+from pyshacl import validate
+results = validate(data_graph, shacl_graph=shapes_graph)
+print(results[2])  # Validation report`}</code></pre>
+</section>
+
+<section className="sparql-query">
+  <h3>Query Shape Definition</h3>
+  <pre><code>{`PREFIX sh: <http://www.w3.org/ns/shacl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?property ?path ?constraint ?value
+WHERE {
+  <${shape.uri}> sh:property ?property .
+  ?property sh:path ?path .
+  ?property ?constraint ?value .
+  FILTER(?constraint != sh:path)
+}`}</code></pre>
+</section>

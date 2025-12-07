@@ -1,0 +1,115 @@
+---
+layout: valueSet
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/ValueSet
+$id: https://standards.org.ai/Healthcare/FHIR/ValueSet/{valueSet.code}
+sameAs: https://standards.org.ai/ValueSet/{valueSet.code}
+canonical: https://standards.org.ai/FHIR/ValueSet/{valueSet.code}
+params:
+  - ValueSet
+schema:
+  valueSet:
+    code: id
+    name: name
+    title: title
+    description: description
+    status: status
+    experimental: boolean
+    publisher: string
+    purpose: string
+    copyright: string
+    compose: object
+    expansion: object
+    concepts: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRValueSetHeader } from '@/components/healthcare/fhir/ValueSetHeader'
+import { FHIRConceptsList } from '@/components/healthcare/fhir/ConceptsList'
+import { FHIRValueSetComposition } from '@/components/healthcare/fhir/ValueSetComposition'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIRValueSetHeader
+  code={valueSet.code}
+  name={valueSet.name}
+  title={valueSet.title}
+  status={valueSet.status}
+/>
+
+<Description content={valueSet.description} />
+
+## ValueSet Information
+
+- **Status**: <StatusBadge status={valueSet.status} />
+- **Experimental**: {valueSet.experimental ? 'Yes' : 'No'}
+- **Publisher**: {valueSet.publisher || 'HL7 International'}
+- **Canonical URL**: {valueSet.url}
+
+{valueSet.purpose && (
+  <>
+    ## Purpose
+
+    {valueSet.purpose}
+  </>
+)}
+
+## Composition
+
+<FHIRValueSetComposition
+  compose={valueSet.compose}
+  includes={valueSet.compose?.include}
+  excludes={valueSet.compose?.exclude}
+/>
+
+## Concepts
+
+<FHIRConceptsList
+  concepts={valueSet.concepts}
+  expansion={valueSet.expansion}
+/>
+
+## Usage Example
+
+<CodeExample
+  title={`${valueSet.name} ValueSet Definition`}
+  language="json"
+  code={valueSet.examples?.definition}
+/>
+
+<CodeExample
+  title="Using in a Resource"
+  language="json"
+  code={valueSet.examples?.usage}
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR ValueSet Resource',
+      url: 'https://www.hl7.org/fhir/valueset.html'
+    },
+    {
+      name: 'This ValueSet Definition',
+      url: valueSet.url
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Terminology Service](https://www.hl7.org/fhir/terminology-service.html)
+- [FHIR ValueSet Resource](https://www.hl7.org/fhir/valueset.html)
+{valueSet.copyright && (
+  <>
+
+    ## Copyright
+
+    {valueSet.copyright}
+  </>
+)}

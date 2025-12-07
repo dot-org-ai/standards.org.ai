@@ -1,0 +1,799 @@
+---
+layout: Authenticator
+source: W3C/WebAuthn
+$type: W3C/WebAuthn/Authenticator
+$id: https://standards.org.ai/W3C/WebAuthn/Authenticator/{Authenticator.code}
+sameAs: https://standards.org.ai/Authenticator/{Authenticator.code}
+canonical: https://w3.org.ai/WebAuthn/Authenticator/{Authenticator.code}
+params:
+  - Authenticator
+schema:
+  Authenticator:
+    code: string
+    type: string
+    attachment: string
+    description: string
+    capabilities: object
+    transport: string[]
+    algorithms: string[]
+    attestation: object
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={Authenticator.type}
+  subtitle="WebAuthn Authenticator Type"
+  code={Authenticator.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Attachment: {Authenticator.attachment}</Badge>
+  {Authenticator.capabilities.residentKey && <Badge variant="success">Resident Keys</Badge>}
+  {Authenticator.capabilities.userVerification && <Badge variant="success">User Verification</Badge>}
+  {Authenticator.transport.map(t => (
+    <Badge key={t} variant="info">{t}</Badge>
+  ))}
+</div>
+
+<Description>
+  {Authenticator.description}
+</Description>
+
+## Authenticator Properties
+
+<PropertiesTable
+  properties={{
+    type: {
+      type: 'string',
+      required: true,
+      description: 'The authenticator type identifier',
+      example: Authenticator.type
+    },
+    attachment: {
+      type: 'string',
+      required: true,
+      description: 'How the authenticator is attached to the client',
+      example: Authenticator.attachment
+    },
+    transport: {
+      type: 'string[]',
+      required: true,
+      description: 'Supported transport methods',
+      example: Authenticator.transport.join(', ')
+    },
+    algorithms: {
+      type: 'string[]',
+      required: true,
+      description: 'Supported signature algorithms',
+      example: Authenticator.algorithms.join(', ')
+    }
+  }}
+/>
+
+## Capabilities
+
+### Resident Keys (Discoverable Credentials)
+
+{Authenticator.capabilities.residentKey ? (
+  <>
+    <Badge variant="success">Supported</Badge>
+
+    This authenticator supports **resident keys** (also called discoverable credentials), which means:
+
+    - Credentials can be stored on the authenticator itself
+    - Users can authenticate without entering a username
+    - Supports passwordless authentication flows
+    - Credentials can be discovered by the relying party
+
+    <CodeExample language="javascript">
+{`// Request resident key support
+const publicKeyCredentialCreationOptions = {
+  challenge: new Uint8Array([/* challenge bytes */]),
+  rp: {
+    name: "Example Corp",
+    id: "example.com"
+  },
+  user: {
+    id: new Uint8Array([/* user ID bytes */]),
+    name: "alice@example.com",
+    displayName: "Alice Smith"
+  },
+  pubKeyCredParams: [
+    { type: "public-key", alg: -7 },  // ES256
+    { type: "public-key", alg: -257 } // RS256
+  ],
+  authenticatorSelection: {
+    authenticatorAttachment: "${Authenticator.attachment}",
+    residentKey: "required",
+    requireResidentKey: true,
+    userVerification: "preferred"
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: publicKeyCredentialCreationOptions
+});`}
+    </CodeExample>
+  </>
+) : (
+  <>
+    <Badge variant="warning">Not Supported</Badge>
+
+    This authenticator does **not** support resident keys. Credentials must be stored server-side, and users must provide a username to authenticate.
+  </>
+)}
+
+### User Verification
+
+{Authenticator.capabilities.userVerification ? (
+  <>
+    <Badge variant="success">Supported</Badge>
+
+    This authenticator supports **user verification**, which can include:
+
+    - {Authenticator.capabilities.userVerification}
+    - Provides strong authentication of the user's identity
+    - Meets higher assurance requirements
+
+    <CodeExample language="javascript">
+{`// Require user verification
+const publicKeyCredentialCreationOptions = {
+  // ... other options ...
+  authenticatorSelection: {
+    authenticatorAttachment: "${Authenticator.attachment}",
+    userVerification: "required"
+  }
+};`}
+    </CodeExample>
+  </>
+) : (
+  <>
+    <Badge variant="info">Test of User Presence Only</Badge>
+
+    This authenticator only supports **user presence** verification (typically a button press), not full user verification.
+  </>
+)}
+
+### Backup Eligibility
+
+{Authenticator.capabilities.backupEligible ? (
+  <>
+    <Badge variant="success">Backup Eligible</Badge>
+
+    - Credentials can be backed up and synced across devices
+    - Provides better user experience and account recovery
+    - Reduces risk of lockout if device is lost
+
+    {Authenticator.capabilities.backupEligible === 'cloud' && (
+      <Alert type="info">
+        This authenticator uses cloud-based backup and sync, such as Apple's iCloud Keychain
+        or Google's Password Manager.
+      </Alert>
+    )}
+  </>
+) : (
+  <>
+    <Badge variant="warning">No Backup</Badge>
+
+    Credentials are bound to a single device and cannot be backed up or synced. If the device is lost, credentials cannot be recovered.
+  </>
+)}
+
+## Transport Methods
+
+This authenticator supports the following transport methods:
+
+{Authenticator.transport.map(transport => (
+  <div key={transport}>
+    <h3>{transport.toUpperCase()}</h3>
+    {transport === 'usb' && (
+      <p>
+        Connection via USB cable. Requires physical connection to the device.
+        Commonly used by security keys like YubiKey.
+      </p>
+    )}
+    {transport === 'nfc' && (
+      <p>
+        Near Field Communication. Allows wireless communication by tapping the
+        authenticator near the device. Supported by many modern smartphones and
+        security keys.
+      </p>
+    )}
+    {transport === 'ble' && (
+      <p>
+        Bluetooth Low Energy. Wireless connection over Bluetooth. Provides
+        convenient authentication without cables or tapping.
+      </p>
+    )}
+    {transport === 'internal' && (
+      <p>
+        Built into the device itself. Examples include platform authenticators
+        like Touch ID, Face ID, or Windows Hello.
+      </p>
+    )}
+    {transport === 'hybrid' && (
+      <p>
+        Hybrid transport allows using a phone as an authenticator for a computer.
+        The phone and computer communicate via QR code scanning and Bluetooth.
+      </p>
+    )}
+  </div>
+))}
+
+<CodeExample language="javascript">
+{`// Specify allowed transports during authentication
+const publicKeyCredentialRequestOptions = {
+  challenge: new Uint8Array([/* challenge bytes */]),
+  allowCredentials: [{
+    type: "public-key",
+    id: credentialId,
+    transports: [${Authenticator.transport.map(t => `"${t}"`).join(', ')}]
+  }]
+};
+
+const assertion = await navigator.credentials.get({
+  publicKey: publicKeyCredentialRequestOptions
+});`}
+</CodeExample>
+
+## Supported Algorithms
+
+This authenticator supports the following signature algorithms:
+
+{Authenticator.algorithms.map(alg => (
+  <div key={alg}>
+    <h3>{alg}</h3>
+    {alg === 'ES256' && (
+      <>
+        <p><strong>COSE Algorithm ID:</strong> -7</p>
+        <p>
+          ECDSA with SHA-256 using the P-256 curve. Widely supported and recommended
+          for most use cases. Provides 128-bit security level.
+        </p>
+      </>
+    )}
+    {alg === 'ES384' && (
+      <>
+        <p><strong>COSE Algorithm ID:</strong> -35</p>
+        <p>
+          ECDSA with SHA-384 using the P-384 curve. Higher security margin than ES256.
+          Provides 192-bit security level.
+        </p>
+      </>
+    )}
+    {alg === 'ES512' && (
+      <>
+        <p><strong>COSE Algorithm ID:</strong> -36</p>
+        <p>
+          ECDSA with SHA-512 using the P-521 curve. Maximum security margin.
+          Provides 256-bit security level.
+        </p>
+      </>
+    )}
+    {alg === 'RS256' && (
+      <>
+        <p><strong>COSE Algorithm ID:</strong> -257</p>
+        <p>
+          RSA with SHA-256. Traditional algorithm with wide compatibility.
+          Requires larger key sizes (2048+ bits) for equivalent security.
+        </p>
+      </>
+    )}
+    {alg === 'EdDSA' && (
+      <>
+        <p><strong>COSE Algorithm ID:</strong> -8</p>
+        <p>
+          Edwards-curve Digital Signature Algorithm. Modern, efficient algorithm
+          using Ed25519. Provides excellent security and performance.
+        </p>
+      </>
+    )}
+  </div>
+))}
+
+<CodeExample language="javascript">
+{`// Specify preferred algorithms during registration
+const publicKeyCredentialCreationOptions = {
+  // ... other options ...
+  pubKeyCredParams: [
+    ${Authenticator.algorithms.map(alg => {
+      const coseAlg = alg === 'ES256' ? -7 : alg === 'ES384' ? -35 : alg === 'ES512' ? -36 : alg === 'RS256' ? -257 : -8;
+      return `{ type: "public-key", alg: ${coseAlg} }, // ${alg}`;
+    }).join('\n    ')}
+  ]
+};`}
+</CodeExample>
+
+## Attestation
+
+{Authenticator.attestation.supported ? (
+  <>
+    ### Attestation Type: {Authenticator.attestation.type}
+
+    <Description>
+      {Authenticator.attestation.description}
+    </Description>
+
+    {Authenticator.attestation.type === 'packed' && (
+      <>
+        <p>
+          Packed attestation provides a compact format for attestation statements.
+          It can use either self-attestation or be signed by an Attestation CA.
+        </p>
+
+        <CodeExample language="json">
+{`{
+  "fmt": "packed",
+  "attStmt": {
+    "alg": -7,
+    "sig": "...",
+    "x5c": ["..."] // Optional certificate chain
+  }
+}`}
+        </CodeExample>
+      </>
+    )}
+
+    {Authenticator.attestation.type === 'tpm' && (
+      <>
+        <p>
+          TPM attestation uses the Trusted Platform Module, providing hardware-backed
+          attestation with manufacturer certificates.
+        </p>
+
+        <CodeExample language="json">
+{`{
+  "fmt": "tpm",
+  "attStmt": {
+    "ver": "2.0",
+    "alg": -7,
+    "x5c": ["..."],
+    "sig": "...",
+    "certInfo": "...",
+    "pubArea": "..."
+  }
+}`}
+        </CodeExample>
+      </>
+    )}
+
+    {Authenticator.attestation.type === 'android-key' && (
+      <>
+        <p>
+          Android Key Attestation uses the Android Keystore system to provide
+          hardware-backed attestation on Android devices.
+        </p>
+
+        <CodeExample language="json">
+{`{
+  "fmt": "android-key",
+  "attStmt": {
+    "alg": -7,
+    "sig": "...",
+    "x5c": ["..."]
+  }
+}`}
+        </CodeExample>
+      </>
+    )}
+
+    {Authenticator.attestation.type === 'apple' && (
+      <>
+        <p>
+          Apple Anonymous Attestation provides privacy-preserving attestation
+          for Apple devices, proving authenticity without identifying the specific device.
+        </p>
+
+        <CodeExample language="json">
+{`{
+  "fmt": "apple",
+  "attStmt": {
+    "x5c": ["..."]
+  }
+}`}
+        </CodeExample>
+      </>
+    )}
+
+    {Authenticator.attestation.type === 'fido-u2f' && (
+      <>
+        <p>
+          FIDO U2F attestation format for legacy U2F authenticators. Each authenticator
+          has a unique attestation certificate.
+        </p>
+
+        <CodeExample language="json">
+{`{
+  "fmt": "fido-u2f",
+  "attStmt": {
+    "sig": "...",
+    "x5c": ["..."]
+  }
+}`}
+        </CodeExample>
+      </>
+    )}
+
+    {Authenticator.attestation.type === 'none' && (
+      <>
+        <p>
+          No attestation is provided. The relying party receives no cryptographic
+          proof of the authenticator's make or model.
+        </p>
+
+        <CodeExample language="json">
+{`{
+  "fmt": "none",
+  "attStmt": {}
+}`}
+        </CodeExample>
+      </>
+    )}
+  </>
+) : (
+  <Alert type="info">
+    This authenticator does not support attestation.
+  </Alert>
+)}
+
+## Examples
+
+### Registration Ceremony
+
+<CodeExample language="javascript">
+{`// Complete registration flow
+async function registerAuthenticator() {
+  // 1. Request challenge from server
+  const challengeResponse = await fetch('/webauthn/register/challenge', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: 'alice@example.com' })
+  });
+
+  const challengeData = await challengeResponse.json();
+
+  // 2. Create credential
+  const publicKeyCredentialCreationOptions = {
+    challenge: Uint8Array.from(challengeData.challenge, c => c.charCodeAt(0)),
+    rp: {
+      name: "Example Corp",
+      id: "example.com"
+    },
+    user: {
+      id: Uint8Array.from(challengeData.userId, c => c.charCodeAt(0)),
+      name: "alice@example.com",
+      displayName: "Alice Smith"
+    },
+    pubKeyCredParams: [
+      ${Authenticator.algorithms.slice(0, 2).map(alg => {
+        const coseAlg = alg === 'ES256' ? -7 : alg === 'ES384' ? -35 : alg === 'RS256' ? -257 : -8;
+        return `{ type: "public-key", alg: ${coseAlg} }`;
+      }).join(',\n      ')}
+    ],
+    authenticatorSelection: {
+      authenticatorAttachment: "${Authenticator.attachment}",
+      ${Authenticator.capabilities.residentKey ? 'residentKey: "preferred",' : ''}
+      userVerification: "${Authenticator.capabilities.userVerification ? 'preferred' : 'discouraged'}"
+    },
+    timeout: 60000,
+    attestation: "direct"
+  };
+
+  const credential = await navigator.credentials.create({
+    publicKey: publicKeyCredentialCreationOptions
+  });
+
+  // 3. Send credential to server
+  const registrationResponse = await fetch('/webauthn/register/complete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: credential.id,
+      rawId: Array.from(new Uint8Array(credential.rawId)),
+      response: {
+        attestationObject: Array.from(new Uint8Array(credential.response.attestationObject)),
+        clientDataJSON: Array.from(new Uint8Array(credential.response.clientDataJSON))
+      },
+      type: credential.type
+    })
+  });
+
+  const result = await registrationResponse.json();
+  return result;
+}`}
+</CodeExample>
+
+### Authentication Ceremony
+
+<CodeExample language="javascript">
+{`// Complete authentication flow
+async function authenticateWithAuthenticator(${Authenticator.capabilities.residentKey ? '' : 'username'}) {
+  // 1. Request challenge from server
+  const challengeResponse = await fetch('/webauthn/authenticate/challenge', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(${Authenticator.capabilities.residentKey ? '{}' : '{ username }'})
+  });
+
+  const challengeData = await challengeResponse.json();
+
+  // 2. Get assertion
+  const publicKeyCredentialRequestOptions = {
+    challenge: Uint8Array.from(challengeData.challenge, c => c.charCodeAt(0)),
+    ${Authenticator.capabilities.residentKey ? '' : `allowCredentials: challengeData.allowCredentials.map(cred => ({
+      type: "public-key",
+      id: Uint8Array.from(cred.id, c => c.charCodeAt(0)),
+      transports: [${Authenticator.transport.map(t => `"${t}"`).join(', ')}]
+    })),`}
+    timeout: 60000,
+    userVerification: "${Authenticator.capabilities.userVerification ? 'preferred' : 'discouraged'}"
+  };
+
+  const assertion = await navigator.credentials.get({
+    publicKey: publicKeyCredentialRequestOptions
+  });
+
+  // 3. Send assertion to server
+  const authenticationResponse = await fetch('/webauthn/authenticate/complete', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: assertion.id,
+      rawId: Array.from(new Uint8Array(assertion.rawId)),
+      response: {
+        authenticatorData: Array.from(new Uint8Array(assertion.response.authenticatorData)),
+        clientDataJSON: Array.from(new Uint8Array(assertion.response.clientDataJSON)),
+        signature: Array.from(new Uint8Array(assertion.response.signature)),
+        userHandle: assertion.response.userHandle
+          ? Array.from(new Uint8Array(assertion.response.userHandle))
+          : null
+      },
+      type: assertion.type
+    })
+  });
+
+  const result = await authenticationResponse.json();
+  return result;
+}`}
+</CodeExample>
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Authenticator Security
+
+{Authenticator.attachment === 'platform' && (
+  <>
+    - **Platform Authenticator:** Integrated into the device, providing strong security
+    - Credentials are bound to the specific device
+    - Uses device-specific security features (Secure Enclave, TPM, etc.)
+    - Consider multi-device scenarios and account recovery
+  </>
+)}
+
+{Authenticator.attachment === 'cross-platform' && (
+  <>
+    - **Roaming Authenticator:** Portable security key that works across devices
+    - Can be used with multiple devices and accounts
+    - Consider physical security and device management
+    - Implement backup authenticator registration
+  </>
+)}
+
+### User Verification
+
+{Authenticator.capabilities.userVerification ? (
+  <>
+    - This authenticator provides user verification
+    - {Authenticator.capabilities.userVerification}
+    - Suitable for high-security scenarios
+    - Meets multi-factor authentication requirements (possession + verification)
+  </>
+) : (
+  <>
+    - This authenticator only verifies user presence (typically via button press)
+    - Does not verify user identity
+    - Consider requiring additional authentication factors for sensitive operations
+  </>
+)}
+
+### Backup and Recovery
+
+{Authenticator.capabilities.backupEligible ? (
+  <>
+    - Credentials can be backed up and synced
+    - Provides better user experience and account recovery
+    - Consider the security implications of cloud backup
+    - Users may access credentials from multiple devices
+    - Implement proper session management for synced credentials
+  </>
+) : (
+  <>
+    - Credentials are device-bound and cannot be backed up
+    - Users may lose access if device is lost or damaged
+    - **Critical:** Implement account recovery mechanisms
+    - Encourage users to register multiple authenticators
+  </>
+)}
+
+### Transport Security
+
+{Authenticator.transport.includes('nfc') && (
+  <>
+    - **NFC Security:** Short range provides some protection against remote attacks
+    - Beware of NFC relay attacks in high-security scenarios
+    - Physical proximity provides assurance of user intent
+  </>
+)}
+
+{Authenticator.transport.includes('ble') && (
+  <>
+    - **Bluetooth Security:** Uses encrypted BLE connections
+    - Ensure pairing is secure and temporary
+    - Monitor for potential relay attacks
+  </>
+)}
+
+{Authenticator.transport.includes('usb') && (
+  <>
+    - **USB Security:** Physical connection provides strong assurance
+    - Protect against malicious USB devices
+    - Users must have physical access to the authenticator
+  </>
+)}
+
+### Attestation Considerations
+
+- Verify attestation statements to ensure authenticator authenticity
+- Maintain trust anchors (CA certificates) for attestation validation
+- Consider privacy implications of attestation
+- Allow users to opt out of attestation when appropriate
+- Monitor FIDO Metadata Service for authenticator security advisories
+
+### Credential Management
+
+- Implement proper credential lifecycle management
+- Allow users to view and revoke registered authenticators
+- Track credential usage and detect suspicious patterns
+- Implement rate limiting on authentication attempts
+- Store credential public keys securely on the server
+
+</SecurityConsiderations>
+
+## Implementation Guidelines
+
+### Server-Side Validation
+
+<CodeExample language="javascript">
+{`// Validate registration response (Node.js example)
+const crypto = require('crypto');
+const cbor = require('cbor');
+
+async function validateRegistration(credential, challenge, origin) {
+  // 1. Verify challenge matches
+  const clientData = JSON.parse(
+    Buffer.from(credential.response.clientDataJSON).toString()
+  );
+
+  if (clientData.challenge !== challenge) {
+    throw new Error('Challenge mismatch');
+  }
+
+  // 2. Verify origin
+  if (clientData.origin !== origin) {
+    throw new Error('Origin mismatch');
+  }
+
+  // 3. Verify type
+  if (clientData.type !== 'webauthn.create') {
+    throw new Error('Invalid type');
+  }
+
+  // 4. Parse attestation object
+  const attestationObject = cbor.decode(
+    Buffer.from(credential.response.attestationObject)
+  );
+
+  const authData = parseAuthenticatorData(attestationObject.authData);
+
+  // 5. Verify RP ID hash
+  const rpIdHash = crypto.createHash('sha256')
+    .update('example.com')
+    .digest();
+
+  if (!authData.rpIdHash.equals(rpIdHash)) {
+    throw new Error('RP ID hash mismatch');
+  }
+
+  // 6. Verify flags
+  if (!authData.flags.userPresent) {
+    throw new Error('User presence flag not set');
+  }
+
+  ${Authenticator.capabilities.userVerification ? `if (!authData.flags.userVerified) {
+    throw new Error('User verification flag not set');
+  }` : ''}
+
+  // 7. Verify attestation statement
+  await verifyAttestationStatement(
+    attestationObject.fmt,
+    attestationObject.attStmt,
+    authData,
+    clientData
+  );
+
+  // 8. Extract and store credential
+  return {
+    credentialId: authData.credentialId,
+    publicKey: authData.publicKey,
+    signCount: authData.signCount
+  };
+}`}
+</CodeExample>
+
+### Best Practices
+
+1. **Challenge Generation:** Use cryptographically secure random challenges (32+ bytes)
+2. **Timeout:** Set appropriate timeouts (30-60 seconds) for ceremonies
+3. **User Experience:** Provide clear instructions and error messages
+4. **Fallback:** Offer alternative authentication methods
+5. **Recovery:** Implement account recovery for lost authenticators
+6. **Testing:** Test across different browsers and devices
+7. **Monitoring:** Track authentication success/failure rates
+
+## Browser Support
+
+{Authenticator.attachment === 'platform' && (
+  <>
+    Platform authenticators are supported in modern browsers:
+
+    - **Chrome/Edge:** Windows Hello, Touch ID, Face ID
+    - **Safari:** Touch ID, Face ID on macOS and iOS
+    - **Firefox:** Windows Hello, Touch ID (limited support)
+
+    Check `PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()` for support.
+  </>
+)}
+
+{Authenticator.attachment === 'cross-platform' && (
+  <>
+    Cross-platform authenticators (security keys) are widely supported:
+
+    - **Chrome/Edge:** Full support for USB, NFC, BLE
+    - **Safari:** USB and NFC support
+    - **Firefox:** Full support for USB, NFC, BLE
+
+    Check `PublicKeyCredential.isConditionalMediationAvailable()` for enhanced features.
+  </>
+)}
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Ceremony" href="/W3C/WebAuthn/Ceremony/registration">Registration Ceremony</RelatedItem>
+  <RelatedItem type="Ceremony" href="/W3C/WebAuthn/Ceremony/authentication">Authentication Ceremony</RelatedItem>
+  <RelatedItem type="Extension" href="/W3C/WebAuthn/Extension/credProps">WebAuthn Extensions</RelatedItem>
+  <RelatedItem type="DID" href="/W3C/DID/Method/web">DID Integration</RelatedItem>
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/webauthn-3/">Web Authentication: An API for accessing Public Key Credentials Level 3</SpecLink>
+  <SpecLink href="https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-errata-20220621.html">CTAP2 Specification</SpecLink>
+  <SpecLink href="https://fidoalliance.org/metadata/">FIDO Metadata Service</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This authenticator type is part of the W3C WebAuthn specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

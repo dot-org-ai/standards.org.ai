@@ -1,0 +1,516 @@
+---
+layout: Method
+source: W3C/DID
+$type: W3C/DID/Method
+$id: https://standards.org.ai/W3C/DID/Method/{Method.code}
+sameAs: https://standards.org.ai/Method/{Method.code}
+canonical: https://w3.org.ai/DID/Method/{Method.code}
+params:
+  - Method
+schema:
+  Method:
+    code: string
+    name: string
+    specification: string
+    description: string
+    features: object
+    methodSpecificId: string
+    resolution: object
+    operations: object
+    security: object
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={`did:${Method.name}`}
+  subtitle="DID Method Specification"
+  code={Method.code}
+/>
+
+<div className="flex gap-2 my-4">
+  {Method.features.createSupported && <Badge variant="success">Create</Badge>}
+  {Method.features.readSupported && <Badge variant="success">Read</Badge>}
+  {Method.features.updateSupported && <Badge variant="success">Update</Badge>}
+  {Method.features.deactivateSupported && <Badge variant="success">Deactivate</Badge>}
+  {Method.features.verifiableDataRegistry && <Badge variant="info">{Method.features.verifiableDataRegistry}</Badge>}
+</div>
+
+<Description>
+  {Method.description}
+</Description>
+
+## DID Syntax
+
+### DID Format
+
+<CodeExample language="text">
+{`did:${Method.name}:${Method.methodSpecificId}`}
+</CodeExample>
+
+### Components
+
+**Method Name:** `{Method.name}`
+
+**Method-Specific Identifier:** {Method.methodSpecificId}
+
+### Examples
+
+<CodeExample language="text">
+{Method.name === 'web' && `did:web:example.com
+did:web:example.com:user:alice
+did:web:w3c-ccg.github.io:user:alice`}
+{Method.name === 'key' && `did:key:z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH
+did:key:z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc`}
+{Method.name === 'ion' && `did:ion:EiClkZMDxPKqC9c-umQfTkR8vvZ9JPhl_xLDI9Nfk38wfw
+did:ion:EiDyOQbbZAa3aiRzeCkV7LOx3SERjjH93EXoIM3UoN4oWg`}
+{Method.name === 'ethr' && `did:ethr:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736
+did:ethr:mainnet:0x3b0BC51Ab9De1e5B7B6E34E5b960285805C41736`}
+{Method.name === 'peer' && `did:peer:2.Vz6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH.EzQ3shf5pKY8fXqK4N7TzZfJ5u8fR`}
+</CodeExample>
+
+## DID Document Example
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:${Method.name}:${Method.methodSpecificId}",
+  "verificationMethod": [
+    {
+      "id": "did:${Method.name}:${Method.methodSpecificId}#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:${Method.name}:${Method.methodSpecificId}",
+      "publicKeyMultibase": "z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"
+    }
+  ],
+  "authentication": [
+    "did:${Method.name}:${Method.methodSpecificId}#key-1"
+  ],
+  "assertionMethod": [
+    "did:${Method.name}:${Method.methodSpecificId}#key-1"
+  ],
+  "service": [
+    {
+      "id": "did:${Method.name}:${Method.methodSpecificId}#service-1",
+      "type": "LinkedDomains",
+      "serviceEndpoint": "https://example.com"
+    }
+  ]
+}`}
+</CodeExample>
+
+## DID Operations
+
+### Create
+
+{Method.features.createSupported ? (
+  <>
+    <Description>
+      {Method.operations.create.description}
+    </Description>
+
+    <CodeExample language="javascript">
+{`${Method.operations.create.example || `// Create a new DID
+const did = await createDID({
+  method: '${Method.name}',
+  options: {
+    // method-specific options
+  }
+});
+
+console.log(did.id); // did:${Method.name}:...
+console.log(did.document); // Full DID document`}`}
+    </CodeExample>
+
+    **Requirements:**
+    {Method.operations.create.requirements?.map(req => (
+      <li key={req}>{req}</li>
+    ))}
+  </>
+) : (
+  <Alert type="info">
+    This DID method does not support create operations. DIDs are derived from cryptographic keys.
+  </Alert>
+)}
+
+### Read (Resolve)
+
+{Method.features.readSupported && (
+  <>
+    <Description>
+      {Method.resolution.description}
+    </Description>
+
+    <CodeExample language="javascript">
+{`${Method.resolution.example || `// Resolve a DID to its DID document
+const result = await resolveDID('did:${Method.name}:${Method.methodSpecificId}');
+
+if (result.didDocument) {
+  console.log('DID Document:', result.didDocument);
+  console.log('Metadata:', result.didDocumentMetadata);
+} else {
+  console.error('Error:', result.didResolutionMetadata.error);
+}`}`}
+    </CodeExample>
+
+    **Resolution Process:**
+    {Method.resolution.process?.map((step, i) => (
+      <li key={i}>{step}</li>
+    ))}
+  </>
+)}
+
+### Update
+
+{Method.features.updateSupported ? (
+  <>
+    <Description>
+      {Method.operations.update.description}
+    </Description>
+
+    <CodeExample language="javascript">
+{`${Method.operations.update.example || `// Update a DID document
+const updated = await updateDID({
+  did: 'did:${Method.name}:${Method.methodSpecificId}',
+  document: updatedDocument,
+  proof: {
+    // proof of authorization
+  }
+});
+
+console.log('Updated:', updated);`}`}
+    </CodeExample>
+
+    **Update Capabilities:**
+    {Method.operations.update.capabilities?.map(cap => (
+      <li key={cap}>{cap}</li>
+    ))}
+  </>
+) : (
+  <Alert type="info">
+    This DID method does not support update operations. DID documents are immutable or derived.
+  </Alert>
+)}
+
+### Deactivate
+
+{Method.features.deactivateSupported ? (
+  <>
+    <Description>
+      {Method.operations.deactivate.description}
+    </Description>
+
+    <CodeExample language="javascript">
+{`${Method.operations.deactivate.example || `// Deactivate a DID
+const result = await deactivateDID({
+  did: 'did:${Method.name}:${Method.methodSpecificId}',
+  proof: {
+    // proof of authorization
+  }
+});
+
+console.log('Deactivated:', result);`}`}
+    </CodeExample>
+  </>
+) : (
+  <Alert type="info">
+    This DID method does not support explicit deactivation operations.
+  </Alert>
+)}
+
+## Resolution
+
+### Resolution Algorithm
+
+The DID resolution process for `did:{Method.name}` follows these steps:
+
+{Method.resolution.algorithm?.map((step, i) => (
+  <div key={i}>
+    <h4>Step {i + 1}: {step.title}</h4>
+    <p>{step.description}</p>
+    {step.code && <CodeExample language="javascript">{step.code}</CodeExample>}
+  </div>
+))}
+
+### Resolution Metadata
+
+<CodeExample language="json">
+{`{
+  "contentType": "application/did+ld+json",
+  "retrieved": "2025-01-15T00:00:00Z",
+  ${Method.resolution.metadata || '"pattern": "did:' + Method.name + '"'}
+}`}
+</CodeExample>
+
+### DID Document Metadata
+
+<CodeExample language="json">
+{`{
+  "created": "2025-01-15T00:00:00Z",
+  "updated": "2025-01-15T00:00:00Z",
+  ${Method.resolution.docMetadata || '"versionId": "1"'}
+}`}
+</CodeExample>
+
+## Method-Specific Features
+
+{Object.entries(Method.features).map(([key, value]) => (
+  value && typeof value === 'string' && (
+    <div key={key}>
+      <h3>{key.replace(/([A-Z])/g, ' $1').trim()}</h3>
+      <p>{value}</p>
+    </div>
+  )
+))}
+
+## Verifiable Data Registry
+
+**Registry Type:** {Method.features.verifiableDataRegistry}
+
+{Method.name === 'web' && (
+  <>
+    The `did:web` method uses **web servers** as the verifiable data registry. DID documents
+    are hosted at predictable HTTPS URLs derived from the DID identifier.
+
+    **Resolution URL Pattern:**
+    <CodeExample language="text">
+{`did:web:example.com          → https://example.com/.well-known/did.json
+did:web:example.com:user:alice → https://example.com/user/alice/did.json`}
+    </CodeExample>
+  </>
+)}
+
+{Method.name === 'key' && (
+  <>
+    The `did:key` method uses **cryptographic key material** as the verifiable data registry.
+    No external storage is required; the DID document is derived from the key itself.
+  </>
+)}
+
+{Method.name === 'ion' && (
+  <>
+    The `did:ion` method uses the **Bitcoin blockchain** and **IPFS** as the verifiable data
+    registry. Operations are anchored to Bitcoin for ordering and timestamping, while
+    actual data is stored on IPFS.
+  </>
+)}
+
+{Method.name === 'ethr' && (
+  <>
+    The `did:ethr` method uses the **Ethereum blockchain** as the verifiable data registry.
+    DID documents are derived from Ethereum addresses, with updates recorded via smart contracts.
+  </>
+)}
+
+{Method.name === 'peer' && (
+  <>
+    The `did:peer` method uses **peer-to-peer exchanges** as the verifiable data registry.
+    No blockchain or centralized registry is required; DIDs are exchanged directly between parties.
+  </>
+)}
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Key Management
+
+{Method.security.keyManagement || (
+  <>
+    - Protect private keys using hardware security modules (HSMs) or secure enclaves
+    - Implement proper key rotation policies
+    - Use separate keys for different verification relationships
+    - Never share or transmit private keys
+  </>
+)}
+
+### Method-Specific Risks
+
+{Method.security.risks?.map(risk => (
+  <div key={risk.title}>
+    <h4>{risk.title}</h4>
+    <p>{risk.description}</p>
+    <p><strong>Mitigation:</strong> {risk.mitigation}</p>
+  </div>
+)) || (
+  <>
+    <h4>Trust Assumptions</h4>
+    <p>Understand the trust assumptions of this DID method's verifiable data registry.</p>
+
+    <h4>Availability</h4>
+    <p>Ensure the verifiable data registry is accessible for resolution operations.</p>
+
+    <h4>Integrity</h4>
+    <p>Verify that DID documents have not been tampered with during resolution.</p>
+  </>
+)}
+
+### Authentication
+
+- Use appropriate verification methods for the use case
+- Verify proof of control before performing sensitive operations
+- Implement proper challenge-response mechanisms
+- Prevent replay attacks using nonces or timestamps
+
+### Privacy
+
+{Method.security.privacy || (
+  <>
+    - Consider correlation risks when using DIDs across contexts
+    - Use different DIDs for different relationships when possible
+    - Be aware of information leakage through public registries
+    - Implement selective disclosure when sharing DID documents
+  </>
+)}
+
+</SecurityConsiderations>
+
+## Implementation Guidelines
+
+### Libraries and SDKs
+
+{Method.name === 'web' && (
+  <>
+    **JavaScript/TypeScript:**
+    - `@decentralized-identity/did-resolver`
+    - `@ceramicnetwork/did-resolver`
+    - `@digitalbazaar/did-method-web`
+
+    **Python:**
+    - `did-web-resolver`
+
+    **Go:**
+    - `github.com/nuts-foundation/go-did`
+  </>
+)}
+
+{Method.name === 'key' && (
+  <>
+    **JavaScript/TypeScript:**
+    - `@digitalbazaar/did-method-key`
+    - `did-key-creator`
+
+    **Python:**
+    - `did-key-py`
+
+    **Go:**
+    - `github.com/nuts-foundation/go-did`
+  </>
+)}
+
+### Testing
+
+Implement comprehensive tests covering:
+
+- DID creation (if supported)
+- DID resolution
+- DID document validation
+- Update operations (if supported)
+- Deactivation (if supported)
+- Error handling and edge cases
+
+### Best Practices
+
+1. **DID Selection**: Choose this method if it aligns with your use case requirements
+2. **Key Management**: Implement robust key management practices
+3. **Error Handling**: Handle resolution failures gracefully
+4. **Caching**: Implement appropriate caching strategies for resolved DID documents
+5. **Validation**: Always validate resolved DID documents before use
+6. **Monitoring**: Monitor method availability and performance
+
+## Use Cases
+
+{Method.name === 'web' && (
+  <>
+    - Organizations with existing web infrastructure
+    - Use cases requiring human-readable DIDs
+    - Scenarios where web-based trust is acceptable
+    - Integration with existing DNS and HTTPS systems
+  </>
+)}
+
+{Method.name === 'key' && (
+  <>
+    - Ephemeral identities for testing
+    - Offline scenarios without registry access
+    - Simple authentication use cases
+    - Demonstrations and prototypes
+  </>
+)}
+
+{Method.name === 'ion' && (
+  <>
+    - Decentralized identity systems
+    - High-value identity anchoring
+    - Scenarios requiring censorship resistance
+    - Long-term identity persistence
+  </>
+)}
+
+{Method.name === 'ethr' && (
+  <>
+    - Ethereum-based applications
+    - Smart contract integration
+    - Blockchain-anchored identity
+    - DeFi and Web3 applications
+  </>
+)}
+
+{Method.name === 'peer' && (
+  <>
+    - Private peer-to-peer communications
+    - Relationship-specific identities
+    - Offline-first applications
+    - Privacy-preserving scenarios
+  </>
+)}
+
+## Interoperability
+
+### DID Resolution
+
+This method is compatible with the Universal Resolver:
+
+<CodeExample language="bash">
+{`curl -X GET "https://dev.uniresolver.io/1.0/identifiers/did:${Method.name}:${Method.methodSpecificId}"`}
+</CodeExample>
+
+### Cross-Method Compatibility
+
+- Compatible with any system supporting W3C DID Core specification
+- Can be used with Verifiable Credentials
+- Interoperable with DIDComm for messaging
+- Supports standard verification relationships
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Document" href="/W3C/DID/Document/verificationMethod">DID Document Structure</RelatedItem>
+  <RelatedItem type="Service" href="/W3C/DID/Service/LinkedDomains">DID Services</RelatedItem>
+  <RelatedItem type="VerificationMethod" href="/W3C/DID/VerificationMethod/Ed25519VerificationKey2020">Verification Methods</RelatedItem>
+  <RelatedItem type="VC" href="/W3C/VC/CredentialType/VerifiableCredential">Verifiable Credentials</RelatedItem>
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs) v1.0</SpecLink>
+  <SpecLink href={Method.specification}>DID Method Specification: did:{Method.name}</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-spec-registries/">DID Specification Registries</SpecLink>
+  <SpecLink href="https://w3c-ccg.github.io/did-resolution/">DID Resolution</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This DID method is part of the W3C Decentralized Identifiers ecosystem. For more information, visit [w3.org.ai](https://w3.org.ai).*

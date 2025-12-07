@@ -1,0 +1,52 @@
+---
+layout: sicIndustryGroup
+source: SEC
+$type: SEC/SICIndustryGroup
+$id: https://standards.org.ai/SEC/SICIndustryGroup/{industryGroup.code}
+sameAs: https://standards.org.ai/SICIndustryGroup/{industryGroup.code}
+canonical: https://us.org.ai/SEC/SICIndustryGroup/{industryGroup.code}
+params:
+  - SICIndustryGroup
+schema:
+  industryGroup:
+    code: code
+    name: name
+    majorGroup: majorGroup
+    division: division
+---
+
+# {industryGroup.name}
+
+<SICIndustryGroupHeader code={industryGroup.code} name={industryGroup.name} />
+
+## Industry Group Code
+
+{industryGroup.code}
+
+## Full Hierarchy
+
+<SICHierarchy code={industryGroup.code} />
+
+## Major Group
+
+<SICMajorGroupLink majorGroup={industryGroup.majorGroup} />
+
+## Division
+
+<SICDivisionLink division={industryGroup.division} />
+
+## SIC Codes in This Group
+
+<SICCodeList industryGroup={industryGroup.code} />
+
+## Companies in Industry Group
+
+<CompaniesByIndustryGroup industryGroup={industryGroup.code} />
+
+## Sibling Industry Groups
+
+<SiblingIndustryGroups majorGroup={industryGroup.majorGroup} current={industryGroup.code} />
+
+## Industry Group Statistics
+
+<IndustryGroupStatistics industryGroup={industryGroup.code} />

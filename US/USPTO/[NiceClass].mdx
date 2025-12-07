@@ -1,0 +1,59 @@
+---
+layout: nice-class
+source: US/USPTO
+$type: US/USPTO/NiceClass
+$id: https://standards.org.ai/US/USPTO/NiceClass/{niceClass.code}
+sameAs: https://standards.org.ai/NiceClass/{niceClass.code}
+canonical: https://us.org.ai/USPTO/NiceClass/{niceClass.code}
+params:
+  - NiceClass
+schema:
+  niceClass:
+    code: code
+    name: name
+    type: type
+    description: description
+    examples: examples
+---
+
+# Nice Class {niceClass.code}: {niceClass.name}
+
+<NiceClassHeader
+  code={niceClass.code}
+  name={niceClass.name}
+  type={niceClass.type}
+/>
+
+## Overview
+
+Nice Classification Class {niceClass.code} is used for {niceClass.type} and covers {niceClass.name}.
+
+## Description
+
+{niceClass.description}
+
+## Class Heading
+
+<NiceClassHeading code={niceClass.code} />
+
+## Examples
+
+{niceClass.examples && (
+  <NiceExamples examples={niceClass.examples} />
+)}
+
+## Alphabetical List
+
+<NiceAlphabeticalList class={niceClass.code} />
+
+## Recent Trademarks
+
+<TrademarkList niceClass={niceClass.code} limit={100} />
+
+## Statistics
+
+<NiceClassStats class={niceClass.code} />
+
+## Related Classes
+
+<RelatedNiceClasses class={niceClass.code} />

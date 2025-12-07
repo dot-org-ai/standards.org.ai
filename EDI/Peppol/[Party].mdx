@@ -1,0 +1,69 @@
+---
+layout: party
+source: EDI/Peppol
+$type: EDI/Peppol/Party
+$id: https://standards.org.ai/EDI/Peppol/Party/{party.scheme}/{party.id}
+sameAs: https://standards.org.ai/PartyIdentifier/{party.scheme}/{party.id}
+canonical: https://standards.org.ai/Peppol/Party/{party.scheme}/{party.id}
+params:
+  - Party
+schema:
+  party:
+    scheme: IdentifierScheme
+    id: PartyID
+    name: PartyName
+    country: CountryCode
+    schemeAgency: SchemeAgencyID
+---
+
+# {party.name}
+
+<PartyHeader scheme={party.scheme} id={party.id} name={party.name} />
+
+## Identifier Scheme
+
+{party.scheme}
+
+## Party ID
+
+{party.id}
+
+## Country
+
+{party.country}
+
+## Scheme Agency
+
+{party.schemeAgency}
+
+## Identifier Scheme Details
+
+<IdentifierSchemeDetails scheme={party.scheme} />
+
+## Supported Processes
+
+<SupportedProcesses partyId={party.id} />
+
+## Capabilities
+
+<PartyCapabilities partyId={party.id} />
+
+## Service Metadata
+
+<ServiceMetadata partyId={party.id} />
+
+## Access Points
+
+<AccessPoints partyId={party.id} />
+
+## Certificates
+
+<Certificates partyId={party.id} />
+
+## Network Participation
+
+<NetworkParticipation partyId={party.id} />
+
+## Related Parties
+
+<RelatedParties partyId={party.id} />

@@ -1,0 +1,198 @@
+---
+layout: element
+source: W3C/SVG
+$type: W3C/SVG/Element
+$id: https://standards.org.ai/W3C/SVG/Element/{element.code}
+sameAs: https://standards.org.ai/Element/{element.code}
+canonical: https://w3.org.ai/SVG/Element/{element.code}
+params:
+  - Element
+schema:
+  element:
+    code: tag
+    name: name
+    tag: string
+    category: string
+    description: string
+    attributes: array
+    presentationAttributes: array
+    deprecated: boolean
+    animatable: boolean
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { SVGElementInfo } from '@/components/w3c/svg/SVGElementInfo'
+import { AttributesList } from '@/components/w3c/svg/AttributesList'
+import { RelatedElements } from '@/components/w3c/svg/RelatedElements'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { LiveSVGPreview } from '@/components/w3c/svg/LiveSVGPreview'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { DeprecationNotice } from '@/components/standards/DeprecationNotice'
+
+<Header
+  type="SVG Element"
+  code={element.tag}
+  name={element.name}
+  standard="W3C SVG"
+/>
+
+{element.deprecated && (
+  <DeprecationNotice
+    message={`The <${element.tag}> element is deprecated in SVG 2.`}
+    alternatives={element.alternatives}
+  />
+)}
+
+<Description content={element.description} />
+
+## Element Information
+
+<SVGElementInfo
+  category={element.category}
+  animatable={element.animatable}
+  permittedContent={element.permittedContent}
+  permittedParents={element.permittedParents}
+  domInterface={element.domInterface}
+/>
+
+## Attributes
+
+<AttributesList
+  attributes={element.attributes}
+  presentationAttributes={element.presentationAttributes}
+  elementTag={element.tag}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`Basic ${element.name} usage`}
+  language="xml"
+  code={element.examples?.basic}
+/>
+
+{element.examples?.basic && (
+  <LiveSVGPreview
+    code={element.examples.basic}
+    title={`Live preview: ${element.name}`}
+  />
+)}
+
+{element.examples?.styled && (
+  <>
+    <CodeExample
+      title="With styling"
+      language="xml"
+      code={element.examples.styled}
+    />
+    <LiveSVGPreview
+      code={element.examples.styled}
+      title="Live preview: Styled"
+    />
+  </>
+)}
+
+{element.examples?.animated && element.animatable && (
+  <>
+    <CodeExample
+      title="With animation"
+      language="xml"
+      code={element.examples.animated}
+    />
+    <LiveSVGPreview
+      code={element.examples.animated}
+      title="Live preview: Animated"
+    />
+  </>
+)}
+
+{element.examples?.javascript && (
+  <CodeExample
+    title="Manipulating with JavaScript"
+    language="javascript"
+    code={element.examples.javascript}
+  />
+)}
+
+## Categories
+
+{element.categories && (
+  <ul>
+    {element.categories.map((category, index) => (
+      <li key={index}>{category}</li>
+    ))}
+  </ul>
+)}
+
+## DOM Interface
+
+{element.domInterface && (
+  <p>
+    This element implements the <code>{element.domInterface}</code> interface.
+  </p>
+)}
+
+## Accessibility Considerations
+
+{element.accessibility?.map((item, index) => (
+  <div key={index} className="accessibility-note">
+    <h3>{item.title}</h3>
+    <p>{item.description}</p>
+    {item.example && (
+      <CodeExample
+        language="xml"
+        code={item.example}
+      />
+    )}
+  </div>
+))}
+
+## Common Patterns
+
+{element.patterns?.map((pattern, index) => (
+  <div key={index} className="pattern">
+    <h3>{pattern.title}</h3>
+    <p>{pattern.description}</p>
+    <CodeExample
+      language="xml"
+      code={pattern.code}
+    />
+    {pattern.code && (
+      <LiveSVGPreview
+        code={pattern.code}
+        title={pattern.title}
+      />
+    )}
+  </div>
+))}
+
+## Related Elements
+
+<RelatedElements
+  category={element.category}
+  currentElement={element.tag}
+  related={element.relatedElements}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`svg.elements.${element.tag}`}
+  standard="W3C SVG"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={element.specifications}
+  standard="SVG"
+/>
+
+## See Also
+
+- [SVG 2 Specification: &lt;{element.tag}&gt;](https://www.w3.org/TR/SVG2/{element.specSection || 'single-page.html'})
+- [MDN Web Docs: &lt;{element.tag}&gt;](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/{element.tag})
+- [SVG Elements Reference](https://www.w3.org/TR/SVG2/eltindex.html)

@@ -1,0 +1,196 @@
+---
+layout: association
+source: Education/CASE
+$type: Education/CASE/Association
+$id: https://standards.org.ai/Education/CASE/Association/{association.code}
+sameAs: https://standards.org.ai/StandardAssociation/{association.code}
+canonical: https://standards.org.ai/CASE/Association/{association.code}
+params:
+  - Association
+schema:
+  association:
+    code: string
+    uri: string
+    identifier: string
+    associationType: string
+    originNode: object
+    destinationNode: object
+    sequenceNumber: string
+    weight: string
+    connectionCitation: string
+    notes: string
+---
+
+# Association: {association.associationType}
+
+<AssociationHeader
+  code={association.code}
+  type={association.associationType}
+  sequenceNumber={association.sequenceNumber}
+/>
+
+## Association Type
+
+<div className="association-type">
+  <p className="type-badge">
+    <span className={`badge association-${association.associationType.toLowerCase().replace(' ', '-')}`}>
+      {association.associationType}
+    </span>
+  </p>
+  <p className="type-description">
+    <AssociationTypeDescription type={association.associationType} />
+  </p>
+</div>
+
+## Association Details
+
+<div className="association-details">
+  <div className="nodes-grid">
+    <div className="origin-node">
+      <h3>Origin Node</h3>
+      {association.originNode && (
+        <div className="node-card">
+          <p className="node-title">
+            <a href={association.originNode.uri || `/Education/CASE/${association.originNode.type}/${association.originNode.code}`}>
+              {association.originNode.title || association.originNode.identifier}
+            </a>
+          </p>
+          {association.originNode.humanCodingScheme && (
+            <p className="node-code"><code>{association.originNode.humanCodingScheme}</code></p>
+          )}
+          {association.originNode.type && (
+            <p className="node-type">Type: {association.originNode.type}</p>
+          )}
+        </div>
+      )}
+    </div>
+
+    <div className="association-arrow">
+      <div className="arrow-symbol">→</div>
+      <div className="arrow-label">{association.associationType}</div>
+      {association.weight && (
+        <div className="arrow-weight">Weight: {association.weight}</div>
+      )}
+      {association.sequenceNumber && (
+        <div className="arrow-sequence">Sequence: {association.sequenceNumber}</div>
+      )}
+    </div>
+
+    <div className="destination-node">
+      <h3>Destination Node</h3>
+      {association.destinationNode && (
+        <div className="node-card">
+          <p className="node-title">
+            <a href={association.destinationNode.uri || `/Education/CASE/${association.destinationNode.type}/${association.destinationNode.code}`}>
+              {association.destinationNode.title || association.destinationNode.identifier}
+            </a>
+          </p>
+          {association.destinationNode.humanCodingScheme && (
+            <p className="node-code"><code>{association.destinationNode.humanCodingScheme}</code></p>
+          )}
+          {association.destinationNode.type && (
+            <p className="node-type">Type: {association.destinationNode.type}</p>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<div className="association-metadata">
+  {association.identifier && (
+    <div className="identifier">
+      <h3>Identifier</h3>
+      <p><code>{association.identifier}</code></p>
+    </div>
+  )}
+
+  {association.uri && (
+    <div className="uri">
+      <h3>Association URI</h3>
+      <p><a href={association.uri}>{association.uri}</a></p>
+    </div>
+  )}
+
+  {association.connectionCitation && (
+    <div className="citation">
+      <h3>Connection Citation</h3>
+      <p>{association.connectionCitation}</p>
+    </div>
+  )}
+</div>
+
+## Association Type Reference
+
+<AssociationTypeReference type={association.associationType} />
+
+## Common Association Types
+
+<section className="association-types-reference">
+  <div className="types-grid">
+    <div className="type-card">
+      <h4>isChildOf</h4>
+      <p>Indicates hierarchical parent-child relationship</p>
+    </div>
+    <div className="type-card">
+      <h4>precedes</h4>
+      <p>Indicates prerequisite or sequential ordering</p>
+    </div>
+    <div className="type-card">
+      <h4>isRelatedTo</h4>
+      <p>Indicates general relationship or cross-reference</p>
+    </div>
+    <div className="type-card">
+      <h4>replacedBy</h4>
+      <p>Indicates supersession or replacement</p>
+    </div>
+    <div className="type-card">
+      <h4>exemplar</h4>
+      <p>Indicates example or illustration</p>
+    </div>
+    <div className="type-card">
+      <h4>hasSkillLevel</h4>
+      <p>Indicates skill or proficiency level</p>
+    </div>
+  </div>
+</section>
+
+## Visual Representation
+
+<AssociationDiagram association={association.code} />
+
+## Context in Framework
+
+<FrameworkContext
+  originNode={association.originNode}
+  destinationNode={association.destinationNode}
+/>
+
+{association.notes && (
+  <section className="notes">
+    <h2>Notes</h2>
+    <div className="notes-content">
+      {association.notes}
+    </div>
+  </section>
+)}
+
+## Related Associations
+
+<RelatedAssociations
+  originNode={association.originNode?.identifier}
+  destinationNode={association.destinationNode?.identifier}
+/>
+
+## Resources
+
+<section className="resources">
+  <h3>CASE Association Resources</h3>
+  <ul>
+    {association.uri && (
+      <li><a href={association.uri}>Official Association URI</a></li>
+    )}
+    <li><a href="https://www.imsglobal.org/activity/case">IMS Global CASE Specification</a></li>
+    <li><a href="https://www.imsglobal.org/sites/default/files/CASE/casev1p0/information_model/caseservicev1p0_infomodelv1p0.html#CFAssociation">CASE Association Specification</a></li>
+  </ul>
+</section>

@@ -1,0 +1,533 @@
+---
+layout: datatype
+source: W3C/CSS
+$type: W3C/CSS/DataType
+$id: https://standards.org.ai/W3C/CSS/DataType/{dataType.code}
+sameAs: https://standards.org.ai/DataType/{dataType.code}
+canonical: https://w3.org.ai/CSS/DataType/{dataType.code}
+params:
+  - DataType
+schema:
+  dataType:
+    code: string
+    name: string
+    syntax: string
+    description: string
+    category: string
+    specification: string
+    values: array
+    examples: array
+---
+
+import { DataTypeHeader } from '@/components/css/DataTypeHeader'
+import { FormalSyntax } from '@/components/css/FormalSyntax'
+import { ValueList } from '@/components/css/ValueList'
+import { CodeExample } from '@/components/css/CodeExample'
+import { BrowserCompatibility } from '@/components/css/BrowserCompatibility'
+import { RelatedDataTypes } from '@/components/css/RelatedDataTypes'
+import { SpecificationLinks } from '@/components/css/SpecificationLinks'
+import { DataTypeTable } from '@/components/css/DataTypeTable'
+
+<DataTypeHeader
+  name={dataType.name}
+  syntax={dataType.syntax}
+  description={dataType.description}
+/>
+
+## Description
+
+{dataType.description}
+
+## Data Type Information
+
+<DataTypeTable>
+  <DataTypeRow label="Data Type" value={<code>&lt;{dataType.code}&gt;</code>} />
+  <DataTypeRow label="Category" value={dataType.category} />
+  <DataTypeRow label="Specification" value={dataType.specification} />
+</DataTypeTable>
+
+## Syntax
+
+<FormalSyntax syntax={dataType.syntax} />
+
+The `<{dataType.code}>` data type represents {dataType.description.toLowerCase()}.
+
+### Formal Grammar
+
+```
+<{dataType.code}> = {dataType.syntax}
+```
+
+## Possible Values
+
+{dataType.values && dataType.values.length > 0 ? (
+  <>
+    <ValueList values={dataType.values} />
+
+    {dataType.values.map((value) => (
+      <section key={value.name}>
+        ### `{value.name}`
+
+        {value.description}
+
+        {value.syntax && (
+          <>
+            **Syntax:** `{value.syntax}`
+          </>
+        )}
+
+        {value.example && (
+          <CodeExample language="css">
+{`/* Example: ${value.name} */
+.element {
+  property: ${value.example};
+}
+`}
+          </CodeExample>
+        )}
+      </section>
+    ))}
+  </>
+) : null}
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="css">
+{`/* Using <${dataType.code}> data type */
+.element {
+  property: /* <${dataType.code}> value */;
+}
+`}
+</CodeExample>
+
+### Common Values
+
+{dataType.examples && dataType.examples.map((example, idx) => (
+  <section key={idx}>
+    <h4>{example.title}</h4>
+
+    <CodeExample language="css">
+{example.css}
+    </CodeExample>
+
+    <p>{example.description}</p>
+  </section>
+))}
+
+### In Different Properties
+
+<CodeExample language="css">
+{`/* <${dataType.code}> in various CSS properties */
+
+${dataType.category === 'length' ? `
+/* Lengths in different contexts */
+.box {
+  width: 200px;              /* absolute length */
+  height: 10em;              /* relative to font-size */
+  margin: 2rem;              /* relative to root font-size */
+  padding: 5%;               /* relative to parent width */
+  border-width: 1px;
+}
+
+.responsive {
+  font-size: 2vw;            /* viewport width */
+  line-height: 1.5vh;        /* viewport height */
+  padding: calc(1rem + 2vw); /* calculated length */
+}
+` : ''}
+
+${dataType.category === 'color' ? `
+/* Colors in different formats */
+.colors {
+  background: #ff0000;              /* hex notation */
+  color: rgb(255, 0, 0);            /* RGB function */
+  border-color: rgba(255, 0, 0, 0.5); /* RGB with alpha */
+  outline-color: hsl(0, 100%, 50%);  /* HSL function */
+  box-shadow: 0 0 10px hsla(0, 100%, 50%, 0.5); /* HSL with alpha */
+}
+
+.modern-colors {
+  background: oklch(0.5 0.2 180);   /* OKLCH color space */
+  color: color(display-p3 1 0 0);   /* Display P3 color space */
+}
+` : ''}
+
+${dataType.category === 'number' ? `
+/* Numbers in different properties */
+.numbers {
+  opacity: 0.5;              /* 0-1 range */
+  line-height: 1.5;          /* unitless number */
+  z-index: 100;              /* integer */
+  flex-grow: 2;              /* positive number */
+  order: -1;                 /* negative allowed */
+}
+` : ''}
+
+${dataType.category === 'percentage' ? `
+/* Percentages in different contexts */
+.percentages {
+  width: 50%;                /* of parent width */
+  height: 100%;              /* of parent height */
+  font-size: 120%;           /* of parent font-size */
+  line-height: 150%;         /* of element font-size */
+  transform: translateX(50%); /* of element width */
+}
+` : ''}
+
+${dataType.category === 'angle' ? `
+/* Angles in different units */
+.angles {
+  transform: rotate(45deg);      /* degrees */
+  transform: rotate(0.785rad);   /* radians */
+  transform: rotate(50grad);     /* gradians */
+  transform: rotate(0.125turn);  /* turns */
+}
+
+.gradient {
+  background: linear-gradient(135deg, red, blue);
+}
+` : ''}
+
+${dataType.category === 'time' ? `
+/* Time values in animations */
+.timing {
+  animation-duration: 2s;         /* seconds */
+  animation-delay: 500ms;         /* milliseconds */
+  transition: all 0.3s ease;
+}
+` : ''}
+
+${dataType.category === 'resolution' ? `
+/* Resolution for media queries */
+@media (min-resolution: 192dpi) {
+  .high-res {
+    background: url('image@2x.png');
+  }
+}
+
+@media (min-resolution: 2dppx) {
+  .retina {
+    background: url('retina.png');
+  }
+}
+` : ''}
+
+${dataType.category === 'image' ? `
+/* Images in different formats */
+.images {
+  background-image: url('photo.jpg');
+  background-image: linear-gradient(to right, red, blue);
+  background-image: radial-gradient(circle, yellow, green);
+  background-image: conic-gradient(from 0deg, red, yellow, green);
+  list-style-image: url('bullet.svg');
+}
+` : ''}
+
+${dataType.category === 'position' ? `
+/* Position values */
+.positioning {
+  background-position: center;
+  background-position: top left;
+  background-position: 50% 50%;
+  background-position: 10px 20px;
+  object-position: center top;
+}
+` : ''}
+`}
+</CodeExample>
+
+### Interactive Demo
+
+<CodeExample language="html" live>
+{`<div class="demo">
+  <div class="element">
+    <${dataType.code}> demonstration
+  </div>
+</div>
+
+<style>
+.demo {
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.element {
+  padding: 2rem;
+  background: white;
+  border: 1px solid #ddd;
+  text-align: center;
+
+  /* Using <${dataType.code}> data type */
+  ${dataType.category === 'color' ? 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);' : ''}
+  ${dataType.category === 'color' ? 'color: white;' : ''}
+  ${dataType.category === 'length' ? 'width: 300px;' : ''}
+  ${dataType.category === 'length' ? 'height: 150px;' : ''}
+  ${dataType.category === 'angle' ? 'transform: rotate(5deg);' : ''}
+  ${dataType.category === 'percentage' ? 'width: 80%;' : ''}
+}
+</style>
+`}
+</CodeExample>
+
+## Valid Formats
+
+{dataType.category === 'length' && `
+### Absolute Lengths
+- **px** - Pixels (1px = 1/96th of 1 inch)
+- **cm** - Centimeters
+- **mm** - Millimeters
+- **in** - Inches (1in = 96px)
+- **pt** - Points (1pt = 1/72nd of 1 inch)
+- **pc** - Picas (1pc = 12pt)
+
+### Relative Lengths
+- **em** - Relative to font-size of the element
+- **rem** - Relative to font-size of the root element
+- **ex** - Relative to x-height of the font
+- **ch** - Relative to width of "0" character
+- **vw** - 1% of viewport width
+- **vh** - 1% of viewport height
+- **vmin** - 1% of viewport's smaller dimension
+- **vmax** - 1% of viewport's larger dimension
+- **%** - Percentage relative to parent
+`}
+
+{dataType.category === 'color' && `
+### Named Colors
+- Basic colors: red, blue, green, yellow, etc.
+- Extended colors: rebeccapurple, cornflowerblue, etc.
+- System colors: currentColor, transparent
+
+### Hexadecimal
+- 3-digit: #RGB
+- 6-digit: #RRGGBB
+- 4-digit with alpha: #RGBA
+- 8-digit with alpha: #RRGGBBAA
+
+### Functional Notations
+- **rgb()** / **rgba()** - Red, Green, Blue (Alpha)
+- **hsl()** / **hsla()** - Hue, Saturation, Lightness (Alpha)
+- **hwb()** - Hue, Whiteness, Blackness
+- **lab()** - CIE LAB color space
+- **lch()** - CIE LCH color space
+- **oklch()** - OK LCH color space
+- **color()** - Predefined color spaces
+`}
+
+{dataType.category === 'angle' && `
+### Angle Units
+- **deg** - Degrees (0-360)
+- **rad** - Radians (0-2π)
+- **grad** - Gradians (0-400)
+- **turn** - Turns (0-1 = full circle)
+`}
+
+{dataType.category === 'time' && `
+### Time Units
+- **s** - Seconds
+- **ms** - Milliseconds (1s = 1000ms)
+`}
+
+{dataType.category === 'resolution' && `
+### Resolution Units
+- **dpi** - Dots per inch
+- **dpcm** - Dots per centimeter
+- **dppx** - Dots per pixel unit (1dppx = 96dpi)
+`}
+
+{dataType.category === 'number' && `
+### Number Ranges
+- Can be positive or negative (property-dependent)
+- Can be integers or decimals
+- Some properties restrict ranges (e.g., opacity: 0-1)
+`}
+
+## Use Cases
+
+Common scenarios where `<{dataType.code}>` is used:
+
+{dataType.category === 'length' && `
+- Sizing elements (width, height, padding, margin)
+- Positioning (top, left, right, bottom)
+- Typography (font-size, line-height, letter-spacing)
+- Borders and outlines (border-width, outline-width)
+- Creating responsive layouts
+`}
+
+{dataType.category === 'color' && `
+- Foreground and background colors
+- Border and outline colors
+- Text decorations and shadows
+- Gradient definitions
+- SVG fill and stroke colors
+`}
+
+{dataType.category === 'angle' && `
+- 2D and 3D rotations
+- Gradient directions
+- Skew transformations
+- Conic gradients
+`}
+
+{dataType.category === 'time' && `
+- Animation durations
+- Transition timings
+- Animation delays
+- Keyframe timing
+`}
+
+{dataType.category === 'percentage' && `
+- Responsive sizing
+- Relative positioning
+- Transform translations
+- Opacity and transparency
+- Font size scaling
+`}
+
+## Browser Compatibility
+
+<BrowserCompatibility dataType={dataType.code} />
+
+## Specifications
+
+<SpecificationLinks specifications={[
+  {
+    name: dataType.specification,
+    url: `https://www.w3.org/TR/${dataType.specification}/#typedef-${dataType.code}`,
+    status: 'Recommendation'
+  }
+]} />
+
+## Related Data Types
+
+<RelatedDataTypes dataType={dataType.code} category={dataType.category} />
+
+## Best Practices
+
+- Use appropriate units for the context (relative vs absolute)
+- Consider accessibility when using colors (contrast ratios)
+- Prefer relative units for responsive designs
+- Use consistent units throughout your stylesheet
+- Validate values are within acceptable ranges
+
+{dataType.category === 'length' && `
+- Use relative units (rem, em) for typography
+- Use viewport units (vw, vh) for responsive layouts
+- Avoid mixing units unnecessarily
+- Consider using CSS custom properties for reusable values
+`}
+
+{dataType.category === 'color' && `
+- Ensure WCAG AA/AAA contrast ratios for text
+- Use HSL for easier color manipulation
+- Consider using CSS custom properties for color schemes
+- Test colors for color-blind users
+- Use transparent keyword instead of rgba(0,0,0,0)
+`}
+
+{dataType.category === 'time' && `
+- Keep animations under 300ms for perceived instant response
+- Use milliseconds for precision under 1 second
+- Respect prefers-reduced-motion user preference
+- Test timing across different devices
+`}
+
+## Common Mistakes
+
+- Using incorrect unit types for specific properties
+- Missing units where required (except for 0 values)
+- Using absolute units where relative units are more appropriate
+- Not considering cross-browser compatibility
+- Forgetting fallback values for newer formats
+
+{dataType.category === 'color' && `
+- Not providing fallbacks for modern color spaces
+- Using insufficient color contrast
+- Relying solely on color to convey information
+`}
+
+{dataType.category === 'length' && `
+- Mixing px and em/rem inconsistently
+- Using px for font-size (limits user zoom)
+- Not accounting for different viewport sizes
+`}
+
+## Validation
+
+{dataType.category === 'length' && `
+Valid: 0, 10px, 2.5em, 50%, -10px, calc(100% - 20px)
+Invalid: 10 (missing unit), px10 (wrong order), 10em px (multiple values)
+`}
+
+{dataType.category === 'color' && `
+Valid: red, #fff, rgb(255 0 0), hsl(0 100% 50%)
+Invalid: #gg0000 (invalid hex), rgb(256, 0, 0) (out of range)
+`}
+
+{dataType.category === 'angle' && `
+Valid: 0, 45deg, -90deg, 0.5turn, 3.14rad
+Invalid: 45 (missing unit), degree (wrong unit name)
+`}
+
+{dataType.category === 'time' && `
+Valid: 0s, 100ms, 0.5s, -1s (for delays)
+Invalid: 100 (missing unit), 1second (wrong unit)
+`}
+
+{dataType.category === 'percentage' && `
+Valid: 0%, 100%, 50.5%, -10%
+Invalid: 50 (missing %), %50 (wrong order)
+`}
+
+## Performance Considerations
+
+- Some value types are more performant than others
+- Avoid complex calculations in hot paths
+- Use CSS custom properties for values used multiple times
+- Consider browser rendering optimizations
+- Profile performance in DevTools
+
+{dataType.category === 'color' && `
+- Modern color spaces may have performance implications
+- Gradients can impact rendering performance
+- Use solid colors when possible
+`}
+
+## Accessibility Notes
+
+- Ensure values support users with different needs
+- Consider users with reduced motion preferences
+- Maintain sufficient contrast ratios for text
+- Don't rely solely on color to convey information
+- Test with assistive technologies
+
+{dataType.category === 'color' && `
+- Minimum contrast ratio 4.5:1 for normal text (WCAG AA)
+- Minimum contrast ratio 3:1 for large text (WCAG AA)
+- Test with color blindness simulators
+`}
+
+{dataType.category === 'time' && `
+- Respect prefers-reduced-motion media query
+- Provide controls for auto-playing animations
+- Avoid flashing content (seizure risk)
+`}
+
+## See Also
+
+- MDN Web Docs: [CSS Data Types](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Types)
+- [CSS Values and Units Module](https://www.w3.org/TR/css-values/)
+- [CSS Color Module](https://www.w3.org/TR/css-color/)
+
+## Tools and Resources
+
+- CSS Validator: https://jigsaw.w3.org/css-validator/
+- Color Contrast Checker: https://webaim.org/resources/contrastchecker/
+- CSS Unit Converter Tools
+- Browser DevTools for testing and debugging
+
+---
+
+*Part of the W3C CSS Data Types Specifications. Last updated from [{dataType.specification}].*

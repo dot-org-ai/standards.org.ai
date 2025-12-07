@@ -1,0 +1,38 @@
+---
+layout: uspc-subclass
+source: US/USPTO
+$type: US/USPTO/USPCSubclass
+$id: https://standards.org.ai/US/USPTO/USPCSubclass/{subclass.code}
+sameAs: https://standards.org.ai/USPCSubclass/{subclass.code}
+canonical: https://us.org.ai/USPTO/USPCSubclass/{subclass.code}
+params:
+  - USPCSubclass
+schema:
+  subclass:
+    code: code
+    name: name
+    class: class
+    cpcEquivalent: cpcEquivalent
+---
+
+# USPC Subclass {subclass.code}: {subclass.name}
+
+<USPCSubclassHeader code={subclass.code} name={subclass.name} class={subclass.class} />
+
+## Overview
+
+**Note:** The United States Patent Classification (USPC) system is no longer being maintained. It has been replaced by the Cooperative Patent Classification (CPC) system.
+
+USPC Subclass {subclass.code} is part of Class {subclass.class} and covers {subclass.name}.
+
+## Parent Class
+
+<USPCClassLink code={subclass.class} />
+
+## CPC Equivalent
+
+<CPCEquivalent uspcSubclass={subclass.code} cpcCode={subclass.cpcEquivalent} />
+
+## Legacy Patents
+
+<PatentList uspcSubclass={subclass.code} />

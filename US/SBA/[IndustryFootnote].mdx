@@ -1,0 +1,35 @@
+---
+layout: industryFootnote
+source: US/SBA
+$type: US/SBA/IndustryFootnote
+$id: https://standards.org.ai/US/SBA/IndustryFootnote/{footnote.code}
+sameAs: https://standards.org.ai/SBA/IndustryFootnote/{footnote.code}
+canonical: https://us.org.ai/SBA/IndustryFootnote/{footnote.code}
+params:
+  - IndustryFootnote
+schema:
+  footnote:
+    code: FootnoteCode
+    text: FootnoteText
+    applicableIndustries: ApplicableIndustries
+---
+
+# Footnote {footnote.code}
+
+<FootnoteHeader code={footnote.code} />
+
+## Footnote Text
+
+{footnote.text}
+
+## Applicable Industries
+
+<IndustriesByFootnote footnoteCode={footnote.code} />
+
+## Affected Size Standards
+
+<SizeStandardsByFootnote footnoteCode={footnote.code} />
+
+## Related Footnotes
+
+<RelatedFootnotes currentCode={footnote.code} />

@@ -1,0 +1,82 @@
+---
+layout: code
+source: ICD
+$type: ICD/Code
+$id: https://standards.org.ai/ICD/Code/{code.code}
+sameAs: https://standards.org.ai/Code/{code.code}
+canonical: https://standards.org.ai/ICD/Code/{code.code}
+params:
+  - Code
+schema:
+  code:
+    code: DiagnosisCode
+    title: DiagnosisTitle
+    category: CategoryCode
+    block: BlockCode
+    chapter: ChapterCode
+    description: DiagnosisDescription
+    includes: Includes
+    excludes: Excludes
+    notes: ClinicalNotes
+    billable: Billable
+---
+
+# {code.title}
+
+<CodeHeader code={code.code} title={code.title} billable={code.billable} />
+
+## Diagnosis Code
+
+{code.code}
+
+## Description
+
+{code.description}
+
+## Billable
+
+{code.billable}
+
+## Parent Category
+
+<CategoryLink code={code.category} />
+
+## Parent Block
+
+<BlockLink code={code.block} />
+
+## Parent Chapter
+
+<ChapterLink code={code.chapter} />
+
+## Includes
+
+{code.includes}
+
+## Excludes
+
+{code.excludes}
+
+## Clinical Notes
+
+{code.notes}
+
+## Related SNOMED Concepts
+
+<SNOMEDByDiagnosis code={code.code} />
+
+## Related LOINC Tests
+
+<LOINCByDiagnosis code={code.code} />
+
+## Related CPT Codes
+
+<CPTByDiagnosis code={code.code} />
+
+## Common Procedures
+
+<ProceduresByDiagnosis code={code.code} />
+
+## Clinical Decision Support
+
+<ClinicalDecisionSupport code={code.code} />

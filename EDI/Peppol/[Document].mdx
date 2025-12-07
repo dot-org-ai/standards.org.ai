@@ -1,0 +1,78 @@
+---
+layout: document
+source: EDI/Peppol
+$type: EDI/Peppol/Document
+$id: https://standards.org.ai/EDI/Peppol/Document/{document.code}
+sameAs: https://standards.org.ai/PeppolDocument/{document.code}
+canonical: https://standards.org.ai/Peppol/Document/{document.code}
+params:
+  - Document
+schema:
+  document:
+    code: DocumentID
+    name: DocumentName
+    description: DocumentDescription
+    ublVersion: UBLVersion
+    peppolBIS: PeppolBIS
+    customizationID: CustomizationID
+---
+
+# {document.name}
+
+<DocumentHeader code={document.code} name={document.name} bis={document.peppolBIS} />
+
+## Description
+
+{document.description}
+
+## Peppol BIS
+
+{document.peppolBIS}
+
+## UBL Version
+
+{document.ublVersion}
+
+## Customization ID
+
+{document.customizationID}
+
+## Document Structure
+
+<DocumentStructure code={document.code} />
+
+## Business Requirements
+
+<BusinessRequirements document={document.code} />
+
+## Business Process
+
+<BusinessProcessLink bis={document.peppolBIS} />
+
+## Syntax Bindings
+
+<SyntaxBindings document={document.code} />
+
+## Validation Artifacts
+
+<ValidationArtifacts document={document.code} />
+
+## Code Lists
+
+<DocumentCodeLists document={document.code} />
+
+## Example Documents
+
+<DocumentExamples code={document.code} />
+
+## Implementation Guide
+
+<ImplementationGuide document={document.code} />
+
+## Related Documents
+
+<RelatedDocuments code={document.code} />
+
+## Country-Specific Extensions
+
+<CountryExtensions document={document.code} />

@@ -1,0 +1,40 @@
+---
+layout: pscCategory
+source: US/GSA
+$type: US/GSA/PSCCategory
+$id: https://standards.org.ai/US/GSA/PSCCategory/{category.code}
+sameAs: https://standards.org.ai/PSCCategory/{category.code}
+canonical: https://us.org.ai/GSA/PSCCategory/{category.code}
+params:
+  - PSCCategory
+schema:
+  category:
+    code: code
+    name: name
+    type: type
+    codes: codes
+---
+
+# {category.code} - {category.name}
+
+<PSCCategoryHeader code={category.code} name={category.name} type={category.type} />
+
+## Type
+
+{category.type}
+
+## Product Service Codes
+
+<PSCList category={category.code} />
+
+## Statistics
+
+<PSCCategoryStats code={category.code} />
+
+## Procurement Trends
+
+<PSCCategoryTrends code={category.code} />
+
+## Top Vendors
+
+<TopVendorsByPSCCategory code={category.code} />

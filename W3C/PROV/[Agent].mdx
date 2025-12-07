@@ -1,0 +1,290 @@
+---
+layout: Agent
+source: W3C/PROV
+$type: W3C/PROV/Agent
+$id: https://standards.org.ai/W3C/PROV/Agent/{agent.code}
+sameAs: https://standards.org.ai/Agent/{agent.code}
+canonical: https://w3.org.ai/PROV/Agent/{agent.code}
+params:
+  - Agent
+schema:
+  agent:
+    code: string
+    uri: string
+    label: string
+    type: array
+    actedOnBehalfOf: array
+    name: string
+    mbox: string
+    homepage: string
+    activities: array
+    entities: array
+    delegations: array
+---
+
+# {agent.label || agent.name}
+
+<div className="agent-header">
+  <div className="agent-metadata">
+    <span className="agent-uri">{agent.uri}</span>
+    <span className="agent-type">PROV Agent</span>
+  </div>
+</div>
+
+{agent.type && agent.type.length > 0 && (
+  <section className="agent-types">
+    <h3>Types</h3>
+    <ul className="type-list">
+      {agent.type.map((type, idx) => (
+        <li key={idx}>
+          <code>{type}</code>
+          {type.includes('Person') && ' 👤'}
+          {type.includes('Organization') && ' 🏢'}
+          {type.includes('SoftwareAgent') && ' 🤖'}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="agent-info">
+  <h2>Agent Information</h2>
+
+  <div className="info-grid">
+    {agent.name && (
+      <div className="info-item">
+        <strong>Name:</strong>
+        <span>{agent.name}</span>
+      </div>
+    )}
+
+    {agent.mbox && (
+      <div className="info-item">
+        <strong>Email:</strong>
+        <span><a href={`mailto:${agent.mbox}`}>{agent.mbox}</a></span>
+      </div>
+    )}
+
+    {agent.homepage && (
+      <div className="info-item">
+        <strong>Homepage:</strong>
+        <span><a href={agent.homepage}>{agent.homepage}</a></span>
+      </div>
+    )}
+  </div>
+</section>
+
+{agent.actedOnBehalfOf && agent.actedOnBehalfOf.length > 0 && (
+  <section className="delegation">
+    <h2>Delegation</h2>
+    <p>This agent acted on behalf of:</p>
+    <ul className="delegation-list">
+      {agent.actedOnBehalfOf.map((delegation, idx) => (
+        <li key={idx} className="delegation-item">
+          <div className="delegate-info">
+            <h4>
+              <a href={delegation.agent?.uri || delegation.uri || delegation}>
+                {delegation.agent?.label || delegation.label || delegation.name || 'Agent'}
+              </a>
+            </h4>
+            {delegation.activity && (
+              <p className="delegation-context">
+                In activity: <a href={delegation.activity.uri || delegation.activity}>
+                  {delegation.activity.label || 'Activity'}
+                </a>
+              </p>
+            )}
+            {delegation.role && (
+              <p className="delegation-role">Role: {delegation.role}</p>
+            )}
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{agent.delegations && agent.delegations.length > 0 && (
+  <section className="delegated-to">
+    <h3>Delegated Authority To</h3>
+    <p>Other agents acting on behalf of this agent:</p>
+    <ul className="delegation-list">
+      {agent.delegations.map((delegate, idx) => (
+        <li key={idx}>
+          <a href={delegate.uri || delegate}>{delegate.label || delegate.name || delegate}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{agent.activities && agent.activities.length > 0 && (
+  <section className="activities">
+    <h2>Associated Activities</h2>
+    <p>This agent was associated with {agent.activities.length} activit{agent.activities.length !== 1 ? 'ies' : 'y'}:</p>
+    <div className="activity-grid">
+      {agent.activities.map((activity, idx) => (
+        <div key={idx} className="activity-card">
+          <h4>
+            <a href={activity.uri || activity}>{activity.label || 'Activity'}</a>
+          </h4>
+          {activity.role && <p><strong>Role:</strong> {activity.role}</p>}
+          {activity.plan && (
+            <p>
+              <strong>Plan:</strong> <a href={activity.plan.uri || activity.plan}>
+                {activity.plan.label || 'Plan'}
+              </a>
+            </p>
+          )}
+          {activity.startedAtTime && (
+            <p className="activity-time">Started: {activity.startedAtTime}</p>
+          )}
+          {activity.endedAtTime && (
+            <p className="activity-time">Ended: {activity.endedAtTime}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{agent.entities && agent.entities.length > 0 && (
+  <section className="attributed-entities">
+    <h2>Attributed Entities</h2>
+    <p>Entities attributed to this agent:</p>
+    <ul className="entity-list">
+      {agent.entities.map((entity, idx) => (
+        <li key={idx} className="entity-item">
+          <a href={entity.uri || entity}>{entity.label || entity}</a>
+          {entity.type && <span className="entity-type"> [{entity.type}]</span>}
+          {entity.generatedAtTime && (
+            <span className="entity-time"> (Generated: {entity.generatedAtTime})</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="prov-overview">
+  <h2>About PROV Agents</h2>
+  <div className="info-box">
+    <p>
+      In PROV, an <strong>Agent</strong> is something that bears some form of responsibility
+      for an activity taking place, for the existence of an entity, or for another agent's activity.
+    </p>
+    <h4>Agent Types</h4>
+    <ul>
+      <li><strong>Person:</strong> A human agent (prov:Person)</li>
+      <li><strong>Organization:</strong> A social or legal institution (prov:Organization)</li>
+      <li><strong>SoftwareAgent:</strong> Running software (prov:SoftwareAgent)</li>
+    </ul>
+    <h4>Key Relationships</h4>
+    <ul>
+      <li><strong>wasAssociatedWith:</strong> Links activities to responsible agents</li>
+      <li><strong>wasAttributedTo:</strong> Links entities to agents responsible for them</li>
+      <li><strong>actedOnBehalfOf:</strong> Delegation relationship between agents</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<${agent.uri}> a prov:Agent ;${agent.type ? `
+  ${agent.type.map(t => `a <${t}>`).join(' ;\n  ')} ;` : ''}
+  rdfs:label "${agent.label || agent.name}"@en ;${agent.name ? `
+  foaf:name "${agent.name}" ;` : ''}${agent.mbox ? `
+  foaf:mbox <mailto:${agent.mbox}> ;` : ''}${agent.homepage ? `
+  foaf:homepage <${agent.homepage}> ;` : ''}${agent.actedOnBehalfOf ? `
+  ${agent.actedOnBehalfOf.map(d => `prov:actedOnBehalfOf <${d.agent?.uri || d.uri || d}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Find all activities associated with this agent</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?activity ?label ?started ?ended
+WHERE {
+  ?activity prov:wasAssociatedWith <${agent.uri}> ;
+            rdfs:label ?label .
+  OPTIONAL { ?activity prov:startedAtTime ?started }
+  OPTIONAL { ?activity prov:endedAtTime ?ended }
+}
+ORDER BY DESC(?started)`}</code></pre>
+
+  <h4>Find all entities attributed to this agent</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?entity ?label ?generated
+WHERE {
+  ?entity prov:wasAttributedTo <${agent.uri}> ;
+          rdfs:label ?label .
+  OPTIONAL { ?entity prov:generatedAtTime ?generated }
+}
+ORDER BY DESC(?generated)`}</code></pre>
+
+  <h4>Find delegation chain</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?delegate ?responsible
+WHERE {
+  # Agents this agent represents
+  ?delegate prov:actedOnBehalfOf <${agent.uri}> .
+
+  # Agents this agent represents
+  <${agent.uri}> prov:actedOnBehalfOf ?responsible .
+}`}</code></pre>
+
+  <h4>Find agent's role in activities</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?activity ?role ?plan
+WHERE {
+  ?activity prov:qualifiedAssociation ?assoc .
+  ?assoc prov:agent <${agent.uri}> .
+  OPTIONAL { ?assoc prov:hadRole ?role }
+  OPTIONAL { ?assoc prov:hadPlan ?plan }
+}`}</code></pre>
+</section>
+
+<section className="usage-examples">
+  <h3>Usage Examples</h3>
+
+  <h4>Attribute an entity to this agent</h4>
+  <pre><code>{`@prefix prov: <http://www.w3.org/ns/prov#> .
+
+<http://example.org/entity/123> a prov:Entity ;
+  prov:wasAttributedTo <${agent.uri}> .`}</code></pre>
+
+  <h4>Associate an activity with this agent</h4>
+  <pre><code>{`@prefix prov: <http://www.w3.org/ns/prov#> .
+
+<http://example.org/activity/456> a prov:Activity ;
+  prov:wasAssociatedWith <${agent.uri}> ;
+  prov:qualifiedAssociation [
+    a prov:Association ;
+    prov:agent <${agent.uri}> ;
+    prov:hadRole <http://example.org/role/developer> ;
+    prov:hadPlan <http://example.org/plan/implementation>
+  ] .`}</code></pre>
+
+  <h4>Define delegation</h4>
+  <pre><code>{`@prefix prov: <http://www.w3.org/ns/prov#> .
+
+<http://example.org/agent/delegate> a prov:Agent ;
+  prov:actedOnBehalfOf <${agent.uri}> ;
+  prov:qualifiedDelegation [
+    a prov:Delegation ;
+    prov:agent <${agent.uri}> ;
+    prov:hadActivity <http://example.org/activity/789>
+  ] .`}</code></pre>
+</section>

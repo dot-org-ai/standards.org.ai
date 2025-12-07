@@ -1,0 +1,192 @@
+---
+layout: Dataset
+source: W3C/DCAT
+$type: W3C/DCAT/Dataset
+$id: https://standards.org.ai/W3C/DCAT/Dataset/{dataset.code}
+sameAs: https://standards.org.ai/Dataset/{dataset.code}
+canonical: https://w3.org.ai/DCAT/Dataset/{dataset.code}
+params:
+  - Dataset
+schema:
+  dataset:
+    code: string
+    uri: string
+    title: string
+    description: string
+    publisher: object
+    distribution: array
+    theme: array
+    keyword: array
+    issued: string
+    modified: string
+    license: string
+    accrualPeriodicity: string
+    spatial: string
+    temporal: object
+    landingPage: string
+    contactPoint: object
+---
+
+# {dataset.title}
+
+<div className="dataset-header">
+  <div className="dataset-metadata">
+    <span className="dataset-uri">{dataset.uri}</span>
+    {dataset.issued && <span className="dataset-issued">Issued: {dataset.issued}</span>}
+    {dataset.modified && <span className="dataset-modified">Modified: {dataset.modified}</span>}
+  </div>
+</div>
+
+## Description
+
+{dataset.description}
+
+<div className="dataset-info-grid">
+  {dataset.publisher && (
+    <div className="publisher">
+      <h3>Publisher</h3>
+      <div className="publisher-details">
+        <p><strong>{dataset.publisher.name}</strong></p>
+        {dataset.publisher.homepage && (
+          <p><a href={dataset.publisher.homepage}>Homepage</a></p>
+        )}
+        {dataset.publisher.type && (
+          <p>Type: {dataset.publisher.type}</p>
+        )}
+      </div>
+    </div>
+  )}
+
+  {dataset.contactPoint && (
+    <div className="contact">
+      <h3>Contact Point</h3>
+      <div className="contact-details">
+        {dataset.contactPoint.name && <p><strong>{dataset.contactPoint.name}</strong></p>}
+        {dataset.contactPoint.email && <p>Email: <a href={`mailto:${dataset.contactPoint.email}`}>{dataset.contactPoint.email}</a></p>}
+      </div>
+    </div>
+  )}
+
+  {dataset.license && (
+    <div className="license">
+      <h3>License</h3>
+      <p><a href={dataset.license}>{dataset.license}</a></p>
+    </div>
+  )}
+
+  {dataset.accrualPeriodicity && (
+    <div className="update-frequency">
+      <h3>Update Frequency</h3>
+      <p>{dataset.accrualPeriodicity}</p>
+    </div>
+  )}
+</div>
+
+{dataset.theme && dataset.theme.length > 0 && (
+  <section className="themes">
+    <h3>Themes</h3>
+    <ul className="theme-list">
+      {dataset.theme.map((theme, idx) => (
+        <li key={idx}>
+          <a href={theme.uri || theme}>{theme.label || theme}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{dataset.keyword && dataset.keyword.length > 0 && (
+  <section className="keywords">
+    <h3>Keywords</h3>
+    <div className="keyword-tags">
+      {dataset.keyword.map((keyword, idx) => (
+        <span key={idx} className="keyword-tag">{keyword}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+{(dataset.spatial || dataset.temporal) && (
+  <section className="coverage">
+    <h3>Coverage</h3>
+    {dataset.spatial && (
+      <div className="spatial-coverage">
+        <h4>Spatial</h4>
+        <p>{dataset.spatial}</p>
+      </div>
+    )}
+    {dataset.temporal && (
+      <div className="temporal-coverage">
+        <h4>Temporal</h4>
+        {dataset.temporal.startDate && <p>Start: {dataset.temporal.startDate}</p>}
+        {dataset.temporal.endDate && <p>End: {dataset.temporal.endDate}</p>}
+      </div>
+    )}
+  </section>
+)}
+
+{dataset.distribution && dataset.distribution.length > 0 && (
+  <section className="distributions">
+    <h2>Distributions</h2>
+    <p>This dataset is available in {dataset.distribution.length} distribution{dataset.distribution.length !== 1 ? 's' : ''}:</p>
+    <div className="distribution-grid">
+      {dataset.distribution.map((dist, idx) => (
+        <div key={idx} className="distribution-card">
+          <h4>{dist.title || `Distribution ${idx + 1}`}</h4>
+          {dist.format && <p><strong>Format:</strong> {dist.format}</p>}
+          {dist.mediaType && <p><strong>Media Type:</strong> {dist.mediaType}</p>}
+          {dist.byteSize && <p><strong>Size:</strong> {dist.byteSize} bytes</p>}
+          <div className="distribution-actions">
+            {dist.accessURL && (
+              <a href={dist.accessURL} className="btn-access">Access</a>
+            )}
+            {dist.downloadURL && (
+              <a href={dist.downloadURL} className="btn-download">Download</a>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{dataset.landingPage && (
+  <section className="landing-page">
+    <h3>More Information</h3>
+    <p><a href={dataset.landingPage} className="btn-landing-page">Visit Dataset Landing Page</a></p>
+  </section>
+)}
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+<${dataset.uri}> a dcat:Dataset ;
+  dcterms:title "${dataset.title}"@en ;
+  dcterms:description "${dataset.description}"@en ;${dataset.publisher ? `
+  dcterms:publisher [
+    a foaf:Organization ;
+    foaf:name "${dataset.publisher.name}"
+  ] ;` : ''}${dataset.issued ? `
+  dcterms:issued "${dataset.issued}"^^xsd:date ;` : ''}${dataset.modified ? `
+  dcterms:modified "${dataset.modified}"^^xsd:date ;` : ''}${dataset.license ? `
+  dcterms:license <${dataset.license}> ;` : ''}${dataset.keyword ? `
+  ${dataset.keyword.map(kw => `dcat:keyword "${kw}"`).join(' ;\n  ')} ;` : ''}${dataset.distribution ? `
+  ${dataset.distribution.map(d => `dcat:distribution <${d.uri || d.accessURL}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-query">
+  <h3>SPARQL Query Example</h3>
+  <pre><code>{`PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?distribution ?format ?accessURL
+WHERE {
+  <${dataset.uri}> dcat:distribution ?distribution .
+  ?distribution dcterms:format ?format ;
+                dcat:accessURL ?accessURL .
+}`}</code></pre>
+</section>

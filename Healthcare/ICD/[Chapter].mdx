@@ -1,0 +1,52 @@
+---
+layout: chapter
+source: ICD
+$type: ICD/Chapter
+$id: https://standards.org.ai/ICD/Chapter/{chapter.code}
+sameAs: https://standards.org.ai/Chapter/{chapter.code}
+canonical: https://standards.org.ai/ICD/Chapter/{chapter.code}
+params:
+  - Chapter
+schema:
+  chapter:
+    code: ChapterCode
+    title: ChapterTitle
+    range: ChapterRange
+    description: ChapterDescription
+---
+
+# {chapter.title}
+
+<ChapterHeader code={chapter.code} title={chapter.title} range={chapter.range} />
+
+## Chapter Code
+
+{chapter.code}
+
+## Description
+
+{chapter.description}
+
+## Code Range
+
+{chapter.range}
+
+## Blocks in this Chapter
+
+<BlockList chapter={chapter.code} />
+
+## All Categories
+
+<CategoryList chapter={chapter.code} />
+
+## All Codes
+
+<CodeList chapter={chapter.code} />
+
+## Related SNOMED Concepts
+
+<SNOMEDByChapter chapter={chapter.code} />
+
+## Clinical Applications
+
+<ChapterClinicalApplications chapter={chapter.code} />

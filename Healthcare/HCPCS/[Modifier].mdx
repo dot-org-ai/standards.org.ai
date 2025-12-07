@@ -1,0 +1,76 @@
+---
+layout: modifier
+source: Healthcare/HCPCS
+$type: Healthcare/HCPCS/Modifier
+$id: https://standards.org.ai/Healthcare/HCPCS/Modifier/{modifier.code}
+sameAs: https://standards.org.ai/HCPCSModifier/{modifier.code}
+canonical: https://us.org.ai/CMS/HCPCS/Modifier/{modifier.code}
+params:
+  - Modifier
+schema:
+  modifier:
+    code: string
+    title: string
+    description: string
+    type: string
+    level: string
+    pricingModifier: boolean
+    informationalModifier: boolean
+---
+
+# {modifier.title}
+
+<ModifierHeader code={modifier.code} title={modifier.title} />
+
+## Modifier Code
+
+**{modifier.code}**
+
+## Description
+
+{modifier.description}
+
+## Modifier Details
+
+<div className="modifier-details">
+  {modifier.type && (
+    <div className="modifier-type">
+      <strong>Type:</strong> {modifier.type}
+    </div>
+  )}
+  {modifier.level && (
+    <div className="modifier-level">
+      <strong>HCPCS Level:</strong> {modifier.level}
+    </div>
+  )}
+  {modifier.pricingModifier !== undefined && (
+    <div className="pricing-modifier">
+      <strong>Pricing Modifier:</strong> {modifier.pricingModifier ? 'Yes' : 'No'}
+    </div>
+  )}
+  {modifier.informationalModifier !== undefined && (
+    <div className="informational-modifier">
+      <strong>Informational Modifier:</strong> {modifier.informationalModifier ? 'Yes' : 'No'}
+    </div>
+  )}
+</div>
+
+## Usage Guidelines
+
+<ModifierGuidelines modifier={modifier.code} />
+
+## Applicable Procedures
+
+<ProceduresByModifier modifier={modifier.code} />
+
+## Billing Scenarios
+
+<ModifierBillingScenarios modifier={modifier.code} />
+
+## Reimbursement Impact
+
+<ModifierReimbursementImpact modifier={modifier.code} />
+
+## Related Modifiers
+
+<RelatedModifiers modifier={modifier.code} />

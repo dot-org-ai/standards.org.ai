@@ -1,0 +1,50 @@
+---
+layout: psc
+source: US/GSA
+$type: US/GSA/PSC
+$id: https://standards.org.ai/US/GSA/PSC/{psc.code}
+sameAs: https://standards.org.ai/PSC/{psc.code}
+canonical: https://us.org.ai/GSA/PSC/{psc.code}
+params:
+  - PSC
+schema:
+  psc:
+    code: code
+    name: name
+    description: description
+    category: category
+    isService: isService
+    isProduct: isProduct
+---
+
+# {psc.code} - {psc.name}
+
+<PSCHeader code={psc.code} name={psc.name} category={psc.category} />
+
+## Description
+
+{psc.description}
+
+## Classification
+
+<PSCClassification isService={psc.isService} isProduct={psc.isProduct} />
+
+## Category
+
+<PSCCategoryLink code={psc.category} />
+
+## Related Codes
+
+<RelatedPSCs code={psc.code} />
+
+## Contract Opportunities
+
+<ContractOpportunitiesByPSC code={psc.code} />
+
+## Historical Usage
+
+<PSCUsageStats code={psc.code} />
+
+## Guidance
+
+<PSCGuidance code={psc.code} />

@@ -46,6 +46,26 @@ interface OccupationRow {
   sort_sequence: string
 }
 
+interface EducationRow {
+  OCC_CODE: string
+  OCC_TITLE: string
+  Less_than_H_S_diploma: string
+  High_school_diploma_or_equivalent: string
+  Some_college_no_degree: string
+  Associates_degree: string
+  Bachelors_degree: string
+  Masters_degree: string
+  Doctoral_or_professional_degree: string
+}
+
+interface STEMRow {
+  OCC_CODE: string
+  OCC_TITLE: string
+  TOT_EMP: string
+  STEM_EMP: string
+  STEM_PERCENT: string
+}
+
 function getSOCLevel(code: string): string {
   if (!code) return 'Occupation'
 
@@ -263,6 +283,125 @@ function transformOESOccupations(): void {
   writeStandardTSV(join(DATA_DIR, 'BLS.OESOccupations.tsv'), occupations)
 }
 
+function transformEducation(): void {
+  console.log('Transforming BLS Education...')
+
+  const sourceFile = join(SOURCE_DIR, 'BLS.Education.educ_list.tsv')
+  if (!existsSync(sourceFile)) {
+    console.log('Skipping education - file not found')
+    return
+  }
+
+  const data = parseTSV<EducationRow>(sourceFile)
+
+  // Define education levels
+  const educationLevels = [
+    { id: 'less_than_hs', name: 'Less than High School Diploma', code: 'less_than_hs' },
+    { id: 'hs_diploma', name: 'High School Diploma or Equivalent', code: 'hs_diploma' },
+    { id: 'some_college', name: 'Some College, No Degree', code: 'some_college' },
+    { id: 'associates', name: 'Associate\'s Degree', code: 'associates' },
+    { id: 'bachelors', name: 'Bachelor\'s Degree', code: 'bachelors' },
+    { id: 'masters', name: 'Master\'s Degree', code: 'masters' },
+    { id: 'doctoral_professional', name: 'Doctoral or Professional Degree', code: 'doctoral_professional' },
+  ]
+
+  const educationRecords: StandardRecord[] = educationLevels.map(edu => ({
+    ns: NS,
+    type: 'Education',
+    id: toWikipediaStyleId(edu.name),
+    name: edu.name,
+    description: '',
+    code: edu.code,
+  }))
+
+  writeStandardTSV(join(DATA_DIR, 'BLS.Education.tsv'), educationRecords)
+
+  // Write occupation-education relationships
+  const relationships: Record<string, string>[] = []
+
+  for (const row of data) {
+    if (!row.OCC_CODE) continue
+
+    const eduData = [
+      { level: 'less_than_hs', value: row.Less_than_H_S_diploma },
+      { level: 'hs_diploma', value: row.High_school_diploma_or_equivalent },
+      { level: 'some_college', value: row.Some_college_no_degree },
+      { level: 'associates', value: row.Associates_degree },
+      { level: 'bachelors', value: row.Bachelors_degree },
+      { level: 'masters', value: row.Masters_degree },
+      { level: 'doctoral_professional', value: row.Doctoral_or_professional_degree },
+    ]
+
+    for (const edu of eduData) {
+      if (edu.value) {
+        const eduLevel = educationLevels.find(e => e.code === edu.level)
+        if (eduLevel) {
+          relationships.push({
+            fromNs: NS,
+            fromType: getSOCLevel(row.OCC_CODE),
+            fromCode: row.OCC_CODE,
+            toNs: NS,
+            toType: 'Education',
+            toId: toWikipediaStyleId(eduLevel.name),
+            relationshipType: 'has_education_distribution',
+            percentage: edu.value,
+          })
+        }
+      }
+    }
+  }
+
+  if (relationships.length > 0) {
+    writeTSV(
+      join(REL_DIR, 'BLS.Occupation.Education.tsv'),
+      relationships,
+      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType', 'percentage']
+    )
+  }
+}
+
+function transformSTEM(): void {
+  console.log('Transforming BLS STEM Occupations...')
+
+  const sourceFile = join(SOURCE_DIR, 'BLS.STEM.STEM_occupations_list.tsv')
+  if (!existsSync(sourceFile)) {
+    console.log('Skipping STEM - file not found')
+    return
+  }
+
+  const data = parseTSV<STEMRow>(sourceFile)
+
+  const stemRecords: StandardRecord[] = data
+    .filter(row => row.OCC_CODE && row.OCC_TITLE)
+    .map(row => ({
+      ns: NS,
+      type: 'STEM',
+      id: toWikipediaStyleId(row.OCC_TITLE),
+      name: row.OCC_TITLE,
+      description: `Total Employment: ${row.TOT_EMP || 'N/A'}, STEM Employment: ${row.STEM_EMP || 'N/A'}, STEM %: ${row.STEM_PERCENT || 'N/A'}`,
+      code: row.OCC_CODE,
+    }))
+
+  writeStandardTSV(join(DATA_DIR, 'BLS.STEM.tsv'), stemRecords)
+
+  // Write occupation-STEM relationships
+  const relationships: RelationshipRecord[] = data
+    .filter(row => row.OCC_CODE)
+    .map(row => ({
+      fromNs: NS,
+      fromType: getSOCLevel(row.OCC_CODE),
+      fromId: toWikipediaStyleId(row.OCC_TITLE),
+      toNs: NS,
+      toType: 'STEM',
+      toId: toWikipediaStyleId(row.OCC_TITLE),
+      relationshipType: 'is_stem_occupation',
+    }))
+
+  if (relationships.length > 0) {
+    writeRelationshipTSV(join(REL_DIR, 'BLS.Occupation.STEM.tsv'), relationships)
+  }
+}
+
 export async function transformBLS(): Promise<void> {
   console.log('=== BLS Transformation ===')
   ensureOutputDirs()
@@ -271,6 +410,8 @@ export async function transformBLS(): Promise<void> {
   transformEmploymentStats()
   transformIndustries()
   transformOESOccupations()
+  transformEducation()
+  transformSTEM()
 
   console.log('=== BLS Transformation Complete ===\n')
 }

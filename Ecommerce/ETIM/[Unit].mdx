@@ -1,0 +1,92 @@
+---
+layout: unit
+source: Ecommerce/ETIM
+$type: ETIM/Unit
+$id: https://standards.org.ai/Ecommerce/ETIM/Unit/{unit.code}
+sameAs: https://standards.org.ai/Unit/{unit.code}
+canonical: https://standards.org.ai/ETIM/Unit/{unit.code}
+params:
+  - Unit
+schema:
+  unit:
+    code: UnitCode
+    name: UnitName
+    description: UnitDescription
+    symbol: Symbol
+    type: UnitType
+    version: Version
+    siUnit: boolean
+---
+
+# {unit.name}
+
+<Header
+  type="ETIM Unit"
+  code={unit.code}
+  name={unit.name}
+  standard="ETIM International"
+/>
+
+## Description
+
+{unit.description}
+
+## ETIM Code
+
+{unit.code}
+
+## Unit Details
+
+<UnitDetails
+  symbol={unit.symbol}
+  type={unit.type}
+  siUnit={unit.siUnit}
+/>
+
+{unit.symbol && (
+  <>
+    ## Symbol
+
+    {unit.symbol}
+  </>
+)}
+
+{unit.type && (
+  <>
+    ## Unit Type
+
+    {unit.type}
+  </>
+)}
+
+{unit.siUnit && (
+  <div className="notice">
+    This is an SI (International System of Units) standard unit.
+  </div>
+)}
+
+## Used in Features
+
+<FeaturesByUnit unit={unit.code} />
+
+## Conversion Factors
+
+<UnitConversions unit={unit.code} />
+
+## Related Units
+
+<RelatedUnits unit={unit.code} type={unit.type} />
+
+## Multilingual Names
+
+<UnitTranslations unit={unit.code} />
+
+## Version
+
+ETIM {unit.version || 'Latest'}
+
+## See Also
+
+- [ETIM International](https://www.etim-international.com/)
+- [Features using this Unit](#used-in-features)
+- [SI Units](https://www.bipm.org/en/measurement-units/)

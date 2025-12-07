@@ -1,0 +1,89 @@
+---
+layout: class
+source: Ecommerce/ETIM
+$type: ETIM/Class
+$id: https://standards.org.ai/Ecommerce/ETIM/Class/{class.code}
+sameAs: https://standards.org.ai/Class/{class.code}
+canonical: https://standards.org.ai/ETIM/Class/{class.code}
+params:
+  - Class
+schema:
+  class:
+    code: ClassCode
+    name: ClassName
+    description: ClassDescription
+    groupCode: GroupCode
+    version: Version
+    eclassMapping: array
+---
+
+# {class.name}
+
+<Header
+  type="ETIM Class"
+  code={class.code}
+  name={class.name}
+  standard="ETIM International"
+/>
+
+## Description
+
+{class.description}
+
+## ETIM Code
+
+{class.code}
+
+## Group
+
+<GroupLink code={class.groupCode} />
+
+## Features
+
+<FeatureList class={class.code} />
+
+## Feature Values
+
+<FeatureValueList class={class.code} />
+
+## Units
+
+<UnitList class={class.code} />
+
+## Product Examples
+
+<ProductExamples class={class.code} />
+
+## Related Classifications
+
+### eCl@ss Mapping
+
+{class.eclassMapping && (
+  <EclassMapping etimClass={class.code} mappings={class.eclassMapping} />
+)}
+
+### GS1 GPC Mapping
+
+<GpcMapping etimClass={class.code} />
+
+### UNSPSC Mapping
+
+<UnspscMapping etimClass={class.code} />
+
+## Sibling Classes
+
+<SiblingClasses group={class.groupCode} current={class.code} />
+
+## Usage Statistics
+
+<ClassUsageStats class={class.code} />
+
+## Version
+
+ETIM {class.version || 'Latest'}
+
+## See Also
+
+- [ETIM International](https://www.etim-international.com/)
+- [Features for this Class](#features)
+- [Related eCl@ss Classifications](#eclass-mapping)

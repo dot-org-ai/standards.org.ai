@@ -1,0 +1,53 @@
+---
+layout: block
+source: ICD
+$type: ICD/Block
+$id: https://standards.org.ai/ICD/Block/{block.code}
+sameAs: https://standards.org.ai/Block/{block.code}
+canonical: https://standards.org.ai/ICD/Block/{block.code}
+params:
+  - Block
+schema:
+  block:
+    code: BlockCode
+    title: BlockTitle
+    range: BlockRange
+    chapter: ChapterCode
+    description: BlockDescription
+---
+
+# {block.title}
+
+<BlockHeader code={block.code} title={block.title} range={block.range} />
+
+## Block Code
+
+{block.code}
+
+## Description
+
+{block.description}
+
+## Code Range
+
+{block.range}
+
+## Parent Chapter
+
+<ChapterLink code={block.chapter} />
+
+## Categories in this Block
+
+<CategoryList block={block.code} />
+
+## All Diagnosis Codes
+
+<CodeList block={block.code} />
+
+## Related SNOMED Concepts
+
+<SNOMEDByBlock block={block.code} />
+
+## Clinical Guidelines
+
+<BlockClinicalGuidelines block={block.code} />

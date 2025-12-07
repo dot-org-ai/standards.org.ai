@@ -1,0 +1,58 @@
+---
+layout: element
+source: EDI/X12
+$type: EDI/X12/Element
+$id: https://standards.org.ai/EDI/X12/Element/{element.code}
+sameAs: https://standards.org.ai/DataElement/{element.code}
+canonical: https://standards.org.ai/X12/Element/{element.code}
+params:
+  - Element
+schema:
+  element:
+    code: ElementID
+    name: ElementName
+    description: ElementDescription
+    dataType: DataType
+    minLength: MinLength
+    maxLength: MaxLength
+---
+
+# {element.code} - {element.name}
+
+<ElementHeader code={element.code} name={element.name} dataType={element.dataType} />
+
+## Description
+
+{element.description}
+
+## Data Type
+
+{element.dataType}
+
+## Length
+
+Minimum: {element.minLength}, Maximum: {element.maxLength}
+
+## Format Requirements
+
+<ElementFormatRequirements element={element.code} />
+
+## Code Lists
+
+<ElementCodeLists element={element.code} />
+
+## Segments Using This Element
+
+<SegmentsByElement element={element.code} />
+
+## Validation Rules
+
+<ElementValidationRules element={element.code} />
+
+## Examples
+
+<ElementExamples element={element.code} />
+
+## Related Elements
+
+<RelatedElements element={element.code} />

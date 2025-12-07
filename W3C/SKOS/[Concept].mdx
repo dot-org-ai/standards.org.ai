@@ -1,0 +1,147 @@
+---
+layout: Concept
+source: W3C/SKOS
+$type: W3C/SKOS/Concept
+$id: https://standards.org.ai/W3C/SKOS/Concept/{concept.code}
+sameAs: https://standards.org.ai/Concept/{concept.code}
+canonical: https://w3.org.ai/SKOS/Concept/{concept.code}
+params:
+  - Concept
+schema:
+  concept:
+    code: string
+    uri: string
+    prefLabel: string
+    altLabel: array
+    definition: string
+    broader: array
+    narrower: array
+    related: array
+    inScheme: string
+    notation: string
+    scopeNote: string
+    example: string
+    historyNote: string
+    editorialNote: string
+---
+
+# {concept.prefLabel}
+
+<div className="concept-header">
+  <div className="concept-metadata">
+    <span className="concept-uri">{concept.uri}</span>
+    {concept.notation && <span className="concept-notation">Notation: {concept.notation}</span>}
+  </div>
+</div>
+
+## Definition
+
+{concept.definition}
+
+{concept.altLabel && concept.altLabel.length > 0 && (
+  <section className="alternative-labels">
+    <h3>Alternative Labels</h3>
+    <ul>
+      {concept.altLabel.map((label, idx) => (
+        <li key={idx}>{label}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{concept.scopeNote && (
+  <section className="scope-note">
+    <h3>Scope Note</h3>
+    <p>{concept.scopeNote}</p>
+  </section>
+)}
+
+{concept.example && (
+  <section className="example">
+    <h3>Example</h3>
+    <p>{concept.example}</p>
+  </section>
+)}
+
+## Semantic Relationships
+
+<div className="concept-relationships">
+  {concept.broader && concept.broader.length > 0 && (
+    <div className="broader">
+      <h4>Broader Concepts</h4>
+      <ul>
+        {concept.broader.map((broader, idx) => (
+          <li key={idx}>
+            <a href={broader}>{broader}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {concept.narrower && concept.narrower.length > 0 && (
+    <div className="narrower">
+      <h4>Narrower Concepts</h4>
+      <ul>
+        {concept.narrower.map((narrower, idx) => (
+          <li key={idx}>
+            <a href={narrower}>{narrower}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  {concept.related && concept.related.length > 0 && (
+    <div className="related">
+      <h4>Related Concepts</h4>
+      <ul>
+        {concept.related.map((related, idx) => (
+          <li key={idx}>
+            <a href={related}>{related}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )}
+</div>
+
+{concept.inScheme && (
+  <section className="scheme-membership">
+    <h3>Concept Scheme</h3>
+    <p>Part of: <a href={concept.inScheme}>{concept.inScheme}</a></p>
+  </section>
+)}
+
+{(concept.historyNote || concept.editorialNote) && (
+  <section className="notes">
+    <h3>Notes</h3>
+    {concept.historyNote && (
+      <div className="history-note">
+        <h4>History Note</h4>
+        <p>{concept.historyNote}</p>
+      </div>
+    )}
+    {concept.editorialNote && (
+      <div className="editorial-note">
+        <h4>Editorial Note</h4>
+        <p>{concept.editorialNote}</p>
+      </div>
+    )}
+  </section>
+)}
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<${concept.uri}> a skos:Concept ;
+  skos:prefLabel "${concept.prefLabel}"@en ;${concept.altLabel ? `
+  ${concept.altLabel.map(label => `skos:altLabel "${label}"@en`).join(' ;\n  ')} ;` : ''}
+  skos:definition "${concept.definition}"@en ;${concept.broader ? `
+  ${concept.broader.map(b => `skos:broader <${b}>`).join(' ;\n  ')} ;` : ''}${concept.narrower ? `
+  ${concept.narrower.map(n => `skos:narrower <${n}>`).join(' ;\n  ')} ;` : ''}${concept.related ? `
+  ${concept.related.map(r => `skos:related <${r}>`).join(' ;\n  ')} ;` : ''}${concept.inScheme ? `
+  skos:inScheme <${concept.inScheme}> ;` : ''}
+  .`}</code></pre>
+</section>

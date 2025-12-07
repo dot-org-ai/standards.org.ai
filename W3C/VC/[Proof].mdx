@@ -1,0 +1,347 @@
+---
+layout: Proof
+source: W3C/VC
+$type: W3C/VC/Proof
+$id: https://standards.org.ai/W3C/VC/Proof/{Proof.code}
+sameAs: https://standards.org.ai/Proof/{Proof.code}
+canonical: https://w3.org.ai/VC/Proof/{Proof.code}
+params:
+  - Proof
+schema:
+  Proof:
+    code: string
+    type: string
+    cryptosuite: string
+    description: string
+    verificationMethod: string
+    keyType: string
+    signatureAlgorithm: string
+    canonicalizationAlgorithm: string
+    securityLevel: number
+    purpose: string[]
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+
+<Header
+  title={Proof.type}
+  subtitle="Verifiable Credential Proof Type"
+  code={Proof.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Cryptosuite: {Proof.cryptosuite}</Badge>
+  <Badge variant="secondary">Security Level: {Proof.securityLevel}-bit</Badge>
+  <Badge variant="info">Key Type: {Proof.keyType}</Badge>
+</div>
+
+<Description>
+  {Proof.description}
+</Description>
+
+## Technical Specifications
+
+### Cryptographic Suite
+
+**Cryptosuite ID:** `{Proof.cryptosuite}`
+
+**Signature Algorithm:** {Proof.signatureAlgorithm}
+
+**Canonicalization:** {Proof.canonicalizationAlgorithm}
+
+**Key Type:** {Proof.keyType}
+
+**Security Level:** {Proof.securityLevel}-bit security
+
+### Supported Proof Purposes
+
+This proof type supports the following proof purposes:
+
+{Proof.purpose.map(p => (
+  <li key={p}><code>{p}</code></li>
+))}
+
+## Proof Properties
+
+<PropertiesTable
+  properties={{
+    type: {
+      type: 'string',
+      required: true,
+      description: 'The proof type identifier',
+      example: Proof.type
+    },
+    created: {
+      type: 'string (ISO 8601)',
+      required: true,
+      description: 'Timestamp when the proof was created',
+      example: '2025-01-15T00:00:00Z'
+    },
+    verificationMethod: {
+      type: 'string (URI)',
+      required: true,
+      description: 'Reference to the verification method used',
+      example: 'did:example:123#key-1'
+    },
+    proofPurpose: {
+      type: 'string',
+      required: true,
+      description: 'The purpose of the proof',
+      example: 'assertionMethod'
+    },
+    proofValue: {
+      type: 'string (multibase)',
+      required: true,
+      description: 'The signature value encoded as multibase',
+      example: 'z58DAdFfa9SkqZMVPxAQpic7ndSayn1PzZs6ZjWp1CktyGesjuTSwRdoWhAfGFCF5bppETSTojQCrfFPP2oumHKtz'
+    },
+    challenge: {
+      type: 'string',
+      required: false,
+      description: 'Challenge from the verifier (for authentication)',
+      example: 'abc123'
+    },
+    domain: {
+      type: 'string',
+      required: false,
+      description: 'Domain for which the proof is valid',
+      example: 'example.com'
+    }
+  }}
+/>
+
+## Examples
+
+### Basic Proof
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://w3id.org/security/suites/${Proof.cryptosuite}/v1"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456",
+    "claim": "example value"
+  },
+  "proof": {
+    "type": "${Proof.type}",
+    "created": "2025-01-15T00:00:00Z",
+    "verificationMethod": "did:example:issuer123#key-1",
+    "proofPurpose": "assertionMethod",
+    "proofValue": "z58DAdFfa9SkqZMVPxAQpic7ndSayn1PzZs6ZjWp1CktyGesjuTSwRdoWhAfGFCF5bppETSTojQCrfFPP2oumHKtz"
+  }
+}`}
+</CodeExample>
+
+### Proof with Challenge and Domain
+
+<CodeExample language="json">
+{`{
+  "proof": {
+    "type": "${Proof.type}",
+    "created": "2025-01-15T00:00:00Z",
+    "verificationMethod": "did:example:holder456#key-1",
+    "proofPurpose": "authentication",
+    "challenge": "d436f0c8fce2a6c0bf0fc48e-2ba32f20",
+    "domain": "verifier.example.com",
+    "proofValue": "z3sXaxjKs4M3BRicwWA9peyNPJvJqxtGsDmpt1jjoHCjgeUc6XrLvfDE4xR1nbFwMqJqJqXHvvVKJ6geRUzsXv4zE"
+  }
+}`}
+</CodeExample>
+
+### Multiple Proofs
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": ["VerifiableCredential"],
+  "issuer": "did:example:issuer123",
+  "issuanceDate": "2025-01-15T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:subject456",
+    "claim": "example value"
+  },
+  "proof": [
+    {
+      "type": "${Proof.type}",
+      "created": "2025-01-15T00:00:00Z",
+      "verificationMethod": "did:example:issuer123#key-1",
+      "proofPurpose": "assertionMethod",
+      "proofValue": "z58DAdFfa9SkqZMVPxAQpic7ndSayn1PzZs6ZjWp1CktyGesjuTSwRdoWhAfGFCF5bppETSTojQCrfFPP2oumHKtz"
+    },
+    {
+      "type": "JsonWebSignature2020",
+      "created": "2025-01-15T00:00:01Z",
+      "verificationMethod": "did:example:issuer123#key-2",
+      "proofPurpose": "assertionMethod",
+      "jws": "eyJhbGciOiJFZERTQSIsImI2NCI6ZmFsc2UsImNyaXQiOlsiYjY0Il19....."
+    }
+  ]
+}`}
+</CodeExample>
+
+## Signing Process
+
+### Step 1: Prepare the Document
+
+1. Create the credential or presentation document without the proof
+2. Ensure all required fields are present and properly formatted
+3. Canonicalize the document using {Proof.canonicalizationAlgorithm}
+
+### Step 2: Create Proof Options
+
+<CodeExample language="json">
+{`{
+  "type": "${Proof.type}",
+  "created": "2025-01-15T00:00:00Z",
+  "verificationMethod": "did:example:issuer123#key-1",
+  "proofPurpose": "assertionMethod"
+}`}
+</CodeExample>
+
+### Step 3: Generate Signature
+
+1. Create the signature input by combining the canonicalized document and proof options
+2. Hash the input if required by the algorithm
+3. Sign using the {Proof.signatureAlgorithm} algorithm with the private key
+4. Encode the signature as multibase (typically base58-btc with 'z' prefix)
+
+### Step 4: Attach Proof
+
+Add the complete proof object (including the proofValue) to the original document.
+
+## Verification Process
+
+### Step 1: Extract Proof
+
+Extract the proof object from the credential or presentation.
+
+### Step 2: Resolve Verification Method
+
+1. Parse the verificationMethod URI to extract the DID and key ID
+2. Resolve the DID document
+3. Locate the verification method in the DID document
+4. Verify that the key type matches {Proof.keyType}
+5. Ensure the verification method is authorized for the stated proofPurpose
+
+### Step 3: Reconstruct Signature Input
+
+1. Remove the proof from the document
+2. Canonicalize the document using {Proof.canonicalizationAlgorithm}
+3. Canonicalize the proof options (proof without proofValue)
+4. Create the signature input by combining both canonicalized forms
+
+### Step 4: Verify Signature
+
+1. Decode the proofValue from multibase
+2. Extract the public key from the verification method
+3. Verify the signature using {Proof.signatureAlgorithm}
+4. Confirm the signature is valid
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Cryptographic Strength
+
+- {Proof.securityLevel}-bit security level provides protection against current threats
+- Regularly monitor NIST and other security advisories for algorithm status
+- Consider migration plans if quantum-resistant alternatives become necessary
+
+### Key Management
+
+- Protect private keys using hardware security modules (HSMs) or secure enclaves
+- Implement proper key rotation policies
+- Never reuse keys across different proof purposes without careful consideration
+- Use separate keys for different security domains
+
+### Canonicalization
+
+- Always use the specified canonicalization algorithm ({Proof.canonicalizationAlgorithm})
+- Ensure consistent implementation across all systems
+- Be aware of potential security issues with improper canonicalization
+
+### Proof Purpose
+
+- Verify that the verification method is authorized for the claimed proofPurpose
+- Do not accept proofs with purposes that don't match the use case
+- Understand the semantic meaning of each proof purpose
+
+### Challenge and Domain
+
+- When used for authentication, always include a fresh challenge value
+- Verify that the domain matches the expected verifier domain
+- Implement replay attack prevention mechanisms
+- Use time-limited challenges with appropriate expiration
+
+### Algorithm Agility
+
+- Be prepared to support multiple proof types
+- Implement graceful degradation when encountering unknown proof types
+- Follow industry best practices for algorithm deprecation
+
+</SecurityConsiderations>
+
+## Implementation Guidance
+
+### Libraries and Tools
+
+When implementing support for {Proof.type}, consider using established libraries:
+
+- **JavaScript/TypeScript**: `@digitalbazaar/vc`, `@transmute/vc.js`
+- **Python**: `pyld`, `did-python`
+- **Java**: `verifiable-credentials-java`
+- **Go**: `go-vc`, `trustbloc/sidetree`
+
+### Testing
+
+Implement comprehensive tests covering:
+
+- Valid proof creation and verification
+- Invalid signature detection
+- Expired proof handling
+- Wrong key type rejection
+- Canonicalization edge cases
+- Challenge and domain validation
+
+### Performance Considerations
+
+- Cache DID resolutions to reduce network overhead
+- Batch verify multiple credentials when possible
+- Consider async/parallel verification for large sets
+- Optimize canonicalization for your document structures
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="CredentialType" href="/W3C/VC/CredentialType/VerifiableCredential">Verifiable Credential</RelatedItem>
+  <RelatedItem type="Term" href="/W3C/VC/Term/proof">Proof Property</RelatedItem>
+  <RelatedItem type="VerificationMethod" href="/W3C/DID/VerificationMethod/{Proof.keyType}">{Proof.keyType} Verification Method</RelatedItem>
+  <RelatedItem type="DID" href="/W3C/DID/Document/verificationMethod">DID Verification Methods</RelatedItem>
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/vc-data-integrity/">Verifiable Credential Data Integrity</SpecLink>
+  <SpecLink href={`https://w3c.github.io/vc-di-${Proof.cryptosuite}/`}>{Proof.cryptosuite} Specification</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs) v1.0</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This proof type is part of the W3C Verifiable Credentials Data Integrity specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

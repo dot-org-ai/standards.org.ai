@@ -1,0 +1,111 @@
+---
+layout: dataType
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/DataType
+$id: https://standards.org.ai/Healthcare/FHIR/DataType/{dataType.code}
+sameAs: https://standards.org.ai/DataType/{dataType.code}
+canonical: https://standards.org.ai/FHIR/DataType/{dataType.code}
+params:
+  - DataType
+schema:
+  dataType:
+    code: id
+    name: name
+    title: title
+    description: description
+    status: status
+    kind: kind
+    abstract: boolean
+    type: type
+    baseDefinition: url
+    derivation: string
+    elements: array
+    constraints: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRDataTypeHeader } from '@/components/healthcare/fhir/DataTypeHeader'
+import { FHIRElementsList } from '@/components/healthcare/fhir/ElementsList'
+import { FHIRConstraints } from '@/components/healthcare/fhir/Constraints'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+import { RelatedDataTypes } from '@/components/healthcare/fhir/RelatedDataTypes'
+
+<FHIRDataTypeHeader
+  code={dataType.code}
+  name={dataType.name}
+  title={dataType.title}
+  status={dataType.status}
+  kind={dataType.kind}
+/>
+
+<Description content={dataType.description} />
+
+## Data Type Information
+
+- **Type**: {dataType.type}
+- **Status**: <StatusBadge status={dataType.status} />
+- **Kind**: {dataType.kind}
+- **Abstract**: {dataType.abstract ? 'Yes' : 'No'}
+- **Derivation**: {dataType.derivation || 'specialization'}
+{dataType.baseDefinition && (
+  <>- **Base Definition**: {dataType.baseDefinition}</>
+)}
+
+## Elements
+
+<FHIRElementsList
+  dataType={dataType.type}
+  elements={dataType.elements}
+/>
+
+## Constraints
+
+<FHIRConstraints
+  dataType={dataType.type}
+  constraints={dataType.constraints}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`${dataType.name} JSON Example`}
+  language="json"
+  code={dataType.examples?.json}
+/>
+
+<CodeExample
+  title={`${dataType.name} in Resource Context`}
+  language="json"
+  code={dataType.examples?.inResource}
+/>
+
+## Related Data Types
+
+<RelatedDataTypes
+  dataType={dataType.type}
+  baseDefinition={dataType.baseDefinition}
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR R4 Data Types',
+      url: `https://www.hl7.org/fhir/R4/datatypes.html#${dataType.type}`
+    },
+    {
+      name: 'FHIR R5 Data Types',
+      url: `https://www.hl7.org/fhir/R5/datatypes.html#${dataType.type}`
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Data Types](https://www.hl7.org/fhir/datatypes.html)
+- [FHIR {dataType.name} Definition](https://www.hl7.org/fhir/datatypes.html#{dataType.type.toLowerCase()})

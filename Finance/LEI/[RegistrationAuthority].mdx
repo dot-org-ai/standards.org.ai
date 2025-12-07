@@ -1,0 +1,53 @@
+---
+layout: registrationAuthority
+source: Finance/LEI
+$type: Finance/LEI/RegistrationAuthority
+$id: https://standards.org.ai/Finance/LEI/RegistrationAuthority/{registrationAuthority.code}
+sameAs: https://standards.org.ai/RegistrationAuthority/{registrationAuthority.code}
+canonical: https://standards.org.ai/LEI/RegistrationAuthority/{registrationAuthority.code}
+params:
+  - RegistrationAuthority
+schema:
+  registrationAuthority:
+    code: code
+    name: name
+    country: country
+    region: region
+    website: website
+---
+
+# {registrationAuthority.name}
+
+<RegistrationAuthorityHeader
+  code={registrationAuthority.code}
+  name={registrationAuthority.name}
+  country={registrationAuthority.country}
+/>
+
+## Code
+
+{registrationAuthority.code}
+
+## Country
+
+{registrationAuthority.country}
+
+## Region
+
+{registrationAuthority.region}
+
+## Website
+
+<ExternalLink url={registrationAuthority.website} />
+
+## Registered Entities
+
+<EntitiesByRegistrationAuthority raCode={registrationAuthority.code} />
+
+## Statistics
+
+<RegistrationAuthorityStatistics raCode={registrationAuthority.code} />
+
+## Service Information
+
+<RegistrationAuthorityServices raCode={registrationAuthority.code} />

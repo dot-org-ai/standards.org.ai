@@ -1,0 +1,441 @@
+---
+layout: class
+source: W3C/OWL
+$type: W3C/OWL/Class
+$id: https://standards.org.ai/W3C/OWL/Class/{Class.code}
+sameAs: https://standards.org.ai/Class/{Class.code}
+canonical: https://w3.org.ai/OWL/Class/{Class.code}
+params:
+  - Class
+schema:
+  Class:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    subClassOf: array
+    equivalentClass: array
+    disjointWith: array
+---
+
+import { ClassHeader } from '@/components/semantic-web/ClassHeader'
+import { ClassHierarchy } from '@/components/semantic-web/ClassHierarchy'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<ClassHeader
+  uri={Class.uri}
+  label={Class.label}
+  type="OWL Class"
+/>
+
+## Description
+
+{Class.comment}
+
+This class is part of an OWL (Web Ontology Language) ontology, providing rich semantics for knowledge representation and automated reasoning.
+
+## Class Hierarchy
+
+<ClassHierarchy
+  current={Class.uri}
+  superClasses={Class.subClassOf}
+  namespace="owl"
+/>
+
+### Superclasses
+
+{Class.subClassOf && Class.subClassOf.length > 0 ? (
+  <>
+    <p>This class is a subclass of:</p>
+    <ul>
+      {Class.subClassOf.map((parent) => (
+        <li key={parent}>
+          <code>{parent}</code>
+          <p className="text-sm text-gray-600">All instances of this class are also instances of {parent}</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This is a top-level class with no explicit superclasses (except <code>owl:Thing</code>).</p>
+)}
+
+### Equivalent Classes
+
+{Class.equivalentClass && Class.equivalentClass.length > 0 ? (
+  <>
+    <p>This class is equivalent to:</p>
+    <ul>
+      {Class.equivalentClass.map((equiv) => (
+        <li key={equiv}>
+          <code>{equiv}</code>
+          <p className="text-sm text-gray-600">Instances are identical in both classes</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>No equivalent classes are defined.</p>
+)}
+
+### Disjoint Classes
+
+{Class.disjointWith && Class.disjointWith.length > 0 ? (
+  <>
+    <p>This class is disjoint with:</p>
+    <ul>
+      {Class.disjointWith.map((disjoint) => (
+        <li key={disjoint}>
+          <code>{disjoint}</code>
+          <p className="text-sm text-gray-600">No resource can be an instance of both classes</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>No disjointness constraints are defined.</p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Class Definition
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix ex: <http://example.org/> .
+
+{Class.uri} a owl:Class ;
+    rdfs:label "{Class.label}"@en ;
+    rdfs:comment "{Class.comment}"@en .
+
+# Create an instance
+ex:myInstance a {Class.uri} ;
+    rdfs:label "Example Instance"@en .
+```
+
+### Class with Restrictions
+
+```turtle
+ex:RestrictedClass a owl:Class ;
+    rdfs:subClassOf {Class.uri} ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasProperty ;
+        owl:someValuesFrom ex:RequiredClass
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:count ;
+        owl:cardinality 1
+    ] .
+```
+
+### Equivalent Class Definition
+
+```turtle
+ex:SynonymClass a owl:Class ;
+    owl:equivalentClass {Class.uri} ;
+    rdfs:label "Synonym for {Class.label}"@en .
+
+# Instances are interchangeable
+ex:instance1 a {Class.uri} .
+ex:instance2 a ex:SynonymClass .
+# Both are instances of both classes
+```
+
+### Disjoint Classes
+
+```turtle
+{Class.uri} owl:disjointWith ex:OtherClass .
+
+# This would cause an inconsistency:
+# ex:invalid a {Class.uri}, ex:OtherClass .
+```
+
+### Class Union
+
+```turtle
+ex:UnionClass a owl:Class ;
+    owl:unionOf ({Class.uri} ex:Class2 ex:Class3) .
+
+# Instances can be from any of the classes
+ex:item1 a {Class.uri} .  # Also in UnionClass
+```
+
+### Class Intersection
+
+```turtle
+ex:IntersectionClass a owl:Class ;
+    owl:intersectionOf ({Class.uri} ex:Class2) .
+
+# Instances must satisfy both classes
+ex:item a ex:IntersectionClass .
+# Implies: ex:item a {Class.uri}, ex:Class2 .
+```
+
+### Class Complement
+
+```turtle
+ex:NotThisClass a owl:Class ;
+    owl:complementOf {Class.uri} .
+
+# Everything except instances of {Class.uri}
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:ex="http://example.org/">
+  <owl:Class rdf:about="{Class.uri}">
+    <rdfs:label xml:lang="en">{Class.label}</rdfs:label>
+    <rdfs:comment xml:lang="en">{Class.comment}</rdfs:comment>
+  </owl:Class>
+
+  <{Class.uri} rdf:about="http://example.org/myInstance">
+    <rdfs:label xml:lang="en">Example Instance</rdfs:label>
+  </{Class.uri}>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "ex": "http://example.org/"
+  },
+  "@id": "ex:myInstance",
+  "@type": "{Class.uri}",
+  "rdfs:label": {
+    "@value": "Example Instance",
+    "@language": "en"
+  }
+}
+```
+
+### SPARQL Queries
+
+```sparql
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Find all instances
+SELECT ?instance ?label
+WHERE {
+  ?instance a {Class.uri} .
+  OPTIONAL { ?instance rdfs:label ?label }
+}
+
+# Find all subclasses
+SELECT ?subclass ?label
+WHERE {
+  ?subclass rdfs:subClassOf+ {Class.uri} .
+  OPTIONAL { ?subclass rdfs:label ?label }
+}
+
+# Find equivalent classes
+SELECT ?equivalent
+WHERE {
+  {Class.uri} owl:equivalentClass ?equivalent .
+}
+
+# Find disjoint classes
+SELECT ?disjoint
+WHERE {
+  {Class.uri} owl:disjointWith ?disjoint .
+}
+```
+
+</UsageExamples>
+
+## OWL Reasoning
+
+### Inference Rules
+
+Reasoners apply the following inferences:
+
+1. **Subclass Transitivity**: If A ⊆ B and B ⊆ C, then A ⊆ C
+2. **Type Propagation**: If x ∈ A and A ⊆ B, then x ∈ B
+3. **Equivalence**: If A ≡ B and x ∈ A, then x ∈ B
+4. **Disjointness**: If A ⊥ B and x ∈ A, then x ∉ B
+
+### Description Logic
+
+This class can be expressed in Description Logic notation:
+
+```
+{Class.label} ⊑ {superclasses}
+{Class.label} ≡ {equivalent classes}
+{Class.label} ⊥ {disjoint classes}
+```
+
+## Class Expressions
+
+### Restriction Patterns
+
+#### Universal Restriction
+
+```turtle
+ex:AllValuesClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:property ;
+        owl:allValuesFrom ex:TargetClass
+    ] .
+# All values of property must be of TargetClass
+```
+
+#### Existential Restriction
+
+```turtle
+ex:SomeValuesClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:property ;
+        owl:someValuesFrom ex:TargetClass
+    ] .
+# At least one value of property must be of TargetClass
+```
+
+#### Cardinality Restrictions
+
+```turtle
+ex:CardinalityClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:property ;
+        owl:minCardinality 1 ;
+        owl:maxCardinality 5
+    ] .
+```
+
+#### Qualified Cardinality
+
+```turtle
+ex:QualifiedClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:property ;
+        owl:qualifiedCardinality 2 ;
+        owl:onClass ex:TargetClass
+    ] .
+```
+
+#### Value Restriction
+
+```turtle
+ex:HasValueClass a owl:Class ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:property ;
+        owl:hasValue ex:specificValue
+    ] .
+```
+
+## OWL 2 Features
+
+### Property Chains
+
+```turtle
+ex:hasGrandparent a owl:ObjectProperty ;
+    owl:propertyChainAxiom (ex:hasParent ex:hasParent) .
+```
+
+### Keys
+
+```turtle
+{Class.uri} owl:hasKey (ex:id ex:code) .
+# Instances with same id and code values are identical
+```
+
+### Disjoint Unions
+
+```turtle
+{Class.uri} owl:disjointUnionOf (ex:SubType1 ex:SubType2 ex:SubType3) .
+```
+
+## Best Practices
+
+When designing with `{Class.label}`:
+
+1. **Single Responsibility**: Each class should represent one clear concept
+2. **Naming Conventions**: Use descriptive, consistent names
+3. **Documentation**: Provide comprehensive labels and comments
+4. **Disjointness**: Explicitly state when classes don't overlap
+5. **Modularity**: Organize related classes into modules
+6. **Versioning**: Use owl:versionInfo for ontology versions
+7. **Profiles**: Consider OWL 2 profiles (EL, QL, RL) for reasoning performance
+
+## Validation
+
+### Consistency Checking
+
+Use reasoners to check for:
+
+- Unsatisfiable classes
+- Disjointness violations
+- Cardinality conflicts
+- Type inconsistencies
+
+### Common Reasoners
+
+- **HermiT**: Complete OWL 2 reasoner
+- **Pellet**: Popular open-source reasoner
+- **FaCT++**: Fast classifier
+- **ELK**: OWL EL reasoner
+- **Konclude**: High-performance reasoner
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2002/07/owl#Thing', label: 'owl:Thing' },
+    { uri: 'http://www.w3.org/2002/07/owl#Class', label: 'owl:Class' },
+    { uri: 'http://www.w3.org/2002/07/owl#equivalentClass', label: 'owl:equivalentClass' },
+    { uri: 'http://www.w3.org/2002/07/owl#disjointWith', label: 'owl:disjointWith' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#subClassOf', label: 'rdfs:subClassOf' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="OWL 2 Web Ontology Language Structural Specification and Functional-Style Syntax"
+  url="https://www.w3.org/TR/owl2-syntax/"
+  section={Class.code}
+/>
+
+### Normative References
+
+- [OWL 2 Web Ontology Language Document Overview](https://www.w3.org/TR/owl2-overview/)
+- [OWL 2 Web Ontology Language Primer](https://www.w3.org/TR/owl2-primer/)
+- [OWL 2 Web Ontology Language Profiles](https://www.w3.org/TR/owl2-profiles/)
+- [OWL 2 Web Ontology Language Semantics and Direct Semantics](https://www.w3.org/TR/owl2-semantics/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/2002/07/owl#`
+- **URI**: `{Class.uri}`
+- **Status**: W3C Recommendation
+- **Version**: OWL 2
+- **OWL 2 DL Compatible**: Yes
+- **OWL 2 Profiles**: Check compatibility with EL, QL, RL profiles
+
+## Additional Resources
+
+- [OWL 2 Primer](https://www.w3.org/TR/owl2-primer/)
+- [Protégé Ontology Editor](https://protege.stanford.edu/)
+- [OWL Working Group](https://www.w3.org/2007/OWL/wiki/OWL_Working_Group)
+- [Manchester OWL Syntax](https://www.w3.org/TR/owl2-manchester-syntax/)

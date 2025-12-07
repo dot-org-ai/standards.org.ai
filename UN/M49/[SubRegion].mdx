@@ -1,0 +1,39 @@
+---
+layout: subRegion
+source: UN/M49
+$type: UN/M49/SubRegion
+$id: https://standards.org.ai/UN/M49/SubRegion/{subRegion.code}
+sameAs: https://standards.org.ai/SubRegion/{subRegion.code}
+canonical: https://un.org.ai/M49/SubRegion/{subRegion.code}
+params:
+  - SubRegion
+schema:
+  subRegion:
+    code: SubRegionCode
+    name: SubRegionName
+    region: RegionCode
+---
+
+# {subRegion.name}
+
+<SubRegionHeader code={subRegion.code} name={subRegion.name} />
+
+## M49 Code
+
+{subRegion.code}
+
+## Parent Region
+
+<RegionLink code={subRegion.region} />
+
+## Intermediate Regions
+
+<IntermediateRegionsBySubRegion subRegionCode={subRegion.code} />
+
+## Countries
+
+<CountriesBySubRegion subRegionCode={subRegion.code} />
+
+## Statistics
+
+<SubRegionStats code={subRegion.code} />

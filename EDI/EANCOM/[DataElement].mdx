@@ -1,0 +1,61 @@
+---
+layout: data-element
+source: EDI/EANCOM
+$type: EDI/EANCOM/DataElement
+$id: https://standards.org.ai/EDI/EANCOM/DataElement/{dataElement.code}
+sameAs: https://standards.org.ai/EANCOMDataElement/{dataElement.code}
+canonical: https://standards.org.ai/EANCOM/DataElement/{dataElement.code}
+params:
+  - DataElement
+schema:
+  dataElement:
+    code: ElementID
+    name: ElementName
+    description: ElementDescription
+    format: ElementFormat
+    status: ElementStatus
+---
+
+# {dataElement.code} - {dataElement.name}
+
+<DataElementHeader code={dataElement.code} name={dataElement.name} format={dataElement.format} />
+
+## Description
+
+{dataElement.description}
+
+## Format
+
+{dataElement.format}
+
+## Status
+
+{dataElement.status}
+
+## Code Values
+
+<DataElementCodes element={dataElement.code} />
+
+## Segments Using This Element
+
+<SegmentsByDataElement element={dataElement.code} />
+
+## Validation Rules
+
+<DataElementValidation element={dataElement.code} />
+
+## GS1 Usage Guidelines
+
+<GS1ElementGuidelines element={dataElement.code} />
+
+## Examples
+
+<DataElementExamples element={dataElement.code} />
+
+## Related Elements
+
+<RelatedDataElements element={dataElement.code} />
+
+## EDIFACT Source
+
+<EDIFACTSource element={dataElement.code} />

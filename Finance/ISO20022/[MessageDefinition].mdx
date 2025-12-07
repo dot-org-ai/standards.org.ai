@@ -1,0 +1,53 @@
+---
+layout: messageDefinition
+source: Finance/ISO20022
+$type: Finance/ISO20022/MessageDefinition
+$id: https://standards.org.ai/Finance/ISO20022/MessageDefinition/{messageDefinition.code}
+sameAs: https://standards.org.ai/MessageDefinition/{messageDefinition.code}
+canonical: https://standards.org.ai/ISO20022/MessageDefinition/{messageDefinition.code}
+params:
+  - MessageDefinition
+schema:
+  messageDefinition:
+    code: code
+    name: name
+    description: description
+    version: version
+    businessArea: businessArea
+---
+
+# {messageDefinition.name}
+
+<MessageDefinitionHeader code={messageDefinition.code} name={messageDefinition.name} version={messageDefinition.version} />
+
+## Description
+
+{messageDefinition.description}
+
+## Version
+
+{messageDefinition.version}
+
+## Business Area
+
+<BusinessAreaLink code={messageDefinition.businessArea} />
+
+## Message Components
+
+<MessageComponents messageDefinitionCode={messageDefinition.code} />
+
+## Data Dictionary
+
+<MessageDataDictionary messageDefinitionCode={messageDefinition.code} />
+
+## Business Rules
+
+<MessageBusinessRules messageDefinitionCode={messageDefinition.code} />
+
+## Validation Rules
+
+<MessageValidationRules messageDefinitionCode={messageDefinition.code} />
+
+## Schema
+
+<MessageSchema messageDefinitionCode={messageDefinition.code} />

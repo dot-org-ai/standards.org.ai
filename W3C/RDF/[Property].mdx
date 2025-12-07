@@ -1,0 +1,219 @@
+---
+layout: property
+source: W3C/RDF
+$type: W3C/RDF/Property
+$id: https://standards.org.ai/W3C/RDF/Property/{Property.code}
+sameAs: https://standards.org.ai/Property/{Property.code}
+canonical: https://w3.org.ai/RDF/Property/{Property.code}
+params:
+  - Property
+schema:
+  Property:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    domain: array
+    range: array
+    subPropertyOf: array
+---
+
+import { PropertyHeader } from '@/components/semantic-web/PropertyHeader'
+import { PropertySignature } from '@/components/semantic-web/PropertySignature'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<PropertyHeader
+  uri={Property.uri}
+  label={Property.label}
+  type="RDF Property"
+/>
+
+## Description
+
+{Property.comment}
+
+This property is part of the RDF (Resource Description Framework) vocabulary, used to express relationships between resources in the semantic web.
+
+## Property Signature
+
+<PropertySignature
+  domain={Property.domain}
+  range={Property.range}
+  subPropertyOf={Property.subPropertyOf}
+/>
+
+### Domain
+
+{Property.domain && Property.domain.length > 0 ? (
+  <>
+    <p>This property can be used with resources of the following types:</p>
+    <ul>
+      {Property.domain.map((d) => (
+        <li key={d}><code>{d}</code></li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This property has no specific domain restriction and can be used with any resource.</p>
+)}
+
+### Range
+
+{Property.range && Property.range.length > 0 ? (
+  <>
+    <p>Values of this property should be of the following types:</p>
+    <ul>
+      {Property.range.map((r) => (
+        <li key={r}><code>{r}</code></li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This property has no specific range restriction and can have values of any type.</p>
+)}
+
+### Property Hierarchy
+
+{Property.subPropertyOf && Property.subPropertyOf.length > 0 ? (
+  <>
+    <p>This property is a specialization of:</p>
+    <ul>
+      {Property.subPropertyOf.map((parent) => (
+        <li key={parent}><code>{parent}</code></li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This is a top-level property with no super-properties.</p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Usage in Turtle
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+
+ex:subject {Property.uri} ex:object .
+
+# With literal value
+ex:resource {Property.uri} "Example value"^^xsd:string .
+
+# Multiple values
+ex:multiValue {Property.uri} ex:value1 ,
+                            ex:value2 ,
+                            ex:value3 .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.org/">
+  <rdf:Description rdf:about="http://example.org/subject">
+    <{Property.uri} rdf:resource="http://example.org/object"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/resource">
+    <{Property.uri}>Example value</{Property.uri}>
+  </rdf:Description>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "ex": "http://example.org/"
+  },
+  "@id": "ex:subject",
+  "{Property.uri}": {
+    "@id": "ex:object"
+  }
+}
+```
+
+### SPARQL Query Example
+
+```sparql
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?subject ?value
+WHERE {
+  ?subject {Property.uri} ?value .
+}
+LIMIT 100
+```
+
+</UsageExamples>
+
+## Characteristics
+
+This property has the following characteristics:
+
+- **Functional**: {Property.functional ? 'Yes - can have at most one value per subject' : 'No'}
+- **Inverse Functional**: {Property.inverseFunctional ? 'Yes - values uniquely identify subjects' : 'No'}
+- **Transitive**: {Property.transitive ? 'Yes - if A→B and B→C then A→C' : 'No'}
+- **Symmetric**: {Property.symmetric ? 'Yes - if A→B then B→A' : 'No'}
+
+## Best Practices
+
+When using `{Property.label}`:
+
+1. **Type Consistency**: Ensure values match the expected range type
+2. **Cardinality**: Be aware of whether multiple values are appropriate
+3. **Blank Nodes**: Consider whether to use URIs or blank nodes for complex values
+4. **Reification**: Use RDF reification or RDF-star for statements about statements
+5. **Provenance**: Include metadata about the source and time of assertions
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property', label: 'rdf:Property' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#domain', label: 'rdfs:domain' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#range', label: 'rdfs:range' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="RDF 1.1 Concepts and Abstract Syntax"
+  url="https://www.w3.org/TR/rdf11-concepts/"
+  section={Property.code}
+/>
+
+### Normative References
+
+- [RDF 1.1 Concepts and Abstract Syntax](https://www.w3.org/TR/rdf11-concepts/)
+- [RDF Schema 1.1](https://www.w3.org/TR/rdf-schema/)
+- [RDF 1.1 Semantics](https://www.w3.org/TR/rdf11-mt/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/1999/02/22-rdf-syntax-ns#`
+- **URI**: `{Property.uri}`
+- **Status**: W3C Recommendation
+- **Version**: RDF 1.1
+
+## Inference Rules
+
+When reasoning with this property:
+
+1. Properties inherit domain and range from super-properties
+2. If a resource uses this property, it is implicitly of type `rdf:Property`
+3. Domain and range constraints can be used for type inference
+
+## Additional Resources
+
+- [RDF Primer](https://www.w3.org/TR/rdf11-primer/)
+- [RDF Semantics](https://www.w3.org/TR/rdf11-mt/)
+- [Best Practices for Publishing Linked Data](https://www.w3.org/TR/ld-bp/)

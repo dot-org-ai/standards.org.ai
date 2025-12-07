@@ -1,0 +1,173 @@
+---
+layout: framework
+source: Education/CASE
+$type: Education/CASE/Framework
+$id: https://standards.org.ai/Education/CASE/Framework/{framework.code}
+sameAs: https://standards.org.ai/CompetencyFramework/{framework.code}
+canonical: https://standards.org.ai/CASE/Framework/{framework.code}
+params:
+  - Framework
+schema:
+  framework:
+    code: string
+    uri: string
+    identifier: string
+    title: string
+    description: string
+    creator: string
+    publisher: string
+    subject: array
+    educationLevel: array
+    language: string
+    version: string
+    adoptionStatus: string
+    statusStartDate: string
+    licenseURI: string
+    notes: string
+---
+
+# {framework.title}
+
+<FrameworkHeader
+  code={framework.code}
+  title={framework.title}
+  publisher={framework.publisher}
+  status={framework.adoptionStatus}
+/>
+
+## Overview
+
+{framework.description}
+
+<div className="framework-metadata">
+  <div className="metadata-grid">
+    {framework.identifier && (
+      <div className="identifier">
+        <h3>Framework Identifier</h3>
+        <p><code>{framework.identifier}</code></p>
+      </div>
+    )}
+
+    {framework.uri && (
+      <div className="uri">
+        <h3>Framework URI</h3>
+        <p><a href={framework.uri}>{framework.uri}</a></p>
+      </div>
+    )}
+
+    {framework.creator && (
+      <div className="creator">
+        <h3>Creator</h3>
+        <p>{framework.creator}</p>
+      </div>
+    )}
+
+    {framework.publisher && (
+      <div className="publisher">
+        <h3>Publisher</h3>
+        <p>{framework.publisher}</p>
+      </div>
+    )}
+
+    {framework.version && (
+      <div className="version">
+        <h3>Version</h3>
+        <p>{framework.version}</p>
+      </div>
+    )}
+
+    {framework.language && (
+      <div className="language">
+        <h3>Language</h3>
+        <p>{framework.language}</p>
+      </div>
+    )}
+
+    {framework.adoptionStatus && (
+      <div className="status">
+        <h3>Adoption Status</h3>
+        <p><span className={`status-badge status-${framework.adoptionStatus.toLowerCase().replace(' ', '-')}`}>{framework.adoptionStatus}</span></p>
+        {framework.statusStartDate && <p className="status-date">Since: {framework.statusStartDate}</p>}
+      </div>
+    )}
+
+    {framework.licenseURI && (
+      <div className="license">
+        <h3>License</h3>
+        <p><a href={framework.licenseURI}>View License</a></p>
+      </div>
+    )}
+  </div>
+</div>
+
+{framework.subject && framework.subject.length > 0 && (
+  <section className="subjects">
+    <h2>Subject Areas</h2>
+    <div className="subject-tags">
+      {framework.subject.map((subj, idx) => (
+        <span key={idx} className="subject-tag">{subj}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+{framework.educationLevel && framework.educationLevel.length > 0 && (
+  <section className="education-levels">
+    <h2>Education Levels</h2>
+    <div className="level-tags">
+      {framework.educationLevel.map((level, idx) => (
+        <span key={idx} className="level-tag">{level}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+{framework.notes && (
+  <section className="notes">
+    <h2>Notes</h2>
+    <div className="notes-content">
+      {framework.notes}
+    </div>
+  </section>
+)}
+
+## Framework Standards
+
+<StandardsList framework={framework.code} />
+
+## Competencies
+
+<CompetenciesList framework={framework.code} />
+
+## Framework Structure
+
+<FrameworkHierarchy framework={framework.code} />
+
+## Associations
+
+<AssociationsList framework={framework.code} />
+
+## Alignments to Other Frameworks
+
+<FrameworkAlignments framework={framework.code} />
+
+## Implementation Resources
+
+<ImplementationResources framework={framework.code} />
+
+## CASE JSON Export
+
+<CASEJSONExport framework={framework.code} />
+
+## Resources
+
+<section className="resources">
+  <h3>CASE Framework Resources</h3>
+  <ul>
+    {framework.uri && (
+      <li><a href={framework.uri}>Official Framework URI</a></li>
+    )}
+    <li><a href="https://www.imsglobal.org/activity/case">IMS Global CASE Specification</a></li>
+    <li><a href="https://www.imsglobal.org/case/casev1p0/examples/index.html">CASE Examples</a></li>
+  </ul>
+</section>

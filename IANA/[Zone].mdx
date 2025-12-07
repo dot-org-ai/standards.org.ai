@@ -1,0 +1,52 @@
+---
+layout: zone
+source: IANA
+$type: IANA/Zone
+$id: https://standards.org.ai/IANA/Zone/{zone.code}
+sameAs: https://standards.org.ai/Zone/{zone.code}
+canonical: https://iana.org.ai/Zone/{zone.code}
+params:
+  - Zone
+schema:
+  zone:
+    code: name
+    name: name
+    offset: offset
+    offsetStr: offsetStr
+    country: country
+    latitude: latitude
+    longitude: longitude
+---
+
+# {zone.name}
+
+<ZoneHeader code={zone.code} offset={zone.offsetStr} />
+
+## IANA Identifier
+
+{zone.code}
+
+## UTC Offset
+
+{zone.offsetStr}
+
+## Location
+
+- Country: {zone.country}
+- Coordinates: {zone.latitude}, {zone.longitude}
+
+## Country
+
+<CountryLink alpha2={zone.country} />
+
+## Current Time
+
+<CurrentTime zone={zone.code} />
+
+## DST Transitions
+
+<DSTTransitions zone={zone.code} />
+
+## Related Zones
+
+<RelatedZones country={zone.country} current={zone.code} />

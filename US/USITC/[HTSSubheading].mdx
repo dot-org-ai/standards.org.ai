@@ -1,0 +1,47 @@
+---
+layout: htssubheading
+source: US/USITC
+$type: US/USITC/HTSSubheading
+$id: https://standards.org.ai/US/USITC/HTSSubheading/{subheading.code}
+sameAs: https://standards.org.ai/HTSSubheading/{subheading.code}
+canonical: https://us.org.ai/USITC/HTSSubheading/{subheading.code}
+params:
+  - HTSSubheading
+schema:
+  subheading:
+    code: code
+    name: name
+    heading: heading
+---
+
+# HTS {subheading.code} - {subheading.name}
+
+<HTSSubheadingHeader code={subheading.code} name={subheading.name} />
+
+## Heading
+
+<HTSHeadingLink code={subheading.heading} />
+
+## Description
+
+{subheading.name}
+
+## Full HTS Codes (Statistical Suffixes)
+
+<HTSCodeList subheading={subheading.code} />
+
+## Duty Rates
+
+<DutyRatesBySubheading subheading={subheading.code} />
+
+## Import Requirements
+
+<ImportRequirementsBySubheading subheading={subheading.code} />
+
+## Special Program Eligibility
+
+<SpecialProgramsBySubheading subheading={subheading.code} />
+
+## Related Subheadings
+
+<RelatedHTSSubheadings heading={subheading.heading} current={subheading.code} />

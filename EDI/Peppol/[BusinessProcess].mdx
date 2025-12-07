@@ -1,0 +1,73 @@
+---
+layout: business-process
+source: EDI/Peppol
+$type: EDI/Peppol/BusinessProcess
+$id: https://standards.org.ai/EDI/Peppol/BusinessProcess/{process.code}
+sameAs: https://standards.org.ai/PeppolBIS/{process.code}
+canonical: https://standards.org.ai/Peppol/BIS/{process.code}
+params:
+  - BusinessProcess
+schema:
+  process:
+    code: BISCode
+    name: BISName
+    description: BISDescription
+    version: BISVersion
+    profile: ProfileID
+---
+
+# {process.name}
+
+<BusinessProcessHeader code={process.code} name={process.name} version={process.version} />
+
+## Description
+
+{process.description}
+
+## BIS Version
+
+{process.version}
+
+## Profile ID
+
+{process.profile}
+
+## Process Overview
+
+<ProcessOverview bis={process.code} />
+
+## Documents Involved
+
+<DocumentList bis={process.code} />
+
+## Process Flow
+
+<ProcessFlowDiagram bis={process.code} />
+
+## Roles and Responsibilities
+
+<ProcessRoles bis={process.code} />
+
+## Business Rules
+
+<BusinessRules bis={process.code} />
+
+## Transaction Requirements
+
+<TransactionRequirements bis={process.code} />
+
+## Use Cases
+
+<UseCases bis={process.code} />
+
+## Country Implementations
+
+<CountryImplementations bis={process.code} />
+
+## Interoperability
+
+<InteroperabilityGuidance bis={process.code} />
+
+## Related Processes
+
+<RelatedProcesses code={process.code} />

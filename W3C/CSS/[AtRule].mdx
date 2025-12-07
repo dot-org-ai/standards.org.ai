@@ -1,0 +1,450 @@
+---
+layout: at-rule
+source: W3C/CSS
+$type: W3C/CSS/AtRule
+$id: https://standards.org.ai/W3C/CSS/AtRule/{atRule.code}
+sameAs: https://standards.org.ai/AtRule/{atRule.code}
+canonical: https://w3.org.ai/CSS/AtRule/{atRule.code}
+params:
+  - AtRule
+schema:
+  atRule:
+    code: string
+    name: string
+    syntax: string
+    description: string
+    nested: boolean
+    descriptors: array
+    specification: string
+    category: string
+    examples: array
+---
+
+import { AtRuleHeader } from '@/components/css/AtRuleHeader'
+import { FormalSyntax } from '@/components/css/FormalSyntax'
+import { DescriptorList } from '@/components/css/DescriptorList'
+import { CodeExample } from '@/components/css/CodeExample'
+import { BrowserCompatibility } from '@/components/css/BrowserCompatibility'
+import { RelatedAtRules } from '@/components/css/RelatedAtRules'
+import { SpecificationLinks } from '@/components/css/SpecificationLinks'
+import { AtRuleTable } from '@/components/css/AtRuleTable'
+
+<AtRuleHeader
+  name={atRule.name}
+  syntax={atRule.syntax}
+  description={atRule.description}
+/>
+
+## Description
+
+{atRule.description}
+
+## At-Rule Information
+
+<AtRuleTable>
+  <AtRuleRow label="At-Rule" value={<code>@{atRule.code}</code>} />
+  <AtRuleRow label="Category" value={atRule.category} />
+  <AtRuleRow label="Nested Rules" value={atRule.nested ? 'Yes' : 'No'} />
+  <AtRuleRow label="Specification" value={atRule.specification} />
+</AtRuleTable>
+
+## Syntax
+
+<FormalSyntax syntax={atRule.syntax} />
+
+```css
+@{atRule.code} {atRule.nested ? '{ /* nested rules */ }' : '/* descriptors */;'}
+```
+
+{atRule.nested ? `
+### Block Content
+
+The \`@${atRule.code}\` rule contains nested CSS rules and declarations within its block.
+
+\`\`\`css
+@${atRule.code} {
+  /* CSS rules can be nested here */
+  selector {
+    property: value;
+  }
+}
+\`\`\`
+` : `
+### Descriptors
+
+The \`@${atRule.code}\` rule uses descriptors to define its behavior.
+`}
+
+## Descriptors
+
+{atRule.descriptors && atRule.descriptors.length > 0 ? (
+  <>
+    <DescriptorList descriptors={atRule.descriptors} />
+
+    {atRule.descriptors.map((descriptor) => (
+      <section key={descriptor.name}>
+        ### `{descriptor.name}`
+
+        **Type:** `{descriptor.type}`
+        {descriptor.required ? '**Required**' : '**Optional**'}
+        {descriptor.defaultValue && `**Default:** \`${descriptor.defaultValue}\``}
+
+        {descriptor.description}
+
+        {descriptor.syntax && (
+          <>
+            **Syntax:**
+            ```css
+            {descriptor.name}: {descriptor.syntax};
+            ```
+          </>
+        )}
+
+        {descriptor.values && (
+          <>
+            **Accepted values:**
+            {descriptor.values.map((val) => (
+              <div key={val.name}>
+                - `{val.name}`: {val.description}
+              </div>
+            ))}
+          </>
+        )}
+      </section>
+    ))}
+  </>
+) : (
+  <p>No descriptors required for this at-rule.</p>
+)}
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="css">
+{`/* Basic @${atRule.code} usage */
+@${atRule.code} ${atRule.nested ? '{\n  /* nested rules */\n}' : '/* descriptors */;'}
+`}
+</CodeExample>
+
+### Common Patterns
+
+{atRule.examples && atRule.examples.map((example, idx) => (
+  <section key={idx}>
+    <h4>{example.title}</h4>
+
+    <CodeExample language="css">
+{example.css}
+    </CodeExample>
+
+    {example.html && (
+      <CodeExample language="html">
+{example.html}
+      </CodeExample>
+    )}
+
+    <p>{example.description}</p>
+  </section>
+))}
+
+### Advanced Usage
+
+<CodeExample language="css">
+{`/* Advanced @${atRule.code} examples */
+
+${atRule.category === 'media' ? `
+/* Responsive design with media queries */
+@${atRule.code} screen and (min-width: 768px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@${atRule.code} screen and (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+}
+
+/* Print styles */
+@${atRule.code} print {
+  .no-print {
+    display: none;
+  }
+}
+` : ''}
+
+${atRule.category === 'font' ? `
+/* Custom font definition */
+@${atRule.code} {
+  font-family: "CustomFont";
+  src: url("font.woff2") format("woff2"),
+       url("font.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+` : ''}
+
+${atRule.category === 'animation' ? `
+/* Animation keyframes */
+@${atRule.code} slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animated {
+  animation: slideIn 0.3s ease-out;
+}
+` : ''}
+
+${atRule.category === 'import' ? `
+/* Import external stylesheets */
+@${atRule.code} url("typography.css");
+@${atRule.code} url("layout.css") screen and (min-width: 768px);
+@${atRule.code} url("print.css") print;
+` : ''}
+
+${atRule.category === 'namespace' ? `
+/* XML namespace declaration */
+@${atRule.code} url(http://www.w3.org/1999/xhtml);
+@${atRule.code} svg url(http://www.w3.org/2000/svg);
+
+svg|a {
+  stroke: blue;
+}
+` : ''}
+
+${atRule.category === 'supports' ? `
+/* Feature queries */
+@${atRule.code} (display: grid) {
+  .layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+@${atRule.code} not (display: grid) {
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+` : ''}
+
+${atRule.category === 'page' ? `
+/* Paged media for printing */
+@${atRule.code} {
+  size: A4;
+  margin: 2cm;
+}
+
+@${atRule.code} :first {
+  margin-top: 3cm;
+}
+` : ''}
+`}
+</CodeExample>
+
+### Interactive Demo
+
+<CodeExample language="html" live>
+{`<div class="demo">
+  <div class="element">
+    Demonstration of @${atRule.code}
+  </div>
+</div>
+
+<style>
+/* Example using @${atRule.code} */
+${atRule.category === 'media' ? `
+@${atRule.code} screen and (max-width: 600px) {
+  .element {
+    background: #ffebee;
+    border-color: #f44336;
+  }
+  .element::before {
+    content: "Mobile view";
+  }
+}
+
+@${atRule.code} screen and (min-width: 601px) {
+  .element {
+    background: #e3f2fd;
+    border-color: #2196f3;
+  }
+  .element::before {
+    content: "Desktop view";
+  }
+}
+` : `
+.demo {
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.element {
+  padding: 2rem;
+  background: white;
+  border: 2px solid #ddd;
+  text-align: center;
+}
+`}
+</style>
+`}
+</CodeExample>
+
+## Use Cases
+
+Common scenarios where `@{atRule.code}` is useful:
+
+{atRule.category === 'media' && `
+- Creating responsive designs for different screen sizes
+- Applying print-specific styles
+- Supporting different device orientations
+- Adapting to user preferences (prefers-reduced-motion, prefers-color-scheme)
+- Optimizing for different media types
+`}
+
+{atRule.category === 'font' && `
+- Loading custom web fonts
+- Defining font families with multiple weights and styles
+- Optimizing font loading performance with font-display
+- Providing fallbacks for different font formats
+- Supporting variable fonts
+`}
+
+{atRule.category === 'animation' && `
+- Defining reusable animation sequences
+- Creating complex multi-step animations
+- Building interactive UI transitions
+- Implementing scroll-based animations
+- Designing loading states and micro-interactions
+`}
+
+{atRule.category === 'import' && `
+- Organizing CSS into modular files
+- Loading external stylesheets
+- Conditionally importing CSS based on media queries
+- Managing third-party stylesheets
+`}
+
+{atRule.category === 'supports' && `
+- Progressive enhancement with feature detection
+- Providing fallbacks for unsupported features
+- Implementing modern CSS with graceful degradation
+- Testing browser capability support
+`}
+
+{atRule.category === 'page' && `
+- Controlling printed page layout
+- Setting page margins and size
+- Creating headers and footers for print
+- Managing page breaks
+- Optimizing content for printing
+`}
+
+## Browser Compatibility
+
+<BrowserCompatibility atRule={atRule.code} />
+
+## Specifications
+
+<SpecificationLinks specifications={[
+  {
+    name: atRule.specification,
+    url: `https://www.w3.org/TR/${atRule.specification}/#at-ruledef-${atRule.code}`,
+    status: 'Recommendation'
+  }
+]} />
+
+## Related At-Rules
+
+<RelatedAtRules atRule={atRule.code} category={atRule.category} />
+
+## Best Practices
+
+- Place `@{atRule.code}` rules in appropriate locations within your stylesheet
+- Consider the cascade and specificity when using nested rules
+- Use descriptors correctly with valid values
+- Test across different browsers and contexts
+- Optimize for performance and loading times
+
+{atRule.category === 'media' && `
+- Use mobile-first or desktop-first approach consistently
+- Combine media queries efficiently
+- Test on real devices, not just browser DevTools
+- Consider orientation, hover capability, and other media features
+`}
+
+{atRule.category === 'font' && `
+- Use woff2 format for best compression
+- Implement font-display: swap for better performance
+- Subset fonts to include only needed characters
+- Provide appropriate fallback fonts
+`}
+
+{atRule.category === 'import' && `
+- Place @import at the beginning of stylesheets
+- Minimize use of @import for better performance
+- Consider bundling instead of runtime imports
+- Use relative URLs when possible
+`}
+
+## Common Mistakes
+
+- Incorrect syntax or descriptor values
+- Missing required descriptors
+- Improper nesting or placement in stylesheet
+- Not considering browser support
+- Performance issues from overuse or misuse
+
+{atRule.category === 'media' && `
+- Creating too many overlapping media queries
+- Not testing across actual device sizes
+- Forgetting to handle edge cases and transitions
+`}
+
+{atRule.category === 'font' && `
+- Loading too many font weights and styles
+- Not providing fallback fonts
+- Blocking render with font loading
+`}
+
+## Performance Considerations
+
+- Evaluate the impact on page load and rendering
+- Minimize complexity and nesting depth
+- Consider critical CSS extraction
+- Use appropriate caching strategies
+- Monitor with performance profiling tools
+
+{atRule.category === 'import' && `
+- Each @import creates an additional HTTP request
+- Imports block parallel downloading
+- Consider using build tools to inline imports
+`}
+
+## Accessibility Notes
+
+- Ensure `@{atRule.code}` usage doesn't negatively impact accessibility
+- Test with screen readers and assistive technologies
+- Respect user preferences (reduced motion, color schemes, etc.)
+- Maintain sufficient contrast ratios in all states
+- Provide alternatives when features aren't supported
+
+## See Also
+
+- MDN Web Docs: [CSS At-Rules](https://developer.mozilla.org/en-US/docs/Web/CSS/At-rule)
+- [CSS Conditional Rules](https://www.w3.org/TR/css-conditional/)
+- Can I Use: [@{atRule.code}](https://caniuse.com/?search=%40{atRule.code})
+
+---
+
+*Part of the W3C CSS At-Rules Specifications. Last updated from [{atRule.specification}].*

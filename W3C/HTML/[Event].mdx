@@ -1,0 +1,161 @@
+---
+layout: event
+source: W3C/HTML
+$type: W3C/HTML/Event
+$id: https://standards.org.ai/W3C/HTML/Event/{event.code}
+sameAs: https://standards.org.ai/Event/{event.code}
+canonical: https://w3.org.ai/HTML/Event/{event.code}
+params:
+  - Event
+schema:
+  event:
+    code: name
+    name: name
+    interface: string
+    bubbles: boolean
+    cancelable: boolean
+    composed: boolean
+    defaultAction: string
+    target: string
+    eventPhase: string
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { EventPropertiesTable } from '@/components/w3c/html/EventPropertiesTable'
+import { RelatedEvents } from '@/components/w3c/html/RelatedEvents'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { EventFlowDiagram } from '@/components/w3c/html/EventFlowDiagram'
+
+<Header
+  type="HTML Event"
+  code={event.name}
+  name={event.name}
+  standard="W3C HTML"
+/>
+
+<Description content={event.description} />
+
+## Event Properties
+
+<EventPropertiesTable
+  interface={event.interface}
+  bubbles={event.bubbles}
+  cancelable={event.cancelable}
+  composed={event.composed}
+  defaultAction={event.defaultAction}
+  target={event.target}
+  eventPhase={event.eventPhase}
+/>
+
+## Event Flow
+
+<EventFlowDiagram
+  bubbles={event.bubbles}
+  cancelable={event.cancelable}
+  composed={event.composed}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`Listening for ${event.name} event`}
+  language="javascript"
+  code={event.examples?.addEventListener}
+/>
+
+{event.examples?.inlineHandler && (
+  <CodeExample
+    title="Using inline event handler"
+    language="html"
+    code={event.examples.inlineHandler}
+  />
+)}
+
+{event.examples?.preventDefault && event.cancelable && (
+  <CodeExample
+    title="Preventing default action"
+    language="javascript"
+    code={event.examples.preventDefault}
+  />
+)}
+
+{event.examples?.eventDelegation && (
+  <CodeExample
+    title="Event delegation pattern"
+    language="javascript"
+    code={event.examples.eventDelegation}
+  />
+)}
+
+## Event Interface
+
+The `{event.name}` event uses the **{event.interface}** interface.
+
+{event.interfaceProperties && (
+  <>
+    ### Interface Properties
+
+    {event.interfaceProperties.map((prop, index) => (
+      <div key={index} className="interface-property">
+        - **{prop.name}** ({prop.type}): {prop.description}
+      </div>
+    ))}
+  </>
+)}
+
+## Target Elements
+
+{event.targetElements && (
+  <ul>
+    {event.targetElements.map((element, index) => (
+      <li key={index}>&lt;{element}&gt;</li>
+    ))}
+  </ul>
+)}
+
+## Common Use Cases
+
+{event.useCases?.map((useCase, index) => (
+  <div key={index} className="use-case">
+    <h3>{useCase.title}</h3>
+    <p>{useCase.description}</p>
+    {useCase.example && (
+      <CodeExample
+        language="javascript"
+        code={useCase.example}
+      />
+    )}
+  </div>
+))}
+
+## Related Events
+
+<RelatedEvents
+  currentEvent={event.name}
+  category={event.category}
+  related={event.relatedEvents}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`api.${event.interface}`}
+  standard="W3C HTML"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={event.specifications}
+  standard="HTML"
+/>
+
+## See Also
+
+- [HTML Living Standard: Event handlers](https://html.spec.whatwg.org/multipage/webappapis.html#event-handlers)
+- [MDN Web Docs: {event.name}](https://developer.mozilla.org/en-US/docs/Web/API/Element/{event.name}_event)
+- [DOM Standard: Events](https://dom.spec.whatwg.org/#events)

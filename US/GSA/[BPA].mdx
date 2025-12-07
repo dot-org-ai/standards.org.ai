@@ -1,0 +1,49 @@
+---
+layout: bpa
+source: US/GSA
+$type: US/GSA/BPA
+$id: https://standards.org.ai/US/GSA/BPA/{bpa.code}
+sameAs: https://standards.org.ai/BPA/{bpa.code}
+canonical: https://us.org.ai/GSA/BPA/{bpa.code}
+params:
+  - BPA
+schema:
+  bpa:
+    code: code
+    name: name
+    vendor: vendor
+    schedule: schedule
+    scope: scope
+---
+
+# {bpa.name}
+
+<BPAHeader code={bpa.code} name={bpa.name} vendor={bpa.vendor} />
+
+## Scope
+
+{bpa.scope}
+
+## Vendor
+
+<VendorLink code={bpa.vendor} />
+
+## Base Schedule
+
+<ScheduleLink code={bpa.schedule} />
+
+## Agreement Details
+
+<BPADetails code={bpa.code} />
+
+## Ordering Information
+
+<BPAOrderingInfo code={bpa.code} />
+
+## Terms and Conditions
+
+<BPATerms code={bpa.code} />
+
+## Performance History
+
+<BPAPerformance code={bpa.code} />

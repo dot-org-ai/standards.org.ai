@@ -1,0 +1,58 @@
+---
+layout: gwac
+source: US/GSA
+$type: US/GSA/GWAC
+$id: https://standards.org.ai/US/GSA/GWAC/{gwac.code}
+sameAs: https://standards.org.ai/GWAC/{gwac.code}
+canonical: https://us.org.ai/GSA/GWAC/{gwac.code}
+params:
+  - GWAC
+schema:
+  gwac:
+    code: code
+    name: name
+    agency: agency
+    scope: scope
+    ceiling: ceiling
+    ordering: ordering
+---
+
+# {gwac.name}
+
+<GWACHeader code={gwac.code} name={gwac.name} agency={gwac.agency} />
+
+## Scope
+
+{gwac.scope}
+
+## Contract Details
+
+<GWACDetails code={gwac.code} ceiling={gwac.ceiling} />
+
+## Administering Agency
+
+{gwac.agency}
+
+## Ordering Procedures
+
+{gwac.ordering}
+
+## Contract Holders
+
+<GWACContractHolders code={gwac.code} />
+
+## Scope Categories
+
+<GWACScopeCategories code={gwac.code} />
+
+## Key Features
+
+<GWACFeatures code={gwac.code} />
+
+## Eligibility
+
+<GWACEligibility code={gwac.code} />
+
+## Resources
+
+<GWACResources code={gwac.code} />

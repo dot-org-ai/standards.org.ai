@@ -1,0 +1,141 @@
+---
+layout: profile
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/Profile
+$id: https://standards.org.ai/Healthcare/FHIR/Profile/{profile.code}
+sameAs: https://standards.org.ai/Profile/{profile.code}
+canonical: https://standards.org.ai/FHIR/Profile/{profile.code}
+params:
+  - Profile
+schema:
+  profile:
+    code: id
+    name: name
+    title: title
+    description: description
+    status: status
+    kind: kind
+    abstract: boolean
+    type: type
+    baseDefinition: url
+    derivation: string
+    experimental: boolean
+    publisher: string
+    purpose: string
+    copyright: string
+    fhirVersion: string
+    mapping: array
+    snapshot: object
+    differential: object
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRProfileHeader } from '@/components/healthcare/fhir/ProfileHeader'
+import { FHIRProfileDifferential } from '@/components/healthcare/fhir/ProfileDifferential'
+import { FHIRProfileSnapshot } from '@/components/healthcare/fhir/ProfileSnapshot'
+import { FHIRMappings } from '@/components/healthcare/fhir/Mappings'
+import { FHIRProfileExamples } from '@/components/healthcare/fhir/ProfileExamples'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIRProfileHeader
+  code={profile.code}
+  name={profile.name}
+  title={profile.title}
+  status={profile.status}
+  baseDefinition={profile.baseDefinition}
+/>
+
+<Description content={profile.description} />
+
+## Profile Information
+
+- **Status**: <StatusBadge status={profile.status} />
+- **Kind**: {profile.kind}
+- **Type**: {profile.type}
+- **Base Definition**: [{profile.baseDefinition}]({profile.baseDefinition})
+- **Derivation**: {profile.derivation}
+- **FHIR Version**: {profile.fhirVersion}
+- **Experimental**: {profile.experimental ? 'Yes' : 'No'}
+- **Publisher**: {profile.publisher || 'HL7 International'}
+
+{profile.purpose && (
+  <>
+    ## Purpose
+
+    {profile.purpose}
+  </>
+)}
+
+## Differential
+
+The differential view shows only the constraints and extensions that differ from the base resource.
+
+<FHIRProfileDifferential
+  differential={profile.differential}
+  baseDefinition={profile.baseDefinition}
+/>
+
+## Snapshot
+
+The snapshot view shows the complete structure with all inherited elements.
+
+<FHIRProfileSnapshot
+  snapshot={profile.snapshot}
+/>
+
+## Mappings
+
+<FHIRMappings
+  mappings={profile.mapping}
+/>
+
+## Examples
+
+<FHIRProfileExamples
+  profileUrl={profile.url}
+  type={profile.type}
+/>
+
+### Conformant Instance Example
+
+<CodeExample
+  title={`Conformant ${profile.name} Instance`}
+  language="json"
+  code={profile.examples?.conformant}
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR Profiling',
+      url: 'https://www.hl7.org/fhir/profiling.html'
+    },
+    {
+      name: 'This Profile Definition',
+      url: profile.url
+    },
+    {
+      name: 'Base Resource',
+      url: profile.baseDefinition
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Profiling](https://www.hl7.org/fhir/profiling.html)
+- [FHIR StructureDefinition](https://www.hl7.org/fhir/structuredefinition.html)
+{profile.copyright && (
+  <>
+
+    ## Copyright
+
+    {profile.copyright}
+  </>
+)}

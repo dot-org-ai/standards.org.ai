@@ -1,0 +1,160 @@
+---
+layout: property
+source: W3C/CSS
+$type: W3C/CSS/Property
+$id: https://standards.org.ai/W3C/CSS/Property/{property.code}
+sameAs: https://standards.org.ai/Property/{property.code}
+canonical: https://w3.org.ai/CSS/Property/{property.code}
+params:
+  - Property
+schema:
+  property:
+    code: string
+    name: string
+    syntax: string
+    initial: string
+    inherited: boolean
+    animatable: boolean
+    percentages: string
+    computedValue: string
+    specification: string
+    description: string
+    values: array
+    appliesToElements: string
+    mediaType: string
+---
+
+import { PropertyHeader } from '@/components/css/PropertyHeader'
+import { FormalSyntax } from '@/components/css/FormalSyntax'
+import { ValueList } from '@/components/css/ValueList'
+import { CodeExample } from '@/components/css/CodeExample'
+import { BrowserCompatibility } from '@/components/css/BrowserCompatibility'
+import { RelatedProperties } from '@/components/css/RelatedProperties'
+import { SpecificationLinks } from '@/components/css/SpecificationLinks'
+import { PropertyTable } from '@/components/css/PropertyTable'
+
+<PropertyHeader
+  name={property.name}
+  syntax={property.syntax}
+  description={property.description}
+/>
+
+## Description
+
+{property.description}
+
+## Formal Definition
+
+<PropertyTable>
+  <PropertyRow label="Initial value" value={property.initial} />
+  <PropertyRow label="Applies to" value={property.appliesToElements} />
+  <PropertyRow label="Inherited" value={property.inherited ? 'yes' : 'no'} />
+  <PropertyRow label="Percentages" value={property.percentages} />
+  <PropertyRow label="Computed value" value={property.computedValue} />
+  <PropertyRow label="Animation type" value={property.animatable ? 'by computed value type' : 'discrete'} />
+</PropertyTable>
+
+## Formal Syntax
+
+<FormalSyntax syntax={property.syntax} />
+
+## Values
+
+<ValueList values={property.values} />
+
+{property.values && property.values.map((value) => (
+  <section key={value.name}>
+    ### `{value.name}`
+
+    {value.description}
+  </section>
+))}
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="css">
+{`/* Example usage of ${property.name} */
+.element {
+  ${property.code}: ${property.initial};
+}
+`}
+</CodeExample>
+
+### Common Patterns
+
+<CodeExample language="css">
+{`/* Practical examples */
+.example-1 {
+  ${property.code}: /* value here */;
+}
+
+.example-2 {
+  ${property.code}: /* alternative value */;
+}
+
+.example-3 {
+  /* Combined with other properties */
+  ${property.code}: /* value */;
+}
+`}
+</CodeExample>
+
+### Interactive Demo
+
+<CodeExample language="html" live>
+{`<div class="demo">
+  <div class="element">Sample Content</div>
+</div>
+
+<style>
+.demo {
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.element {
+  ${property.code}: ${property.initial};
+  padding: 1rem;
+  background: white;
+  border: 1px solid #ddd;
+}
+</style>
+`}
+</CodeExample>
+
+## Browser Compatibility
+
+<BrowserCompatibility property={property.code} />
+
+## Specifications
+
+<SpecificationLinks specifications={[
+  {
+    name: property.specification,
+    url: `https://www.w3.org/TR/${property.specification}/#${property.code}`,
+    status: 'Recommendation'
+  }
+]} />
+
+## Related Properties
+
+<RelatedProperties property={property.code} />
+
+## See Also
+
+- MDN Web Docs: [{property.name}](https://developer.mozilla.org/en-US/docs/Web/CSS/{property.code})
+- CSS Working Group Drafts
+- Can I Use: [{property.code}](https://caniuse.com/?search={property.code})
+
+## Notes
+
+- Check browser compatibility before using in production
+- Consider fallback values for older browsers
+- Test across different viewport sizes if responsive behavior applies
+- Validate CSS using W3C CSS Validator
+
+---
+
+*Part of the W3C CSS Specifications. Last updated from [{property.specification}].*

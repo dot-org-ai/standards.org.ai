@@ -1,0 +1,35 @@
+---
+layout: exceptionCode
+source: US/SBA
+$type: US/SBA/ExceptionCode
+$id: https://standards.org.ai/US/SBA/ExceptionCode/{exception.code}
+sameAs: https://standards.org.ai/SBA/ExceptionCode/{exception.code}
+canonical: https://us.org.ai/SBA/ExceptionCode/{exception.code}
+params:
+  - ExceptionCode
+schema:
+  exception:
+    code: ExceptionCode
+    description: Description
+    industries: ApplicableIndustries
+---
+
+# Exception Code {exception.code}
+
+<ExceptionCodeHeader code={exception.code} />
+
+## Description
+
+{exception.description}
+
+## Applicable Industries
+
+<IndustriesByException exceptionCode={exception.code} />
+
+## Impact on Size Standards
+
+<ExceptionImpactDetails code={exception.code} />
+
+## Related Exceptions
+
+<RelatedExceptions currentCode={exception.code} />

@@ -1,0 +1,287 @@
+---
+layout: Activity
+source: W3C/PROV
+$type: W3C/PROV/Activity
+$id: https://standards.org.ai/W3C/PROV/Activity/{activity.code}
+sameAs: https://standards.org.ai/Activity/{activity.code}
+canonical: https://w3.org.ai/PROV/Activity/{activity.code}
+params:
+  - Activity
+schema:
+  activity:
+    code: string
+    uri: string
+    label: string
+    type: array
+    used: array
+    wasAssociatedWith: array
+    wasInformedBy: array
+    startedAtTime: string
+    endedAtTime: string
+    wasStartedBy: object
+    wasEndedBy: object
+    generated: array
+    invalidated: array
+    atLocation: string
+---
+
+# {activity.label}
+
+<div className="activity-header">
+  <div className="activity-metadata">
+    <span className="activity-uri">{activity.uri}</span>
+    <span className="activity-type">PROV Activity</span>
+  </div>
+</div>
+
+{activity.type && activity.type.length > 0 && (
+  <section className="activity-types">
+    <h3>Types</h3>
+    <ul>
+      {activity.type.map((type, idx) => (
+        <li key={idx}><code>{type}</code></li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="activity-timeline">
+  <h2>Timeline</h2>
+
+  <div className="timeline">
+    {activity.startedAtTime && (
+      <div className="timeline-event start">
+        <h4>Started</h4>
+        <p className="timestamp">{activity.startedAtTime}</p>
+        {activity.wasStartedBy && (
+          <p className="trigger">
+            Triggered by: <a href={activity.wasStartedBy.uri || activity.wasStartedBy}>
+              {activity.wasStartedBy.label || 'Entity'}
+            </a>
+          </p>
+        )}
+      </div>
+    )}
+
+    {activity.endedAtTime && (
+      <div className="timeline-event end">
+        <h4>Ended</h4>
+        <p className="timestamp">{activity.endedAtTime}</p>
+        {activity.wasEndedBy && (
+          <p className="trigger">
+            Ended by: <a href={activity.wasEndedBy.uri || activity.wasEndedBy}>
+              {activity.wasEndedBy.label || 'Entity'}
+            </a>
+          </p>
+        )}
+      </div>
+    )}
+
+    {activity.startedAtTime && activity.endedAtTime && (
+      <div className="duration">
+        <p>
+          <strong>Duration:</strong> {
+            new Date(activity.endedAtTime).getTime() - new Date(activity.startedAtTime).getTime()
+          } ms
+        </p>
+      </div>
+    )}
+  </div>
+</section>
+
+{activity.atLocation && (
+  <section className="location">
+    <h3>Location</h3>
+    <p>{activity.atLocation}</p>
+  </section>
+)}
+
+{activity.used && activity.used.length > 0 && (
+  <section className="usage">
+    <h2>Used Entities</h2>
+    <p>This activity used {activity.used.length} entit{activity.used.length !== 1 ? 'ies' : 'y'}:</p>
+    <ul className="entity-list">
+      {activity.used.map((entity, idx) => (
+        <li key={idx} className="entity-item">
+          <a href={entity.uri || entity}>{entity.label || entity}</a>
+          {entity.role && <span className="role"> (Role: {entity.role})</span>}
+          {entity.type && <span className="entity-type"> [{entity.type}]</span>}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{activity.generated && activity.generated.length > 0 && (
+  <section className="generation">
+    <h2>Generated Entities</h2>
+    <p>This activity generated {activity.generated.length} entit{activity.generated.length !== 1 ? 'ies' : 'y'}:</p>
+    <ul className="entity-list">
+      {activity.generated.map((entity, idx) => (
+        <li key={idx} className="entity-item">
+          <a href={entity.uri || entity}>{entity.label || entity}</a>
+          {entity.role && <span className="role"> (Role: {entity.role})</span>}
+          {entity.generatedAtTime && (
+            <span className="generation-time"> at {entity.generatedAtTime}</span>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{activity.invalidated && activity.invalidated.length > 0 && (
+  <section className="invalidation">
+    <h3>Invalidated Entities</h3>
+    <ul className="entity-list">
+      {activity.invalidated.map((entity, idx) => (
+        <li key={idx}>
+          <a href={entity.uri || entity}>{entity.label || entity}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{activity.wasAssociatedWith && activity.wasAssociatedWith.length > 0 && (
+  <section className="association">
+    <h2>Associated Agents</h2>
+    <p>This activity was associated with {activity.wasAssociatedWith.length} agent{activity.wasAssociatedWith.length !== 1 ? 's' : ''}:</p>
+    <div className="agent-grid">
+      {activity.wasAssociatedWith.map((assoc, idx) => (
+        <div key={idx} className="agent-card">
+          <h4>
+            <a href={assoc.agent?.uri || assoc.uri || assoc}>
+              {assoc.agent?.label || assoc.label || assoc.name || 'Agent'}
+            </a>
+          </h4>
+          {assoc.role && <p><strong>Role:</strong> {assoc.role}</p>}
+          {assoc.plan && (
+            <p>
+              <strong>Plan:</strong> <a href={assoc.plan.uri || assoc.plan}>
+                {assoc.plan.label || 'Plan'}
+              </a>
+            </p>
+          )}
+        </div>
+      ))}
+    </div>
+  </section>
+)}
+
+{activity.wasInformedBy && activity.wasInformedBy.length > 0 && (
+  <section className="communication">
+    <h3>Was Informed By</h3>
+    <p>This activity was informed by other activities:</p>
+    <ul className="activity-list">
+      {activity.wasInformedBy.map((act, idx) => (
+        <li key={idx}>
+          <a href={act.uri || act}>{act.label || act}</a>
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="prov-overview">
+  <h2>About PROV Activities</h2>
+  <div className="info-box">
+    <p>
+      In PROV, an <strong>Activity</strong> is something that occurs over a period of time and
+      acts upon or with entities. Activities may include consuming, processing, transforming,
+      modifying, relocating, using, or generating entities.
+    </p>
+    <h4>Key Concepts</h4>
+    <ul>
+      <li><strong>Usage:</strong> Activities use entities as input</li>
+      <li><strong>Generation:</strong> Activities generate new entities as output</li>
+      <li><strong>Association:</strong> Activities are associated with agents who carry them out</li>
+      <li><strong>Communication:</strong> Activities can be informed by other activities</li>
+      <li><strong>Timeline:</strong> Activities have start and end times</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<${activity.uri}> a prov:Activity ;
+  rdfs:label "${activity.label}"@en ;${activity.type ? `
+  ${activity.type.map(t => `a <${t}>`).join(' ;\n  ')} ;` : ''}${activity.startedAtTime ? `
+  prov:startedAtTime "${activity.startedAtTime}"^^xsd:dateTime ;` : ''}${activity.endedAtTime ? `
+  prov:endedAtTime "${activity.endedAtTime}"^^xsd:dateTime ;` : ''}${activity.used ? `
+  ${activity.used.map(e => `prov:used <${e.uri || e}>`).join(' ;\n  ')} ;` : ''}${activity.generated ? `
+  ${activity.generated.map(e => `prov:generated <${e.uri || e}>`).join(' ;\n  ')} ;` : ''}${activity.wasAssociatedWith ? `
+  ${activity.wasAssociatedWith.map(a => `prov:wasAssociatedWith <${a.agent?.uri || a.uri || a}>`).join(' ;\n  ')} ;` : ''}${activity.wasInformedBy ? `
+  ${activity.wasInformedBy.map(a => `prov:wasInformedBy <${a.uri || a}>`).join(' ;\n  ')} ;` : ''}${activity.atLocation ? `
+  prov:atLocation "${activity.atLocation}" ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Find all inputs and outputs</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?input ?output
+WHERE {
+  OPTIONAL { <${activity.uri}> prov:used ?input }
+  OPTIONAL { <${activity.uri}> prov:generated ?output }
+}`}</code></pre>
+
+  <h4>Trace activity chain</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?priorActivity ?subsequentActivity
+WHERE {
+  OPTIONAL { ?priorActivity prov:wasInformedBy <${activity.uri}> }
+  OPTIONAL { <${activity.uri}> prov:wasInformedBy ?subsequentActivity }
+}`}</code></pre>
+
+  <h4>Find responsible agents</h4>
+  <pre><code>{`PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?agent ?role ?plan
+WHERE {
+  <${activity.uri}> prov:qualifiedAssociation ?assoc .
+  ?assoc prov:agent ?agent .
+  OPTIONAL { ?assoc prov:hadRole ?role }
+  OPTIONAL { ?assoc prov:hadPlan ?plan }
+}`}</code></pre>
+</section>
+
+<section className="visualization">
+  <h3>Activity Flow</h3>
+  <div className="flow-diagram">
+    <div className="flow-section">
+      <h4>Inputs</h4>
+      {activity.used && activity.used.map((entity, idx) => (
+        <div key={idx} className="flow-entity">{entity.label || entity}</div>
+      ))}
+    </div>
+
+    <div className="flow-section activity-center">
+      <div className="flow-activity">{activity.label}</div>
+      {activity.wasAssociatedWith && (
+        <div className="flow-agents">
+          {activity.wasAssociatedWith.map((agent, idx) => (
+            <div key={idx} className="flow-agent">
+              {agent.agent?.label || agent.label || 'Agent'}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div className="flow-section">
+      <h4>Outputs</h4>
+      {activity.generated && activity.generated.map((entity, idx) => (
+        <div key={idx} className="flow-entity">{entity.label || entity}</div>
+      ))}
+    </div>
+  </div>
+</section>

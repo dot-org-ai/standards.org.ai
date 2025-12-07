@@ -1,0 +1,374 @@
+---
+layout: guideline
+source: W3C/WCAG
+$type: W3C/WCAG/Guideline
+$id: https://standards.org.ai/W3C/WCAG/Guideline/{guideline.code}
+sameAs: https://standards.org.ai/Guideline/{guideline.code}
+canonical: https://w3.org.ai/WCAG/Guideline/{guideline.code}
+params:
+  - Guideline
+schema:
+  guideline:
+    code: string
+    number: string
+    name: string
+    principle: string
+    principleNumber: string
+    description: string
+    successCriteria: array
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { SuccessCriteriaList } from '@/components/wcag/SuccessCriteriaList'
+import { ConformanceLevelBadge } from '@/components/wcag/ConformanceLevelBadge'
+import { Breadcrumb } from '@/components/Breadcrumb'
+
+<Breadcrumb
+  items={[
+    { label: 'WCAG', href: '/W3C/WCAG' },
+    { label: `Principle ${guideline.principleNumber}`, href: `/W3C/WCAG/Principle/${guideline.principle}` },
+    { label: `Guideline ${guideline.number}`, href: `/W3C/WCAG/Guideline/${guideline.code}` }
+  ]}
+/>
+
+<Header
+  title={`Guideline ${guideline.number}: ${guideline.name}`}
+  type="WCAG Guideline"
+  code={guideline.code}
+/>
+
+## Overview
+
+<Description>
+  {guideline.description}
+</Description>
+
+This guideline falls under **Principle {guideline.principleNumber}: {guideline.principle}** and provides specific objectives for achieving accessible web content. It contains {guideline.successCriteria.length} testable success criteria at various conformance levels.
+
+## Purpose and Benefits
+
+### Who Benefits
+
+This guideline helps users who:
+
+- Use assistive technologies (screen readers, screen magnifiers, speech recognition)
+- Have visual, auditory, motor, or cognitive disabilities
+- Use alternative input methods or navigation techniques
+- Access content in challenging environments or on diverse devices
+- Experience temporary disabilities or situational limitations
+
+### Impact on User Experience
+
+Implementing this guideline improves:
+
+- **Accessibility**: Content is usable by people with disabilities
+- **Usability**: Better experience for all users, not just those with disabilities
+- **Compatibility**: Works across different technologies and platforms
+- **Flexibility**: Adapts to user preferences and needs
+- **Robustness**: Maintains functionality across various contexts
+
+## Success Criteria
+
+<SuccessCriteriaList guideline={guideline.code} />
+
+This guideline contains the following testable success criteria:
+
+{guideline.successCriteria.map(sc => (
+  <div key={sc.number} className="success-criterion-summary">
+    <h3>
+      {sc.number} {sc.name}
+      <ConformanceLevelBadge level={sc.level} />
+    </h3>
+    <p>{sc.description}</p>
+  </div>
+))}
+
+## Implementation Guidance
+
+### General Approach
+
+1. **Understand Requirements**: Review each success criterion under this guideline
+2. **Assess Current State**: Evaluate existing content against requirements
+3. **Plan Solutions**: Choose appropriate techniques for your context
+4. **Implement Changes**: Apply sufficient techniques systematically
+5. **Test and Verify**: Ensure all criteria are met before deployment
+6. **Monitor Compliance**: Regularly review as content evolves
+
+### Code Examples
+
+#### Basic Implementation
+
+```html
+<!-- Example: Implementing {guideline.name} -->
+<section aria-labelledby="section-title">
+  <h2 id="section-title">{guideline.name}</h2>
+
+  <!-- Content following guideline {guideline.number} requirements -->
+  <div role="region" aria-label="Content area">
+    <!-- Accessible content implementation -->
+  </div>
+</section>
+```
+
+#### React Component Example
+
+```jsx
+import { useAccessibility } from '@/hooks/useAccessibility'
+
+const AccessibleComponent = () => {
+  const { announceToScreenReader } = useAccessibility()
+
+  const handleAction = () => {
+    // Perform action
+    announceToScreenReader(
+      `Action completed following guideline {guideline.number}`
+    )
+  }
+
+  return (
+    <div>
+      <h2>{guideline.name}</h2>
+      {/* Component implementation */}
+      <button
+        onClick={handleAction}
+        aria-label="Accessible action button"
+      >
+        Perform Action
+      </button>
+    </div>
+  )
+}
+```
+
+#### Advanced Pattern
+
+```typescript
+// Accessibility utility following guideline {guideline.number}
+class AccessibilityHelper {
+  private guidelines: Set<string> = new Set()
+
+  checkGuideline(guidelineNumber: string): boolean {
+    return this.guidelines.has(guidelineNumber)
+  }
+
+  implementGuideline(
+    guidelineNumber: string,
+    techniques: string[]
+  ): void {
+    // Apply sufficient techniques
+    techniques.forEach(technique => {
+      this.applyTechnique(technique)
+    })
+    this.guidelines.add(guidelineNumber)
+  }
+
+  private applyTechnique(technique: string): void {
+    // Implementation specific to technique
+    console.log(`Applying technique: ${technique}`)
+  }
+}
+```
+
+## Testing Procedures
+
+### Manual Testing Checklist
+
+- [ ] Review all success criteria under this guideline
+- [ ] Test with keyboard navigation only
+- [ ] Verify with screen reader (NVDA, JAWS, VoiceOver)
+- [ ] Check with browser zoom at 200%
+- [ ] Test in high contrast mode
+- [ ] Verify on mobile devices
+- [ ] Test with voice control software
+- [ ] Review with actual users who have disabilities
+
+### Automated Testing
+
+```javascript
+// Automated test suite for guideline {guideline.number}
+describe('Guideline {guideline.number}: {guideline.name}', () => {
+  beforeEach(() => {
+    cy.visit('/page-to-test')
+    cy.injectAxe()
+  })
+
+  it('should meet all Level A criteria', () => {
+    cy.checkA11y(null, {
+      runOnly: {
+        type: 'tag',
+        values: ['wcag2a', 'wcag{guideline.version.replace('.', '')}a']
+      }
+    })
+  })
+
+  it('should meet all Level AA criteria', () => {
+    cy.checkA11y(null, {
+      runOnly: {
+        type: 'tag',
+        values: ['wcag2aa', 'wcag{guideline.version.replace('.', '')}aa']
+      }
+    })
+  })
+
+  it('should meet guideline {guideline.number} requirements', () => {
+    // Specific tests for this guideline
+    cy.checkA11y(null, {
+      rules: {
+        // Configure rules specific to guideline {guideline.number}
+      }
+    })
+  })
+})
+```
+
+### Testing Tools
+
+| Tool Type | Examples | Purpose |
+|-----------|----------|---------|
+| Automated Scanners | axe DevTools, WAVE, Lighthouse | Quick detection of common issues |
+| Screen Readers | NVDA, JAWS, VoiceOver, TalkBack | Verify assistive technology compatibility |
+| Manual Tools | Colour Contrast Analyser, HeadingsMap | Detailed inspection of specific aspects |
+| User Testing | Direct feedback from users with disabilities | Real-world validation |
+
+## Common Techniques
+
+### Sufficient Techniques
+
+These techniques are reliable ways to meet the success criteria:
+
+1. **Semantic HTML**: Use proper HTML elements for their intended purpose
+2. **ARIA Attributes**: Apply ARIA when HTML semantics are insufficient
+3. **Alternative Text**: Provide text alternatives for non-text content
+4. **Keyboard Support**: Ensure all functionality is keyboard accessible
+5. **Focus Management**: Maintain logical and visible focus order
+6. **Error Identification**: Clearly identify and describe errors
+7. **Labels and Instructions**: Provide clear labels for form inputs
+
+### Advisory Techniques
+
+These techniques go beyond requirements but improve accessibility:
+
+- Progressive enhancement strategies
+- Clear and simple language
+- Consistent navigation and identification
+- Helpful error suggestions
+- Multiple ways to find content
+- Sufficient time to read and interact
+
+### Common Failures
+
+Avoid these practices that violate this guideline:
+
+- Missing or incorrect semantic structure
+- Keyboard traps or inaccessible controls
+- Insufficient color contrast
+- Missing alternative text
+- Automatic redirects or updates without user control
+- Time limits without options to extend
+- Content that causes seizures or physical reactions
+
+## Conformance Considerations
+
+### Level A (Minimum)
+
+Essential requirements that, if not met, make content inaccessible to some users. All websites should meet Level A criteria.
+
+### Level AA (Recommended)
+
+Addresses major barriers to accessibility. Level AA is the recommended target for most organizations and is required by many laws and policies.
+
+### Level AAA (Enhanced)
+
+Provides the highest level of accessibility. Level AAA may not be achievable for all content but should be applied where possible.
+
+## Related Guidelines
+
+<RelatedItems
+  items={[
+    { type: 'principle', code: guideline.principle },
+    ...guideline.successCriteria
+  ]}
+  title="Related Standards"
+/>
+
+### Same Principle
+
+Other guidelines under the same principle:
+- See Principle {guideline.principleNumber}: {guideline.principle}
+
+### Cross-Reference
+
+This guideline often works in conjunction with:
+- Guideline 1.1 (Text Alternatives)
+- Guideline 2.1 (Keyboard Accessible)
+- Guideline 4.1 (Compatible)
+
+## Industry Applications
+
+### Web Development
+
+- Websites and web applications
+- Single-page applications (SPAs)
+- Progressive web apps (PWAs)
+- E-commerce platforms
+
+### Mobile Development
+
+- Native iOS and Android apps
+- Hybrid mobile applications
+- Mobile-responsive websites
+
+### Enterprise Software
+
+- Business applications
+- Internal tools and dashboards
+- Content management systems
+
+### Digital Publishing
+
+- E-books and digital documents
+- Online learning platforms
+- News and media websites
+
+## Resources
+
+### Official Documentation
+
+<SpecificationLink
+  href={`https://www.w3.org/TR/WCAG${guideline.version.replace('.', '')}/#${guideline.code}`}
+  title={`WCAG ${guideline.version} - Guideline ${guideline.number}`}
+  organization="W3C"
+  standard="WCAG"
+  version={guideline.version}
+/>
+
+### Additional Resources
+
+- [Understanding Guideline {guideline.number}](https://www.w3.org/WAI/WCAG{guideline.version.replace('.', '')}/Understanding/{guideline.code})
+- [How to Meet Guideline {guideline.number}](https://www.w3.org/WAI/WCAG{guideline.version.replace('.', '')}/quickref/#{guideline.code})
+- [Techniques for Guideline {guideline.number}](https://www.w3.org/WAI/WCAG{guideline.version.replace('.', '')}/Techniques/)
+
+### Training and Support
+
+- [W3C WAI Tutorials](https://www.w3.org/WAI/tutorials/)
+- [MDN Accessibility Guide](https://developer.mozilla.org/en-US/docs/Web/Accessibility)
+- [WebAIM Resources](https://webaim.org/resources/)
+
+## Quick Reference
+
+| Aspect | Details |
+|--------|---------|
+| Guideline Number | {guideline.number} |
+| Guideline Name | {guideline.name} |
+| Parent Principle | {guideline.principleNumber} - {guideline.principle} |
+| Success Criteria | {guideline.successCriteria.length} |
+| WCAG Version | {guideline.version} |
+| Status | W3C Recommendation |
+
+---
+
+*For complete implementation guidance, refer to the individual success criteria pages and associated techniques.*

@@ -1,0 +1,135 @@
+---
+layout: Collection
+source: W3C/SKOS
+$type: W3C/SKOS/Collection
+$id: https://standards.org.ai/W3C/SKOS/Collection/{collection.code}
+sameAs: https://standards.org.ai/Collection/{collection.code}
+canonical: https://w3.org.ai/SKOS/Collection/{collection.code}
+params:
+  - Collection
+schema:
+  collection:
+    code: string
+    uri: string
+    label: string
+    description: string
+    members: array
+    memberList: array
+    note: string
+    inScheme: string
+---
+
+# {collection.label}
+
+<div className="collection-header">
+  <div className="collection-metadata">
+    <span className="collection-uri">{collection.uri}</span>
+    <span className="collection-type">SKOS Collection</span>
+  </div>
+</div>
+
+{collection.description && (
+  <section className="description">
+    <h2>Description</h2>
+    <p>{collection.description}</p>
+  </section>
+)}
+
+{collection.note && (
+  <section className="note">
+    <div className="info-box">
+      <strong>Note:</strong> {collection.note}
+    </div>
+  </section>
+)}
+
+<section className="collection-members">
+  <h2>Collection Members</h2>
+
+  {collection.memberList && collection.memberList.length > 0 ? (
+    <div className="ordered-members">
+      <p className="member-info">
+        This collection maintains an ordered list of members.
+      </p>
+      <ol className="member-list-ordered">
+        {collection.memberList.map((member, idx) => (
+          <li key={idx}>
+            <a href={member.uri || member}>{member.prefLabel || member.label || member}</a>
+            {member.definition && <p className="member-definition">{member.definition}</p>}
+          </li>
+        ))}
+      </ol>
+    </div>
+  ) : collection.members && collection.members.length > 0 ? (
+    <div className="unordered-members">
+      <p className="member-info">
+        This collection contains {collection.members.length} member{collection.members.length !== 1 ? 's' : ''}.
+      </p>
+      <ul className="member-list">
+        {collection.members.map((member, idx) => (
+          <li key={idx}>
+            <a href={member.uri || member}>{member.prefLabel || member.label || member}</a>
+            {member.definition && <p className="member-definition">{member.definition}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ) : (
+    <p>No members defined for this collection.</p>
+  )}
+</section>
+
+{collection.inScheme && (
+  <section className="scheme-membership">
+    <h3>Part of Concept Scheme</h3>
+    <p><a href={collection.inScheme}>{collection.inScheme}</a></p>
+  </section>
+)}
+
+<section className="collection-info">
+  <h3>About SKOS Collections</h3>
+  <p>
+    SKOS Collections provide a way to group concepts together for specific purposes,
+    such as creating curated lists or organizing concepts independently of the
+    hierarchical structure.
+  </p>
+  <div className="key-differences">
+    <h4>Collection Types</h4>
+    <ul>
+      <li><strong>skos:Collection:</strong> An unordered grouping of concepts using <code>skos:member</code></li>
+      <li><strong>skos:OrderedCollection:</strong> An ordered list using <code>skos:memberList</code></li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<${collection.uri}> a ${collection.memberList ? 'skos:OrderedCollection' : 'skos:Collection'} ;
+  skos:prefLabel "${collection.label}"@en ;${collection.description ? `
+  skos:definition "${collection.description}"@en ;` : ''}${collection.note ? `
+  skos:note "${collection.note}"@en ;` : ''}${collection.inScheme ? `
+  skos:inScheme <${collection.inScheme}> ;` : ''}${collection.memberList ? `
+  skos:memberList ( ${collection.memberList.map(m => `<${m.uri || m}>`).join(' ')} ) ;` : collection.members ? `
+  ${collection.members.map(m => `skos:member <${m.uri || m}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="usage-examples">
+  <h3>Usage Examples</h3>
+
+  <h4>Query collection members with SPARQL</h4>
+  <pre><code>{`PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?member ?label
+WHERE {
+  <${collection.uri}> skos:member ?member .
+  ?member skos:prefLabel ?label .
+}`}</code></pre>
+
+  <h4>Add concept to this collection</h4>
+  <pre><code>{`@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+
+<${collection.uri}> skos:member <http://example.org/concept/new-concept> .`}</code></pre>
+</section>

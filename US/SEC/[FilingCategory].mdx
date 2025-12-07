@@ -1,0 +1,48 @@
+---
+layout: filingCategory
+source: SEC
+$type: SEC/FilingCategory
+$id: https://standards.org.ai/SEC/FilingCategory/{category.code}
+sameAs: https://standards.org.ai/FilingCategory/{category.code}
+canonical: https://us.org.ai/SEC/FilingCategory/{category.code}
+params:
+  - FilingCategory
+schema:
+  category:
+    code: code
+    name: name
+    description: description
+    forms: forms
+---
+
+# {category.name}
+
+<FilingCategoryHeader code={category.code} name={category.name} />
+
+## Category Code
+
+{category.code}
+
+## Description
+
+{category.description}
+
+## Forms in This Category
+
+<FormTypeList category={category.code} />
+
+## Recent Filings
+
+<RecentFilingsByCategory category={category.code} />
+
+## Filing Statistics
+
+<CategoryStatistics category={category.code} />
+
+## Filing Requirements
+
+<CategoryRequirements category={category.code} />
+
+## Key Deadlines
+
+<CategoryDeadlines category={category.code} />

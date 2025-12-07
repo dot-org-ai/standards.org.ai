@@ -1,0 +1,798 @@
+---
+layout: state
+source: W3C/ARIA
+$type: W3C/ARIA/State
+$id: https://standards.org.ai/W3C/ARIA/State/{state.name}
+sameAs: https://standards.org.ai/State/{state.name}
+canonical: https://w3.org.ai/ARIA/State/{state.name}
+params:
+  - State
+schema:
+  state:
+    name: string
+    type: string
+    valueType: string
+    defaultValue: string
+    description: string
+    usedInRoles: array
+    relatedStates: array
+    allowedValues: array
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { StateBadge } from '@/components/aria/StateBadge'
+import { CodeExample } from '@/components/CodeExample'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { RelatedItems } from '@/components/RelatedItems'
+import { AllowedValues } from '@/components/aria/AllowedValues'
+import { RoleCompatibility } from '@/components/aria/RoleCompatibility'
+
+<Header
+  title={state.name}
+  type="ARIA State"
+  code={state.name}
+  badge={<StateBadge type={state.type} />}
+/>
+
+## State Type
+
+<StateBadge type={state.type} detailed />
+
+This is an ARIA **state** attribute in WAI-ARIA {state.version}.
+
+**Key Difference**: States are dynamic and change frequently based on user interaction, while properties are more static and rarely change after initial page load.
+
+## Description
+
+<Description>
+  {state.description}
+</Description>
+
+## Value Type
+
+**Type**: `{state.valueType}`
+
+{state.valueType === 'true/false' && (
+  <p>
+    This state accepts boolean values. Use `"true"` or `"false"` (as strings in HTML).
+    Omitting the attribute is typically equivalent to the default value.
+  </p>
+)}
+
+{state.valueType === 'tristate' && (
+  <p>
+    This state accepts three values: `"true"`, `"false"`, or `"mixed"`.
+    The mixed state indicates a partially checked or indeterminate state.
+  </p>
+)}
+
+{state.valueType === 'token' && (
+  <p>
+    This state accepts a predefined set of string values (tokens).
+    See allowed values below for the complete list.
+  </p>
+)}
+
+{state.valueType === 'token list' && (
+  <p>
+    This state accepts one or more space-separated tokens from the allowed values list.
+  </p>
+)}
+
+{state.valueType === 'integer' && (
+  <p>
+    This state accepts integer values. The specific range depends on context and usage.
+  </p>
+)}
+
+{state.valueType === 'number' && (
+  <p>
+    This state accepts numeric values (integers or decimals).
+  </p>
+)}
+
+## Allowed Values
+
+<AllowedValues values={state.allowedValues} defaultValue={state.defaultValue} />
+
+{state.allowedValues.length > 0 && (
+  <div className="allowed-values-table">
+    | Value | Description | Usage |
+    |-------|-------------|-------|
+    {state.allowedValues.map(val => `
+    | \`${val.value}\` | ${val.description} | ${val.usage} |
+    `).join('')}
+  </div>
+)}
+
+### Default Value
+
+**Default**: `{state.defaultValue}`
+
+{state.defaultValue && (
+  <p>
+    When the {state.name} attribute is not specified, the default value of
+    `{state.defaultValue}` is assumed by assistive technologies.
+  </p>
+)}
+
+{!state.defaultValue && (
+  <p>
+    This state has no default value. When omitted, there is no implied state.
+  </p>
+)}
+
+## Usage with Roles
+
+<RoleCompatibility state={state.name} roles={state.usedInRoles} />
+
+This state can be used with the following ARIA roles:
+
+{state.usedInRoles.map((role) => (
+  <div key={role.name} className="role-usage">
+    ### {role.name}
+
+    **Usage**: {role.usage}
+
+    {role.required && (
+      <span className="required-badge">Required</span>
+    )}
+
+    ```html
+    <div role="{role.name}" {state.name}="{role.recommendedValue || state.allowedValues[0]?.value}">
+      <!-- Content -->
+    </div>
+    ```
+  </div>
+))}
+
+### Not Applicable To
+
+This state should NOT be used with:
+- Elements without appropriate roles
+- Static, non-interactive content (unless specifically designed for dynamic updates)
+- Roles that have conflicting or incompatible semantics
+
+## Implementation Examples
+
+### Basic HTML
+
+```html
+<!-- Basic usage of {state.name} -->
+<div
+  role="button"
+  {state.name}="{state.allowedValues[0]?.value || state.defaultValue}"
+  tabindex="0"
+>
+  Interactive Element
+</div>
+```
+
+### Toggle State Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{state.name} State Example</title>
+  <style>
+    .toggle-button {
+      padding: 10px 20px;
+      border: 2px solid #333;
+      background: #fff;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .toggle-button[{state.name}="true"] {
+      background: #0066cc;
+      color: white;
+    }
+
+    .toggle-button:focus {
+      outline: 2px solid #005fcc;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <button
+    type="button"
+    class="toggle-button"
+    {state.name}="{state.defaultValue}"
+    onclick="toggleState(this)"
+  >
+    Toggle State
+  </button>
+
+  <script>
+    function toggleState(element) {
+      const currentState = element.getAttribute('{state.name}')
+      {state.valueType === 'true/false' && `
+      const newState = currentState === 'true' ? 'false' : 'true'
+      element.setAttribute('${state.name}', newState)
+      `}
+      {state.valueType === 'tristate' && `
+      const states = ['false', 'mixed', 'true']
+      const currentIndex = states.indexOf(currentState)
+      const newState = states[(currentIndex + 1) % states.length]
+      element.setAttribute('${state.name}', newState)
+      `}
+
+      // Announce change to screen readers
+      announceStateChange(newState)
+    }
+
+    function announceStateChange(newState) {
+      const announcement = document.createElement('div')
+      announcement.setAttribute('role', 'status')
+      announcement.setAttribute('aria-live', 'polite')
+      announcement.className = 'sr-only'
+      announcement.textContent = `State changed to ${newState}`
+
+      document.body.appendChild(announcement)
+      setTimeout(() => announcement.remove(), 1000)
+    }
+  </script>
+</body>
+</html>
+```
+
+### React Implementation
+
+```jsx
+import { useState } from 'react'
+
+const StateExample = ({ initialValue = '{state.defaultValue}' }) => {
+  const [stateValue, setStateValue] = useState(initialValue)
+
+  const toggleState = () => {
+    {state.valueType === 'true/false' && `
+    setStateValue(prev => prev === 'true' ? 'false' : 'true')
+    `}
+    {state.valueType === 'tristate' && `
+    const states = ['false', 'mixed', 'true']
+    const currentIndex = states.indexOf(stateValue)
+    setStateValue(states[(currentIndex + 1) % states.length])
+    `}
+    {state.valueType === 'token' && `
+    const values = ${JSON.stringify(state.allowedValues.map(v => v.value))}
+    const currentIndex = values.indexOf(stateValue)
+    setStateValue(values[(currentIndex + 1) % values.length])
+    `}
+  }
+
+  return (
+    <div>
+      <button
+        type="button"
+        {state.name}={stateValue}
+        onClick={toggleState}
+        aria-label={`Toggle state, currently ${stateValue}`}
+      >
+        Current state: {stateValue}
+      </button>
+
+      {/* Visual indicator */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        State changed to {stateValue}
+      </div>
+    </div>
+  )
+}
+
+export default StateExample
+```
+
+### React Hook
+
+```jsx
+import { useState, useCallback } from 'react'
+
+/**
+ * Hook for managing {state.name} state
+ */
+export const use{state.name.replace('aria-', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')} = (
+  initialValue = '{state.defaultValue}'
+) => {
+  const [value, setValue] = useState(initialValue)
+
+  const toggle = useCallback(() => {
+    {state.valueType === 'true/false' && `
+    setValue(prev => prev === 'true' ? 'false' : 'true')
+    `}
+    {state.valueType === 'tristate' && `
+    const states = ['false', 'mixed', 'true']
+    setValue(prev => {
+      const currentIndex = states.indexOf(prev)
+      return states[(currentIndex + 1) % states.length]
+    })
+    `}
+  }, [])
+
+  const set = useCallback((newValue) => {
+    {state.allowedValues.length > 0 && `
+    const allowedValues = ${JSON.stringify(state.allowedValues.map(v => v.value))}
+    if (!allowedValues.includes(newValue)) {
+      console.warn(\`Invalid value for ${state.name}: \${newValue}\`)
+      return
+    }
+    `}
+    setValue(newValue)
+  }, [])
+
+  return {
+    value,
+    set,
+    toggle,
+    props: {
+      '{state.name}': value
+    }
+  }
+}
+
+// Usage
+function MyComponent() {
+  const state = use{state.name.replace('aria-', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}()
+
+  return (
+    <button
+      type="button"
+      {...state.props}
+      onClick={state.toggle}
+    >
+      Toggle
+    </button>
+  )
+}
+```
+
+### Vue Composition API
+
+```vue
+<template>
+  <button
+    type="button"
+    :{state.name}="stateValue"
+    @click="toggleState"
+  >
+    Current state: {{ stateValue }}
+  </button>
+
+  <div role="status" aria-live="polite" class="sr-only">
+    State changed to {{ stateValue }}
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+
+const props = defineProps({
+  initialValue: {
+    type: String,
+    default: '{state.defaultValue}'
+  }
+})
+
+const stateValue = ref(props.initialValue)
+
+const toggleState = () => {
+  {state.valueType === 'true/false' && `
+  stateValue.value = stateValue.value === 'true' ? 'false' : 'true'
+  `}
+  {state.valueType === 'tristate' && `
+  const states = ['false', 'mixed', 'true']
+  const currentIndex = states.indexOf(stateValue.value)
+  stateValue.value = states[(currentIndex + 1) % states.length]
+  `}
+  {state.valueType === 'token' && `
+  const values = ${JSON.stringify(state.allowedValues.map(v => v.value))}
+  const currentIndex = values.indexOf(stateValue.value)
+  stateValue.value = values[(currentIndex + 1) % values.length]
+  `}
+}
+</script>
+
+<style scoped>
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+</style>
+```
+
+### Angular Component
+
+```typescript
+import { Component, Input } from '@angular/core'
+
+@Component({
+  selector: 'app-state-example',
+  template: `
+    <button
+      type="button"
+      [attr.{state.name}]="stateValue"
+      (click)="toggleState()"
+    >
+      Current state: {{ stateValue }}
+    </button>
+
+    <div role="status" aria-live="polite" class="sr-only">
+      State changed to {{ stateValue }}
+    </div>
+  `,
+  styles: [`
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+  `]
+})
+export class StateExampleComponent {
+  @Input() initialValue = '{state.defaultValue}'
+
+  stateValue: string = this.initialValue
+
+  ngOnInit(): void {
+    this.stateValue = this.initialValue
+  }
+
+  toggleState(): void {
+    {state.valueType === 'true/false' && `
+    this.stateValue = this.stateValue === 'true' ? 'false' : 'true'
+    `}
+    {state.valueType === 'tristate' && `
+    const states = ['false', 'mixed', 'true']
+    const currentIndex = states.indexOf(this.stateValue)
+    this.stateValue = states[(currentIndex + 1) % states.length]
+    `}
+    {state.valueType === 'token' && `
+    const values = ${JSON.stringify(state.allowedValues.map(v => v.value))}
+    const currentIndex = values.indexOf(this.stateValue)
+    this.stateValue = values[(currentIndex + 1) % values.length]
+    `}
+  }
+}
+```
+
+## JavaScript State Management
+
+```javascript
+/**
+ * Utility class for managing {state.name}
+ */
+class {state.name.replace('aria-', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}Manager {
+  constructor(element) {
+    this.element = element
+    this.allowedValues = ${JSON.stringify(state.allowedValues.map(v => v.value))}
+  }
+
+  get value() {
+    return this.element.getAttribute('{state.name}') || '{state.defaultValue}'
+  }
+
+  set value(newValue) {
+    if (!this.isValidValue(newValue)) {
+      throw new Error(`Invalid value for {state.name}: ${newValue}`)
+    }
+    this.element.setAttribute('{state.name}', newValue)
+    this.announceChange(newValue)
+  }
+
+  isValidValue(value) {
+    return this.allowedValues.includes(value)
+  }
+
+  toggle() {
+    {state.valueType === 'true/false' && `
+    this.value = this.value === 'true' ? 'false' : 'true'
+    `}
+    {state.valueType === 'tristate' && `
+    const states = ['false', 'mixed', 'true']
+    const currentIndex = states.indexOf(this.value)
+    this.value = states[(currentIndex + 1) % states.length]
+    `}
+  }
+
+  announceChange(newValue) {
+    const announcement = document.createElement('div')
+    announcement.setAttribute('role', 'status')
+    announcement.setAttribute('aria-live', 'polite')
+    announcement.style.position = 'absolute'
+    announcement.style.left = '-10000px'
+    announcement.textContent = `State changed to ${newValue}`
+
+    document.body.appendChild(announcement)
+    setTimeout(() => announcement.remove(), 1000)
+  }
+}
+
+// Usage
+const element = document.querySelector('[{state.name}]')
+const manager = new {state.name.replace('aria-', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}Manager(element)
+
+// Toggle state
+manager.toggle()
+
+// Set specific value
+manager.value = '{state.allowedValues[1]?.value || state.defaultValue}'
+```
+
+## Testing
+
+### Automated Testing
+
+```javascript
+// Jest + Testing Library
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { axe } from 'jest-axe'
+
+describe('{state.name} state', () => {
+  it('should have no accessibility violations', async () => {
+    const { container } = render(
+      <button {state.name}="{state.defaultValue}">
+        Test Button
+      </button>
+    )
+
+    const results = await axe(container)
+    expect(results).toHaveNoViolations()
+  })
+
+  it('should toggle state on click', async () => {
+    const user = userEvent.setup()
+    render(
+      <button
+        {state.name}="{state.defaultValue}"
+        onClick={(e) => {
+          const current = e.currentTarget.getAttribute('{state.name}')
+          {state.valueType === 'true/false' && `
+          e.currentTarget.setAttribute(
+            '${state.name}',
+            current === 'true' ? 'false' : 'true'
+          )
+          `}
+        }}
+      >
+        Toggle
+      </button>
+    )
+
+    const button = screen.getByRole('button')
+    expect(button).toHaveAttribute('{state.name}', '{state.defaultValue}')
+
+    await user.click(button)
+
+    {state.valueType === 'true/false' && `
+    const expectedValue = '${state.defaultValue}' === 'true' ? 'false' : 'true'
+    expect(button).toHaveAttribute('${state.name}', expectedValue)
+    `}
+  })
+
+  {state.allowedValues.length > 0 && `
+  it('should only accept valid values', () => {
+    const { rerender } = render(
+      <button ${state.name}="${state.allowedValues[0].value}">
+        Button
+      </button>
+    )
+
+    const button = screen.getByRole('button')
+
+    ${state.allowedValues.map((val, i) => `
+    rerender(<button ${state.name}="${val.value}">Button</button>)
+    expect(button).toHaveAttribute('${state.name}', '${val.value}')
+    `).join('\n    ')}
+  })
+  `}
+})
+```
+
+### Manual Testing Checklist
+
+- [ ] State attribute is present on appropriate elements
+- [ ] Initial state value is correct
+- [ ] State changes in response to user interaction
+- [ ] Screen reader announces state changes
+- [ ] Visual indicator matches ARIA state
+- [ ] Keyboard interaction updates state correctly
+- [ ] State persists across interactions
+- [ ] Only valid values are used
+- [ ] State is synchronized with visual presentation
+- [ ] Works across different browsers and assistive technologies
+
+### Screen Reader Testing
+
+#### Expected Announcements
+
+**NVDA**:
+- Initial: "[Element name], [role], {state.name} {state.defaultValue}"
+- After change: "State changed to [new value]"
+
+**JAWS**:
+- Initial: "[Element name], [role], {state.name} {state.defaultValue}"
+- After change: "[new value]"
+
+**VoiceOver**:
+- Initial: "[Element name], [role], {state.name} {state.defaultValue}"
+- After change: "State changed to [new value]"
+
+**TalkBack**:
+- Initial: "[Element name], [role], {state.name} {state.defaultValue}"
+- After change: "State [new value]"
+
+## Common Mistakes
+
+### Mistake 1: Invalid Values
+
+```html
+<!-- Incorrect: Invalid value -->
+<button {state.name}="yes">
+  Toggle
+</button>
+
+<!-- Correct: Valid value -->
+<button {state.name}="{state.allowedValues[0]?.value || state.defaultValue}">
+  Toggle
+</button>
+```
+
+### Mistake 2: Missing Visual Indication
+
+```html
+<!-- Incorrect: No visual indicator of state -->
+<button {state.name}="true">
+  Button
+</button>
+
+<!-- Correct: Visual matches ARIA state -->
+<button
+  {state.name}="true"
+  class="active"
+  style="background: #0066cc; color: white;"
+>
+  Button
+</button>
+
+<style>
+  button[{state.name}="true"] {
+    background: #0066cc;
+    color: white;
+  }
+</style>
+```
+
+### Mistake 3: Not Announcing Changes
+
+```javascript
+// Incorrect: State changes silently
+button.setAttribute('{state.name}', 'true')
+
+// Correct: Announce changes to screen readers
+button.setAttribute('{state.name}', 'true')
+
+const announcement = document.createElement('div')
+announcement.setAttribute('role', 'status')
+announcement.setAttribute('aria-live', 'polite')
+announcement.textContent = 'State changed to true'
+document.body.appendChild(announcement)
+setTimeout(() => announcement.remove(), 1000)
+```
+
+### Mistake 4: Conflicting States
+
+```html
+<!-- Incorrect: Conflicting ARIA states -->
+<button
+  {state.name}="true"
+  {state.relatedStates[0]?.name}="false"
+  aria-disabled="true"
+>
+  Confusing Button
+</button>
+
+<!-- Correct: Consistent state management -->
+<button
+  {state.name}="false"
+  aria-disabled="false"
+>
+  Clear Button
+</button>
+```
+
+## Related States and Properties
+
+<RelatedItems
+  items={state.relatedStates}
+  title="Related ARIA Attributes"
+  description="These states and properties are commonly used together"
+/>
+
+{state.relatedStates.map((related) => (
+  <div key={related.name} className="related-state">
+    ### {related.name}
+
+    **Relationship**: {related.relationship}
+
+    {related.description}
+
+    ```html
+    <div
+      role="checkbox"
+      {state.name}="{state.defaultValue}"
+      {related.name}="{related.defaultValue}"
+    >
+      <!-- Both states working together -->
+    </div>
+    ```
+  </div>
+))}
+
+## Browser and AT Support
+
+| Platform | Browser | Screen Reader | Support Level |
+|----------|---------|---------------|---------------|
+| Windows | Chrome | NVDA | Full |
+| Windows | Firefox | NVDA | Full |
+| Windows | Edge | JAWS | Full |
+| macOS | Safari | VoiceOver | Full |
+| iOS | Safari | VoiceOver | Full |
+| Android | Chrome | TalkBack | Full |
+
+### Known Issues
+
+- **Issue**: Specific browser/AT behavior
+  - **Affected**: Browser X with AT Y
+  - **Workaround**: Alternative implementation
+  - **Status**: Tracked in issue #XXX
+
+## Specification
+
+<SpecificationLink
+  href={`https://www.w3.org/TR/wai-aria-${state.version.replace('.', '')}/#${state.name}`}
+  title={`WAI-ARIA ${state.version} - ${state.name} state`}
+  organization="W3C"
+  standard="ARIA"
+  version={state.version}
+/>
+
+### Additional Resources
+
+- [ARIA States and Properties](https://www.w3.org/TR/wai-aria-{state.version.replace('.', '')}/#state_prop_def)
+- [Using ARIA](https://www.w3.org/TR/using-aria/)
+- [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
+- [MDN ARIA States](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes)
+
+## Quick Reference
+
+| Property | Value |
+|----------|-------|
+| Attribute Name | {state.name} |
+| Type | State |
+| Value Type | {state.valueType} |
+| Default Value | {state.defaultValue || 'None'} |
+| Allowed Values | {state.allowedValues.length} |
+| Used in Roles | {state.usedInRoles.length} |
+| ARIA Version | {state.version} |
+
+---
+
+*Remember: ARIA states represent dynamic properties that change in response to user interaction or application state. Always ensure visual presentation matches the ARIA state.*

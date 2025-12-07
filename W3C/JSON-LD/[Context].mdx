@@ -1,0 +1,741 @@
+---
+layout: context
+source: W3C/JSON-LD
+$type: W3C/JSON-LD/Context
+$id: https://standards.org.ai/W3C/JSON-LD/Context/{context.code}
+sameAs: https://standards.org.ai/Context/{context.code}
+canonical: https://w3.org.ai/JSON-LD/Context/{context.code}
+params:
+  - Context
+schema:
+  context:
+    code: string
+    uri: string
+    name: string
+    description: string
+    version: string
+    terms: array
+    namespace: string
+    maintainer: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { TermsTable } from '@/components/standards/TermsTable'
+import { RelatedItems } from '@/components/standards/RelatedItems'
+import { SpecificationLink } from '@/components/standards/SpecificationLink'
+import { Metadata } from '@/components/standards/Metadata'
+import { Alert } from '@/components/standards/Alert'
+import { Badge } from '@/components/standards/Badge'
+
+<Header
+  title={context.name}
+  category="JSON-LD Context"
+  type="Vocabulary Context"
+  standard="W3C JSON-LD 1.1"
+/>
+
+<Metadata
+  items={[
+    { label: 'Context URI', value: context.uri },
+    { label: 'Namespace', value: context.namespace },
+    { label: 'Version', value: context.version },
+    { label: 'Maintainer', value: context.maintainer },
+    { label: 'Terms', value: context.terms.length.toString() },
+    { label: 'Standard', value: 'JSON-LD 1.1' }
+  ]}
+/>
+
+<Alert type="info">
+This context provides a JSON-LD mapping for the {context.name} vocabulary. Use this context URL in your JSON-LD documents to automatically map terms to their full IRIs.
+</Alert>
+
+## Context URI
+
+<CodeExample language="text" title="Context URL">
+{context.uri}
+</CodeExample>
+
+Copy this URL to use in your `@context`:
+
+<CodeExample language="json" title="Basic Usage">
+{`{
+  "@context": "${context.uri}",
+  "@type": "Thing",
+  "name": "Example"
+}`}
+</CodeExample>
+
+## Description
+
+<Description>
+{context.description}
+
+The {context.name} context ({context.uri}) provides JSON-LD bindings for the {context.namespace} vocabulary. This context enables developers to use simple property names in JSON-LD documents that automatically expand to full IRIs from the {context.name} namespace. It is maintained by {context.maintainer} and follows the JSON-LD 1.1 specification.
+</Description>
+
+## Vocabulary Terms
+
+This context defines mappings for the following terms:
+
+<TermsTable
+  terms={context.terms.map(term => ({
+    term: term.name,
+    iri: term.iri,
+    type: term.type || 'Property',
+    description: term.description,
+    datatype: term.datatype || 'any',
+    container: term.container
+  }))}
+/>
+
+## Examples
+
+### Basic Document
+
+<CodeExample language="json" title={`Using ${context.name} Context`}>
+{context.namespace.includes('schema.org') ? `{
+  "@context": "${context.uri}",
+  "@type": "Person",
+  "name": "Jane Doe",
+  "jobTitle": "Software Engineer",
+  "email": "jane@example.com",
+  "url": "https://janedoe.com",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Tech Company Inc.",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "123 Main St",
+      "addressLocality": "San Francisco",
+      "addressRegion": "CA",
+      "postalCode": "94105",
+      "addressCountry": "US"
+    }
+  },
+  "colleague": [
+    {
+      "@type": "Person",
+      "name": "John Smith"
+    }
+  ]
+}` : context.namespace.includes('activitystreams') ? `{
+  "@context": "${context.uri}",
+  "@type": "Create",
+  "actor": {
+    "@type": "Person",
+    "name": "Alice Johnson",
+    "id": "https://social.example/users/alice"
+  },
+  "object": {
+    "@type": "Note",
+    "content": "Hello, world! This is my first post.",
+    "published": "2024-01-15T10:30:00Z"
+  },
+  "to": [
+    "https://www.w3.org/ns/activitystreams#Public"
+  ],
+  "cc": [
+    "https://social.example/users/alice/followers"
+  ]
+}` : context.namespace.includes('foaf') ? `{
+  "@context": "${context.uri}",
+  "@type": "Person",
+  "name": "Alice Williams",
+  "nick": "alice",
+  "mbox": "mailto:alice@example.org",
+  "homepage": "https://alice.example.org",
+  "knows": [
+    {
+      "@type": "Person",
+      "name": "Bob Smith",
+      "mbox": "mailto:bob@example.org"
+    },
+    {
+      "@type": "Person",
+      "name": "Charlie Brown",
+      "homepage": "https://charlie.example.org"
+    }
+  ],
+  "currentProject": {
+    "@type": "Project",
+    "name": "Open Source Initiative",
+    "homepage": "https://project.example.org"
+  }
+}` : context.namespace.includes('dublincore') || context.namespace.includes('dc') ? `{
+  "@context": "${context.uri}",
+  "@id": "https://example.org/documents/report-2024",
+  "@type": "Text",
+  "title": "Annual Technology Report 2024",
+  "creator": [
+    "Jane Smith",
+    "John Doe"
+  ],
+  "subject": [
+    "Technology",
+    "Innovation",
+    "Digital Transformation"
+  ],
+  "description": "A comprehensive report on technology trends and innovations in 2024.",
+  "publisher": "Example Publishing House",
+  "date": "2024-01-15",
+  "type": "Text",
+  "format": "application/pdf",
+  "identifier": "ISBN:978-3-16-148410-0",
+  "language": "en",
+  "rights": "© 2024 Example Publishing House. All rights reserved."
+}` : context.namespace.includes('hydra') ? `{
+  "@context": "${context.uri}",
+  "@id": "/api/products",
+  "@type": "Collection",
+  "totalItems": 150,
+  "member": [
+    {
+      "@id": "/api/products/1",
+      "@type": "Product",
+      "name": "Widget A"
+    },
+    {
+      "@id": "/api/products/2",
+      "@type": "Product",
+      "name": "Widget B"
+    }
+  ],
+  "view": {
+    "@id": "/api/products?page=1",
+    "@type": "PartialCollectionView",
+    "first": "/api/products?page=1",
+    "next": "/api/products?page=2",
+    "last": "/api/products?page=15"
+  }
+}` : `{
+  "@context": "${context.uri}",
+  "@type": "Resource",
+  "label": "Example Resource",
+  "description": "A sample resource using this context"
+}`}
+</CodeExample>
+
+### Combined with Custom Context
+
+<CodeExample language="json" title="Mixing Contexts">
+{`{
+  "@context": [
+    "${context.uri}",
+    {
+      "@vocab": "${context.namespace}",
+      "custom": "https://example.org/vocab/",
+      "myProperty": {
+        "@id": "custom:myProperty",
+        "@type": "@id"
+      },
+      "myDate": {
+        "@id": "custom:createdDate",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      }
+    }
+  ],
+  "@id": "https://example.org/custom-resource",
+  "@type": "${context.namespace.includes('schema.org') ? 'Thing' : context.namespace.includes('foaf') ? 'Person' : 'Resource'}",
+  "name": "Custom Resource with Mixed Context",
+  "description": "This uses both the standard context and custom terms",
+  "myProperty": "https://example.org/related-resource",
+  "myDate": "2024-01-15T10:30:00Z"
+}`}
+</CodeExample>
+
+### Embedded Context Definition
+
+<CodeExample language="json" title="Inline Context Based on {context.name}">
+{`{
+  "@context": {
+    ${context.terms.slice(0, 5).map(term => `"${term.name}": "${term.iri}"`).join(',\n    ')},
+    "@base": "https://example.org/data/",
+    "@vocab": "${context.namespace}"
+  },
+  "@id": "item-123",
+  "@type": "${context.namespace.includes('schema.org') ? 'Product' : 'Thing'}",
+  "${context.terms[0]?.name || 'name'}": "Inline Context Example"
+}`}
+</CodeExample>
+
+### With Framing
+
+<CodeExample language="json" title="JSON-LD Frame with {context.name}">
+{`{
+  "@context": "${context.uri}",
+  "@type": "${context.namespace.includes('schema.org') ? 'Organization' : context.namespace.includes('foaf') ? 'Organization' : 'Organization'}",
+  "${context.namespace.includes('schema.org') ? 'employee' : context.namespace.includes('foaf') ? 'member' : 'hasMember'}": {
+    "@type": "${context.namespace.includes('schema.org') ? 'Person' : context.namespace.includes('foaf') ? 'Person' : 'Person'}",
+    "@embed": "@always"
+  }
+}`}
+</CodeExample>
+
+## Use Cases
+
+### 1. Structured Data for SEO
+
+{context.namespace.includes('schema.org') ? `
+Use Schema.org JSON-LD for rich snippets and enhanced search results:
+
+<CodeExample language="html" title="In HTML <head>">
+{\`<script type="application/ld+json">
+{
+  "@context": "${context.uri}",
+  "@type": "LocalBusiness",
+  "name": "Example Cafe",
+  "image": "https://example.com/photos/cafe.jpg",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "123 Coffee Street",
+    "addressLocality": "Portland",
+    "addressRegion": "OR",
+    "postalCode": "97209"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 45.5231,
+    "longitude": -122.6765
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "08:00",
+      "closes": "18:00"
+    }
+  ]
+}
+</script>\`}
+</CodeExample>
+
+This enables Google and other search engines to display rich results with business information, ratings, hours, and more.
+` : context.namespace.includes('activitystreams') ? `
+Use Activity Streams for social networking and activity feeds:
+
+<CodeExample language="json" title="Social Activity">
+{\`{
+  "@context": "${context.uri}",
+  "@type": "Like",
+  "actor": "https://social.example/users/alice",
+  "object": {
+    "@type": "Article",
+    "@id": "https://blog.example/posts/123",
+    "name": "Understanding JSON-LD",
+    "content": "JSON-LD is a method of encoding Linked Data using JSON..."
+  },
+  "published": "2024-01-15T14:22:00Z"
+}\`}
+</CodeExample>
+
+Perfect for ActivityPub, Mastodon, and decentralized social networks.
+` : `
+Use this context to add semantic meaning to your data and enable interoperability across systems.
+`}
+
+### 2. API Responses
+
+<CodeExample language="json" title="REST API with Linked Data">
+{`{
+  "@context": [
+    "${context.uri}",
+    {
+      "hydra": "http://www.w3.org/ns/hydra/core#",
+      "operation": "hydra:operation",
+      "method": "hydra:method"
+    }
+  ],
+  "@id": "/api/resources/456",
+  "@type": "${context.namespace.includes('schema.org') ? 'Product' : 'Resource'}",
+  "name": "API Resource",
+  "operation": [
+    {
+      "@type": "hydra:Operation",
+      "method": "GET",
+      "expects": null,
+      "returns": "${context.namespace.includes('schema.org') ? 'schema:Product' : 'Resource'}"
+    },
+    {
+      "@type": "hydra:Operation",
+      "method": "PUT",
+      "expects": "${context.namespace.includes('schema.org') ? 'schema:Product' : 'Resource'}",
+      "returns": "${context.namespace.includes('schema.org') ? 'schema:Product' : 'Resource'}"
+    }
+  ]
+}`}
+</CodeExample>
+
+### 3. Knowledge Graphs
+
+{context.namespace.includes('schema.org') ? `
+Build knowledge graphs with Schema.org entities:
+
+<CodeExample language="json" title="Knowledge Graph">
+{\`{
+  "@context": "${context.uri}",
+  "@graph": [
+    {
+      "@id": "https://example.org/authors/jane-smith",
+      "@type": "Person",
+      "name": "Jane Smith",
+      "alumniOf": {
+        "@id": "https://example.org/universities/stanford"
+      },
+      "worksFor": {
+        "@id": "https://example.org/companies/tech-corp"
+      }
+    },
+    {
+      "@id": "https://example.org/universities/stanford",
+      "@type": "EducationalOrganization",
+      "name": "Stanford University",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Stanford",
+        "addressRegion": "CA"
+      }
+    },
+    {
+      "@id": "https://example.org/companies/tech-corp",
+      "@type": "Corporation",
+      "name": "Tech Corporation",
+      "founder": {
+        "@id": "https://example.org/authors/jane-smith"
+      }
+    }
+  ]
+}\`}
+</CodeExample>
+` : `
+Build interconnected knowledge graphs using this vocabulary for entity relationships.
+`}
+
+### 4. Data Integration
+
+<CodeExample language="json" title="Integrating Multiple Data Sources">
+{`{
+  "@context": [
+    "${context.uri}",
+    {
+      "dc": "http://purl.org/dc/terms/",
+      "prov": "http://www.w3.org/ns/prov#"
+    }
+  ],
+  "@id": "https://data.example.org/datasets/2024-climate",
+  "@type": "${context.namespace.includes('schema.org') ? 'Dataset' : 'Resource'}",
+  "name": "Climate Data 2024",
+  "dc:source": "https://climate.example.org/raw-data",
+  "prov:wasGeneratedBy": {
+    "@type": "prov:Activity",
+    "prov:startedAtTime": "2024-01-01T00:00:00Z",
+    "prov:endedAtTime": "2024-12-31T23:59:59Z"
+  }
+}`}
+</CodeExample>
+
+## JavaScript Integration
+
+### Using jsonld.js
+
+<CodeExample language="javascript" title="Processing with jsonld.js">
+{`import jsonld from 'jsonld';
+
+const document = {
+  "@context": "${context.uri}",
+  "@type": "${context.namespace.includes('schema.org') ? 'Person' : 'Resource'}",
+  "name": "Example"
+};
+
+// Expand to full IRIs
+const expanded = await jsonld.expand(document);
+console.log('Expanded:', JSON.stringify(expanded, null, 2));
+
+// Output:
+// [
+//   {
+//     "@type": ["${context.namespace}${context.namespace.includes('schema.org') ? 'Person' : 'Resource'}"],
+//     "${context.namespace}name": [
+//       { "@value": "Example" }
+//     ]
+//   }
+// ]
+
+// Compact with different context
+const compacted = await jsonld.compact(expanded, {
+  "@context": "${context.uri}"
+});
+console.log('Compacted:', JSON.stringify(compacted, null, 2));
+
+// Convert to N-Quads
+const nquads = await jsonld.toRDF(document, {
+  format: 'application/n-quads'
+});
+console.log('N-Quads:', nquads);
+
+// Normalize for signing/comparison
+const normalized = await jsonld.normalize(document, {
+  algorithm: 'URDNA2015',
+  format: 'application/n-quads'
+});
+console.log('Normalized:', normalized);`}
+</CodeExample>
+
+### React Component Example
+
+<CodeExample language="jsx" title="React Component with JSON-LD">
+{`import React from 'react';
+
+function ${context.namespace.includes('schema.org') ? 'ProductPage' : 'ResourcePage'}({ ${context.namespace.includes('schema.org') ? 'product' : 'resource'} }) {
+  const structuredData = {
+    "@context": "${context.uri}",
+    "@type": "${context.namespace.includes('schema.org') ? 'Product' : 'Resource'}",
+    "name": ${context.namespace.includes('schema.org') ? 'product.name' : 'resource.name'},
+    ${context.namespace.includes('schema.org') ? `"description": product.description,
+    "image": product.imageUrl,
+    "offers": {
+      "@type": "Offer",
+      "price": product.price,
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    }` : '"description": resource.description'}
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <div>
+        <h1>{${context.namespace.includes('schema.org') ? 'product.name' : 'resource.name'}}</h1>
+        <p>{${context.namespace.includes('schema.org') ? 'product.description' : 'resource.description'}}</p>
+      </div>
+    </>
+  );
+}
+
+export default ${context.namespace.includes('schema.org') ? 'ProductPage' : 'ResourcePage'};`}
+</CodeExample>
+
+## Python Integration
+
+### Using PyLD
+
+<CodeExample language="python" title="Processing with PyLD">
+{`from pyld import jsonld
+import json
+
+document = {
+    "@context": "${context.uri}",
+    "@type": "${context.namespace.includes('schema.org') ? 'Person' : 'Resource'}",
+    "name": "Example Resource"
+}
+
+# Expand the document
+expanded = jsonld.expand(document)
+print("Expanded:", json.dumps(expanded, indent=2))
+
+# Compact with context
+compacted = jsonld.compact(document, "${context.uri}")
+print("Compacted:", json.dumps(compacted, indent=2))
+
+# Convert to RDF
+nquads = jsonld.to_rdf(document, {'format': 'application/n-quads'})
+print("N-Quads:", nquads)
+
+# Normalize
+normalized = jsonld.normalize(
+    document,
+    {'algorithm': 'URDNA2015', 'format': 'application/n-quads'}
+)
+print("Normalized:", normalized)
+
+# Frame the data
+frame = {
+    "@context": "${context.uri}",
+    "@type": "${context.namespace.includes('schema.org') ? 'Person' : 'Resource'}"
+}
+framed = jsonld.frame(document, frame)
+print("Framed:", json.dumps(framed, indent=2))`}
+</CodeExample>
+
+## Best Practices
+
+### Context Management
+
+1. **Use Stable URLs**: Always reference stable, versioned context URLs
+   ```json
+   {
+     "@context": "${context.uri}"
+   }
+   ```
+
+2. **Cache Contexts**: Implement aggressive caching for remote contexts
+   ```javascript
+   const documentLoader = jsonld.documentLoaders.node();
+   const customLoader = async (url) => {
+     if (url === '${context.uri}') {
+       return {
+         contextUrl: null,
+         document: cachedContext,
+         documentUrl: url
+       };
+     }
+     return documentLoader(url);
+   };
+   ```
+
+3. **Combine Contexts**: Merge standard and custom contexts
+   ```json
+   {
+     "@context": [
+       "${context.uri}",
+       {
+         "custom": "https://example.org/vocab/"
+       }
+     ]
+   }
+   ```
+
+4. **Version Awareness**: Be aware of context versions
+   ${context.version ? `- Current version: ${context.version}` : ''}
+   - Monitor for updates and deprecations
+   - Test compatibility before upgrading
+
+### Performance Optimization
+
+1. **Inline Critical Contexts**: For high-performance scenarios, inline frequently-used contexts
+2. **HTTP/2**: Use HTTP/2 for parallel context loading
+3. **CDN**: Host contexts on CDN for global distribution
+4. **Compression**: Enable gzip/brotli compression for context files
+5. **Preload**: Use `<link rel="preload">` for context URLs
+
+### Validation
+
+Validate your JSON-LD documents:
+
+<CodeExample language="bash" title="Using JSON-LD Playground API">
+{`curl -X POST https://json-ld.org/playground/process \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "input": {
+      "@context": "${context.uri}",
+      "@type": "Thing",
+      "name": "Test"
+    },
+    "operation": "expand"
+  }'`}
+</CodeExample>
+
+### Error Handling
+
+<CodeExample language="javascript" title="Robust Error Handling">
+{`async function processJsonLd(document) {
+  try {
+    const expanded = await jsonld.expand(document, {
+      documentLoader: customLoader,
+      safe: true, // Prevent remote context loading in production
+      timeout: 5000 // 5 second timeout
+    });
+    return expanded;
+  } catch (error) {
+    if (error.name === 'jsonld.LoadDocumentError') {
+      console.error('Failed to load context:', error.message);
+      // Fallback to cached context
+    } else if (error.name === 'jsonld.InvalidFrame') {
+      console.error('Invalid JSON-LD frame:', error.message);
+    } else {
+      console.error('JSON-LD processing error:', error);
+    }
+    throw error;
+  }
+}`}
+</CodeExample>
+
+## Related Contexts
+
+<RelatedItems
+  items={[
+    context.namespace.includes('schema.org') ?
+      { type: 'Context', code: 'ACTIVITY_STREAMS', label: 'Activity Streams - Social data' } :
+      { type: 'Context', code: 'SCHEMA_ORG', label: 'Schema.org - Common vocabulary' },
+
+    context.namespace.includes('activitystreams') ?
+      { type: 'Context', code: 'SCHEMA_ORG', label: 'Schema.org - Structured data' } :
+      { type: 'Context', code: 'ACTIVITY_STREAMS', label: 'Activity Streams - Activities' },
+
+    { type: 'Context', code: 'FOAF', label: 'FOAF - Friend of a Friend' },
+    { type: 'Context', code: 'DUBLIN_CORE', label: 'Dublin Core - Metadata' },
+    { type: 'Context', code: 'HYDRA', label: 'Hydra - Hypermedia APIs' },
+
+    { type: 'Keyword', code: 'CONTEXT', label: '@context - Context keyword' },
+    { type: 'Keyword', code: 'TYPE', label: '@type - Type keyword' },
+    { type: 'Keyword', code: 'ID', label: '@id - Identifier keyword' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title={`${context.name} Context`}
+  url={context.uri}
+  organization={context.maintainer}
+/>
+
+### Additional Resources
+
+- [JSON-LD 1.1 Specification](https://www.w3.org/TR/json-ld11/)
+- [JSON-LD Best Practices](https://w3c.github.io/json-ld-bp/)
+- [JSON-LD Playground](https://json-ld.org/playground/)
+- {context.namespace.includes('schema.org') ? '[Schema.org Documentation](https://schema.org/docs/documents.html)' : context.namespace.includes('activitystreams') ? '[Activity Streams 2.0](https://www.w3.org/TR/activitystreams-core/)' : `[${context.name} Documentation](${context.namespace})`}
+- [JSON-LD Community Group](https://www.w3.org/community/json-ld/)
+
+## Namespace Information
+
+**Namespace IRI**: `{context.namespace}`
+
+**Preferred Prefix**: `{context.code.toLowerCase()}`
+
+**Example Usage**:
+```json
+{
+  "@context": {
+    "{context.code.toLowerCase()}": "{context.namespace}"
+  },
+  "@type": "{context.code.toLowerCase()}:${context.namespace.includes('schema.org') ? 'Thing' : 'Resource'}"
+}
+```
+
+## Version History
+
+{context.version && (
+  <>
+  - **Current**: {context.version}
+  </>
+)}
+- **JSON-LD 1.0**: Initial context support
+- **JSON-LD 1.1**: Enhanced context features including scoped contexts, protected terms, and @propagate
+
+### Breaking Changes
+
+When upgrading between versions:
+1. Review changelog for breaking changes
+2. Test with validation tools
+3. Update client code as needed
+4. Consider supporting multiple versions during transition
+
+## Support and Community
+
+- **Issue Tracker**: Report issues with this context to {context.maintainer}
+- **Mailing List**: {context.namespace.includes('schema.org') ? 'public-schemaorg@w3.org' : context.namespace.includes('activitystreams') ? 'public-socialweb@w3.org' : 'Contact the maintainer'}
+- **Stack Overflow**: Tag questions with \`json-ld\` and \`{context.code.toLowerCase()}\`
+- **GitHub**: {context.namespace.includes('schema.org') ? 'https://github.com/schemaorg/schemaorg' : 'Check maintainer repository'}
+
+## License
+
+This context is provided by {context.maintainer} under {context.namespace.includes('schema.org') ? 'CC-BY-SA 3.0' : context.namespace.includes('w3.org') ? 'W3C Document License' : 'the applicable license'}.
+
+Always verify the current license terms at the context URL.

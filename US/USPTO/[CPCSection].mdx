@@ -1,0 +1,39 @@
+---
+layout: cpc-section
+source: US/USPTO
+$type: US/USPTO/CPCSection
+$id: https://standards.org.ai/US/USPTO/CPCSection/{section.code}
+sameAs: https://standards.org.ai/CPCSection/{section.code}
+canonical: https://us.org.ai/USPTO/CPCSection/{section.code}
+params:
+  - CPCSection
+schema:
+  section:
+    code: code
+    name: name
+    classes: classes
+---
+
+# CPC Section {section.code}: {section.name}
+
+<CPCSectionHeader code={section.code} name={section.name} />
+
+## Overview
+
+The Cooperative Patent Classification (CPC) Section {section.code} covers {section.name}.
+
+## CPC Classes
+
+<CPCClassList section={section.code} />
+
+## All Subclasses
+
+<CPCSubclassList section={section.code} />
+
+## Patent Statistics
+
+<CPCSectionStats section={section.code} />
+
+## Related Classifications
+
+<RelatedClassifications section={section.code} />

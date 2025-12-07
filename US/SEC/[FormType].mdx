@@ -1,0 +1,58 @@
+---
+layout: formType
+source: SEC
+$type: SEC/FormType
+$id: https://standards.org.ai/SEC/FormType/{form.code}
+sameAs: https://standards.org.ai/FormType/{form.code}
+canonical: https://us.org.ai/SEC/FormType/{form.code}
+params:
+  - FormType
+schema:
+  form:
+    code: code
+    name: name
+    description: description
+    category: category
+    frequency: frequency
+    filers: filers
+---
+
+# {form.name}
+
+<FormTypeHeader code={form.code} name={form.name} />
+
+## Form Code
+
+{form.code}
+
+## Description
+
+{form.description}
+
+## Category
+
+<FilingCategoryLink category={form.category} />
+
+## Filing Frequency
+
+{form.frequency}
+
+## Required Filers
+
+{form.filers}
+
+## Recent Filings
+
+<RecentFilings formType={form.code} />
+
+## Filing Requirements
+
+<FilingRequirements formType={form.code} />
+
+## Related Forms
+
+<RelatedForms formType={form.code} />
+
+## Instructions and Resources
+
+<FormInstructions formType={form.code} />

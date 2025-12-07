@@ -1,0 +1,361 @@
+---
+layout: binding
+source: W3C/WoT
+$type: W3C/WoT/Binding
+$id: https://standards.org.ai/W3C/WoT/Binding/{binding.protocol}/{binding.code}
+sameAs: https://standards.org.ai/Binding/{binding.protocol}/{binding.code}
+canonical: https://w3.org.ai/WoT/Binding/{binding.protocol}/{binding.code}
+params:
+  - Binding
+schema:
+  binding:
+    code: BindingCode
+    protocol: Protocol
+    title: BindingTitle
+    description: BindingDescription
+    href: URI
+    contentType: ContentType
+    op: Operations
+    htv_methodName: HTTPMethod
+    htv_headers: HTTPHeaders
+    htv_statusCodeValue: HTTPStatusCode
+    mqv_topic: MQTTTopic
+    mqv_qos: MQTTQoS
+    mqv_retain: MQTTRetain
+    cov_method: CoAPMethod
+    cov_contentFormat: CoAPContentFormat
+    modv_function: ModbusFunction
+    modv_entity: ModbusEntity
+    modv_address: ModbusAddress
+    subprotocol: Subprotocol
+    security: SecurityScheme
+    scopes: Scopes
+    response: ResponseMetadata
+---
+
+# {binding.title}
+
+<BindingHeader
+  protocol={binding.protocol}
+  code={binding.code}
+  title={binding.title}
+/>
+
+## Description
+
+{binding.description}
+
+## Protocol Binding Details
+
+<BindingMetadata binding={binding} />
+
+### Protocol: {binding.protocol}
+
+<ProtocolDescription protocol={binding.protocol} />
+
+### Endpoint
+
+```
+{binding.href}
+```
+
+### Content Type
+
+`{binding.contentType}`
+
+### Operations
+
+<BindingOperations operations={binding.op} />
+
+## Protocol-Specific Configuration
+
+### HTTP Binding
+
+<HTTPBindingDetails
+  methodName={binding.htv_methodName}
+  headers={binding.htv_headers}
+  statusCodeValue={binding.htv_statusCodeValue}
+/>
+
+```json
+{
+  "href": "{binding.href}",
+  "contentType": "{binding.contentType}",
+  "htv:methodName": "{binding.htv_methodName}",
+  "htv:headers": {binding.htv_headers},
+  "htv:statusCodeValue": {binding.htv_statusCodeValue}
+}
+```
+
+#### HTTP Methods
+
+- **GET** - Read property values or retrieve resource state
+- **PUT** - Update property values or resources
+- **POST** - Invoke actions or create resources
+- **DELETE** - Remove resources or cancel operations
+- **PATCH** - Partial updates to resources
+
+### CoAP Binding
+
+<CoAPBindingDetails
+  method={binding.cov_method}
+  contentFormat={binding.cov_contentFormat}
+/>
+
+```json
+{
+  "href": "{binding.href}",
+  "contentType": "{binding.contentType}",
+  "cov:method": "{binding.cov_method}",
+  "cov:contentFormat": {binding.cov_contentFormat}
+}
+```
+
+#### CoAP Methods
+
+- **GET** - Observe or read resource
+- **PUT** - Update resource
+- **POST** - Invoke action
+- **DELETE** - Remove resource
+
+### MQTT Binding
+
+<MQTTBindingDetails
+  topic={binding.mqv_topic}
+  qos={binding.mqv_qos}
+  retain={binding.mqv_retain}
+/>
+
+```json
+{
+  "href": "{binding.href}",
+  "contentType": "{binding.contentType}",
+  "mqv:topic": "{binding.mqv_topic}",
+  "mqv:qos": {binding.mqv_qos},
+  "mqv:retain": {binding.mqv_retain}
+}
+```
+
+#### MQTT QoS Levels
+
+- **0** - At most once delivery
+- **1** - At least once delivery
+- **2** - Exactly once delivery
+
+### Modbus Binding
+
+<ModbusBindingDetails
+  function={binding.modv_function}
+  entity={binding.modv_entity}
+  address={binding.modv_address}
+/>
+
+```json
+{
+  "href": "{binding.href}",
+  "contentType": "{binding.contentType}",
+  "modv:function": "{binding.modv_function}",
+  "modv:entity": "{binding.modv_entity}",
+  "modv:address": {binding.modv_address}
+}
+```
+
+## Security Configuration
+
+<BindingSecurity
+  security={binding.security}
+  scopes={binding.scopes}
+/>
+
+## Subprotocol
+
+<BindingSubprotocol subprotocol={binding.subprotocol} />
+
+## Response Metadata
+
+<BindingResponse response={binding.response} />
+
+## Implementation Examples
+
+### HTTP Binding Example
+
+```javascript
+// Read property using HTTP GET
+const response = await fetch('{binding.href}', {
+  method: '{binding.htv_methodName}',
+  headers: {
+    'Accept': '{binding.contentType}',
+    'Authorization': 'Bearer <token>'
+  }
+});
+const data = await response.json();
+console.log('Data:', data);
+```
+
+```javascript
+// Write property using HTTP PUT
+const response = await fetch('{binding.href}', {
+  method: 'PUT',
+  headers: {
+    'Content-Type': '{binding.contentType}',
+    'Authorization': 'Bearer <token>'
+  },
+  body: JSON.stringify(newValue)
+});
+```
+
+### CoAP Binding Example
+
+```javascript
+// Using node-coap library
+const coap = require('coap');
+
+// CoAP GET request
+const req = coap.request({
+  hostname: 'coap.example.com',
+  pathname: '/thing/property',
+  method: '{binding.cov_method}',
+  confirmable: true
+});
+
+req.on('response', (res) => {
+  console.log('Response:', res.payload.toString());
+});
+
+req.end();
+```
+
+```javascript
+// CoAP Observe
+const req = coap.request({
+  hostname: 'coap.example.com',
+  pathname: '/thing/property',
+  observe: true
+});
+
+req.on('response', (res) => {
+  console.log('Update:', res.payload.toString());
+});
+
+req.end();
+```
+
+### MQTT Binding Example
+
+```javascript
+// Using MQTT.js library
+const mqtt = require('mqtt');
+const client = mqtt.connect('mqtt://broker.example.com');
+
+client.on('connect', () => {
+  // Subscribe to property updates
+  client.subscribe('{binding.mqv_topic}', { qos: {binding.mqv_qos} });
+
+  // Publish new value
+  client.publish('{binding.mqv_topic}/set',
+    JSON.stringify(newValue),
+    {
+      qos: {binding.mqv_qos},
+      retain: {binding.mqv_retain}
+    }
+  );
+});
+
+client.on('message', (topic, message) => {
+  console.log('Received:', message.toString());
+});
+```
+
+### WebSocket Binding Example
+
+```javascript
+// WebSocket connection
+const ws = new WebSocket('wss://thing.example.com/ws');
+
+ws.onopen = () => {
+  console.log('Connected');
+
+  // Send request
+  ws.send(JSON.stringify({
+    action: 'readProperty',
+    name: 'temperature'
+  }));
+};
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log('Response:', data);
+};
+```
+
+### Modbus Binding Example
+
+```javascript
+// Using node-modbus library
+const ModbusRTU = require('modbus-serial');
+const client = new ModbusRTU();
+
+// Connect to Modbus TCP
+await client.connectTCP('{binding.href}');
+client.setID(1);
+
+// Read holding registers
+const data = await client.readHoldingRegisters(
+  {binding.modv_address},
+  1
+);
+console.log('Value:', data.data[0]);
+```
+
+## Content Negotiation
+
+<BindingContentNegotiation contentType={binding.contentType} />
+
+### Supported Content Types
+
+- `application/json` - JSON data format
+- `application/cbor` - CBOR binary format
+- `text/plain` - Plain text
+- `application/xml` - XML format
+- `application/senml+json` - SenML JSON
+- `application/octet-stream` - Binary data
+
+## Error Handling
+
+```javascript
+// HTTP error handling
+try {
+  const response = await fetch('{binding.href}');
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+  const data = await response.json();
+} catch (error) {
+  console.error('Request failed:', error);
+}
+```
+
+## Performance Considerations
+
+<BindingPerformance protocol={binding.protocol} />
+
+## Related Bindings
+
+<RelatedBindings protocol={binding.protocol} current={binding.code} />
+
+## Protocol Specifications
+
+<ProtocolSpecifications protocol={binding.protocol} />
+
+## Specification
+
+<SpecificationLink spec="wot-binding-templates" />
+
+### References
+
+- [WoT Binding Templates](https://www.w3.org/TR/wot-binding-templates/)
+- [HTTP Protocol Binding](https://www.w3.org/TR/wot-binding-templates/#http-binding)
+- [CoAP Protocol Binding](https://www.w3.org/TR/wot-binding-templates/#coap-binding)
+- [MQTT Protocol Binding](https://www.w3.org/TR/wot-binding-templates/#mqtt-binding)
+- [Modbus Protocol Binding](https://www.w3.org/TR/wot-binding-templates/#modbus-binding)
+- [WebSocket Protocol Binding](https://www.w3.org/TR/wot-binding-templates/#websocket-binding)

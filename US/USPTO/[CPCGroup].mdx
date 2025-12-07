@@ -1,0 +1,58 @@
+---
+layout: cpc-group
+source: US/USPTO
+$type: US/USPTO/CPCGroup
+$id: https://standards.org.ai/US/USPTO/CPCGroup/{group.code}
+sameAs: https://standards.org.ai/CPCGroup/{group.code}
+canonical: https://us.org.ai/USPTO/CPCGroup/{group.code}
+params:
+  - CPCGroup
+schema:
+  group:
+    code: code
+    name: name
+    subclass: subclass
+    isMainGroup: isMainGroup
+    parent: parent
+---
+
+# CPC Group {group.code}: {group.name}
+
+<CPCGroupHeader
+  code={group.code}
+  name={group.name}
+  subclass={group.subclass}
+  isMainGroup={group.isMainGroup}
+  parent={group.parent}
+/>
+
+## Overview
+
+{group.isMainGroup ? 'Main Group' : 'Subgroup'} {group.code} is part of Subclass {group.subclass} and covers {group.name}.
+
+## Description
+
+<CPCGroupDescription code={group.code} />
+
+## Hierarchy
+
+<CPCGroupHierarchy code={group.code} parent={group.parent} />
+
+{!group.isMainGroup && (
+  <>
+    ## Parent Group
+    <CPCGroupLink code={group.parent} />
+  </>
+)}
+
+## Child Subgroups
+
+<CPCSubgroupList parent={group.code} />
+
+## Recent Patents
+
+<PatentList cpcGroup={group.code} limit={50} />
+
+## Patent Trends
+
+<CPCGroupTrends code={group.code} />

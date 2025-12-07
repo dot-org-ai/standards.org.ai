@@ -1,0 +1,652 @@
+---
+layout: VerificationMethod
+source: W3C/DID
+$type: W3C/DID/VerificationMethod
+$id: https://standards.org.ai/W3C/DID/VerificationMethod/{VerificationMethod.code}
+sameAs: https://standards.org.ai/VerificationMethod/{VerificationMethod.code}
+canonical: https://w3.org.ai/DID/VerificationMethod/{VerificationMethod.code}
+params:
+  - VerificationMethod
+schema:
+  VerificationMethod:
+    code: string
+    type: string
+    description: string
+    keyType: string
+    curve: string
+    publicKeyEncoding: string
+    securityLevel: number
+    purposes: string[]
+    contexts: string[]
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={VerificationMethod.type}
+  subtitle="DID Verification Method Type"
+  code={VerificationMethod.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">Key Type: {VerificationMethod.keyType}</Badge>
+  <Badge variant="secondary">Curve: {VerificationMethod.curve}</Badge>
+  <Badge variant="info">Security: {VerificationMethod.securityLevel}-bit</Badge>
+  <Badge variant="success">Encoding: {VerificationMethod.publicKeyEncoding}</Badge>
+</div>
+
+<Description>
+  {VerificationMethod.description}
+</Description>
+
+## Verification Method Properties
+
+<PropertiesTable
+  properties={{
+    id: {
+      type: 'string (DID URL)',
+      required: true,
+      description: 'Unique identifier for the verification method',
+      example: `did:example:123#${VerificationMethod.code}`
+    },
+    type: {
+      type: 'string',
+      required: true,
+      description: 'The verification method type',
+      example: VerificationMethod.type
+    },
+    controller: {
+      type: 'string (DID)',
+      required: true,
+      description: 'The DID that controls this verification method',
+      example: 'did:example:123'
+    },
+    [VerificationMethod.publicKeyEncoding === 'multibase' ? 'publicKeyMultibase' : 'publicKeyJwk']: {
+      type: VerificationMethod.publicKeyEncoding === 'multibase' ? 'string (multibase)' : 'object (JWK)',
+      required: true,
+      description: 'The public key material',
+      example: VerificationMethod.publicKeyEncoding === 'multibase'
+        ? 'z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH'
+        : '{ "kty": "EC", "crv": "P-256", ... }'
+    }
+  }}
+/>
+
+## Supported Purposes
+
+This verification method type can be used for the following purposes:
+
+{VerificationMethod.purposes.map(purpose => (
+  <li key={purpose}>
+    <code>{purpose}</code> - {
+      purpose === 'authentication' ? 'Authenticate as the DID subject' :
+      purpose === 'assertionMethod' ? 'Sign and issue verifiable credentials' :
+      purpose === 'keyAgreement' ? 'Perform key agreement for encryption' :
+      purpose === 'capabilityInvocation' ? 'Invoke authorization capabilities' :
+      purpose === 'capabilityDelegation' ? 'Delegate authorization capabilities' :
+      purpose
+    }
+  </li>
+))}
+
+## Examples
+
+### Basic Verification Method
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    ${VerificationMethod.contexts.map(c => `"${c}"`).join(',\n    ')}
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#${VerificationMethod.code}",
+      "type": "${VerificationMethod.type}",
+      "controller": "did:example:123456789abcdefghi",
+      ${VerificationMethod.publicKeyEncoding === 'multibase'
+        ? `"publicKeyMultibase": "z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"`
+        : VerificationMethod.keyType === 'EC'
+        ? `"publicKeyJwk": {
+        "kty": "EC",
+        "crv": "${VerificationMethod.curve}",
+        "x": "38M1FDts7Oea7urmseiugGW7tWc3mLpJh6rKe7xINZ8",
+        "y": "nDQW6XZ7b_u2Sy9slofYLlG03sOEoug3I0aAPQ0exs4"
+      }`
+        : `"publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "${VerificationMethod.curve}",
+        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+      }`
+      }
+    }
+  ]
+}`}
+</CodeExample>
+
+### Complete DID Document with Verification Method
+
+<CodeExample language="json">
+{`{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    ${VerificationMethod.contexts.map(c => `"${c}"`).join(',\n    ')}
+  ],
+  "id": "did:example:123456789abcdefghi",
+  "verificationMethod": [
+    {
+      "id": "did:example:123456789abcdefghi#${VerificationMethod.code}",
+      "type": "${VerificationMethod.type}",
+      "controller": "did:example:123456789abcdefghi",
+      ${VerificationMethod.publicKeyEncoding === 'multibase'
+        ? `"publicKeyMultibase": "z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"`
+        : `"publicKeyJwk": {
+        "kty": "OKP",
+        "crv": "${VerificationMethod.curve}",
+        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"
+      }`
+      }
+    }
+  ],
+  ${VerificationMethod.purposes.includes('authentication') ? `"authentication": [
+    "did:example:123456789abcdefghi#${VerificationMethod.code}"
+  ],` : ''}
+  ${VerificationMethod.purposes.includes('assertionMethod') ? `"assertionMethod": [
+    "did:example:123456789abcdefghi#${VerificationMethod.code}"
+  ],` : ''}
+  ${VerificationMethod.purposes.includes('keyAgreement') ? `"keyAgreement": [
+    "did:example:123456789abcdefghi#${VerificationMethod.code}"
+  ],` : ''}
+  ${VerificationMethod.purposes.includes('capabilityInvocation') ? `"capabilityInvocation": [
+    "did:example:123456789abcdefghi#${VerificationMethod.code}"
+  ],` : ''}
+  ${VerificationMethod.purposes.includes('capabilityDelegation') ? `"capabilityDelegation": [
+    "did:example:123456789abcdefghi#${VerificationMethod.code}"
+  ]` : ''}
+}`}
+</CodeExample>
+
+{VerificationMethod.publicKeyEncoding === 'multibase' && (
+  <>
+    ### Multibase Encoding
+
+    The public key is encoded using multibase (base58-btc with 'z' prefix):
+
+    <CodeExample language="javascript">
+{`// Encode public key as multibase
+import { base58btc } from 'multiformats/bases/base58';
+
+const publicKeyBytes = new Uint8Array([...]); // Raw key bytes
+const multibaseKey = base58btc.encode(publicKeyBytes);
+// Returns: "z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH"
+
+// Decode multibase public key
+const decoded = base58btc.decode(multibaseKey);
+// Returns: Uint8Array of key bytes`}
+    </CodeExample>
+  </>
+)}
+
+{VerificationMethod.publicKeyEncoding === 'JWK' && (
+  <>
+    ### JWK (JSON Web Key) Format
+
+    The public key is represented as a JSON Web Key:
+
+    <CodeExample language="json">
+{`{
+  "kty": "${VerificationMethod.keyType === 'EC' ? 'EC' : 'OKP'}",
+  "crv": "${VerificationMethod.curve}",
+  ${VerificationMethod.keyType === 'EC'
+    ? `"x": "38M1FDts7Oea7urmseiugGW7tWc3mLpJh6rKe7xINZ8",
+  "y": "nDQW6XZ7b_u2Sy9slofYLlG03sOEoug3I0aAPQ0exs4"`
+    : `"x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo"`
+  }
+}`}
+    </CodeExample>
+
+    <CodeExample language="javascript">
+{`// Convert JWK to key bytes
+import { importJWK } from 'jose';
+
+const jwk = {
+  kty: '${VerificationMethod.keyType === 'EC' ? 'EC' : 'OKP'}',
+  crv: '${VerificationMethod.curve}',
+  // ... other properties
+};
+
+const key = await importJWK(jwk);`}
+    </CodeExample>
+  </>
+)}
+
+## Key Generation
+
+### Generating a New Key Pair
+
+<CodeExample language="javascript">
+{`${VerificationMethod.keyType === 'Ed25519'
+  ? `// Generate Ed25519 key pair
+import { generateKeyPair } from '@stablelib/ed25519';
+
+const keyPair = generateKeyPair();
+// keyPair.publicKey: Uint8Array(32)
+// keyPair.secretKey: Uint8Array(64)
+
+// Encode public key as multibase
+import { base58btc } from 'multiformats/bases/base58';
+const publicKeyMultibase = base58btc.encode(keyPair.publicKey);`
+  : VerificationMethod.keyType === 'X25519'
+  ? `// Generate X25519 key pair
+import { generateKeyPair } from '@stablelib/x25519';
+
+const keyPair = generateKeyPair();
+// keyPair.publicKey: Uint8Array(32)
+// keyPair.secretKey: Uint8Array(32)
+
+// Encode public key as multibase
+import { base58btc } from 'multiformats/bases/base58';
+const publicKeyMultibase = base58btc.encode(keyPair.publicKey);`
+  : VerificationMethod.keyType === 'EC'
+  ? `// Generate EC key pair (${VerificationMethod.curve})
+import { generateKeyPair, exportJWK } from 'jose';
+
+const { publicKey, privateKey } = await generateKeyPair('ES256');
+const publicKeyJwk = await exportJWK(publicKey);
+
+console.log(publicKeyJwk);
+// {
+//   kty: 'EC',
+//   crv: 'P-256',
+//   x: '...',
+//   y: '...'
+// }`
+  : `// Generate key pair
+// Implementation depends on the specific key type and library used`
+}`}
+</CodeExample>
+
+### Creating Verification Method
+
+<CodeExample language="javascript">
+{`// Create verification method object
+function createVerificationMethod(did, keyId, ${VerificationMethod.publicKeyEncoding === 'multibase' ? 'publicKeyMultibase' : 'publicKeyJwk'}) {
+  return {
+    id: \`\${did}#\${keyId}\`,
+    type: '${VerificationMethod.type}',
+    controller: did,
+    ${VerificationMethod.publicKeyEncoding === 'multibase' ? 'publicKeyMultibase' : 'publicKeyJwk'}
+  };
+}
+
+const verificationMethod = createVerificationMethod(
+  'did:example:123',
+  '${VerificationMethod.code}',
+  ${VerificationMethod.publicKeyEncoding === 'multibase'
+    ? 'publicKeyMultibase'
+    : 'publicKeyJwk'
+  }
+);`}
+</CodeExample>
+
+## Usage in Different Contexts
+
+{VerificationMethod.purposes.includes('authentication') && (
+  <>
+    ### Authentication
+
+    Use this verification method to authenticate as the DID subject:
+
+    <CodeExample language="javascript">
+{`// Create authentication proof
+import { sign } from '@stablelib/ed25519';
+
+const challenge = 'random-challenge-from-verifier';
+const domain = 'verifier.example.com';
+
+// Create message to sign
+const message = JSON.stringify({
+  challenge,
+  domain,
+  timestamp: new Date().toISOString()
+});
+
+// Sign with private key
+const signature = sign(secretKey, new TextEncoder().encode(message));
+
+// Create proof
+const proof = {
+  type: 'Ed25519Signature2020',
+  created: new Date().toISOString(),
+  verificationMethod: 'did:example:123#${VerificationMethod.code}',
+  proofPurpose: 'authentication',
+  challenge,
+  domain,
+  proofValue: base58btc.encode(signature)
+};`}
+    </CodeExample>
+  </>
+)}
+
+{VerificationMethod.purposes.includes('assertionMethod') && (
+  <>
+    ### Assertion Method (Signing Credentials)
+
+    Use this verification method to sign verifiable credentials:
+
+    <CodeExample language="javascript">
+{`// Sign a verifiable credential
+async function signCredential(credential, verificationMethodId, privateKey) {
+  // Create credential proof
+  const proof = {
+    type: 'Ed25519Signature2020',
+    created: new Date().toISOString(),
+    verificationMethod: verificationMethodId,
+    proofPurpose: 'assertionMethod'
+  };
+
+  // Canonicalize and sign
+  const canonicalized = await canonicalize(credential);
+  const signature = sign(privateKey, new TextEncoder().encode(canonicalized));
+
+  proof.proofValue = base58btc.encode(signature);
+
+  return {
+    ...credential,
+    proof
+  };
+}
+
+const signedVC = await signCredential(
+  credential,
+  'did:example:123#${VerificationMethod.code}',
+  secretKey
+);`}
+    </CodeExample>
+  </>
+)}
+
+{VerificationMethod.purposes.includes('keyAgreement') && (
+  <>
+    ### Key Agreement (Encryption)
+
+    Use this verification method for key agreement to establish shared secrets:
+
+    <CodeExample language="javascript">
+{`// Perform key agreement
+import { sharedKey } from '@stablelib/x25519';
+
+// Recipient's public key (from their DID document)
+const recipientPublicKey = base58btc.decode(recipientPublicKeyMultibase);
+
+// Your private key
+const senderPrivateKey = myPrivateKey;
+
+// Derive shared secret
+const shared = sharedKey(senderPrivateKey, recipientPublicKey);
+
+// Use shared secret to encrypt message
+import { encrypt } from '@stablelib/chacha20poly1305';
+
+const nonce = randomBytes(12);
+const encrypted = encrypt(shared, nonce, message);`}
+    </CodeExample>
+  </>
+)}
+
+## Verification
+
+### Verifying Signatures
+
+<CodeExample language="javascript">
+{`// Verify a signature
+async function verifySignature(message, signature, verificationMethodId) {
+  // Resolve DID and get verification method
+  const did = verificationMethodId.split('#')[0];
+  const result = await resolveDID(did);
+
+  // Find verification method
+  const vm = result.didDocument.verificationMethod.find(
+    v => v.id === verificationMethodId
+  );
+
+  if (!vm) {
+    throw new Error('Verification method not found');
+  }
+
+  // Extract public key
+  const publicKey = ${
+    VerificationMethod.publicKeyEncoding === 'multibase'
+      ? 'base58btc.decode(vm.publicKeyMultibase)'
+      : 'await importJWK(vm.publicKeyJwk)'
+  };
+
+  // Verify signature
+  import { verify } from '@stablelib/ed25519';
+  const valid = verify(
+    publicKey,
+    new TextEncoder().encode(message),
+    signature
+  );
+
+  return valid;
+}`}
+</CodeExample>
+
+### Verifying Credential Proofs
+
+<CodeExample language="javascript">
+{`// Verify a verifiable credential proof
+async function verifyCredential(credential) {
+  const { proof, ...credentialWithoutProof } = credential;
+
+  // Canonicalize credential
+  const canonicalized = await canonicalize(credentialWithoutProof);
+
+  // Decode signature
+  const signature = base58btc.decode(proof.proofValue);
+
+  // Verify
+  const valid = await verifySignature(
+    canonicalized,
+    signature,
+    proof.verificationMethod
+  );
+
+  return valid;
+}`}
+</CodeExample>
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Cryptographic Strength
+
+- **Security Level:** {VerificationMethod.securityLevel}-bit security
+- Provides strong protection against current cryptographic attacks
+- {VerificationMethod.securityLevel >= 256 ? 'Considered quantum-resistant or quantum-safe' : 'May be vulnerable to future quantum computers'}
+- Regularly review NIST and cryptographic community recommendations
+
+### Key Management
+
+- **Private Key Protection:** Never include private keys in DID documents
+- Use hardware security modules (HSMs) for high-value keys
+- Implement proper key rotation policies
+- Securely back up private keys with encryption
+- Use separate keys for different purposes when possible
+
+### Key Usage
+
+{VerificationMethod.purposes.includes('authentication') && (
+  <>
+    - **Authentication:** Use for proving control of the DID
+    - Implement challenge-response to prevent replay attacks
+    - Use short-lived authentication proofs
+    - Include domain binding to prevent cross-site attacks
+  </>
+)}
+
+{VerificationMethod.purposes.includes('assertionMethod') && (
+  <>
+    - **Assertion:** Use for signing verifiable credentials
+    - Never reuse signatures across different credentials
+    - Include timestamp in signed data
+    - Implement proper canonicalization before signing
+  </>
+)}
+
+{VerificationMethod.purposes.includes('keyAgreement') && (
+  <>
+    - **Key Agreement:** Use for deriving shared secrets
+    - Always use ephemeral keys when possible
+    - Implement perfect forward secrecy
+    - Use authenticated encryption (AEAD)
+  </>
+)}
+
+### Verification
+
+- Always verify the controller of a verification method
+- Check that the verification method is authorized for its purpose
+- Validate key parameters and encoding
+- Implement proper error handling for verification failures
+- Use constant-time comparison for cryptographic values
+
+### Algorithm Considerations
+
+**Curve:** {VerificationMethod.curve}
+
+{VerificationMethod.curve === 'Ed25519' && (
+  <>
+    - EdDSA with Curve25519 provides excellent security and performance
+    - Resistant to timing attacks
+    - No need for random number generation during signing
+    - Widely supported in modern cryptographic libraries
+  </>
+)}
+
+{VerificationMethod.curve === 'X25519' && (
+  <>
+    - Elliptic Curve Diffie-Hellman with Curve25519
+    - Designed for key agreement and encryption
+    - Fast and secure implementation
+    - Compatible with Ed25519 key derivation
+  </>
+)}
+
+{VerificationMethod.curve === 'P-256' && (
+  <>
+    - NIST standardized curve
+    - Widely supported in existing infrastructure
+    - Consider Curve25519 for new implementations
+    - Ensure proper random number generation
+  </>
+)}
+
+{VerificationMethod.curve === 'P-384' && (
+  <>
+    - Higher security margin than P-256
+    - Suitable for government and high-security applications
+    - Larger key sizes and signatures
+    - Slower performance than smaller curves
+  </>
+)}
+
+</SecurityConsiderations>
+
+## Implementation Guidelines
+
+### Libraries and Tools
+
+**JavaScript/TypeScript:**
+- `@stablelib/ed25519` - Ed25519 operations
+- `@stablelib/x25519` - X25519 key agreement
+- `@digitalbazaar/ed25519-verification-key-2020`
+- `jose` - JWK operations
+- `multiformats` - Multibase encoding
+
+**Python:**
+- `cryptography` - General cryptographic operations
+- `pynacl` - NaCl cryptography (Ed25519, X25519)
+- `jwcrypto` - JWK support
+
+**Go:**
+- `golang.org/x/crypto/ed25519`
+- `golang.org/x/crypto/curve25519`
+
+### Testing
+
+Implement comprehensive tests:
+
+<CodeExample language="javascript">
+{`describe('${VerificationMethod.type}', () => {
+  test('generates valid key pair', () => {
+    const keyPair = generateKeyPair();
+    expect(keyPair.publicKey).toHaveLength(32);
+    expect(keyPair.secretKey).toHaveLength(64);
+  });
+
+  test('signs and verifies messages', () => {
+    const keyPair = generateKeyPair();
+    const message = new TextEncoder().encode('test message');
+
+    const signature = sign(keyPair.secretKey, message);
+    const valid = verify(keyPair.publicKey, message, signature);
+
+    expect(valid).toBe(true);
+  });
+
+  test('rejects invalid signatures', () => {
+    const keyPair = generateKeyPair();
+    const message = new TextEncoder().encode('test message');
+    const wrongMessage = new TextEncoder().encode('wrong message');
+
+    const signature = sign(keyPair.secretKey, message);
+    const valid = verify(keyPair.publicKey, wrongMessage, signature);
+
+    expect(valid).toBe(false);
+  });
+});`}
+</CodeExample>
+
+### Best Practices
+
+1. **Key Generation:** Use cryptographically secure random number generators
+2. **Storage:** Encrypt private keys at rest
+3. **Transport:** Use secure channels for key transport
+4. **Rotation:** Implement regular key rotation
+5. **Revocation:** Have a plan for key revocation and recovery
+6. **Documentation:** Document key management procedures
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Document" href="/W3C/DID/Document/verificationMethod">DID Document Verification Methods</RelatedItem>
+  <RelatedItem type="Method" href="/W3C/DID/Method/key">DID Methods</RelatedItem>
+  {VerificationMethod.purposes.includes('assertionMethod') && (
+    <RelatedItem type="Proof" href="/W3C/VC/Proof/Ed25519Signature2020">Credential Proof Types</RelatedItem>
+  )}
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/did-core/">Decentralized Identifiers (DIDs) v1.0</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/did-spec-registries/#verification-method-types">DID Verification Method Type Registry</SpecLink>
+  <SpecLink href={VerificationMethod.contexts[0] || 'https://w3id.org/security/suites/ed25519-2020/v1'}>Cryptographic Suite Specification</SpecLink>
+  <SpecLink href="https://datatracker.ietf.org/doc/html/rfc8032">RFC 8032: Edwards-Curve Digital Signature Algorithm (EdDSA)</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This verification method type is part of the W3C DID Core specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

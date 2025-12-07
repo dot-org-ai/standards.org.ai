@@ -1,0 +1,49 @@
+---
+layout: businessType
+source: US/SBA
+$type: US/SBA/BusinessType
+$id: https://standards.org.ai/US/SBA/BusinessType/{businessType.code}
+sameAs: https://standards.org.ai/SBA/BusinessType/{businessType.code}
+canonical: https://us.org.ai/SBA/BusinessType/{businessType.code}
+params:
+  - BusinessType
+schema:
+  businessType:
+    code: BusinessTypeCode
+    name: BusinessTypeName
+    description: Description
+    eligibilityCriteria: EligibilityCriteria
+    certificationRequired: CertificationRequired
+---
+
+# {businessType.name}
+
+<BusinessTypeHeader code={businessType.code} name={businessType.name} />
+
+## Description
+
+{businessType.description}
+
+## Eligibility Criteria
+
+{businessType.eligibilityCriteria}
+
+## Certification Required
+
+{businessType.certificationRequired}
+
+## Applicable Contract Set-Asides
+
+<ContractTypesByBusinessType businessTypeCode={businessType.code} />
+
+## Size Standards
+
+<SizeStandardsByBusinessType businessTypeCode={businessType.code} />
+
+## Application Process
+
+<BusinessTypeApplicationProcess code={businessType.code} />
+
+## Resources and Benefits
+
+<BusinessTypeResources code={businessType.code} />

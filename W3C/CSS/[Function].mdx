@@ -1,0 +1,278 @@
+---
+layout: function
+source: W3C/CSS
+$type: W3C/CSS/Function
+$id: https://standards.org.ai/W3C/CSS/Function/{function.code}
+sameAs: https://standards.org.ai/Function/{function.code}
+canonical: https://w3.org.ai/CSS/Function/{function.code}
+params:
+  - Function
+schema:
+  function:
+    code: string
+    name: string
+    parameters: array
+    returnType: string
+    specification: string
+    description: string
+    syntax: string
+    category: string
+    examples: array
+---
+
+import { FunctionHeader } from '@/components/css/FunctionHeader'
+import { FormalSyntax } from '@/components/css/FormalSyntax'
+import { ParameterList } from '@/components/css/ParameterList'
+import { CodeExample } from '@/components/css/CodeExample'
+import { BrowserCompatibility } from '@/components/css/BrowserCompatibility'
+import { RelatedFunctions } from '@/components/css/RelatedFunctions'
+import { SpecificationLinks } from '@/components/css/SpecificationLinks'
+import { FunctionTable } from '@/components/css/FunctionTable'
+
+<FunctionHeader
+  name={function.name}
+  syntax={function.syntax}
+  description={function.description}
+/>
+
+## Description
+
+{function.description}
+
+## Function Information
+
+<FunctionTable>
+  <FunctionRow label="Function Name" value={<code>{function.code}()</code>} />
+  <FunctionRow label="Category" value={function.category} />
+  <FunctionRow label="Return Type" value={function.returnType} />
+  <FunctionRow label="Specification" value={function.specification} />
+</FunctionTable>
+
+## Syntax
+
+<FormalSyntax syntax={function.syntax} />
+
+```css
+{function.code}({function.parameters && function.parameters.map(p => p.name).join(', ')})
+```
+
+## Parameters
+
+<ParameterList parameters={function.parameters} />
+
+{function.parameters && function.parameters.map((param) => (
+  <section key={param.name}>
+    ### `{param.name}`
+
+    **Type:** `{param.type}`
+    {param.required ? '**Required**' : '**Optional**'}
+    {param.defaultValue && `**Default:** \`${param.defaultValue}\``}
+
+    {param.description}
+
+    {param.values && (
+      <>
+        **Accepted values:**
+        {param.values.map((val) => (
+          <div key={val}>
+            - `{val}`
+          </div>
+        ))}
+      </>
+    )}
+  </section>
+))}
+
+## Return Value
+
+**Type:** `{function.returnType}`
+
+The `{function.code}()` function returns a {function.returnType} value that can be used in CSS property values.
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="css">
+{`/* Basic ${function.name} function usage */
+.element {
+  property: ${function.code}(${function.parameters && function.parameters.map(p => p.example || p.defaultValue || 'value').join(', ')});
+}
+`}
+</CodeExample>
+
+### Common Patterns
+
+{function.examples && function.examples.map((example, idx) => (
+  <section key={idx}>
+    <h4>{example.title}</h4>
+
+    <CodeExample language="css">
+{example.css}
+    </CodeExample>
+
+    {example.html && (
+      <CodeExample language="html">
+{example.html}
+      </CodeExample>
+    )}
+
+    <p>{example.description}</p>
+  </section>
+))}
+
+### Advanced Usage
+
+<CodeExample language="css">
+{`/* Advanced examples with ${function.code}() */
+
+/* Nested function calls */
+.example-1 {
+  property: ${function.code}(/* parameters */);
+}
+
+/* With CSS variables */
+.example-2 {
+  --custom-value: /* value */;
+  property: ${function.code}(var(--custom-value));
+}
+
+/* In complex expressions */
+.example-3 {
+  property: calc(${function.code}(/* params */) * 2);
+}
+`}
+</CodeExample>
+
+### Interactive Demo
+
+<CodeExample language="html" live>
+{`<div class="demo">
+  <div class="element">
+    Demonstration of ${function.name}
+  </div>
+</div>
+
+<style>
+.demo {
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.element {
+  padding: 2rem;
+  background: white;
+  border: 1px solid #ddd;
+  /* Using ${function.code}() function */
+  property: ${function.code}(${function.parameters && function.parameters.map(p => p.example || 'value').join(', ')});
+}
+</style>
+`}
+</CodeExample>
+
+## Use Cases
+
+Common scenarios where `{function.code}()` is useful:
+
+{function.category === 'color' && `
+- Creating color values dynamically
+- Adjusting color properties programmatically
+- Building color themes and palettes
+- Implementing dark mode variations
+`}
+
+{function.category === 'transform' && `
+- Applying transformations to elements
+- Creating animations and transitions
+- Building responsive layouts
+- Implementing 3D effects
+`}
+
+{function.category === 'math' && `
+- Performing calculations in CSS
+- Creating responsive sizing
+- Building fluid typography systems
+- Calculating layout dimensions
+`}
+
+{function.category === 'filter' && `
+- Applying visual effects to elements
+- Creating image filters
+- Building graphic effects
+- Enhancing visual presentation
+`}
+
+{function.category === 'gradient' && `
+- Creating gradient backgrounds
+- Building color transitions
+- Implementing decorative effects
+- Designing visual patterns
+`}
+
+## Browser Compatibility
+
+<BrowserCompatibility function={function.code} />
+
+## Specifications
+
+<SpecificationLinks specifications={[
+  {
+    name: function.specification,
+    url: `https://www.w3.org/TR/${function.specification}/#funcdef-${function.code}`,
+    status: 'Recommendation'
+  }
+]} />
+
+## Related Functions
+
+<RelatedFunctions function={function.code} category={function.category} />
+
+## Best Practices
+
+- Validate parameter types and ranges for expected behavior
+- Consider browser support before using in production
+- Use appropriate fallback values for unsupported browsers
+- Test function output across different contexts
+- Combine with CSS variables for maintainable code
+
+## Common Mistakes
+
+- Passing incorrect parameter types or values
+- Missing required parameters
+- Not providing fallback values for older browsers
+- Over-nesting function calls affecting performance
+- Using functions in unsupported property contexts
+
+## Performance Considerations
+
+- Function evaluation happens at paint time
+- Complex nested functions may impact rendering performance
+- Consider caching computed values when possible
+- Test performance on lower-end devices
+- Use browser DevTools to profile CSS function usage
+
+## Accessibility Notes
+
+- Ensure function output maintains sufficient contrast ratios (for color functions)
+- Test with screen readers and assistive technologies
+- Provide alternative styling for users with motion preferences (for transform functions)
+- Consider prefers-color-scheme and other user preferences
+
+## See Also
+
+- MDN Web Docs: [CSS Functions](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Functions)
+- [CSS Values and Units Module](https://www.w3.org/TR/css-values/)
+- Can I Use: [{function.code}()](https://caniuse.com/?search={function.code})
+
+## Examples in the Wild
+
+Real-world usage patterns and popular implementations:
+
+- Design systems using `{function.code}()` for consistent theming
+- Component libraries leveraging function for dynamic styling
+- Framework implementations and best practices
+- Community patterns and recipes
+
+---
+
+*Part of the W3C CSS Functions Specifications. Last updated from [{function.specification}].*

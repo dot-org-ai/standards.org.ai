@@ -1,0 +1,61 @@
+---
+layout: segment
+source: EDI/EANCOM
+$type: EDI/EANCOM/Segment
+$id: https://standards.org.ai/EDI/EANCOM/Segment/{segment.code}
+sameAs: https://standards.org.ai/EANCOMSegment/{segment.code}
+canonical: https://standards.org.ai/EANCOM/Segment/{segment.code}
+params:
+  - Segment
+schema:
+  segment:
+    code: SegmentTag
+    name: SegmentName
+    description: SegmentDescription
+    status: SegmentStatus
+    maxOccurrences: MaxOccurrences
+---
+
+# {segment.code} - {segment.name}
+
+<SegmentHeader code={segment.code} name={segment.name} status={segment.status} />
+
+## Description
+
+{segment.description}
+
+## Status
+
+{segment.status}
+
+## Maximum Occurrences
+
+{segment.maxOccurrences}
+
+## Data Elements
+
+<DataElementList segment={segment.code} />
+
+## Composite Elements
+
+<CompositeElementList segment={segment.code} />
+
+## Messages Using This Segment
+
+<MessagesBySegment segment={segment.code} />
+
+## Segment Syntax
+
+<SegmentSyntax segment={segment.code} />
+
+## Usage Notes
+
+<SegmentUsageNotes segment={segment.code} />
+
+## Examples
+
+<SegmentExamples segment={segment.code} />
+
+## GS1 Specific Rules
+
+<GS1SegmentRules segment={segment.code} />

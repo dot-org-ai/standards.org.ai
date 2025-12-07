@@ -1,0 +1,150 @@
+---
+layout: class
+source: W3C/RDF
+$type: W3C/RDF/Class
+$id: https://standards.org.ai/W3C/RDF/Class/{Class.code}
+sameAs: https://standards.org.ai/Class/{Class.code}
+canonical: https://w3.org.ai/RDF/Class/{Class.code}
+params:
+  - Class
+schema:
+  Class:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    subClassOf: array
+---
+
+import { ClassHeader } from '@/components/semantic-web/ClassHeader'
+import { ClassHierarchy } from '@/components/semantic-web/ClassHierarchy'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<ClassHeader
+  uri={Class.uri}
+  label={Class.label}
+  type="RDF Class"
+/>
+
+## Description
+
+{Class.comment}
+
+This class is part of the RDF (Resource Description Framework) vocabulary, which provides the foundational data model for describing resources on the web using subject-predicate-object triples.
+
+## Class Hierarchy
+
+<ClassHierarchy
+  current={Class.uri}
+  superClasses={Class.subClassOf}
+  namespace="rdf"
+/>
+
+### Superclasses
+
+{Class.subClassOf && Class.subClassOf.length > 0 ? (
+  <ul>
+    {Class.subClassOf.map((parent) => (
+      <li key={parent}><code>{parent}</code></li>
+    ))}
+  </ul>
+) : (
+  <p>This is a top-level class with no superclasses.</p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Usage in Turtle
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix ex: <http://example.org/> .
+
+ex:resource a {Class.uri} ;
+    rdf:value "Example resource of type {Class.label}" .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.org/">
+  <{Class.uri} rdf:about="http://example.org/resource">
+    <rdf:value>Example resource of type {Class.label}</rdf:value>
+  </{Class.uri}>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "ex": "http://example.org/"
+  },
+  "@id": "ex:resource",
+  "@type": "{Class.uri}",
+  "rdf:value": "Example resource of type {Class.label}"
+}
+```
+
+</UsageExamples>
+
+## Properties
+
+Common properties used with instances of this class:
+
+- `rdf:type` - Indicates that a resource is an instance of this class
+- `rdfs:label` - Provides a human-readable label
+- `rdfs:comment` - Provides a description or comment
+
+## Best Practices
+
+When working with `{Class.label}`:
+
+1. **Clear Typing**: Always explicitly type resources using `rdf:type` or the shorthand `a`
+2. **Documentation**: Include `rdfs:label` and `rdfs:comment` for better discoverability
+3. **Namespace Usage**: Use proper namespace prefixes for readability
+4. **Validation**: Consider using SHACL or ShEx to validate instances
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#Resource', label: 'rdfs:Resource' },
+    { uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', label: 'rdf:type' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#Class', label: 'rdfs:Class' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="RDF 1.1 Concepts and Abstract Syntax"
+  url="https://www.w3.org/TR/rdf11-concepts/"
+  section={Class.code}
+/>
+
+### Normative References
+
+- [RDF 1.1 Concepts and Abstract Syntax](https://www.w3.org/TR/rdf11-concepts/)
+- [RDF Schema 1.1](https://www.w3.org/TR/rdf-schema/)
+- [RDF 1.1 Semantics](https://www.w3.org/TR/rdf11-mt/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/1999/02/22-rdf-syntax-ns#`
+- **URI**: `{Class.uri}`
+- **Status**: W3C Recommendation
+- **Version**: RDF 1.1
+
+## Additional Resources
+
+- [RDF Primer](https://www.w3.org/TR/rdf11-primer/)
+- [RDF Validator](https://www.w3.org/RDF/Validator/)
+- [Linked Data Platform](https://www.w3.org/TR/ldp/)

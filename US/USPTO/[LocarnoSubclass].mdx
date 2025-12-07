@@ -1,0 +1,48 @@
+---
+layout: locarno-subclass
+source: US/USPTO
+$type: US/USPTO/LocarnoSubclass
+$id: https://standards.org.ai/US/USPTO/LocarnoSubclass/{subclass.code}
+sameAs: https://standards.org.ai/LocarnoSubclass/{subclass.code}
+canonical: https://us.org.ai/USPTO/LocarnoSubclass/{subclass.code}
+params:
+  - LocarnoSubclass
+schema:
+  subclass:
+    code: code
+    name: name
+    class: class
+    products: products
+---
+
+# Locarno Subclass {subclass.code}: {subclass.name}
+
+<LocarnoSubclassHeader
+  code={subclass.code}
+  name={subclass.name}
+  class={subclass.class}
+/>
+
+## Overview
+
+Locarno Subclass {subclass.code} is part of Class {subclass.class} and covers {subclass.name}.
+
+## Parent Class
+
+<LocarnoClassLink code={subclass.class} />
+
+## Products
+
+<LocarnoProductList subclass={subclass.code} />
+
+## Design Patents
+
+<DesignPatentList locarnoSubclass={subclass.code} limit={50} />
+
+## Statistics
+
+<LocarnoSubclassStats subclass={subclass.code} />
+
+## Related Subclasses
+
+<RelatedLocarnoSubclasses subclass={subclass.code} />

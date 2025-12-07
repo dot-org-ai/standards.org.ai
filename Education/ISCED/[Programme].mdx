@@ -1,0 +1,130 @@
+---
+layout: programme
+source: Education/ISCED
+$type: Education/ISCED/Programme
+$id: https://standards.org.ai/Education/ISCED/Programme/{programme.code}
+sameAs: https://standards.org.ai/EducationProgramme/{programme.code}
+canonical: https://standards.org.ai/ISCED/Programme/{programme.code}
+params:
+  - Programme
+schema:
+  programme:
+    code: string
+    name: string
+    description: string
+    orientation: string
+    level: string
+    field: string
+    duration: string
+    credits: string
+    completionLevel: string
+    provider: string
+    country: string
+    accreditation: string
+    learningOutcomes: array
+---
+
+# {programme.name}
+
+<ProgrammeHeader code={programme.code} name={programme.name} orientation={programme.orientation} />
+
+## Programme Overview
+
+{programme.description}
+
+<div className="programme-info-grid">
+  <div className="orientation">
+    <h3>Programme Orientation</h3>
+    <p><strong>{programme.orientation}</strong></p>
+    <p className="orientation-description">
+      {programme.orientation === 'General' && 'Designed to develop general knowledge, skills and competencies, not specifically oriented to a specific class of occupations.'}
+      {programme.orientation === 'Vocational' && 'Designed to equip learners with knowledge, skills and competencies for a particular occupation or trade.'}
+      {programme.orientation === 'Academic' && 'Designed primarily to prepare students for further education.'}
+      {programme.orientation === 'Professional' && 'Designed to provide the knowledge, skills and competencies for a specific profession.'}
+    </p>
+  </div>
+
+  {programme.level && (
+    <div className="level">
+      <h3>ISCED Level</h3>
+      <p><a href={`/Education/ISCED/Level/${programme.level}`}>Level {programme.level}</a></p>
+    </div>
+  )}
+
+  {programme.field && (
+    <div className="field">
+      <h3>Field of Education</h3>
+      <p><a href={`/Education/ISCED/Field/${programme.field}`}>{programme.field}</a></p>
+    </div>
+  )}
+
+  {programme.duration && (
+    <div className="duration">
+      <h3>Duration</h3>
+      <p>{programme.duration}</p>
+    </div>
+  )}
+
+  {programme.credits && (
+    <div className="credits">
+      <h3>Credits</h3>
+      <p>{programme.credits}</p>
+    </div>
+  )}
+
+  {programme.completionLevel && (
+    <div className="completion">
+      <h3>Completion Level</h3>
+      <p>{programme.completionLevel}</p>
+    </div>
+  )}
+</div>
+
+{programme.provider && (
+  <section className="provider">
+    <h2>Provider Information</h2>
+    <p><strong>{programme.provider}</strong></p>
+    {programme.country && <p>Country: {programme.country}</p>}
+    {programme.accreditation && <p>Accreditation: {programme.accreditation}</p>}
+  </section>
+)}
+
+{programme.learningOutcomes && programme.learningOutcomes.length > 0 && (
+  <section className="learning-outcomes">
+    <h2>Learning Outcomes</h2>
+    <p>Upon successful completion of this programme, learners will be able to:</p>
+    <ul className="outcomes-list">
+      {programme.learningOutcomes.map((outcome, idx) => (
+        <li key={idx}>{outcome}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+## Curriculum and Content
+
+<CurriculumOverview programme={programme.code} />
+
+## Entry Requirements
+
+<EntryRequirements programme={programme.code} />
+
+## Career Outcomes
+
+<CareerOutcomes programme={programme.code} />
+
+## Progression Pathways
+
+<ProgressionPathways programme={programme.code} />
+
+## Related Programmes
+
+<RelatedProgrammes code={programme.code} field={programme.field} level={programme.level} />
+
+## Competencies and Standards
+
+<CompetencyMapping programme={programme.code} />
+
+## Quality Assurance
+
+<QualityAssurance programme={programme.code} />

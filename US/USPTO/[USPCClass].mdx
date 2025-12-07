@@ -1,0 +1,42 @@
+---
+layout: uspc-class
+source: US/USPTO
+$type: US/USPTO/USPCClass
+$id: https://standards.org.ai/US/USPTO/USPCClass/{uspcClass.code}
+sameAs: https://standards.org.ai/USPCClass/{uspcClass.code}
+canonical: https://us.org.ai/USPTO/USPCClass/{uspcClass.code}
+params:
+  - USPCClass
+schema:
+  uspcClass:
+    code: code
+    name: name
+    subclasses: subclasses
+    cpcEquivalent: cpcEquivalent
+---
+
+# USPC Class {uspcClass.code}: {uspcClass.name}
+
+<USPCClassHeader code={uspcClass.code} name={uspcClass.name} />
+
+## Overview
+
+**Note:** The United States Patent Classification (USPC) system is no longer being maintained. It has been replaced by the Cooperative Patent Classification (CPC) system.
+
+USPC Class {uspcClass.code} covers {uspcClass.name}.
+
+## Subclasses
+
+<USPCSubclassList class={uspcClass.code} />
+
+## CPC Equivalent
+
+<CPCEquivalent uspcClass={uspcClass.code} cpcCode={uspcClass.cpcEquivalent} />
+
+## Legacy Patents
+
+<PatentList uspcClass={uspcClass.code} />
+
+## Historical Usage
+
+<USPCClassStats class={uspcClass.code} />

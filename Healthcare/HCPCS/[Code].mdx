@@ -1,0 +1,125 @@
+---
+layout: code
+source: Healthcare/HCPCS
+$type: Healthcare/HCPCS/Code
+$id: https://standards.org.ai/Healthcare/HCPCS/Code/{code.code}
+sameAs: https://standards.org.ai/HCPCS/{code.code}
+canonical: https://us.org.ai/CMS/HCPCS/Code/{code.code}
+params:
+  - Code
+schema:
+  code:
+    code: string
+    title: string
+    longDescription: string
+    shortDescription: string
+    level: string
+    category: string
+    modifier: array
+    pricingIndicator: string
+    coverageCode: string
+    status: string
+    actionCode: string
+    effectiveDate: string
+    terminationDate: string
+---
+
+# {code.title}
+
+<CodeHeader code={code.code} title={code.title} level={code.level} />
+
+## HCPCS Code
+
+**{code.code}**
+
+## Description
+
+<div className="descriptions">
+  {code.shortDescription && (
+    <div className="short-description">
+      <strong>Short Description:</strong> {code.shortDescription}
+    </div>
+  )}
+  {code.longDescription && (
+    <div className="long-description">
+      <strong>Long Description:</strong> {code.longDescription}
+    </div>
+  )}
+</div>
+
+## Code Details
+
+<div className="code-details">
+  {code.level && (
+    <div className="level">
+      <strong>HCPCS Level:</strong> {code.level}
+    </div>
+  )}
+  {code.category && (
+    <div className="category">
+      <strong>Category:</strong> {code.category}
+    </div>
+  )}
+  {code.status && (
+    <div className="status">
+      <strong>Status:</strong> {code.status}
+    </div>
+  )}
+  {code.actionCode && (
+    <div className="action-code">
+      <strong>Action Code:</strong> {code.actionCode}
+    </div>
+  )}
+  {code.pricingIndicator && (
+    <div className="pricing-indicator">
+      <strong>Pricing Indicator:</strong> {code.pricingIndicator}
+    </div>
+  )}
+  {code.coverageCode && (
+    <div className="coverage-code">
+      <strong>Coverage Code:</strong> {code.coverageCode}
+    </div>
+  )}
+</div>
+
+## Effective Dates
+
+<div className="effective-dates">
+  {code.effectiveDate && (
+    <div className="effective-date">
+      <strong>Effective Date:</strong> {code.effectiveDate}
+    </div>
+  )}
+  {code.terminationDate && (
+    <div className="termination-date">
+      <strong>Termination Date:</strong> {code.terminationDate}
+    </div>
+  )}
+</div>
+
+{code.modifier && code.modifier.length > 0 && (
+  <section className="modifiers">
+    <h2>Applicable Modifiers</h2>
+    <div className="modifier-list">
+      {code.modifier.map((mod, idx) => (
+        <ModifierLink key={idx} code={mod} />
+      ))}
+    </div>
+  </section>
+)}
+
+## Related Codes
+
+<RelatedHCPCSCodes category={code.category} current={code.code} />
+
+## CPT Crosswalk
+
+<HCPCSToCPT hcpcsCode={code.code} />
+
+## Coverage and Reimbursement
+
+<CoverageInformation code={code.code} />
+
+## LCD/NCD Information
+
+<LocalCoverageDecisions code={code.code} />

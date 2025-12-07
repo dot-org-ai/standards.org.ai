@@ -1,0 +1,49 @@
+---
+layout: sin
+source: US/GSA
+$type: US/GSA/SIN
+$id: https://standards.org.ai/US/GSA/SIN/{sin.code}
+sameAs: https://standards.org.ai/SIN/{sin.code}
+canonical: https://us.org.ai/GSA/SIN/{sin.code}
+params:
+  - SIN
+schema:
+  sin:
+    code: code
+    name: name
+    description: description
+    schedule: schedule
+    subcategories: subcategories
+---
+
+# {sin.code} - {sin.name}
+
+<SINHeader code={sin.code} name={sin.name} schedule={sin.schedule} />
+
+## Description
+
+{sin.description}
+
+## GSA Schedule
+
+<ScheduleLink code={sin.schedule} />
+
+## Subcategories
+
+<SINSubcategoryList sin={sin.code} />
+
+## Vendors
+
+<VendorsBySIN code={sin.code} />
+
+## Pricing
+
+<SINPricingInfo code={sin.code} />
+
+## Ordering Guide
+
+<SINOrderingGuide code={sin.code} />
+
+## Product Examples
+
+<SINProductExamples code={sin.code} />

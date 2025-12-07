@@ -1,0 +1,216 @@
+---
+layout: Distribution
+source: W3C/DCAT
+$type: W3C/DCAT/Distribution
+$id: https://standards.org.ai/W3C/DCAT/Distribution/{distribution.code}
+sameAs: https://standards.org.ai/Distribution/{distribution.code}
+canonical: https://w3.org.ai/DCAT/Distribution/{distribution.code}
+params:
+  - Distribution
+schema:
+  distribution:
+    code: string
+    uri: string
+    title: string
+    description: string
+    format: string
+    mediaType: string
+    accessURL: string
+    downloadURL: string
+    byteSize: number
+    issued: string
+    modified: string
+    license: string
+    rights: string
+    compressFormat: string
+    packageFormat: string
+---
+
+# {distribution.title || 'Dataset Distribution'}
+
+<div className="distribution-header">
+  <div className="distribution-metadata">
+    <span className="distribution-uri">{distribution.uri}</span>
+    {distribution.format && <span className="distribution-format">{distribution.format}</span>}
+    {distribution.mediaType && <span className="distribution-media-type">{distribution.mediaType}</span>}
+  </div>
+</div>
+
+{distribution.description && (
+  <section className="description">
+    <h2>Description</h2>
+    <p>{distribution.description}</p>
+  </section>
+)}
+
+<section className="distribution-details">
+  <h2>Distribution Details</h2>
+
+  <div className="details-grid">
+    {distribution.format && (
+      <div className="detail-item">
+        <strong>Format:</strong>
+        <span>{distribution.format}</span>
+      </div>
+    )}
+
+    {distribution.mediaType && (
+      <div className="detail-item">
+        <strong>Media Type:</strong>
+        <span><code>{distribution.mediaType}</code></span>
+      </div>
+    )}
+
+    {distribution.byteSize && (
+      <div className="detail-item">
+        <strong>Size:</strong>
+        <span>{distribution.byteSize.toLocaleString()} bytes ({(distribution.byteSize / 1024 / 1024).toFixed(2)} MB)</span>
+      </div>
+    )}
+
+    {distribution.compressFormat && (
+      <div className="detail-item">
+        <strong>Compression:</strong>
+        <span>{distribution.compressFormat}</span>
+      </div>
+    )}
+
+    {distribution.packageFormat && (
+      <div className="detail-item">
+        <strong>Package Format:</strong>
+        <span>{distribution.packageFormat}</span>
+      </div>
+    )}
+
+    {distribution.issued && (
+      <div className="detail-item">
+        <strong>Issued:</strong>
+        <span>{distribution.issued}</span>
+      </div>
+    )}
+
+    {distribution.modified && (
+      <div className="detail-item">
+        <strong>Modified:</strong>
+        <span>{distribution.modified}</span>
+      </div>
+    )}
+  </div>
+</section>
+
+<section className="access-section">
+  <h2>Access Information</h2>
+
+  <div className="access-options">
+    {distribution.accessURL && (
+      <div className="access-option">
+        <h3>Access URL</h3>
+        <p>Access this distribution online:</p>
+        <a href={distribution.accessURL} className="btn-primary btn-access">
+          Access Distribution
+        </a>
+        <p className="access-note">
+          <small>This URL may provide access via web page, API, or other service</small>
+        </p>
+      </div>
+    )}
+
+    {distribution.downloadURL && (
+      <div className="download-option">
+        <h3>Download URL</h3>
+        <p>Download this distribution directly:</p>
+        <a href={distribution.downloadURL} className="btn-primary btn-download" download>
+          Download Distribution
+        </a>
+        <p className="download-note">
+          <small>Direct download of the data file</small>
+        </p>
+      </div>
+    )}
+  </div>
+</section>
+
+{(distribution.license || distribution.rights) && (
+  <section className="rights-section">
+    <h2>Rights & Licensing</h2>
+
+    {distribution.license && (
+      <div className="license">
+        <h3>License</h3>
+        <p><a href={distribution.license}>{distribution.license}</a></p>
+      </div>
+    )}
+
+    {distribution.rights && (
+      <div className="rights">
+        <h3>Rights Statement</h3>
+        <p>{distribution.rights}</p>
+      </div>
+    )}
+  </section>
+)}
+
+<section className="usage-info">
+  <h2>Usage Guidelines</h2>
+  <div className="info-box">
+    <h4>About DCAT Distributions</h4>
+    <p>
+      A distribution represents a specific available form of a dataset. The same dataset
+      might be available in multiple distributions with different formats, access methods,
+      or compression schemes.
+    </p>
+    <ul>
+      <li><strong>Access URL:</strong> Use when the distribution is accessible via a service or landing page</li>
+      <li><strong>Download URL:</strong> Use for direct download links to data files</li>
+      <li><strong>Format:</strong> Describes the file format (e.g., CSV, JSON, XML)</li>
+      <li><strong>Media Type:</strong> IANA media type (e.g., text/csv, application/json)</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+
+<${distribution.uri}> a dcat:Distribution ;${distribution.title ? `
+  dcterms:title "${distribution.title}"@en ;` : ''}${distribution.description ? `
+  dcterms:description "${distribution.description}"@en ;` : ''}${distribution.format ? `
+  dcterms:format "${distribution.format}" ;` : ''}${distribution.mediaType ? `
+  dcat:mediaType "${distribution.mediaType}" ;` : ''}${distribution.accessURL ? `
+  dcat:accessURL <${distribution.accessURL}> ;` : ''}${distribution.downloadURL ? `
+  dcat:downloadURL <${distribution.downloadURL}> ;` : ''}${distribution.byteSize ? `
+  dcat:byteSize ${distribution.byteSize} ;` : ''}${distribution.license ? `
+  dcterms:license <${distribution.license}> ;` : ''}${distribution.issued ? `
+  dcterms:issued "${distribution.issued}"^^xsd:date ;` : ''}${distribution.modified ? `
+  dcterms:modified "${distribution.modified}"^^xsd:date ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="code-examples">
+  <h3>Code Examples</h3>
+
+  <h4>Fetch distribution using JavaScript</h4>
+  <pre><code>{`// Fetch the distribution
+fetch('${distribution.downloadURL || distribution.accessURL}')
+  .then(response => response.${distribution.mediaType === 'application/json' ? 'json' : 'text'}())
+  .then(data => {
+    console.log('Distribution data:', data);
+  })
+  .catch(error => {
+    console.error('Error fetching distribution:', error);
+  });`}</code></pre>
+
+  <h4>Query distribution metadata with SPARQL</h4>
+  <pre><code>{`PREFIX dcat: <http://www.w3.org/ns/dcat#>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?format ?mediaType ?accessURL ?size
+WHERE {
+  <${distribution.uri}> dcterms:format ?format ;
+                        dcat:mediaType ?mediaType ;
+                        dcat:accessURL ?accessURL .
+  OPTIONAL { <${distribution.uri}> dcat:byteSize ?size }
+}`}</code></pre>
+</section>

@@ -1,0 +1,133 @@
+---
+layout: element
+source: W3C/HTML
+$type: W3C/HTML/Element
+$id: https://standards.org.ai/W3C/HTML/Element/{element.code}
+sameAs: https://standards.org.ai/Element/{element.code}
+canonical: https://w3.org.ai/HTML/Element/{element.code}
+params:
+  - Element
+schema:
+  element:
+    code: tag
+    name: name
+    tag: string
+    category: string
+    description: string
+    deprecated: boolean
+    attributes: array
+    globalAttributes: boolean
+    contentModel: string
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { RelatedElements } from '@/components/w3c/html/RelatedElements'
+import { AttributesList } from '@/components/w3c/html/AttributesList'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { DeprecationNotice } from '@/components/standards/DeprecationNotice'
+import { ContentModelDiagram } from '@/components/w3c/html/ContentModelDiagram'
+
+<Header
+  type="HTML Element"
+  code={element.tag}
+  name={element.name}
+  standard="W3C HTML"
+/>
+
+{element.deprecated && (
+  <DeprecationNotice
+    message={`The <${element.tag}> element is deprecated and should not be used in new projects.`}
+    alternatives={element.alternatives}
+  />
+)}
+
+<Description content={element.description} />
+
+## Element Information
+
+- **Category**: {element.category}
+- **Content Model**: {element.contentModel}
+- **Tag Omission**: {element.tagOmission || 'Neither tag is omissible'}
+- **Permitted ARIA Roles**: {element.permittedAriaRoles?.join(', ') || 'Any'}
+
+## Attributes
+
+<AttributesList
+  attributes={element.attributes}
+  globalAttributes={element.globalAttributes}
+  elementTag={element.tag}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`Basic ${element.name} usage`}
+  language="html"
+  code={element.examples?.basic}
+/>
+
+{element.examples?.advanced && (
+  <CodeExample
+    title="Advanced usage"
+    language="html"
+    code={element.examples.advanced}
+  />
+)}
+
+{element.examples?.withJavaScript && (
+  <CodeExample
+    title="Using with JavaScript"
+    language="javascript"
+    code={element.examples.withJavaScript}
+  />
+)}
+
+## Content Model
+
+<ContentModelDiagram
+  contentModel={element.contentModel}
+  contentCategories={element.contentCategories}
+  permittedContent={element.permittedContent}
+  permittedParents={element.permittedParents}
+/>
+
+## Accessibility Considerations
+
+{element.accessibility?.map((item, index) => (
+  <div key={index} className="accessibility-note">
+    <h3>{item.title}</h3>
+    <p>{item.description}</p>
+  </div>
+))}
+
+## Related Elements
+
+<RelatedElements
+  category={element.category}
+  currentElement={element.tag}
+  related={element.relatedElements}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`html.elements.${element.tag}`}
+  standard="W3C HTML"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={element.specifications}
+  standard="HTML"
+/>
+
+## See Also
+
+- [HTML Living Standard](https://html.spec.whatwg.org/multipage/semantics.html#{element.tag})
+- [MDN Web Docs: &lt;{element.tag}&gt;](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/{element.tag})
+- [W3C HTML Specification](https://www.w3.org/TR/html52/semantics.html#{element.tag})

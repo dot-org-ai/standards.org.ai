@@ -1,0 +1,105 @@
+---
+layout: enumeration
+source: Ecommerce/SchemaOrg
+$type: SchemaOrg/Enumeration
+$id: https://standards.org.ai/Ecommerce/SchemaOrg/Enumeration/{enumeration.id}
+sameAs: https://schema.org/{enumeration.id}
+canonical: https://schema.org.ai/Enumeration/{enumeration.id}
+params:
+  - Enumeration
+schema:
+  enumeration:
+    id: EnumerationId
+    name: EnumerationName
+    description: EnumerationDescription
+    parents: array
+    version: Version
+---
+
+# {enumeration.name}
+
+<Header
+  type="Schema.org Enumeration"
+  code={enumeration.id}
+  name={enumeration.name}
+  standard="Schema.org"
+/>
+
+## Description
+
+{enumeration.description}
+
+## Schema.org ID
+
+{enumeration.id}
+
+## Parent Types
+
+{enumeration.parents && enumeration.parents.length > 0 ? (
+  <ParentTypesList parents={enumeration.parents} />
+) : (
+  <p>Enumeration</p>
+)}
+
+## Enumeration Members
+
+<EnumerationMemberList enumeration={enumeration.id} />
+
+## Usage in Properties
+
+<PropertiesByEnumeration enumeration={enumeration.id} />
+
+## JSON-LD Example
+
+<CodeExample
+  title={`${enumeration.name} JSON-LD Example`}
+  language="json"
+  code={`{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "availability": "https://schema.org/${enumeration.id}/InStock"
+}`}
+/>
+
+## Microdata Example
+
+<CodeExample
+  title={`${enumeration.name} Microdata Example`}
+  language="html"
+  code={`<div itemscope itemtype="https://schema.org/Product">
+  <link itemprop="availability" href="https://schema.org/${enumeration.id}/InStock" />
+</div>`}
+/>
+
+## RDFa Example
+
+<CodeExample
+  title={`${enumeration.name} RDFa Example`}
+  language="html"
+  code={`<div vocab="https://schema.org/" typeof="Product">
+  <link property="availability" href="https://schema.org/${enumeration.id}/InStock" />
+</div>`}
+/>
+
+## E-commerce Specific Usage
+
+{(enumeration.id === 'ItemAvailability' ||
+  enumeration.id === 'OfferItemCondition' ||
+  enumeration.id === 'PaymentMethod' ||
+  enumeration.id === 'DeliveryMethod') && (
+  <EcommerceEnumerationUsage enumeration={enumeration.id} />
+)}
+
+## Related Enumerations
+
+<RelatedEnumerations enumeration={enumeration.id} />
+
+## Version
+
+Schema.org {enumeration.version || 'Latest'}
+
+## See Also
+
+- [Schema.org Official Documentation](https://schema.org/{enumeration.id})
+- [Enumeration Members](#enumeration-members)
+- [Properties using this Enumeration](#usage-in-properties)

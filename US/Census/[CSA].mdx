@@ -1,0 +1,35 @@
+---
+layout: csa
+source: Census/Metropolitan
+$type: Census/CSA
+$id: https://standards.org.ai/Census/CSA/{csa.code}
+sameAs: https://standards.org.ai/CSA/{csa.code}
+canonical: https://us.org.ai/Census/CSA/{csa.code}
+params:
+  - CSA
+schema:
+  csa:
+    code: code
+    name: name
+    cbsas: cbsas
+---
+
+# {csa.name}
+
+<CSAHeader code={csa.code} name={csa.name} />
+
+## CSA Code
+
+{csa.code}
+
+## Core Based Statistical Areas
+
+<CBSAList csa={csa.code} cbsas={csa.cbsas} />
+
+## Demographics
+
+<CSADemographics code={csa.code} />
+
+## Economy
+
+<CSAEconomy code={csa.code} />

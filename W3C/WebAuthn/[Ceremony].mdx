@@ -1,0 +1,786 @@
+---
+layout: Ceremony
+source: W3C/WebAuthn
+$type: W3C/WebAuthn/Ceremony
+$id: https://standards.org.ai/W3C/WebAuthn/Ceremony/{Ceremony.code}
+sameAs: https://standards.org.ai/Ceremony/{Ceremony.code}
+canonical: https://w3.org.ai/WebAuthn/Ceremony/{Ceremony.code}
+params:
+  - Ceremony
+schema:
+  Ceremony:
+    code: string
+    name: string
+    description: string
+    steps: object[]
+    apiMethod: string
+    response: string
+    validationRules: string[]
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+import { FlowDiagram } from '@/components/FlowDiagram'
+
+<Header
+  title={Ceremony.name}
+  subtitle="WebAuthn Ceremony"
+  code={Ceremony.code}
+/>
+
+<div className="flex gap-2 my-4">
+  <Badge variant="primary">API: {Ceremony.apiMethod}</Badge>
+  <Badge variant="info">Response: {Ceremony.response}</Badge>
+  <Badge variant="secondary">Steps: {Ceremony.steps.length}</Badge>
+</div>
+
+<Description>
+  {Ceremony.description}
+</Description>
+
+## Ceremony Overview
+
+The {Ceremony.name} ceremony is a multi-step process involving:
+
+1. **Relying Party (RP):** Your web application server
+2. **Client:** User's web browser
+3. **Authenticator:** Hardware or software authenticator device
+
+<FlowDiagram>
+  {Ceremony.steps.map((step, i) => (
+    <FlowStep key={i} number={i + 1} actor={step.actor}>
+      {step.description}
+    </FlowStep>
+  ))}
+</FlowDiagram>
+
+## Ceremony Steps
+
+{Ceremony.steps.map((step, index) => (
+  <div key={index}>
+    <h3>Step {index + 1}: {step.title}</h3>
+    <p><strong>Actor:</strong> {step.actor}</p>
+
+    <Description>
+      {step.description}
+    </Description>
+
+    {step.code && (
+      <CodeExample language={step.language || 'javascript'}>
+        {step.code}
+      </CodeExample>
+    )}
+
+    {step.notes && (
+      <Alert type="info">
+        {step.notes}
+      </Alert>
+    )}
+  </div>
+))}
+
+## Complete Implementation
+
+### Client-Side Implementation
+
+<CodeExample language="javascript">
+{Ceremony.name === 'Registration' ? `// Complete registration ceremony
+async function register(username, displayName) {
+  try {
+    // Step 1: Request challenge from server
+    const challengeResponse = await fetch('/webauthn/register/begin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: username,
+        displayName: displayName
+      })
+    });
+
+    if (!challengeResponse.ok) {
+      throw new Error('Failed to get challenge');
+    }
+
+    const options = await challengeResponse.json();
+
+    // Step 2: Convert base64url to ArrayBuffer
+    const publicKeyCredentialCreationOptions = {
+      challenge: base64urlToBuffer(options.challenge),
+      rp: options.rp,
+      user: {
+        id: base64urlToBuffer(options.user.id),
+        name: options.user.name,
+        displayName: options.user.displayName
+      },
+      pubKeyCredParams: options.pubKeyCredParams,
+      authenticatorSelection: options.authenticatorSelection,
+      timeout: options.timeout,
+      attestation: options.attestation || 'none',
+      excludeCredentials: options.excludeCredentials?.map(cred => ({
+        ...cred,
+        id: base64urlToBuffer(cred.id)
+      }))
+    };
+
+    // Step 3: Call WebAuthn API
+    const credential = await navigator.credentials.create({
+      publicKey: publicKeyCredentialCreationOptions
+    });
+
+    if (!credential) {
+      throw new Error('Failed to create credential');
+    }
+
+    // Step 4: Prepare credential for transmission
+    const attestationResponse = {
+      id: credential.id,
+      rawId: bufferToBase64url(credential.rawId),
+      response: {
+        attestationObject: bufferToBase64url(credential.response.attestationObject),
+        clientDataJSON: bufferToBase64url(credential.response.clientDataJSON),
+        transports: credential.response.getTransports?.() || []
+      },
+      type: credential.type,
+      clientExtensionResults: credential.getClientExtensionResults()
+    };
+
+    // Step 5: Send credential to server
+    const verifyResponse = await fetch('/webauthn/register/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(attestationResponse)
+    });
+
+    if (!verifyResponse.ok) {
+      const error = await verifyResponse.json();
+      throw new Error(error.message || 'Registration failed');
+    }
+
+    const result = await verifyResponse.json();
+    console.log('Registration successful:', result);
+    return result;
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    throw error;
+  }
+}
+
+// Helper functions
+function base64urlToBuffer(base64url) {
+  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+function bufferToBase64url(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary)
+    .replace(/\\+/g, '-')
+    .replace(/\\//g, '_')
+    .replace(/=/g, '');
+}` : `// Complete authentication ceremony
+async function authenticate(username, conditionalUI = false) {
+  try {
+    // Step 1: Request challenge from server
+    const challengeResponse = await fetch('/webauthn/authenticate/begin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: username
+      })
+    });
+
+    if (!challengeResponse.ok) {
+      throw new Error('Failed to get challenge');
+    }
+
+    const options = await challengeResponse.json();
+
+    // Step 2: Convert base64url to ArrayBuffer
+    const publicKeyCredentialRequestOptions = {
+      challenge: base64urlToBuffer(options.challenge),
+      timeout: options.timeout,
+      rpId: options.rpId,
+      allowCredentials: options.allowCredentials?.map(cred => ({
+        type: 'public-key',
+        id: base64urlToBuffer(cred.id),
+        transports: cred.transports
+      })),
+      userVerification: options.userVerification || 'preferred'
+    };
+
+    // Step 3: Call WebAuthn API
+    const credential = await navigator.credentials.get({
+      publicKey: publicKeyCredentialRequestOptions,
+      mediation: conditionalUI ? 'conditional' : 'optional'
+    });
+
+    if (!credential) {
+      throw new Error('Authentication cancelled');
+    }
+
+    // Step 4: Prepare assertion for transmission
+    const assertionResponse = {
+      id: credential.id,
+      rawId: bufferToBase64url(credential.rawId),
+      response: {
+        authenticatorData: bufferToBase64url(credential.response.authenticatorData),
+        clientDataJSON: bufferToBase64url(credential.response.clientDataJSON),
+        signature: bufferToBase64url(credential.response.signature),
+        userHandle: credential.response.userHandle
+          ? bufferToBase64url(credential.response.userHandle)
+          : null
+      },
+      type: credential.type,
+      clientExtensionResults: credential.getClientExtensionResults()
+    };
+
+    // Step 5: Send assertion to server
+    const verifyResponse = await fetch('/webauthn/authenticate/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(assertionResponse)
+    });
+
+    if (!verifyResponse.ok) {
+      const error = await verifyResponse.json();
+      throw new Error(error.message || 'Authentication failed');
+    }
+
+    const result = await verifyResponse.json();
+    console.log('Authentication successful:', result);
+    return result;
+
+  } catch (error) {
+    console.error('Authentication error:', error);
+    throw error;
+  }
+}
+
+// Helper functions
+function base64urlToBuffer(base64url) {
+  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes.buffer;
+}
+
+function bufferToBase64url(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary)
+    .replace(/\\+/g, '-')
+    .replace(/\\//g, '_')
+    .replace(/=/g, '');
+}`}
+</CodeExample>
+
+### Server-Side Implementation
+
+<CodeExample language="javascript">
+{Ceremony.name === 'Registration' ? `// Node.js/Express registration endpoints
+const crypto = require('crypto');
+const cbor = require('cbor');
+const { generateChallenge, verifyAttestationResponse } = require('./webauthn-utils');
+
+// Store challenges temporarily (use Redis in production)
+const challenges = new Map();
+
+// Begin registration
+app.post('/webauthn/register/begin', async (req, res) => {
+  const { username, displayName } = req.body;
+
+  // Generate challenge
+  const challenge = generateChallenge(); // 32 random bytes
+
+  // Store challenge for this session
+  challenges.set(req.session.id, {
+    challenge,
+    username,
+    timestamp: Date.now()
+  });
+
+  // Generate user ID
+  const userId = crypto.randomBytes(32);
+
+  // Create options
+  const options = {
+    challenge: bufferToBase64url(challenge),
+    rp: {
+      name: 'Example Corp',
+      id: 'example.com'
+    },
+    user: {
+      id: bufferToBase64url(userId),
+      name: username,
+      displayName: displayName
+    },
+    pubKeyCredParams: [
+      { type: 'public-key', alg: -7 },  // ES256
+      { type: 'public-key', alg: -257 } // RS256
+    ],
+    authenticatorSelection: {
+      authenticatorAttachment: 'platform',
+      residentKey: 'preferred',
+      userVerification: 'preferred'
+    },
+    timeout: 60000,
+    attestation: 'none',
+    excludeCredentials: await getExistingCredentials(username)
+  };
+
+  res.json(options);
+});
+
+// Complete registration
+app.post('/webauthn/register/complete', async (req, res) => {
+  try {
+    const credential = req.body;
+
+    // Retrieve stored challenge
+    const stored = challenges.get(req.session.id);
+    if (!stored) {
+      return res.status(400).json({ error: 'Challenge not found' });
+    }
+
+    // Verify challenge timeout (5 minutes)
+    if (Date.now() - stored.timestamp > 300000) {
+      challenges.delete(req.session.id);
+      return res.status(400).json({ error: 'Challenge expired' });
+    }
+
+    // Verify attestation response
+    const verification = await verifyAttestationResponse({
+      credential,
+      expectedChallenge: stored.challenge,
+      expectedOrigin: 'https://example.com',
+      expectedRPID: 'example.com'
+    });
+
+    if (!verification.verified) {
+      return res.status(400).json({ error: 'Verification failed' });
+    }
+
+    // Store credential in database
+    await storeCredential({
+      userId: stored.username,
+      credentialId: credential.rawId,
+      publicKey: verification.publicKey,
+      signCount: verification.signCount,
+      transports: credential.response.transports,
+      createdAt: new Date()
+    });
+
+    // Clear challenge
+    challenges.delete(req.session.id);
+
+    res.json({
+      success: true,
+      credentialId: credential.id
+    });
+
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});` : `// Node.js/Express authentication endpoints
+const crypto = require('crypto');
+const { generateChallenge, verifyAssertionResponse } = require('./webauthn-utils');
+
+// Store challenges temporarily (use Redis in production)
+const challenges = new Map();
+
+// Begin authentication
+app.post('/webauthn/authenticate/begin', async (req, res) => {
+  const { username } = req.body;
+
+  // Generate challenge
+  const challenge = generateChallenge(); // 32 random bytes
+
+  // Store challenge for this session
+  challenges.set(req.session.id, {
+    challenge,
+    username,
+    timestamp: Date.now()
+  });
+
+  // Get user's credentials
+  const credentials = await getUserCredentials(username);
+
+  // Create options
+  const options = {
+    challenge: bufferToBase64url(challenge),
+    timeout: 60000,
+    rpId: 'example.com',
+    allowCredentials: credentials.map(cred => ({
+      type: 'public-key',
+      id: cred.credentialId,
+      transports: cred.transports
+    })),
+    userVerification: 'preferred'
+  };
+
+  res.json(options);
+});
+
+// Complete authentication
+app.post('/webauthn/authenticate/complete', async (req, res) => {
+  try {
+    const assertion = req.body;
+
+    // Retrieve stored challenge
+    const stored = challenges.get(req.session.id);
+    if (!stored) {
+      return res.status(400).json({ error: 'Challenge not found' });
+    }
+
+    // Verify challenge timeout (5 minutes)
+    if (Date.now() - stored.timestamp > 300000) {
+      challenges.delete(req.session.id);
+      return res.status(400).json({ error: 'Challenge expired' });
+    }
+
+    // Get stored credential
+    const credential = await getCredential(assertion.rawId);
+    if (!credential) {
+      return res.status(400).json({ error: 'Credential not found' });
+    }
+
+    // Verify assertion
+    const verification = await verifyAssertionResponse({
+      assertion,
+      expectedChallenge: stored.challenge,
+      expectedOrigin: 'https://example.com',
+      expectedRPID: 'example.com',
+      publicKey: credential.publicKey,
+      currentSignCount: credential.signCount
+    });
+
+    if (!verification.verified) {
+      return res.status(400).json({ error: 'Verification failed' });
+    }
+
+    // Update sign count
+    await updateCredentialSignCount(
+      credential.id,
+      verification.newSignCount
+    );
+
+    // Create session
+    req.session.userId = credential.userId;
+    req.session.authenticated = true;
+
+    // Clear challenge
+    challenges.delete(req.session.id);
+
+    res.json({
+      success: true,
+      userId: credential.userId
+    });
+
+  } catch (error) {
+    console.error('Authentication error:', error);
+    res.status(500).json({ error: error.message });
+  }
+});`}
+</CodeExample>
+
+## Validation Rules
+
+The server MUST validate all of the following:
+
+{Ceremony.validationRules.map((rule, index) => (
+  <div key={index}>
+    <h4>{index + 1}. {rule.title}</h4>
+    <p>{rule.description}</p>
+    {rule.code && (
+      <CodeExample language="javascript">
+        {rule.code}
+      </CodeExample>
+    )}
+  </div>
+))}
+
+## Error Handling
+
+### Common Errors
+
+<CodeExample language="javascript">
+{`// Handle WebAuthn errors
+async function handleWebAuthnError(error) {
+  if (error.name === 'NotAllowedError') {
+    // User cancelled or timeout
+    return {
+      type: 'user_cancelled',
+      message: 'Authentication was cancelled. Please try again.'
+    };
+  }
+
+  if (error.name === 'InvalidStateError') {
+    // Credential already registered (registration only)
+    return {
+      type: 'already_registered',
+      message: 'This authenticator is already registered.'
+    };
+  }
+
+  if (error.name === 'NotSupportedError') {
+    // Browser doesn't support WebAuthn or algorithm
+    return {
+      type: 'not_supported',
+      message: 'Your browser does not support this authentication method.'
+    };
+  }
+
+  if (error.name === 'SecurityError') {
+    // Security violation (e.g., insecure origin)
+    return {
+      type: 'security_error',
+      message: 'A security error occurred. Please ensure you are on a secure connection.'
+    };
+  }
+
+  if (error.name === 'AbortError') {
+    // Operation aborted
+    return {
+      type: 'aborted',
+      message: 'The operation was aborted.'
+    };
+  }
+
+  // Unknown error
+  return {
+    type: 'unknown',
+    message: 'An unexpected error occurred. Please try again.'
+  };
+}`}
+</CodeExample>
+
+### User Feedback
+
+<CodeExample language="javascript">
+{`// Provide user feedback during ceremony
+async function ${Ceremony.name.toLowerCase()}WithFeedback() {
+  const statusEl = document.getElementById('status');
+
+  try {
+    statusEl.textContent = 'Requesting challenge from server...';
+    const options = await getOptions();
+
+    statusEl.textContent = '${Ceremony.name === 'Registration' ? 'Please use your authenticator to create a credential...' : 'Please use your authenticator to sign in...'}';
+    const credential = await navigator.credentials.${Ceremony.apiMethod}(options);
+
+    if (!credential) {
+      statusEl.textContent = 'Authentication cancelled.';
+      return;
+    }
+
+    statusEl.textContent = 'Verifying with server...';
+    const result = await verifyWithServer(credential);
+
+    statusEl.textContent = '${Ceremony.name === 'Registration' ? 'Registration' : 'Authentication'} successful!';
+    return result;
+
+  } catch (error) {
+    const errorInfo = await handleWebAuthnError(error);
+    statusEl.textContent = errorInfo.message;
+    console.error(errorInfo);
+  }
+}`}
+</CodeExample>
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Challenge Requirements
+
+- **Randomness:** Use cryptographically secure random number generator
+- **Length:** Minimum 16 bytes, recommended 32 bytes
+- **Uniqueness:** Each challenge MUST be unique and used only once
+- **Storage:** Store challenges server-side, not in cookies or client storage
+- **Timeout:** Implement challenge expiration (recommended 5 minutes maximum)
+
+### Origin Validation
+
+- **Verify Origin:** MUST match the expected origin exactly
+- **HTTPS Only:** WebAuthn requires secure contexts (HTTPS)
+- **Subdomain Handling:** Be careful with RP ID and subdomains
+- **Port Numbers:** Origin includes port number if non-default
+
+### Relying Party ID (RP ID)
+
+- **Domain Matching:** RP ID MUST be a valid domain suffix of origin
+- **No Wildcards:** Cannot use wildcards in RP ID
+- **Cross-Domain:** Cannot share credentials across different RP IDs
+- **Verification:** Always verify RP ID hash in authenticator data
+
+{Ceremony.name === 'Registration' && (
+  <>
+    ### Registration-Specific Security
+
+    - **Exclude Credentials:** Prevent re-registration of existing credentials
+    - **User Verification:** Consider requiring UV for high-security scenarios
+    - **Attestation:** Decide if you need to verify authenticator attestation
+    - **Credential ID:** Must be unique per RP and user
+  </>
+)}
+
+{Ceremony.name === 'Authentication' && (
+  <>
+    ### Authentication-Specific Security
+
+    - **Sign Counter:** Verify and update signature counter to detect cloned credentials
+    - **User Handle:** Use to identify user in passwordless scenarios
+    - **Credential Lookup:** Validate credential belongs to the claimed user
+    - **Backup State:** Monitor backup state changes for security alerts
+  </>
+)}
+
+### Rate Limiting
+
+- Implement rate limiting on ceremony endpoints
+- Limit failed attempts per user and per IP
+- Use exponential backoff for repeated failures
+- Monitor for credential stuffing attacks
+
+### Session Management
+
+- Create authenticated sessions only after successful verification
+- Use secure session cookies with httpOnly and sameSite flags
+- Implement session timeout and renewal
+- Invalidate sessions on logout or security events
+
+</SecurityConsiderations>
+
+## Best Practices
+
+### User Experience
+
+1. **Clear Instructions:** Provide step-by-step guidance
+2. **Error Messages:** Give helpful, user-friendly error messages
+3. **Timeout Warning:** Warn users before timeout occurs
+4. **Multiple Authenticators:** Allow registration of backup authenticators
+5. **Conditional UI:** Use conditional mediation for seamless autofill experience
+
+### Implementation
+
+1. **Use Libraries:** Consider using established WebAuthn libraries
+2. **Test Thoroughly:** Test across browsers and authenticator types
+3. **Monitor Usage:** Track success/failure rates
+4. **Update Dependencies:** Keep crypto libraries up to date
+5. **Security Review:** Regular security audits of implementation
+
+### Fallback Mechanisms
+
+<CodeExample language="javascript">
+{`// Check WebAuthn support
+async function initializeAuth() {
+  if (!window.PublicKeyCredential) {
+    // WebAuthn not supported
+    showFallbackAuth();
+    return;
+  }
+
+  // Check for platform authenticator
+  const available = await PublicKeyCredential
+    .isUserVerifyingPlatformAuthenticatorAvailable();
+
+  if (available) {
+    showWebAuthnAuth();
+  } else {
+    showSecurityKeyAuth(); // Or other fallback
+  }
+}`}
+</CodeExample>
+
+## Testing
+
+### Unit Tests
+
+<CodeExample language="javascript">
+{`// Example tests
+describe('${Ceremony.name} Ceremony', () => {
+  test('validates challenge format', () => {
+    const challenge = generateChallenge();
+    expect(challenge).toHaveLength(32);
+    expect(challenge instanceof Uint8Array).toBe(true);
+  });
+
+  test('rejects expired challenges', async () => {
+    const oldChallenge = {
+      challenge: generateChallenge(),
+      timestamp: Date.now() - 400000 // 6+ minutes ago
+    };
+
+    await expect(
+      verify${Ceremony.name}(credential, oldChallenge)
+    ).rejects.toThrow('Challenge expired');
+  });
+
+  test('validates origin', async () => {
+    const wrongOrigin = 'https://evil.com';
+
+    await expect(
+      verify${Ceremony.name}(credential, challenge, wrongOrigin)
+    ).rejects.toThrow('Origin mismatch');
+  });
+});`}
+</CodeExample>
+
+### Integration Tests
+
+- Test complete ceremony flow end-to-end
+- Test with real authenticators when possible
+- Test error scenarios and edge cases
+- Test cross-browser compatibility
+- Test timeout handling
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Authenticator" href="/W3C/WebAuthn/Authenticator/platform">Platform Authenticators</RelatedItem>
+  <RelatedItem type="Authenticator" href="/W3C/WebAuthn/Authenticator/cross-platform">Cross-Platform Authenticators</RelatedItem>
+  <RelatedItem type="Extension" href="/W3C/WebAuthn/Extension/credProps">WebAuthn Extensions</RelatedItem>
+  {Ceremony.name === 'Registration' && (
+    <RelatedItem type="Ceremony" href="/W3C/WebAuthn/Ceremony/authentication">Authentication Ceremony</RelatedItem>
+  )}
+  {Ceremony.name === 'Authentication' && (
+    <RelatedItem type="Ceremony" href="/W3C/WebAuthn/Ceremony/registration">Registration Ceremony</RelatedItem>
+  )}
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/webauthn-3/">Web Authentication: An API for accessing Public Key Credentials Level 3</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/webauthn-3/#sctn-${Ceremony.name.toLowerCase()}">{Ceremony.name} Ceremony</SpecLink>
+  <SpecLink href="https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-errata-20220621.html">CTAP2 Specification</SpecLink>
+  <SpecLink href="https://w3c.github.io/webauthn/">WebAuthn Editor's Draft</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This ceremony is part of the W3C WebAuthn specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

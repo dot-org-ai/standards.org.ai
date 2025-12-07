@@ -1,0 +1,50 @@
+---
+layout: timezone
+source: IANA
+$type: IANA/Timezone
+$id: https://standards.org.ai/IANA/Timezone/{timezone.code}
+sameAs: https://standards.org.ai/Timezone/{timezone.code}
+canonical: https://iana.org.ai/Timezone/{timezone.code}
+params:
+  - Timezone
+schema:
+  timezone:
+    code: value
+    name: value
+    abbreviation: abbr
+    offset: offset
+    isDST: isdst
+    description: text
+---
+
+# {timezone.name}
+
+<TimezoneHeader code={timezone.code} abbreviation={timezone.abbreviation} />
+
+## UTC Offset
+
+{timezone.offset} hours ({timezone.description})
+
+## Abbreviation
+
+{timezone.abbreviation}
+
+## Daylight Saving Time
+
+{timezone.isDST ? "Yes" : "No"}
+
+## IANA Identifiers
+
+<TimezoneIdentifiers timezone={timezone.code} />
+
+## Countries in This Timezone
+
+<CountriesByTimezone timezone={timezone.code} />
+
+## Cities in This Timezone
+
+<CitiesByTimezone timezone={timezone.code} />
+
+## Adjacent Timezones
+
+<AdjacentTimezones offset={timezone.offset} current={timezone.code} />

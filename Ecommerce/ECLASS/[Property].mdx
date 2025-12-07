@@ -1,0 +1,86 @@
+---
+layout: property
+source: Ecommerce/ECLASS
+$type: ECLASS/Property
+$id: https://standards.org.ai/Ecommerce/ECLASS/Property/{property.code}
+sameAs: https://standards.org.ai/Property/{property.code}
+canonical: https://standards.org.ai/ECLASS/Property/{property.code}
+params:
+  - Property
+schema:
+  property:
+    code: PropertyCode
+    name: PropertyName
+    description: PropertyDescription
+    dataType: DataType
+    unit: Unit
+    version: Version
+    preferredName: PreferredName
+    definition: Definition
+---
+
+# {property.name}
+
+<Header
+  type="eCl@ss Property"
+  code={property.code}
+  name={property.preferredName || property.name}
+  standard="eCl@ss"
+/>
+
+## Definition
+
+{property.definition || property.description}
+
+## eCl@ss Code
+
+{property.code}
+
+## Property Details
+
+<PropertyDetails
+  dataType={property.dataType}
+  unit={property.unit}
+  preferredName={property.preferredName}
+/>
+
+## Data Type
+
+{property.dataType}
+
+{property.unit && (
+  <>
+    ## Unit of Measurement
+
+    {property.unit}
+  </>
+)}
+
+## Allowed Values
+
+<PropertyValueList property={property.code} />
+
+## Used in Classes
+
+<ClassesByProperty property={property.code} />
+
+## Used in Sub-Groups
+
+<SubGroupsByProperty property={property.code} />
+
+## Related Properties
+
+<RelatedProperties property={property.code} />
+
+## Multilingual Names
+
+<PropertyTranslations property={property.code} />
+
+## Version
+
+eCl@ss {property.version || 'Latest'}
+
+## See Also
+
+- [eCl@ss Property Documentation](https://www.eclass.eu/)
+- [Classes using this Property](#used-in-classes)

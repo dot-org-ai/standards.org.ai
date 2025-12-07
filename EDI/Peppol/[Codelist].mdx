@@ -1,0 +1,69 @@
+---
+layout: codelist
+source: EDI/Peppol
+$type: EDI/Peppol/Codelist
+$id: https://standards.org.ai/EDI/Peppol/Codelist/{codelist.id}
+sameAs: https://standards.org.ai/Codelist/{codelist.id}
+canonical: https://standards.org.ai/Peppol/Codelist/{codelist.id}
+params:
+  - Codelist
+schema:
+  codelist:
+    id: CodelistID
+    name: CodelistName
+    description: CodelistDescription
+    agency: AgencyID
+    version: Version
+---
+
+# {codelist.name}
+
+<CodelistHeader id={codelist.id} name={codelist.name} agency={codelist.agency} />
+
+## Description
+
+{codelist.description}
+
+## Agency
+
+{codelist.agency}
+
+## Version
+
+{codelist.version}
+
+## Code Values
+
+<CodeValues codelist={codelist.id} />
+
+## Documents Using This Codelist
+
+<DocumentsByCodelist codelist={codelist.id} />
+
+## Business Rules
+
+<CodelistBusinessRules codelist={codelist.id} />
+
+## Validation
+
+<CodelistValidation codelist={codelist.id} />
+
+## Source Standard
+
+<SourceStandard codelist={codelist.id} />
+
+## Country-Specific Values
+
+<CountrySpecificCodes codelist={codelist.id} />
+
+## Change History
+
+<CodelistChangeHistory codelist={codelist.id} />
+
+## Related Codelists
+
+<RelatedCodelists codelist={codelist.id} />
+
+## Usage Examples
+
+<CodelistExamples codelist={codelist.id} />

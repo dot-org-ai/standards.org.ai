@@ -1,0 +1,107 @@
+---
+layout: field
+source: Education/ISCED
+$type: Education/ISCED/Field
+$id: https://standards.org.ai/Education/ISCED/Field/{field.code}
+sameAs: https://standards.org.ai/FieldOfEducation/{field.code}
+canonical: https://standards.org.ai/ISCED/Field/{field.code}
+params:
+  - Field
+schema:
+  field:
+    code: string
+    name: string
+    description: string
+    broadField: string
+    narrowField: string
+    detailedField: string
+    level: string
+    examples: array
+    exclusions: array
+---
+
+# ISCED Field {field.code}: {field.name}
+
+<FieldHeader code={field.code} name={field.name} />
+
+## Description
+
+{field.description}
+
+<div className="field-hierarchy">
+  <div className="hierarchy-level">
+    <h3>Classification Hierarchy</h3>
+    {field.broadField && (
+      <div className="broad-field">
+        <strong>Broad Field:</strong> {field.broadField}
+      </div>
+    )}
+    {field.narrowField && (
+      <div className="narrow-field">
+        <strong>Narrow Field:</strong> {field.narrowField}
+      </div>
+    )}
+    {field.detailedField && (
+      <div className="detailed-field">
+        <strong>Detailed Field:</strong> {field.detailedField}
+      </div>
+    )}
+  </div>
+</div>
+
+{field.examples && field.examples.length > 0 && (
+  <section className="examples">
+    <h2>Examples of Programmes</h2>
+    <ul className="programme-examples">
+      {field.examples.map((example, idx) => (
+        <li key={idx}>{example}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{field.exclusions && field.exclusions.length > 0 && (
+  <section className="exclusions">
+    <h2>Exclusions</h2>
+    <p>The following programmes are NOT included in this field:</p>
+    <ul className="exclusion-list">
+      {field.exclusions.map((exclusion, idx) => (
+        <li key={idx}>{exclusion}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+## Related Fields
+
+<RelatedFields code={field.code} />
+
+## Programmes in This Field
+
+<ProgrammesByField fieldCode={field.code} />
+
+## Educational Levels
+
+<LevelsByField fieldCode={field.code} />
+
+## Career Pathways
+
+<CareerPathways fieldCode={field.code} />
+
+## Competency Frameworks
+
+<CompetencyFrameworks fieldCode={field.code} />
+
+## Standards and Accreditation
+
+<AccreditationStandards fieldCode={field.code} />
+
+## Resources
+
+<section className="resources">
+  <h3>UNESCO ISCED Resources</h3>
+  <ul>
+    <li><a href="http://uis.unesco.org/sites/default/files/documents/isced-fields-of-education-training-2013-en.pdf">ISCED Fields of Education and Training 2013</a></li>
+    <li><a href="http://uis.unesco.org/en/topic/international-standard-classification-education-isced">Official ISCED Documentation</a></li>
+  </ul>
+</section>

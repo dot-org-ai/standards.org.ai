@@ -1,0 +1,47 @@
+---
+layout: htsheading
+source: US/USITC
+$type: US/USITC/HTSHeading
+$id: https://standards.org.ai/US/USITC/HTSHeading/{heading.code}
+sameAs: https://standards.org.ai/HTSHeading/{heading.code}
+canonical: https://us.org.ai/USITC/HTSHeading/{heading.code}
+params:
+  - HTSHeading
+schema:
+  heading:
+    code: code
+    name: name
+    chapter: chapter
+---
+
+# HTS {heading.code} - {heading.name}
+
+<HTSHeadingHeader code={heading.code} name={heading.name} />
+
+## Chapter
+
+<HTSChapterLink code={heading.chapter} />
+
+## Description
+
+{heading.name}
+
+## Subheadings
+
+<HTSSubheadingList heading={heading.code} />
+
+## Import Statistics
+
+<ImportsByHeadingStats heading={heading.code} />
+
+## Common Commodities
+
+<CommonCommoditiesByHeading heading={heading.code} />
+
+## Trade Partners
+
+<TopTradePartnersByHeading heading={heading.code} />
+
+## Related Headings
+
+<RelatedHTSHeadings chapter={heading.chapter} current={heading.code} />

@@ -1,0 +1,202 @@
+---
+layout: Element
+source: W3C/DublinCore
+$type: W3C/DublinCore/Element
+$id: https://standards.org.ai/W3C/DublinCore/Element/{element.code}
+sameAs: https://standards.org.ai/Element/{element.code}
+canonical: https://w3.org.ai/DublinCore/Element/{element.code}
+params:
+  - Element
+schema:
+  element:
+    code: string
+    name: string
+    uri: string
+    label: string
+    definition: string
+    comment: string
+    type: string
+    isDefinedBy: string
+    issued: string
+    modified: string
+---
+
+# {element.label}
+
+<div className="element-header">
+  <div className="element-metadata">
+    <span className="element-name"><code>dc:{element.name}</code></span>
+    <span className="element-uri">{element.uri}</span>
+  </div>
+</div>
+
+<section className="definition">
+  <h2>Definition</h2>
+  <p className="definition-text">{element.definition}</p>
+</section>
+
+{element.comment && (
+  <section className="comment">
+    <h3>Comment</h3>
+    <p>{element.comment}</p>
+  </section>
+)}
+
+<section className="metadata">
+  <h2>Metadata</h2>
+
+  <div className="metadata-grid">
+    <div className="metadata-item">
+      <strong>Name:</strong>
+      <code>{element.name}</code>
+    </div>
+
+    <div className="metadata-item">
+      <strong>URI:</strong>
+      <code>{element.uri}</code>
+    </div>
+
+    {element.type && (
+      <div className="metadata-item">
+        <strong>Type:</strong>
+        <code>{element.type}</code>
+      </div>
+    )}
+
+    {element.isDefinedBy && (
+      <div className="metadata-item">
+        <strong>Defined By:</strong>
+        <a href={element.isDefinedBy}>{element.isDefinedBy}</a>
+      </div>
+    )}
+
+    {element.issued && (
+      <div className="metadata-item">
+        <strong>Issued:</strong>
+        {element.issued}
+      </div>
+    )}
+
+    {element.modified && (
+      <div className="metadata-item">
+        <strong>Modified:</strong>
+        {element.modified}
+      </div>
+    )}
+  </div>
+</section>
+
+<section className="usage-examples">
+  <h2>Usage Examples</h2>
+
+  <h3>RDF/XML</h3>
+  <pre><code>{`<rdf:Description rdf:about="http://example.org/resource">
+  <dc:${element.name}>Example value for ${element.label}</dc:${element.name}>
+</rdf:Description>`}</code></pre>
+
+  <h3>Turtle</h3>
+  <pre><code>{`@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+<http://example.org/resource>
+  dc:${element.name} "Example value for ${element.label}" .`}</code></pre>
+
+  <h3>JSON-LD</h3>
+  <pre><code>{`{
+  "@context": {
+    "dc": "http://purl.org/dc/elements/1.1/"
+  },
+  "@id": "http://example.org/resource",
+  "dc:${element.name}": "Example value for ${element.label}"
+}`}</code></pre>
+</section>
+
+<section className="dc-overview">
+  <h2>About Dublin Core Elements</h2>
+  <div className="info-box">
+    <p>
+      The <strong>Dublin Core Metadata Element Set</strong> is a vocabulary of fifteen properties
+      for use in resource description. It provides a simple and standardized set of conventions
+      for describing resources.
+    </p>
+    <h4>The 15 Core Elements</h4>
+    <ul>
+      <li><strong>dc:title</strong> - A name given to the resource</li>
+      <li><strong>dc:creator</strong> - An entity primarily responsible for making the resource</li>
+      <li><strong>dc:subject</strong> - The topic of the resource</li>
+      <li><strong>dc:description</strong> - An account of the resource</li>
+      <li><strong>dc:publisher</strong> - An entity responsible for making the resource available</li>
+      <li><strong>dc:contributor</strong> - An entity responsible for making contributions</li>
+      <li><strong>dc:date</strong> - A point or period of time associated with the resource</li>
+      <li><strong>dc:type</strong> - The nature or genre of the resource</li>
+      <li><strong>dc:format</strong> - The file format, physical medium, or dimensions</li>
+      <li><strong>dc:identifier</strong> - An unambiguous reference to the resource</li>
+      <li><strong>dc:source</strong> - A related resource from which it is derived</li>
+      <li><strong>dc:language</strong> - A language of the resource</li>
+      <li><strong>dc:relation</strong> - A related resource</li>
+      <li><strong>dc:coverage</strong> - Spatial or temporal topic, applicability</li>
+      <li><strong>dc:rights</strong> - Information about rights held in and over the resource</li>
+    </ul>
+  </div>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Schema Definition</h3>
+  <pre><code>{`@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+<${element.uri}> a rdf:Property ;
+  rdfs:label "${element.label}"@en ;
+  rdfs:comment "${element.definition}"@en ;${element.isDefinedBy ? `
+  rdfs:isDefinedBy <${element.isDefinedBy}> ;` : ''}${element.issued ? `
+  dc:issued "${element.issued}" ;` : ''}${element.modified ? `
+  dc:modified "${element.modified}" ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>SPARQL Query Examples</h3>
+
+  <h4>Find all resources using this element</h4>
+  <pre><code>{`PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+SELECT ?resource ?value
+WHERE {
+  ?resource dc:${element.name} ?value .
+}
+LIMIT 100`}</code></pre>
+
+  <h4>Search by element value</h4>
+  <pre><code>{`PREFIX dc: <http://purl.org/dc/elements/1.1/>
+
+SELECT ?resource
+WHERE {
+  ?resource dc:${element.name} ?value .
+  FILTER(CONTAINS(LCASE(?value), "search term"))
+}`}</code></pre>
+</section>
+
+<section className="best-practices">
+  <h2>Best Practices</h2>
+
+  <div className="practice-box">
+    <h4>General Guidelines</h4>
+    <ul>
+      <li>Use Dublin Core elements for basic resource description</li>
+      <li>Consider Dublin Core Terms (dcterms:) for more specific properties</li>
+      <li>Provide values in multiple languages where appropriate</li>
+      <li>Use standardized values for type, format, and language when possible</li>
+      <li>Be consistent in how you apply elements across resources</li>
+    </ul>
+  </div>
+
+  <div className="practice-box">
+    <h4>Element-Specific Tips</h4>
+    <ul>
+      <li>Use URIs for creators, publishers, and contributors when available</li>
+      <li>Format dates using ISO 8601 (YYYY-MM-DD)</li>
+      <li>Use standard identifier schemes (ISBN, DOI, URI) for dc:identifier</li>
+      <li>Apply controlled vocabularies for dc:subject when possible</li>
+    </ul>
+  </div>
+</section>

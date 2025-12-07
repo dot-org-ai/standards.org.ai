@@ -15,6 +15,23 @@ export const NAMESPACES = {
   UN: 'un.org.ai',
   IANA: 'iana.org.ai',
   EDIFACT: 'un.org.ai',
+  W3C: 'w3.org.ai',
+  FHIR: 'fhir.org.ai',
+  X12: 'x12.org.ai',
+  EANCOM: 'eancom.org.ai',
+  Peppol: 'peppol.org.ai',
+  ICD: 'icd.org.ai',
+  SNOMED: 'snomed.org.ai',
+  LOINC: 'loinc.org.ai',
+  ISO20022: 'iso20022.org.ai',
+  LEI: 'lei.org.ai',
+  ISIN: 'isin.org.ai',
+  MCC: 'mcc.org.ai',
+  SWIFT: 'swift.org.ai',
+  SEC: 'us.org.ai',
+  SBA: 'us.org.ai',
+  USPTO: 'us.org.ai',
+  USITC: 'us.org.ai',
 } as const
 
 // Standard output columns

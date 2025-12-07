@@ -1,0 +1,133 @@
+---
+layout: ConceptScheme
+source: W3C/SKOS
+$type: W3C/SKOS/ConceptScheme
+$id: https://standards.org.ai/W3C/SKOS/ConceptScheme/{scheme.code}
+sameAs: https://standards.org.ai/ConceptScheme/{scheme.code}
+canonical: https://w3.org.ai/SKOS/ConceptScheme/{scheme.code}
+params:
+  - ConceptScheme
+schema:
+  scheme:
+    code: string
+    uri: string
+    title: string
+    description: string
+    hasTopConcept: array
+    creator: string
+    created: string
+    modified: string
+    license: string
+    version: string
+---
+
+# {scheme.title}
+
+<div className="scheme-header">
+  <div className="scheme-metadata">
+    <span className="scheme-uri">{scheme.uri}</span>
+    {scheme.version && <span className="scheme-version">Version: {scheme.version}</span>}
+  </div>
+</div>
+
+## Description
+
+{scheme.description}
+
+<div className="scheme-info">
+  {scheme.creator && (
+    <div className="creator">
+      <strong>Creator:</strong> {scheme.creator}
+    </div>
+  )}
+  {scheme.created && (
+    <div className="created">
+      <strong>Created:</strong> {scheme.created}
+    </div>
+  )}
+  {scheme.modified && (
+    <div className="modified">
+      <strong>Modified:</strong> {scheme.modified}
+    </div>
+  )}
+  {scheme.license && (
+    <div className="license">
+      <strong>License:</strong> <a href={scheme.license}>{scheme.license}</a>
+    </div>
+  )}
+</div>
+
+{scheme.hasTopConcept && scheme.hasTopConcept.length > 0 && (
+  <section className="top-concepts">
+    <h3>Top Concepts</h3>
+    <ul className="concept-list">
+      {scheme.hasTopConcept.map((concept, idx) => (
+        <li key={idx}>
+          <a href={concept.uri || concept}>
+            {concept.prefLabel || concept}
+          </a>
+          {concept.definition && (
+            <p className="concept-definition">{concept.definition}</p>
+          )}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
+
+<section className="usage-guidelines">
+  <h3>Usage Guidelines</h3>
+  <p>
+    This SKOS Concept Scheme provides a controlled vocabulary for organizing and
+    structuring knowledge in a specific domain. Use the top concepts as entry points
+    to explore the hierarchy of terms.
+  </p>
+  <ul>
+    <li>Use <code>skos:inScheme</code> to relate concepts to this scheme</li>
+    <li>Navigate hierarchies using <code>skos:broader</code> and <code>skos:narrower</code></li>
+    <li>Find alternative terms using <code>skos:altLabel</code></li>
+    <li>Discover related concepts using <code>skos:related</code></li>
+  </ul>
+</section>
+
+<section className="rdf-representation">
+  <h3>RDF Representation</h3>
+  <pre><code>{`@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<${scheme.uri}> a skos:ConceptScheme ;
+  dc:title "${scheme.title}"@en ;
+  dc:description "${scheme.description}"@en ;${scheme.creator ? `
+  dc:creator "${scheme.creator}" ;` : ''}${scheme.created ? `
+  dcterms:created "${scheme.created}"^^xsd:date ;` : ''}${scheme.modified ? `
+  dcterms:modified "${scheme.modified}"^^xsd:date ;` : ''}${scheme.license ? `
+  dcterms:license <${scheme.license}> ;` : ''}${scheme.hasTopConcept ? `
+  ${scheme.hasTopConcept.map(c => `skos:hasTopConcept <${c.uri || c}>`).join(' ;\n  ')} ;` : ''}
+  .`}</code></pre>
+</section>
+
+<section className="sparql-queries">
+  <h3>Useful SPARQL Queries</h3>
+
+  <h4>List all concepts in this scheme</h4>
+  <pre><code>{`PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?concept ?label ?definition
+WHERE {
+  ?concept skos:inScheme <${scheme.uri}> ;
+           skos:prefLabel ?label .
+  OPTIONAL { ?concept skos:definition ?definition }
+}
+ORDER BY ?label`}</code></pre>
+
+  <h4>Find concept hierarchy</h4>
+  <pre><code>{`PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+SELECT ?broader ?concept ?narrower
+WHERE {
+  ?concept skos:inScheme <${scheme.uri}> .
+  OPTIONAL { ?concept skos:broader ?broader }
+  OPTIONAL { ?concept skos:narrower ?narrower }
+}`}</code></pre>
+</section>

@@ -1,0 +1,52 @@
+---
+layout: cbpindustry
+source: Census/BusinessPatterns
+$type: Census/CBPIndustry
+$id: https://standards.org.ai/Census/CBPIndustry/{cbp.naics}
+sameAs: https://standards.org.ai/CBPIndustry/{cbp.naics}
+canonical: https://us.org.ai/Census/CBPIndustry/{cbp.naics}
+params:
+  - CBPIndustry
+schema:
+  cbp:
+    naics: naics
+    establishments: establishments
+    employment: employment
+    payroll: payroll
+---
+
+# County Business Patterns: {cbp.naics}
+
+<CBPIndustryHeader naics={cbp.naics} />
+
+## NAICS Code
+
+<NAICSLink code={cbp.naics} />
+
+## Establishments
+
+{cbp.establishments}
+
+## Employment
+
+{cbp.employment}
+
+## Annual Payroll
+
+{cbp.payroll}
+
+## NAICS Industry
+
+<NAICSIndustryDetails code={cbp.naics} />
+
+## County Data
+
+<CBPCountyData naics={cbp.naics} />
+
+## State Data
+
+<CBPStateData naics={cbp.naics} />
+
+## Trends
+
+<CBPTrends naics={cbp.naics} />

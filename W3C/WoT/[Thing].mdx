@@ -1,0 +1,160 @@
+---
+layout: thing
+source: W3C/WoT
+$type: W3C/WoT/Thing
+$id: https://standards.org.ai/W3C/WoT/Thing/{thing.id}
+sameAs: https://standards.org.ai/Thing/{thing.id}
+canonical: https://w3.org.ai/WoT/Thing/{thing.id}
+params:
+  - Thing
+schema:
+  thing:
+    id: ThingID
+    title: ThingTitle
+    description: ThingDescription
+    atContext: Context
+    atType: ThingType
+    base: BaseURI
+    properties: Properties
+    actions: Actions
+    events: Events
+    links: Links
+    forms: Forms
+    security: SecuritySchemes
+    securityDefinitions: SecurityDefinitions
+    profile: Profile
+    schemaDefinitions: SchemaDefinitions
+    uriVariables: URIVariables
+    version: Version
+    created: Created
+    modified: Modified
+    support: Support
+---
+
+# {thing.title}
+
+<ThingHeader id={thing.id} title={thing.title} type={thing.atType} />
+
+## Description
+
+{thing.description}
+
+## Thing Description
+
+<ThingDescriptionCard thing={thing} />
+
+### JSON-LD Context
+
+```json
+{
+  "@context": "{thing.atContext}",
+  "@type": "{thing.atType}",
+  "id": "{thing.id}",
+  "title": "{thing.title}",
+  "base": "{thing.base}"
+}
+```
+
+## Interaction Affordances
+
+### Properties
+
+<ThingProperties properties={thing.properties} />
+
+Properties represent the state of a Thing. They can be read-only, write-only, or read-write, and may support observing changes.
+
+### Actions
+
+<ThingActions actions={thing.actions} />
+
+Actions represent functions that can be invoked on a Thing. They may accept input data and return output data.
+
+### Events
+
+<ThingEvents events={thing.events} />
+
+Events represent asynchronous occurrences that can be subscribed to for notifications.
+
+## Security Configuration
+
+<ThingSecuritySchemes
+  security={thing.security}
+  securityDefinitions={thing.securityDefinitions}
+/>
+
+## Protocol Bindings
+
+<ThingForms forms={thing.forms} base={thing.base} />
+
+## Semantic Annotations
+
+<ThingSemanticTypes types={thing.atType} />
+
+## Links
+
+<ThingLinks links={thing.links} />
+
+## URI Variables
+
+<ThingURIVariables uriVariables={thing.uriVariables} />
+
+## Schema Definitions
+
+<ThingSchemaDefinitions schemaDefinitions={thing.schemaDefinitions} />
+
+## Metadata
+
+- **Version**: {thing.version}
+- **Created**: {thing.created}
+- **Modified**: {thing.modified}
+- **Profile**: {thing.profile}
+- **Support**: {thing.support}
+
+## Implementation Examples
+
+### Read Property Value
+
+```javascript
+// Using node-wot
+const thing = await WoT.consume(thingDescription);
+const value = await thing.readProperty('propertyName');
+console.log('Property value:', value);
+```
+
+### Invoke Action
+
+```javascript
+// Invoke an action with input
+const result = await thing.invokeAction('actionName', {
+  param1: 'value1',
+  param2: 42
+});
+console.log('Action result:', result);
+```
+
+### Subscribe to Event
+
+```javascript
+// Subscribe to events
+thing.subscribeEvent('eventName', async (data) => {
+  console.log('Event received:', data);
+});
+```
+
+## Validation
+
+<ThingValidation thing={thing} />
+
+## Related Things
+
+<RelatedThings thingType={thing.atType} current={thing.id} />
+
+## Specification
+
+<SpecificationLink spec="wot-thing-description" />
+
+### References
+
+- [W3C Web of Things (WoT) Thing Description](https://www.w3.org/TR/wot-thing-description/)
+- [W3C WoT Architecture](https://www.w3.org/TR/wot-architecture/)
+- [WoT Scripting API](https://www.w3.org/TR/wot-scripting-api/)

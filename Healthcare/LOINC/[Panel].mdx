@@ -1,0 +1,79 @@
+---
+layout: panel
+source: LOINC
+$type: LOINC/Panel
+$id: https://standards.org.ai/LOINC/Panel/{panel.num}
+sameAs: https://standards.org.ai/Panel/{panel.num}
+canonical: https://standards.org.ai/LOINC/Panel/{panel.num}
+params:
+  - Panel
+schema:
+  panel:
+    num: LOINC_NUM
+    longCommonName: LONG_COMMON_NAME
+    shortName: SHORTNAME
+    status: STATUS
+    class: CLASS
+    type: TYPE
+    consumerName: CONSUMER_NAME
+---
+
+# {panel.longCommonName}
+
+<PanelHeader num={panel.num} name={panel.longCommonName} type={panel.type} status={panel.status} />
+
+## Panel Number
+
+{panel.num}
+
+## Long Common Name
+
+{panel.longCommonName}
+
+## Short Name
+
+{panel.shortName}
+
+## Consumer Name
+
+{panel.consumerName}
+
+## Type
+
+{panel.type}
+
+## Class
+
+{panel.class}
+
+## Status
+
+{panel.status}
+
+## Panel Members
+
+<PanelMembers panel={panel.num} />
+
+## Observation Codes in Panel
+
+<CodesInPanel panel={panel.num} />
+
+## Parent Panels
+
+<ParentPanels panel={panel.num} />
+
+## Child Panels
+
+<ChildPanels panel={panel.num} />
+
+## Related Panels
+
+<RelatedPanels panel={panel.num} />
+
+## Clinical Guidelines
+
+<PanelClinicalGuidelines panel={panel.num} />
+
+## Order Sets
+
+<OrderSetsByPanel panel={panel.num} />

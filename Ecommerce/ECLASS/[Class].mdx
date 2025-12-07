@@ -1,0 +1,102 @@
+---
+layout: class
+source: Ecommerce/ECLASS
+$type: ECLASS/Class
+$id: https://standards.org.ai/Ecommerce/ECLASS/Class/{class.code}
+sameAs: https://standards.org.ai/Class/{class.code}
+canonical: https://standards.org.ai/ECLASS/Class/{class.code}
+params:
+  - Class
+schema:
+  class:
+    code: ClassCode
+    name: ClassName
+    description: ClassDescription
+    segmentCode: SegmentCode
+    mainGroupCode: MainGroupCode
+    groupCode: GroupCode
+    subGroupCode: SubGroupCode
+    version: Version
+    keywords: array
+---
+
+# {class.name}
+
+<Header
+  type="eCl@ss Class"
+  code={class.code}
+  name={class.name}
+  standard="eCl@ss"
+/>
+
+## Description
+
+{class.description}
+
+## eCl@ss Code
+
+{class.code}
+
+## Hierarchy
+
+<EclassHierarchy
+  segment={class.segmentCode}
+  mainGroup={class.mainGroupCode}
+  group={class.groupCode}
+  subGroup={class.subGroupCode}
+  class={class.code}
+  level="class"
+/>
+
+## Parent Sub-Group
+
+<SubGroupLink code={class.subGroupCode} />
+
+## Properties
+
+<PropertyList class={class.code} />
+
+## Property Values
+
+<PropertyValueList class={class.code} />
+
+## Keywords
+
+{class.keywords && (
+  <KeywordList keywords={class.keywords} />
+)}
+
+## Product Examples
+
+<ProductExamples class={class.code} />
+
+## Related Classifications
+
+### ETIM Mapping
+
+<EtimMapping eclassCode={class.code} />
+
+### GS1 GPC Mapping
+
+<GpcMapping eclassCode={class.code} />
+
+### UNSPSC Mapping
+
+<UnspscMapping eclassCode={class.code} />
+
+## Sibling Classes
+
+<SiblingClasses subGroup={class.subGroupCode} current={class.code} />
+
+## Usage Statistics
+
+<ClassUsageStats class={class.code} />
+
+## Version
+
+eCl@ss {class.version || 'Latest'}
+
+## See Also
+
+- [eCl@ss Official Documentation](https://www.eclass.eu/)
+- [Properties for this Class](#properties)

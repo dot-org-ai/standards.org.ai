@@ -1,0 +1,179 @@
+---
+layout: attribute
+source: W3C/SVG
+$type: W3C/SVG/Attribute
+$id: https://standards.org.ai/W3C/SVG/Attribute/{attribute.code}
+sameAs: https://standards.org.ai/Attribute/{attribute.code}
+canonical: https://w3.org.ai/SVG/Attribute/{attribute.code}
+params:
+  - Attribute
+schema:
+  attribute:
+    code: name
+    name: name
+    elements: array
+    animatable: boolean
+    type: string
+    description: string
+    deprecated: boolean
+    presentationAttribute: boolean
+    defaultValue: string
+    valueType: string
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { SVGAttributeInfo } from '@/components/w3c/svg/SVGAttributeInfo'
+import { ElementsList } from '@/components/w3c/svg/ElementsList'
+import { ValueTable } from '@/components/standards/ValueTable'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { LiveSVGPreview } from '@/components/w3c/svg/LiveSVGPreview'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { DeprecationNotice } from '@/components/standards/DeprecationNotice'
+
+<Header
+  type="SVG Attribute"
+  code={attribute.name}
+  name={attribute.name}
+  standard="W3C SVG"
+/>
+
+{attribute.deprecated && (
+  <DeprecationNotice
+    message={`The ${attribute.name} attribute is deprecated in SVG 2.`}
+    alternatives={attribute.alternatives}
+  />
+)}
+
+<Description content={attribute.description} />
+
+## Attribute Information
+
+<SVGAttributeInfo
+  type={attribute.type}
+  valueType={attribute.valueType}
+  animatable={attribute.animatable}
+  presentationAttribute={attribute.presentationAttribute}
+  defaultValue={attribute.defaultValue}
+/>
+
+## Applicable Elements
+
+<ElementsList
+  elements={attribute.elements}
+  attributeName={attribute.name}
+/>
+
+{attribute.values && (
+  <>
+    ## Possible Values
+
+    <ValueTable
+      values={attribute.values}
+      type={attribute.valueType}
+    />
+  </>
+)}
+
+## Usage Examples
+
+<CodeExample
+  title={`Using the ${attribute.name} attribute`}
+  language="xml"
+  code={attribute.examples?.basic}
+/>
+
+{attribute.examples?.basic && (
+  <LiveSVGPreview
+    code={attribute.examples.basic}
+    title={`Live preview: ${attribute.name}`}
+  />
+)}
+
+{attribute.examples?.multiple && (
+  <>
+    <CodeExample
+      title="Multiple values example"
+      language="xml"
+      code={attribute.examples.multiple}
+    />
+    <LiveSVGPreview
+      code={attribute.examples.multiple}
+      title="Live preview: Multiple values"
+    />
+  </>
+)}
+
+{attribute.animatable && attribute.examples?.animated && (
+  <>
+    <CodeExample
+      title="Animating the attribute"
+      language="xml"
+      code={attribute.examples.animated}
+    />
+    <LiveSVGPreview
+      code={attribute.examples.animated}
+      title="Live preview: Animation"
+    />
+  </>
+)}
+
+{attribute.presentationAttribute && attribute.examples?.css && (
+  <CodeExample
+    title="Using as CSS property"
+    language="css"
+    code={attribute.examples.css}
+  />
+)}
+
+{attribute.examples?.javascript && (
+  <CodeExample
+    title="Manipulating with JavaScript"
+    language="javascript"
+    code={attribute.examples.javascript}
+  />
+)}
+
+## Presentation Attribute
+
+{attribute.presentationAttribute ? (
+  <div className="presentation-attribute-notice">
+    <p>This attribute is a presentation attribute, which means it can also be used as a CSS property.</p>
+    <p>CSS values will override attribute values.</p>
+  </div>
+) : (
+  <p>This attribute is not a presentation attribute and cannot be used as a CSS property.</p>
+)}
+
+## Animation Support
+
+{attribute.animatable ? (
+  <div className="animatable-notice">
+    <p>This attribute can be animated using SVG animation elements or CSS animations.</p>
+    {attribute.animationNotes && <p>{attribute.animationNotes}</p>}
+  </div>
+) : (
+  <p>This attribute cannot be animated.</p>
+)}
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`svg.attributes.${attribute.name}`}
+  standard="W3C SVG"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={attribute.specifications}
+  standard="SVG"
+/>
+
+## See Also
+
+- [SVG 2 Specification: {attribute.name}](https://www.w3.org/TR/SVG2/{attribute.specSection || 'single-page.html'})
+- [MDN Web Docs: {attribute.name}](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/{attribute.name})
+- [SVG Attributes Reference](https://www.w3.org/TR/SVG2/attindex.html)

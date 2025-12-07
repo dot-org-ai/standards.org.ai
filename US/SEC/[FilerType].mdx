@@ -1,0 +1,48 @@
+---
+layout: filerType
+source: SEC
+$type: SEC/FilerType
+$id: https://standards.org.ai/SEC/FilerType/{filer.code}
+sameAs: https://standards.org.ai/FilerType/{filer.code}
+canonical: https://us.org.ai/SEC/FilerType/{filer.code}
+params:
+  - FilerType
+schema:
+  filer:
+    code: code
+    name: name
+    criteria: criteria
+    requirements: requirements
+---
+
+# {filer.name}
+
+<FilerTypeHeader code={filer.code} name={filer.name} />
+
+## Filer Type Code
+
+{filer.code}
+
+## Qualification Criteria
+
+{filer.criteria}
+
+## Filing Requirements
+
+{filer.requirements}
+
+## Required Forms
+
+<RequiredForms filerType={filer.code} />
+
+## Companies by Filer Type
+
+<CompaniesByFilerType filerType={filer.code} />
+
+## Compliance Calendar
+
+<ComplianceCalendar filerType={filer.code} />
+
+## Transition Rules
+
+<TransitionRules filerType={filer.code} />

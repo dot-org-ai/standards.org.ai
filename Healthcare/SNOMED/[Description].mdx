@@ -1,0 +1,69 @@
+---
+layout: description
+source: SNOMED
+$type: SNOMED/Description
+$id: https://standards.org.ai/SNOMED/Description/{description.id}
+sameAs: https://standards.org.ai/Description/{description.id}
+canonical: https://standards.org.ai/SNOMED/Description/{description.id}
+params:
+  - Description
+schema:
+  description:
+    id: DescriptionId
+    conceptId: ConceptId
+    term: Term
+    typeId: TypeId
+    languageCode: LanguageCode
+    caseSignificanceId: CaseSignificanceId
+    active: Active
+    effectiveTime: EffectiveTime
+    moduleId: ModuleId
+---
+
+# {description.term}
+
+<DescriptionHeader id={description.id} term={description.term} typeId={description.typeId} active={description.active} />
+
+## Description ID
+
+{description.id}
+
+## Term
+
+{description.term}
+
+## Concept
+
+<ConceptLink id={description.conceptId} />
+
+## Type
+
+{description.typeId}
+
+## Language
+
+{description.languageCode}
+
+## Case Significance
+
+{description.caseSignificanceId}
+
+## Status
+
+Active: {description.active}
+
+## Effective Time
+
+{description.effectiveTime}
+
+## Language Reference Sets
+
+<LanguageRefSetList description={description.id} />
+
+## Acceptability
+
+<DescriptionAcceptability description={description.id} />
+
+## Related Descriptions
+
+<RelatedDescriptions concept={description.conceptId} current={description.id} />

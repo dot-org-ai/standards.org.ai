@@ -1,0 +1,68 @@
+---
+layout: labeler
+source: Healthcare/NDC
+$type: Healthcare/NDC/Labeler
+$id: https://standards.org.ai/Healthcare/NDC/Labeler/{labeler.code}
+sameAs: https://standards.org.ai/DrugLabeler/{labeler.code}
+canonical: https://standards.org.ai/NDC/Labeler/{labeler.code}
+params:
+  - Labeler
+schema:
+  labeler:
+    code: string
+    labelerCode: string
+    labelerName: string
+    address: object
+    contactInfo: object
+    productCount: number
+---
+
+# {labeler.labelerName}
+
+<LabelerHeader code={labeler.labelerCode} name={labeler.labelerName} />
+
+## Labeler Code
+
+**{labeler.labelerCode}**
+
+## Company Information
+
+{labeler.address && (
+  <div className="company-address">
+    <h3>Address</h3>
+    {labeler.address.street && <p>{labeler.address.street}</p>}
+    {labeler.address.city && labeler.address.state && labeler.address.zip && (
+      <p>{labeler.address.city}, {labeler.address.state} {labeler.address.zip}</p>
+    )}
+    {labeler.address.country && <p>{labeler.address.country}</p>}
+  </div>
+)}
+
+{labeler.contactInfo && (
+  <div className="contact-info">
+    <h3>Contact Information</h3>
+    {labeler.contactInfo.phone && <p><strong>Phone:</strong> {labeler.contactInfo.phone}</p>}
+    {labeler.contactInfo.email && (
+      <p><strong>Email:</strong> <a href={`mailto:${labeler.contactInfo.email}`}>{labeler.contactInfo.email}</a></p>
+    )}
+    {labeler.contactInfo.website && (
+      <p><strong>Website:</strong> <a href={labeler.contactInfo.website} target="_blank" rel="noopener noreferrer">{labeler.contactInfo.website}</a></p>
+    )}
+  </div>
+)}
+
+## Statistics
+
+{labeler.productCount && (
+  <div className="statistics">
+    <p><strong>Total Products:</strong> {labeler.productCount}</p>
+  </div>
+)}
+
+## Products
+
+<ProductsByLabeler labelerCode={labeler.labelerCode} />
+
+## Recent Activity
+
+<LabelerActivity labelerCode={labeler.labelerCode} />

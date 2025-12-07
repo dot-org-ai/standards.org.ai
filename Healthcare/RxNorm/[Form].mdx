@@ -1,0 +1,67 @@
+---
+layout: form
+source: Healthcare/RxNorm
+$type: Healthcare/RxNorm/Form
+$id: https://standards.org.ai/Healthcare/RxNorm/Form/{form.code}
+sameAs: https://standards.org.ai/DoseForm/{form.code}
+canonical: https://standards.org.ai/RxNorm/Form/{form.code}
+params:
+  - Form
+schema:
+  form:
+    code: string
+    rxcui: string
+    name: string
+    description: string
+    routeOfAdministration: array
+    formType: string
+---
+
+# {form.name}
+
+<FormHeader rxcui={form.rxcui} name={form.name} />
+
+## RxCUI
+
+**{form.rxcui}**
+
+## Dose Form Details
+
+<div className="form-details">
+  <div className="name">
+    <strong>Dose Form:</strong> {form.name}
+  </div>
+  {form.description && (
+    <div className="description">
+      <strong>Description:</strong> {form.description}
+    </div>
+  )}
+  {form.formType && (
+    <div className="form-type">
+      <strong>Form Type:</strong> {form.formType}
+    </div>
+  )}
+</div>
+
+{form.routeOfAdministration && form.routeOfAdministration.length > 0 && (
+  <section className="routes">
+    <h2>Routes of Administration</h2>
+    <ul className="route-list">
+      {form.routeOfAdministration.map((route, idx) => (
+        <li key={idx}>{route}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+## Products Available in This Form
+
+<ProductsByForm rxcui={form.rxcui} />
+
+## Ingredients Available in This Form
+
+<IngredientsByForm rxcui={form.rxcui} />
+
+## Related Dose Forms
+
+<RelatedForms rxcui={form.rxcui} />

@@ -1,0 +1,73 @@
+---
+layout: code
+source: Healthcare/CPT
+$type: Healthcare/CPT/Code
+$id: https://standards.org.ai/Healthcare/CPT/Code/{code.code}
+sameAs: https://standards.org.ai/CPT/{code.code}
+canonical: https://standards.org.ai/CPT/Code/{code.code}
+params:
+  - Code
+schema:
+  code:
+    code: string
+    title: string
+    description: string
+    category: string
+    modifier: array
+    relativeValue: number
+    status: string
+---
+
+# {code.title}
+
+<CodeHeader code={code.code} title={code.title} category={code.category} />
+
+## CPT Code
+
+**{code.code}**
+
+## Description
+
+{code.description}
+
+## Category
+
+<CategoryLink code={code.category} />
+
+## Details
+
+<div className="code-details">
+  {code.relativeValue && (
+    <div className="relative-value">
+      <strong>Relative Value:</strong> {code.relativeValue}
+    </div>
+  )}
+  {code.status && (
+    <div className="status">
+      <strong>Status:</strong> {code.status}
+    </div>
+  )}
+</div>
+
+{code.modifier && code.modifier.length > 0 && (
+  <section className="modifiers">
+    <h2>Applicable Modifiers</h2>
+    <div className="modifier-list">
+      {code.modifier.map((mod, idx) => (
+        <ModifierLink key={idx} code={mod} />
+      ))}
+    </div>
+  </section>
+)}
+
+## Related Codes
+
+<RelatedCPTCodes category={code.category} current={code.code} />
+
+## HCPCS Crosswalk
+
+<CPTToHCPCS cptCode={code.code} />
+
+## Billing Guidelines
+
+<BillingGuidelines code={code.code} />

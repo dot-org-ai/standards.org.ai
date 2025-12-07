@@ -1,0 +1,72 @@
+---
+layout: htscode
+source: US/USITC
+$type: US/USITC/HTSCode
+$id: https://standards.org.ai/US/USITC/HTSCode/{code.code}
+sameAs: https://standards.org.ai/HTSCode/{code.code}
+canonical: https://us.org.ai/USITC/HTSCode/{code.code}
+params:
+  - HTSCode
+schema:
+  code:
+    code: code
+    name: name
+    subheading: subheading
+    unit: unit
+    generalRate: generalRate
+    specialRate: specialRate
+    column2Rate: column2Rate
+---
+
+# HTS {code.code} - {code.name}
+
+<HTSCodeHeader code={code.code} name={code.name} />
+
+## Subheading
+
+<HTSSubheadingLink code={code.subheading} />
+
+## Full Classification
+
+<HTSFullHierarchy code={code.code} />
+
+## Description
+
+{code.name}
+
+## Duty Rates
+
+### General Rate (Column 1)
+{code.generalRate}
+
+### Special Program Rates
+{code.specialRate}
+
+### Column 2 Rate
+{code.column2Rate}
+
+<DutyRateDetails code={code.code} />
+
+## Unit of Quantity
+
+{code.unit}
+
+## Special Program Eligibility
+
+<SpecialProgramEligibility code={code.code} />
+
+## Import Statistics
+
+<ImportsByHTSCode code={code.code} />
+
+## Customs Rulings
+
+<CustomsRulingsByHTS code={code.code} />
+
+## Related Products
+
+<RelatedHTSCodes subheading={code.subheading} current={code.code} />
+
+## Schedule B Export Code
+
+<ScheduleBEquivalent hts={code.code} />

@@ -1,0 +1,39 @@
+---
+layout: businessArea
+source: Finance/ISO20022
+$type: Finance/ISO20022/BusinessArea
+$id: https://standards.org.ai/Finance/ISO20022/BusinessArea/{businessArea.code}
+sameAs: https://standards.org.ai/BusinessArea/{businessArea.code}
+canonical: https://standards.org.ai/ISO20022/BusinessArea/{businessArea.code}
+params:
+  - BusinessArea
+schema:
+  businessArea:
+    code: code
+    name: name
+    description: description
+---
+
+# {businessArea.name}
+
+<BusinessAreaHeader code={businessArea.code} name={businessArea.name} />
+
+## Description
+
+{businessArea.description}
+
+## Messages in this Business Area
+
+<MessagesByBusinessArea businessAreaCode={businessArea.code} />
+
+## Common Use Cases
+
+<BusinessAreaUseCases businessAreaCode={businessArea.code} />
+
+## Message Definitions
+
+<MessageDefinitionsByBusinessArea businessAreaCode={businessArea.code} />
+
+## Related Standards
+
+<RelatedStandards businessAreaCode={businessArea.code} />

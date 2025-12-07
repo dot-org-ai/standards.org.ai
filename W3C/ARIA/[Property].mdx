@@ -1,0 +1,883 @@
+---
+layout: property
+source: W3C/ARIA
+$type: W3C/ARIA/Property
+$id: https://standards.org.ai/W3C/ARIA/Property/{property.name}
+sameAs: https://standards.org.ai/Property/{property.name}
+canonical: https://w3.org.ai/ARIA/Property/{property.name}
+params:
+  - Property
+schema:
+  property:
+    name: string
+    type: string
+    valueType: string
+    defaultValue: string
+    description: string
+    usedInRoles: array
+    relatedProperties: array
+    allowedValues: array
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertyBadge } from '@/components/aria/PropertyBadge'
+import { CodeExample } from '@/components/CodeExample'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { RelatedItems } from '@/components/RelatedItems'
+import { AllowedValues } from '@/components/aria/AllowedValues'
+import { RoleCompatibility } from '@/components/aria/RoleCompatibility'
+
+<Header
+  title={property.name}
+  type="ARIA Property"
+  code={property.name}
+  badge={<PropertyBadge type={property.type} />}
+/>
+
+## Property Type
+
+<PropertyBadge type={property.type} detailed />
+
+This is an ARIA **property** attribute in WAI-ARIA {property.version}.
+
+**Key Difference**: Properties are typically static or change infrequently (like labels or descriptions), while states are dynamic and change frequently based on user interaction.
+
+## Description
+
+<Description>
+  {property.description}
+</Description>
+
+## Value Type
+
+**Type**: `{property.valueType}`
+
+{property.valueType === 'string' && (
+  <p>
+    This property accepts any string value. The string should be descriptive
+    and provide meaningful information to assistive technology users.
+  </p>
+)}
+
+{property.valueType === 'ID reference' && (
+  <p>
+    This property accepts the ID of another element in the document. The referenced
+    element must exist in the DOM and have a valid ID attribute.
+  </p>
+)}
+
+{property.valueType === 'ID reference list' && (
+  <p>
+    This property accepts one or more element IDs, separated by spaces. Each ID
+    must reference a valid element in the document.
+  </p>
+)}
+
+{property.valueType === 'token' && (
+  <p>
+    This property accepts a predefined set of string values (tokens).
+    See allowed values below for the complete list.
+  </p>
+)}
+
+{property.valueType === 'token list' && (
+  <p>
+    This property accepts one or more space-separated tokens from the allowed values list.
+  </p>
+)}
+
+{property.valueType === 'integer' && (
+  <p>
+    This property accepts integer values. The specific range depends on context and usage.
+  </p>
+)}
+
+{property.valueType === 'number' && (
+  <p>
+    This property accepts numeric values (integers or decimals).
+  </p>
+)}
+
+{property.valueType === 'URI' && (
+  <p>
+    This property accepts a valid URI (Uniform Resource Identifier).
+  </p>
+)}
+
+## Allowed Values
+
+{property.allowedValues.length > 0 ? (
+  <>
+    <AllowedValues values={property.allowedValues} defaultValue={property.defaultValue} />
+
+    <div className="allowed-values-table">
+      | Value | Description | When to Use |
+      |-------|-------------|-------------|
+      {property.allowedValues.map(val => `
+      | \`${val.value}\` | ${val.description} | ${val.usage} |
+      `).join('')}
+    </div>
+  </>
+) : (
+  <p>
+    This property accepts {property.valueType} values. There are no predefined
+    constraints on the values, but they should be meaningful and appropriate for context.
+  </p>
+)}
+
+### Default Value
+
+{property.defaultValue ? (
+  <>
+    **Default**: `{property.defaultValue}`
+
+    <p>
+      When the {property.name} attribute is not specified, the default value of
+      `{property.defaultValue}` is assumed by assistive technologies.
+    </p>
+  </>
+) : (
+  <p>
+    This property has no default value. When omitted, there is no implied value.
+    You should explicitly set this property when needed.
+  </p>
+)}
+
+## Usage with Roles
+
+<RoleCompatibility property={property.name} roles={property.usedInRoles} />
+
+This property can be used with the following ARIA roles:
+
+{property.usedInRoles.map((role) => (
+  <div key={role.name} className="role-usage">
+    ### {role.name}
+
+    **Usage**: {role.usage}
+
+    {role.required && (
+      <span className="required-badge">Required</span>
+    )}
+
+    {role.recommended && (
+      <span className="recommended-badge">Recommended</span>
+    )}
+
+    ```html
+    <div
+      role="{role.name}"
+      {property.name}="{role.exampleValue || property.allowedValues[0]?.value || 'example value'}"
+    >
+      <!-- Content -->
+    </div>
+    ```
+
+    {role.notes && (
+      <p className="role-notes">**Note**: {role.notes}</p>
+    )}
+  </div>
+))}
+
+### Global Property
+
+{property.global ? (
+  <div className="global-notice">
+    This is a **global ARIA property** and can be used on any element, regardless
+    of role. However, it is most meaningful when used with interactive elements
+    or specific roles.
+  </div>
+) : (
+  <p>
+    This property should only be used with the roles listed above. Using it with
+    other roles may not provide the intended accessibility benefits.
+  </p>
+)}
+
+## Implementation Examples
+
+### Basic HTML
+
+```html
+<!-- Basic usage of {property.name} -->
+<button
+  type="button"
+  {property.name}="{property.allowedValues[0]?.value || property.defaultValue || 'example value'}"
+>
+  Action Button
+</button>
+```
+
+### Label and Description Pattern
+
+{property.name.includes('label') && (
+  <>
+    ```html
+    <!-- Using {property.name} for accessible naming -->
+    <button
+      type="button"
+      {property.name}="Close dialog"
+      onclick="closeDialog()"
+    >
+      <svg aria-hidden="true" width="24" height="24">
+        <use href="#icon-close" />
+      </svg>
+    </button>
+
+    <!-- Alternative: Visual label with aria-labelledby -->
+    <button
+      type="button"
+      aria-labelledby="close-label"
+      onclick="closeDialog()"
+    >
+      <span id="close-label">Close</span>
+    </button>
+    ```
+  </>
+)}
+
+{property.name.includes('describedby') && (
+  <>
+    ```html
+    <!-- Using {property.name} for additional description -->
+    <input
+      type="email"
+      id="email"
+      aria-label="Email address"
+      {property.name}="email-help email-format"
+      required
+    />
+    <span id="email-help">We'll never share your email.</span>
+    <span id="email-format">Format: user@example.com</span>
+
+    <!-- Error state with description -->
+    <input
+      type="email"
+      id="email-error"
+      aria-label="Email address"
+      {property.name}="email-error-msg"
+      aria-invalid="true"
+    />
+    <span id="email-error-msg" role="alert">
+      Please enter a valid email address.
+    </span>
+    ```
+  </>
+)}
+
+{property.valueType === 'ID reference list' && (
+  <>
+    ```html
+    <!-- Multiple ID references -->
+    <div
+      role="region"
+      aria-labelledby="region-title"
+      {property.name}="ref-1 ref-2 ref-3"
+    >
+      <h2 id="region-title">Content Region</h2>
+      <div id="ref-1">First referenced element</div>
+      <div id="ref-2">Second referenced element</div>
+      <div id="ref-3">Third referenced element</div>
+    </div>
+    ```
+  </>
+)}
+
+### Complete Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{property.name} Property Example</title>
+  <style>
+    .container {
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    button:focus {
+      outline: 2px solid #005fcc;
+      outline-offset: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Using {property.name}</h1>
+
+    <button
+      type="button"
+      {property.name}="{property.allowedValues[0]?.value || 'example value'}"
+      id="example-button"
+    >
+      Example Button
+    </button>
+
+    {property.valueType === 'ID reference' && `
+    <div id="referenced-element">
+      This element is referenced by the button
+    </div>
+    `}
+
+    {property.valueType === 'ID reference list' && `
+    <div id="ref-element-1">First reference</div>
+    <div id="ref-element-2">Second reference</div>
+    `}
+  </div>
+
+  <script>
+    // JavaScript for managing {property.name}
+    const button = document.getElementById('example-button')
+
+    {property.valueType === 'string' && `
+    // Update property dynamically
+    function updateProperty(newValue) {
+      button.setAttribute('${property.name}', newValue)
+      console.log('${property.name} updated to:', newValue)
+    }
+    `}
+
+    {property.valueType === 'ID reference' && `
+    // Validate ID reference
+    function validateReference() {
+      const refId = button.getAttribute('${property.name}')
+      const refElement = document.getElementById(refId)
+
+      if (!refElement) {
+        console.error('Referenced element not found:', refId)
+        return false
+      }
+
+      console.log('Valid reference to:', refElement)
+      return true
+    }
+
+    validateReference()
+    `}
+
+    {property.valueType === 'ID reference list' && `
+    // Manage multiple references
+    function updateReferences(ids) {
+      button.setAttribute('${property.name}', ids.join(' '))
+
+      // Validate all references exist
+      ids.forEach(id => {
+        if (!document.getElementById(id)) {
+          console.warn('Referenced element not found:', id)
+        }
+      })
+    }
+    `}
+  </script>
+</body>
+</html>
+```
+
+### React Implementation
+
+```jsx
+import { useId, useRef, useEffect } from 'react'
+
+const PropertyExample = ({
+  propertyValue = '{property.defaultValue || "example"}',
+  children
+}) => {
+  const elementId = useId()
+  const elementRef = useRef(null)
+
+  {property.valueType === 'ID reference' && `
+  const referenceId = useId()
+  `}
+
+  useEffect(() => {
+    {property.valueType === 'ID reference' && `
+    // Validate reference exists
+    const refElement = document.getElementById(propertyValue)
+    if (!refElement) {
+      console.warn('Referenced element not found:', propertyValue)
+    }
+    `}
+  }, [propertyValue])
+
+  return (
+    <>
+      <div
+        ref={elementRef}
+        {property.name}={propertyValue}
+        role="region"
+      >
+        {children}
+      </div>
+
+      {property.valueType === 'ID reference' && `
+      <div id={referenceId}>
+        Referenced content
+      </div>
+      `}
+    </>
+  )
+}
+
+export default PropertyExample
+```
+
+### React Hook
+
+```jsx
+import { useState, useCallback, useId } from 'react'
+
+/**
+ * Hook for managing {property.name} property
+ */
+export const use{property.name.replace('aria-', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')} = (
+  initialValue = '{property.defaultValue || ""}'
+) => {
+  const [value, setValue] = useState(initialValue)
+  {property.valueType === 'ID reference' && `const generatedId = useId()`}
+
+  const update = useCallback((newValue) => {
+    {property.allowedValues.length > 0 && `
+    const allowedValues = ${JSON.stringify(property.allowedValues.map(v => v.value))}
+    if (!allowedValues.includes(newValue)) {
+      console.warn(\`Invalid value for ${property.name}: \${newValue}\`)
+      return false
+    }
+    `}
+
+    {property.valueType === 'ID reference' && `
+    // Validate ID exists in document
+    if (typeof document !== 'undefined') {
+      const element = document.getElementById(newValue)
+      if (!element) {
+        console.warn(\`Referenced element not found: \${newValue}\`)
+      }
+    }
+    `}
+
+    setValue(newValue)
+    return true
+  }, [])
+
+  return {
+    value,
+    update,
+    props: {
+      '{property.name}': value
+    },
+    {property.valueType === 'ID reference' && `
+    generatedId
+    `}
+  }
+}
+
+// Usage
+function MyComponent() {
+  const property = use{property.name.replace('aria-', '').split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}('{property.allowedValues[0]?.value || property.defaultValue || "example"}')
+
+  return (
+    <div {...property.props}>
+      Content
+    </div>
+  )
+}
+```
+
+### Vue Composition API
+
+```vue
+<template>
+  <div
+    :{property.name}="propertyValue"
+    role="region"
+  >
+    <slot />
+  </div>
+
+  {property.valueType === 'ID reference' && `
+  <div :id="referenceId">
+    Referenced content
+  </div>
+  `}
+</template>
+
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue'
+
+const props = defineProps({
+  initialValue: {
+    type: String,
+    default: '{property.defaultValue || "example"}'
+  }
+})
+
+const propertyValue = ref(props.initialValue)
+{property.valueType === 'ID reference' && `
+const referenceId = ref(\`ref-\${Math.random().toString(36).substr(2, 9)}\`)
+`}
+
+{property.valueType === 'ID reference' && `
+watch(propertyValue, (newValue) => {
+  // Validate reference exists
+  const element = document.getElementById(newValue)
+  if (!element) {
+    console.warn('Referenced element not found:', newValue)
+  }
+})
+`}
+
+const updateProperty = (newValue) => {
+  {property.allowedValues.length > 0 && `
+  const allowedValues = ${JSON.stringify(property.allowedValues.map(v => v.value))}
+  if (!allowedValues.includes(newValue)) {
+    console.warn(\`Invalid value for ${property.name}: \${newValue}\`)
+    return
+  }
+  `}
+
+  propertyValue.value = newValue
+}
+
+defineExpose({ updateProperty })
+</script>
+```
+
+### Angular Component
+
+```typescript
+import { Component, Input, OnInit, OnChanges } from '@angular/core'
+
+@Component({
+  selector: 'app-property-example',
+  template: `
+    <div
+      [attr.{property.name}]="propertyValue"
+      role="region"
+    >
+      <ng-content></ng-content>
+    </div>
+
+    {property.valueType === 'ID reference' && `
+    <div [id]="referenceId">
+      Referenced content
+    </div>
+    `}
+  `
+})
+export class PropertyExampleComponent implements OnInit, OnChanges {
+  @Input() initialValue = '{property.defaultValue || "example"}'
+
+  propertyValue: string
+  {property.valueType === 'ID reference' && `
+  referenceId = \`ref-\${Math.random().toString(36).substr(2, 9)}\`
+  `}
+
+  ngOnInit(): void {
+    this.propertyValue = this.initialValue
+    this.validateProperty()
+  }
+
+  ngOnChanges(): void {
+    this.validateProperty()
+  }
+
+  validateProperty(): void {
+    {property.allowedValues.length > 0 && `
+    const allowedValues = ${JSON.stringify(property.allowedValues.map(v => v.value))}
+    if (!allowedValues.includes(this.propertyValue)) {
+      console.warn(\`Invalid value for ${property.name}: \${this.propertyValue}\`)
+    }
+    `}
+
+    {property.valueType === 'ID reference' && `
+    const element = document.getElementById(this.propertyValue)
+    if (!element) {
+      console.warn('Referenced element not found:', this.propertyValue)
+    }
+    `}
+  }
+
+  updateProperty(newValue: string): void {
+    this.propertyValue = newValue
+    this.validateProperty()
+  }
+}
+```
+
+## Testing
+
+### Automated Testing
+
+```javascript
+// Jest + Testing Library
+import { render, screen } from '@testing-library/react'
+import { axe } from 'jest-axe'
+
+describe('{property.name} property', () => {
+  it('should have no accessibility violations', async () => {
+    const { container } = render(
+      <div {property.name}="{property.allowedValues[0]?.value || property.defaultValue || 'test'}">
+        Content
+      </div>
+    )
+
+    const results = await axe(container)
+    expect(results).toHaveNoViolations()
+  })
+
+  it('should have correct property value', () => {
+    const testValue = '{property.allowedValues[0]?.value || property.defaultValue || "test"}'
+    const { container } = render(
+      <div {property.name}={testValue}>
+        Content
+      </div>
+    )
+
+    const element = container.firstChild
+    expect(element).toHaveAttribute('{property.name}', testValue)
+  })
+
+  {property.valueType === 'ID reference' && `
+  it('should reference valid element', () => {
+    render(
+      <>
+        <div ${property.name}="referenced-element">
+          Element with reference
+        </div>
+        <div id="referenced-element">
+          Referenced element
+        </div>
+      </>
+    )
+
+    const refElement = document.getElementById('referenced-element')
+    expect(refElement).toBeInTheDocument()
+  })
+  `}
+
+  {property.allowedValues.length > 0 && `
+  it('should accept all valid values', () => {
+    const validValues = ${JSON.stringify(property.allowedValues.map(v => v.value))}
+
+    validValues.forEach(value => {
+      const { container } = render(
+        <div ${property.name}={value}>Content</div>
+      )
+
+      expect(container.firstChild).toHaveAttribute('${property.name}', value)
+    })
+  })
+  `}
+})
+```
+
+### Manual Testing Checklist
+
+- [ ] Property attribute is present on appropriate elements
+- [ ] Property value is valid and appropriate for context
+- [ ] {property.valueType.includes('ID') ? 'Referenced element(s) exist in DOM' : 'Value is meaningful and descriptive'}
+- [ ] Screen reader announces property information correctly
+- [ ] Property enhances accessibility as intended
+- [ ] Works across different browsers
+- [ ] Compatible with major screen readers
+- [ ] {property.global ? 'Used judiciously on global elements' : 'Only used with appropriate roles'}
+- [ ] Property doesn't conflict with other ARIA attributes
+- [ ] Documentation clearly explains property usage
+
+### Screen Reader Testing
+
+#### Expected Announcements
+
+**NVDA**:
+{property.name.includes('label') && '- Announces as the accessible name'}
+{property.name.includes('describedby') && '- Announces description after element name'}
+{property.name.includes('labelledby') && '- Announces text from referenced element(s)'}
+
+**JAWS**:
+{property.name.includes('label') && '- Uses as element label'}
+{property.name.includes('describedby') && '- Reads description in verbose mode'}
+{property.name.includes('labelledby') && '- Reads referenced element text'}
+
+**VoiceOver**:
+{property.name.includes('label') && '- Speaks as element label'}
+{property.name.includes('describedby') && '- Provides description after main announcement'}
+{property.name.includes('labelledby') && '- Reads text from referenced IDs'}
+
+## Common Mistakes
+
+### Mistake 1: Invalid Values
+
+{property.allowedValues.length > 0 && `
+\`\`\`html
+<!-- Incorrect: Invalid value -->
+<div ${property.name}="invalid-value">
+  Content
+</div>
+
+<!-- Correct: Valid value from allowed list -->
+<div ${property.name}="${property.allowedValues[0].value}">
+  Content
+</div>
+\`\`\`
+`}
+
+### Mistake 2: Missing Referenced Elements
+
+{property.valueType.includes('ID reference') && `
+\`\`\`html
+<!-- Incorrect: Referenced ID doesn't exist -->
+<button ${property.name}="non-existent-id">
+  Button
+</button>
+
+<!-- Correct: Referenced element exists -->
+<button ${property.name}="existing-element">
+  Button
+</button>
+<div id="existing-element">
+  Referenced content
+</div>
+\`\`\`
+`}
+
+### Mistake 3: Redundant or Conflicting Attributes
+
+```html
+<!-- Incorrect: Conflicting attributes -->
+<button
+  aria-label="Close"
+  aria-labelledby="close-text"
+  {property.name}="value"
+>
+  <span id="close-text">Close Dialog</span>
+</button>
+
+<!-- Correct: Use one labeling method -->
+<button aria-labelledby="close-text">
+  <span id="close-text">Close Dialog</span>
+</button>
+```
+
+### Mistake 4: Overusing Global Properties
+
+{property.global && `
+\`\`\`html
+<!-- Incorrect: Unnecessary use on every element -->
+<div ${property.name}="value">
+  <p ${property.name}="value">
+    <span ${property.name}="value">Text</span>
+  </p>
+</div>
+
+<!-- Correct: Use only where meaningful -->
+<div ${property.name}="value">
+  <p>Regular paragraph</p>
+  <span>Regular text</span>
+</div>
+\`\`\`
+`}
+
+## Related Properties
+
+<RelatedItems
+  items={property.relatedProperties}
+  title="Related ARIA Attributes"
+  description="These properties are commonly used together or serve similar purposes"
+/>
+
+{property.relatedProperties.map((related) => (
+  <div key={related.name} className="related-property">
+    ### {related.name}
+
+    **Relationship**: {related.relationship}
+
+    {related.description}
+
+    ```html
+    <div
+      {property.name}="{property.allowedValues[0]?.value || 'value1'}"
+      {related.name}="{related.exampleValue || 'value2'}"
+    >
+      <!-- Properties working together -->
+    </div>
+    ```
+  </div>
+))}
+
+## Browser and AT Support
+
+| Platform | Browser | Screen Reader | Support Level |
+|----------|---------|---------------|---------------|
+| Windows | Chrome | NVDA | Full |
+| Windows | Firefox | NVDA | Full |
+| Windows | Edge | JAWS | Full |
+| macOS | Safari | VoiceOver | Full |
+| iOS | Safari | VoiceOver | Full |
+| Android | Chrome | TalkBack | Full |
+
+### Known Issues
+
+- **Issue**: Specific browser/AT behavior
+  - **Affected**: Browser X with AT Y version Z
+  - **Workaround**: Alternative implementation approach
+  - **Status**: Tracked in ARIA working group
+
+## Best Practices
+
+1. **Use Semantic HTML First**: Prefer native HTML elements over ARIA when possible
+2. **Be Descriptive**: Provide clear, concise, meaningful values
+3. **Validate References**: Ensure ID references point to existing elements
+4. **Test Thoroughly**: Verify with screen readers and automated tools
+5. **Document Usage**: Clearly document why and how the property is used
+6. **Keep Updated**: Update property values when content changes
+7. **Avoid Redundancy**: Don't duplicate information already available
+8. **Consider Context**: Ensure property makes sense in its usage context
+
+## Specification
+
+<SpecificationLink
+  href={`https://www.w3.org/TR/wai-aria-${property.version.replace('.', '')}/#${property.name}`}
+  title={`WAI-ARIA ${property.version} - ${property.name} property`}
+  organization="W3C"
+  standard="ARIA"
+  version={property.version}
+/>
+
+### Additional Resources
+
+- [ARIA Properties Documentation](https://www.w3.org/TR/wai-aria-{property.version.replace('.', '')}/#state_prop_def)
+- [Using ARIA Guide](https://www.w3.org/TR/using-aria/)
+- [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
+- [MDN ARIA Attributes Reference](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes)
+
+## Quick Reference
+
+| Property | Value |
+|----------|-------|
+| Attribute Name | {property.name} |
+| Type | Property |
+| Value Type | {property.valueType} |
+| Default Value | {property.defaultValue || 'None'} |
+| Allowed Values | {property.allowedValues.length > 0 ? property.allowedValues.length : 'Any ' + property.valueType} |
+| Global Property | {property.global ? 'Yes' : 'No'} |
+| Used in Roles | {property.usedInRoles.length} |
+| ARIA Version | {property.version} |
+
+---
+
+*Remember: ARIA properties are typically static or infrequently changing. Use states for dynamic values that change based on user interaction.*

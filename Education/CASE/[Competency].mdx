@@ -1,0 +1,199 @@
+---
+layout: competency
+source: Education/CASE
+$type: Education/CASE/Competency
+$id: https://standards.org.ai/Education/CASE/Competency/{competency.code}
+sameAs: https://standards.org.ai/Competency/{competency.code}
+canonical: https://standards.org.ai/CASE/Competency/{competency.code}
+params:
+  - Competency
+schema:
+  competency:
+    code: string
+    uri: string
+    identifier: string
+    humanCodingScheme: string
+    competencyText: string
+    competencyCategory: string
+    competencyLabel: string
+    conceptKeywords: array
+    language: string
+    educationLevel: array
+    framework: string
+    subject: string
+    proficiencyLevel: string
+    bloomsLevel: string
+    dokLevel: string
+    notes: string
+---
+
+# {competency.competencyLabel || competency.humanCodingScheme}: {competency.competencyText}
+
+<CompetencyHeader
+  code={competency.code}
+  label={competency.competencyLabel}
+  category={competency.competencyCategory}
+  framework={competency.framework}
+/>
+
+## Competency Statement
+
+<div className="competency-statement">
+  <p className="competency-text">{competency.competencyText}</p>
+</div>
+
+<div className="competency-metadata">
+  <div className="metadata-grid">
+    {competency.identifier && (
+      <div className="identifier">
+        <h3>Identifier</h3>
+        <p><code>{competency.identifier}</code></p>
+      </div>
+    )}
+
+    {competency.uri && (
+      <div className="uri">
+        <h3>Competency URI</h3>
+        <p><a href={competency.uri}>{competency.uri}</a></p>
+      </div>
+    )}
+
+    {competency.humanCodingScheme && (
+      <div className="coding-scheme">
+        <h3>Coding Scheme</h3>
+        <p><code>{competency.humanCodingScheme}</code></p>
+      </div>
+    )}
+
+    {competency.competencyCategory && (
+      <div className="category">
+        <h3>Category</h3>
+        <p>{competency.competencyCategory}</p>
+      </div>
+    )}
+
+    {competency.framework && (
+      <div className="framework">
+        <h3>Framework</h3>
+        <p><a href={`/Education/CASE/Framework/${competency.framework}`}>{competency.framework}</a></p>
+      </div>
+    )}
+
+    {competency.subject && (
+      <div className="subject">
+        <h3>Subject</h3>
+        <p>{competency.subject}</p>
+      </div>
+    )}
+
+    {competency.language && (
+      <div className="language">
+        <h3>Language</h3>
+        <p>{competency.language}</p>
+      </div>
+    )}
+  </div>
+</div>
+
+{(competency.proficiencyLevel || competency.bloomsLevel || competency.dokLevel) && (
+  <section className="cognitive-levels">
+    <h2>Cognitive Complexity</h2>
+    <div className="levels-grid">
+      {competency.proficiencyLevel && (
+        <div className="proficiency-level">
+          <h3>Proficiency Level</h3>
+          <p><span className="level-badge">{competency.proficiencyLevel}</span></p>
+        </div>
+      )}
+
+      {competency.bloomsLevel && (
+        <div className="blooms-level">
+          <h3>Bloom's Taxonomy Level</h3>
+          <p><span className="level-badge blooms">{competency.bloomsLevel}</span></p>
+        </div>
+      )}
+
+      {competency.dokLevel && (
+        <div className="dok-level">
+          <h3>Depth of Knowledge (DOK)</h3>
+          <p><span className="level-badge dok">{competency.dokLevel}</span></p>
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+{competency.educationLevel && competency.educationLevel.length > 0 && (
+  <section className="education-levels">
+    <h2>Education Levels</h2>
+    <div className="level-tags">
+      {competency.educationLevel.map((level, idx) => (
+        <span key={idx} className="level-tag">{level}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+{competency.conceptKeywords && competency.conceptKeywords.length > 0 && (
+  <section className="keywords">
+    <h2>Concept Keywords</h2>
+    <div className="keyword-tags">
+      {competency.conceptKeywords.map((keyword, idx) => (
+        <span key={idx} className="keyword-tag">{keyword}</span>
+      ))}
+    </div>
+  </section>
+)}
+
+## Associated Standards
+
+<AssociatedStandards competency={competency.code} />
+
+## Associations
+
+<CompetencyAssociations competency={competency.code} />
+
+## Learning Objectives
+
+<LearningObjectives competency={competency.code} />
+
+## Assessment Criteria
+
+<AssessmentCriteria competency={competency.code} />
+
+## Performance Indicators
+
+<PerformanceIndicators competency={competency.code} />
+
+## Teaching Strategies
+
+<TeachingStrategies competency={competency.code} />
+
+## Related Competencies
+
+<RelatedCompetencies competency={competency.code} />
+
+## Alignments
+
+<CompetencyAlignments competency={competency.code} />
+
+{competency.notes && (
+  <section className="notes">
+    <h2>Notes</h2>
+    <div className="notes-content">
+      {competency.notes}
+    </div>
+  </section>
+)}
+
+## Resources
+
+<section className="resources">
+  <h3>CASE Competency Resources</h3>
+  <ul>
+    {competency.uri && (
+      <li><a href={competency.uri}>Official Competency URI</a></li>
+    )}
+    <li><a href="https://www.imsglobal.org/activity/case">IMS Global CASE Specification</a></li>
+  </ul>
+</section>

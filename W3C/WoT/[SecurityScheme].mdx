@@ -1,0 +1,419 @@
+---
+layout: securityscheme
+source: W3C/WoT
+$type: W3C/WoT/SecurityScheme
+$id: https://standards.org.ai/W3C/WoT/SecurityScheme/{securityScheme.code}
+sameAs: https://standards.org.ai/SecurityScheme/{securityScheme.code}
+canonical: https://w3.org.ai/WoT/SecurityScheme/{securityScheme.code}
+params:
+  - SecurityScheme
+schema:
+  securityScheme:
+    code: SchemeCode
+    scheme: SchemeType
+    title: SchemeTitle
+    description: SchemeDescription
+    in: ParameterLocation
+    name: ParameterName
+    authorization: AuthorizationEndpoint
+    token: TokenEndpoint
+    refresh: RefreshEndpoint
+    scopes: Scopes
+    flow: OAuthFlow
+    qop: QualityOfProtection
+    proxy: ProxyURI
+    alg: Algorithm
+    format: TokenFormat
+    identity: IdentityProvider
+---
+
+# {securityScheme.title}
+
+<SecuritySchemeHeader
+  code={securityScheme.code}
+  scheme={securityScheme.scheme}
+  title={securityScheme.title}
+/>
+
+## Description
+
+{securityScheme.description}
+
+## Security Scheme Metadata
+
+<SecuritySchemeMetadata securityScheme={securityScheme} />
+
+### Scheme Type: {securityScheme.scheme}
+
+<SchemeTypeDescription scheme={securityScheme.scheme} />
+
+### Configuration
+
+```json
+{
+  "scheme": "{securityScheme.scheme}",
+  "description": "{securityScheme.description}"
+}
+```
+
+## Scheme-Specific Configuration
+
+### No Security (nosec)
+
+<NoSecurityDetails />
+
+```json
+{
+  "scheme": "nosec",
+  "description": "No security mechanism required"
+}
+```
+
+This scheme indicates that no authentication or authorization is required. Use only for publicly accessible resources or testing environments.
+
+### Basic Authentication (basic)
+
+<BasicAuthDetails
+  in={securityScheme.in}
+  name={securityScheme.name}
+/>
+
+```json
+{
+  "scheme": "basic",
+  "in": "{securityScheme.in}",
+  "name": "{securityScheme.name}",
+  "description": "{securityScheme.description}"
+}
+```
+
+#### Implementation Example
+
+```javascript
+// Basic authentication with username and password
+const username = 'user';
+const password = 'password';
+const credentials = btoa(`${username}:${password}`);
+
+const response = await fetch('https://thing.example.com/properties/temperature', {
+  headers: {
+    'Authorization': `Basic ${credentials}`
+  }
+});
+```
+
+### Digest Authentication (digest)
+
+<DigestAuthDetails
+  qop={securityScheme.qop}
+  in={securityScheme.in}
+  name={securityScheme.name}
+/>
+
+```json
+{
+  "scheme": "digest",
+  "qop": "{securityScheme.qop}",
+  "in": "{securityScheme.in}",
+  "name": "{securityScheme.name}"
+}
+```
+
+#### Implementation Example
+
+```javascript
+// Digest authentication (typically handled by HTTP client libraries)
+const DigestClient = require('digest-fetch');
+const client = new DigestClient('user', 'password');
+
+const response = await client.fetch('https://thing.example.com/properties/temperature');
+```
+
+### API Key (apikey)
+
+<APIKeyDetails
+  in={securityScheme.in}
+  name={securityScheme.name}
+/>
+
+```json
+{
+  "scheme": "apikey",
+  "in": "{securityScheme.in}",
+  "name": "{securityScheme.name}",
+  "description": "API key authentication"
+}
+```
+
+#### Implementation Examples
+
+```javascript
+// API key in header
+const response = await fetch('https://thing.example.com/properties/temperature', {
+  headers: {
+    'X-API-Key': 'your-api-key-here'
+  }
+});
+```
+
+```javascript
+// API key in query parameter
+const apiKey = 'your-api-key-here';
+const url = `https://thing.example.com/properties/temperature?api_key=${apiKey}`;
+const response = await fetch(url);
+```
+
+```javascript
+// API key in cookie
+const response = await fetch('https://thing.example.com/properties/temperature', {
+  credentials: 'include',
+  headers: {
+    'Cookie': 'api_key=your-api-key-here'
+  }
+});
+```
+
+### Bearer Token (bearer)
+
+<BearerTokenDetails
+  authorization={securityScheme.authorization}
+  alg={securityScheme.alg}
+  format={securityScheme.format}
+/>
+
+```json
+{
+  "scheme": "bearer",
+  "authorization": "{securityScheme.authorization}",
+  "alg": "{securityScheme.alg}",
+  "format": "{securityScheme.format}"
+}
+```
+
+#### Implementation Example
+
+```javascript
+// Bearer token (e.g., JWT)
+const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...';
+
+const response = await fetch('https://thing.example.com/properties/temperature', {
+  headers: {
+    'Authorization': `Bearer ${token}`
+  }
+});
+```
+
+### OAuth2 (oauth2)
+
+<OAuth2Details
+  authorization={securityScheme.authorization}
+  token={securityScheme.token}
+  refresh={securityScheme.refresh}
+  scopes={securityScheme.scopes}
+  flow={securityScheme.flow}
+/>
+
+```json
+{
+  "scheme": "oauth2",
+  "authorization": "{securityScheme.authorization}",
+  "token": "{securityScheme.token}",
+  "refresh": "{securityScheme.refresh}",
+  "scopes": {securityScheme.scopes},
+  "flow": "{securityScheme.flow}"
+}
+```
+
+#### OAuth2 Flows
+
+<OAuth2Flows flow={securityScheme.flow} />
+
+#### Implementation Example - Authorization Code Flow
+
+```javascript
+// Step 1: Redirect to authorization endpoint
+const authUrl = new URL('{securityScheme.authorization}');
+authUrl.searchParams.set('client_id', 'your-client-id');
+authUrl.searchParams.set('redirect_uri', 'https://yourapp.com/callback');
+authUrl.searchParams.set('response_type', 'code');
+authUrl.searchParams.set('scope', 'read write');
+
+// User is redirected and grants permission
+
+// Step 2: Exchange code for token
+const tokenResponse = await fetch('{securityScheme.token}', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: new URLSearchParams({
+    grant_type: 'authorization_code',
+    code: authorizationCode,
+    client_id: 'your-client-id',
+    client_secret: 'your-client-secret',
+    redirect_uri: 'https://yourapp.com/callback'
+  })
+});
+
+const { access_token } = await tokenResponse.json();
+
+// Step 3: Use access token
+const response = await fetch('https://thing.example.com/properties/temperature', {
+  headers: {
+    'Authorization': `Bearer ${access_token}`
+  }
+});
+```
+
+#### Token Refresh
+
+```javascript
+// Refresh access token
+const refreshResponse = await fetch('{securityScheme.refresh}', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken,
+    client_id: 'your-client-id',
+    client_secret: 'your-client-secret'
+  })
+});
+
+const { access_token: newAccessToken } = await refreshResponse.json();
+```
+
+### PSK (Pre-Shared Key) (psk)
+
+<PSKDetails identity={securityScheme.identity} />
+
+```json
+{
+  "scheme": "psk",
+  "identity": "{securityScheme.identity}",
+  "description": "Pre-shared key authentication"
+}
+```
+
+### Public Key (public)
+
+<PublicKeyDetails />
+
+```json
+{
+  "scheme": "public",
+  "description": "Public key authentication"
+}
+```
+
+### Mutual TLS (combo)
+
+<ComboSecurityDetails />
+
+```json
+{
+  "scheme": "combo",
+  "allOf": [
+    { "scheme": "bearer" },
+    { "scheme": "public" }
+  ],
+  "description": "Combined security mechanisms"
+}
+```
+
+## Scopes
+
+<SecurityScopes scopes={securityScheme.scopes} />
+
+## Proxy Configuration
+
+<ProxyConfiguration proxy={securityScheme.proxy} />
+
+## Security Best Practices
+
+<SecurityBestPractices scheme={securityScheme.scheme} />
+
+### General Guidelines
+
+1. **Always use HTTPS/TLS** for sensitive data transmission
+2. **Rotate credentials regularly** to minimize exposure risk
+3. **Use strong authentication** for production environments
+4. **Implement rate limiting** to prevent abuse
+5. **Monitor access patterns** for anomalies
+6. **Store credentials securely** using environment variables or secure vaults
+7. **Implement proper error handling** without exposing security details
+
+### Scheme-Specific Recommendations
+
+<SchemeSecurityRecommendations scheme={securityScheme.scheme} />
+
+## Error Handling
+
+```javascript
+// Handle authentication errors
+try {
+  const response = await fetch(endpoint, { headers });
+
+  if (response.status === 401) {
+    console.error('Authentication failed - invalid credentials');
+    // Refresh token or re-authenticate
+  } else if (response.status === 403) {
+    console.error('Authorization failed - insufficient permissions');
+    // Request appropriate scopes
+  }
+} catch (error) {
+  console.error('Security error:', error);
+}
+```
+
+## Token Management
+
+```javascript
+// Token storage and management
+class TokenManager {
+  constructor() {
+    this.accessToken = null;
+    this.refreshToken = null;
+    this.expiresAt = null;
+  }
+
+  setTokens(access, refresh, expiresIn) {
+    this.accessToken = access;
+    this.refreshToken = refresh;
+    this.expiresAt = Date.now() + (expiresIn * 1000);
+  }
+
+  isExpired() {
+    return Date.now() >= this.expiresAt;
+  }
+
+  async refreshIfNeeded() {
+    if (this.isExpired() && this.refreshToken) {
+      await this.refresh();
+    }
+  }
+
+  async refresh() {
+    // Implement token refresh logic
+  }
+}
+```
+
+## Related Security Schemes
+
+<RelatedSecuritySchemes scheme={securityScheme.scheme} current={securityScheme.code} />
+
+## Specification
+
+<SpecificationLink spec="wot-thing-description" section="security" />
+
+### References
+
+- [WoT Thing Description - Security Schemes](https://www.w3.org/TR/wot-thing-description/#security-schemes)
+- [WoT Security and Privacy Guidelines](https://www.w3.org/TR/wot-security/)
+- [OAuth 2.0 Authorization Framework](https://datatracker.ietf.org/doc/html/rfc6749)
+- [HTTP Authentication: Basic and Digest Access](https://datatracker.ietf.org/doc/html/rfc7617)
+- [JSON Web Token (JWT)](https://datatracker.ietf.org/doc/html/rfc7519)
+- [TLS 1.3](https://datatracker.ietf.org/doc/html/rfc8446)

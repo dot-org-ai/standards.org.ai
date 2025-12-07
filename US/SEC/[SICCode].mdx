@@ -1,0 +1,57 @@
+---
+layout: sicCode
+source: SEC
+$type: SEC/SICCode
+$id: https://standards.org.ai/SEC/SICCode/{sic.code}
+sameAs: https://standards.org.ai/SICCode/{sic.code}
+canonical: https://us.org.ai/SEC/SICCode/{sic.code}
+params:
+  - SICCode
+schema:
+  sic:
+    code: code
+    name: name
+    division: division
+    majorGroup: majorGroup
+    industryGroup: industryGroup
+---
+
+# {sic.name}
+
+<SICCodeHeader code={sic.code} name={sic.name} />
+
+## SIC Code
+
+{sic.code}
+
+## Full Hierarchy
+
+<SICHierarchy code={sic.code} />
+
+## Division
+
+<SICDivisionLink division={sic.division} />
+
+## Major Group
+
+<SICMajorGroupLink majorGroup={sic.majorGroup} />
+
+## Industry Group
+
+<SICIndustryGroupLink industryGroup={sic.industryGroup} />
+
+## Companies in This Industry
+
+<CompaniesBySIC code={sic.code} />
+
+## Recent SEC Filings
+
+<FilingsBySIC code={sic.code} />
+
+## Industry Statistics
+
+<SICStatistics code={sic.code} />
+
+## Related NAICS Codes
+
+<RelatedNAICS sicCode={sic.code} />

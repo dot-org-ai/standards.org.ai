@@ -1,0 +1,42 @@
+---
+layout: us-trademark-class
+source: US/USPTO
+$type: US/USPTO/USTrademarkClass
+$id: https://standards.org.ai/US/USPTO/USTrademarkClass/{tmClass.code}
+sameAs: https://standards.org.ai/USTrademarkClass/{tmClass.code}
+canonical: https://us.org.ai/USPTO/USTrademarkClass/{tmClass.code}
+params:
+  - USTrademarkClass
+schema:
+  tmClass:
+    code: code
+    name: name
+    niceEquivalent: niceEquivalent
+    description: description
+---
+
+# US Trademark Class {tmClass.code}: {tmClass.name}
+
+<USTrademarkClassHeader code={tmClass.code} name={tmClass.name} />
+
+## Overview
+
+**Note:** The US Trademark Classification system has been harmonized with the Nice Classification system for international consistency.
+
+US Trademark Class {tmClass.code} covers {tmClass.name}.
+
+## Description
+
+{tmClass.description}
+
+## Nice Classification Equivalent
+
+<NiceEquivalent usTmClass={tmClass.code} niceClass={tmClass.niceEquivalent} />
+
+## Legacy Trademarks
+
+<TrademarkList usTmClass={tmClass.code} />
+
+## Historical Usage
+
+<USTrademarkClassStats class={tmClass.code} />

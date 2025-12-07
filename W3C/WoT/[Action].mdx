@@ -1,0 +1,233 @@
+---
+layout: action
+source: W3C/WoT
+$type: W3C/WoT/Action
+$id: https://standards.org.ai/W3C/WoT/Action/{action.thing}/{action.name}
+sameAs: https://standards.org.ai/Action/{action.thing}/{action.name}
+canonical: https://w3.org.ai/WoT/Action/{action.thing}/{action.name}
+params:
+  - Action
+schema:
+  action:
+    thing: ThingID
+    name: ActionName
+    title: ActionTitle
+    description: ActionDescription
+    input: InputSchema
+    output: OutputSchema
+    safe: Safe
+    idempotent: Idempotent
+    synchronous: Synchronous
+    forms: Forms
+    uriVariables: URIVariables
+    atType: SemanticType
+---
+
+# {action.title}
+
+<ActionHeader
+  thing={action.thing}
+  name={action.name}
+  title={action.title}
+/>
+
+## Description
+
+{action.description}
+
+## Action Metadata
+
+<ActionMetadata action={action} />
+
+### Invocation Characteristics
+
+- **Safe**: {action.safe ? 'Yes' : 'No'} - Does not alter Thing state
+- **Idempotent**: {action.idempotent ? 'Yes' : 'No'} - Multiple invocations have same effect
+- **Synchronous**: {action.synchronous ? 'Yes' : 'No'} - Returns result immediately
+
+### Action Signature
+
+```json
+{
+  "title": "{action.title}",
+  "description": "{action.description}",
+  "safe": {action.safe},
+  "idempotent": {action.idempotent},
+  "synchronous": {action.synchronous}
+}
+```
+
+## Input Schema
+
+<ActionInputSchema input={action.input} />
+
+### Input Data Structure
+
+```json
+{action.input}
+```
+
+## Output Schema
+
+<ActionOutputSchema output={action.output} />
+
+### Output Data Structure
+
+```json
+{action.output}
+```
+
+## Protocol Bindings
+
+<ActionForms forms={action.forms} />
+
+### HTTP Method Selection
+
+<ActionHTTPMethod
+  safe={action.safe}
+  idempotent={action.idempotent}
+/>
+
+## URI Variables
+
+<ActionURIVariables uriVariables={action.uriVariables} />
+
+## Semantic Annotations
+
+<ActionSemanticTypes types={action.atType} />
+
+## Usage Examples
+
+### Invoke Action (Basic)
+
+```javascript
+// Using WoT Scripting API
+const thing = await WoT.consume(thingDescription);
+const result = await thing.invokeAction('{action.name}');
+console.log('Action result:', result);
+```
+
+### Invoke Action with Input
+
+```javascript
+// With input parameters
+const inputData = {
+  // Input parameters based on schema
+};
+const result = await thing.invokeAction('{action.name}', inputData);
+console.log('Action completed:', result);
+```
+
+### HTTP Invocation
+
+```javascript
+// Direct HTTP POST request
+const response = await fetch('https://thing.example.com/actions/{action.name}', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    // Input data
+  })
+});
+const result = await response.json();
+console.log('Result:', result);
+```
+
+## Protocol-Specific Examples
+
+### HTTP Binding
+
+<ActionHTTPExample action={action} />
+
+```javascript
+// HTTP POST with authentication
+const response = await fetch('https://thing.example.com/actions/{action.name}', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer <token>'
+  },
+  body: JSON.stringify(inputData)
+});
+```
+
+### CoAP Binding
+
+<ActionCoAPExample action={action} />
+
+```javascript
+// CoAP POST request
+const coap = require('coap');
+const req = coap.request({
+  hostname: 'thing.example.com',
+  pathname: '/actions/{action.name}',
+  method: 'POST'
+});
+req.write(JSON.stringify(inputData));
+req.on('response', (res) => {
+  console.log('Response:', res.payload.toString());
+});
+req.end();
+```
+
+### MQTT Binding
+
+<ActionMQTTExample action={action} />
+
+```javascript
+// MQTT publish to action topic
+const mqtt = require('mqtt');
+const client = mqtt.connect('mqtt://broker.example.com');
+client.publish('things/{action.thing}/actions/{action.name}', JSON.stringify(inputData));
+```
+
+## Asynchronous Action Handling
+
+```javascript
+// For long-running actions
+const actionHandle = await thing.invokeAction('{action.name}', inputData);
+
+// Poll for status (if supported)
+const status = await actionHandle.getStatus();
+console.log('Action status:', status);
+
+// Wait for completion
+const result = await actionHandle.wait();
+console.log('Final result:', result);
+```
+
+## Error Handling
+
+```javascript
+try {
+  const result = await thing.invokeAction('{action.name}', inputData);
+  console.log('Success:', result);
+} catch (error) {
+  console.error('Action failed:', error.message);
+  if (error.code === 'TIMEOUT') {
+    console.log('Action timed out');
+  } else if (error.code === 'INVALID_INPUT') {
+    console.log('Invalid input parameters');
+  }
+}
+```
+
+## Parent Thing
+
+<ThingLink id={action.thing} />
+
+## Related Actions
+
+<RelatedActions thing={action.thing} current={action.name} />
+
+## Specification
+
+<SpecificationLink spec="wot-thing-description" section="actions" />
+
+### References
+
+- [WoT Thing Description - Action Affordance](https://www.w3.org/TR/wot-thing-description/#actionaffordance)
+- [WoT Scripting API - invokeAction](https://www.w3.org/TR/wot-scripting-api/#the-invokeaction-method)
+- [HTTP Methods for RESTful APIs](https://restfulapi.net/http-methods/)

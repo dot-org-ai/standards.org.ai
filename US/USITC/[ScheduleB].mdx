@@ -1,0 +1,62 @@
+---
+layout: scheduleb
+source: US/USITC
+$type: US/USITC/ScheduleB
+$id: https://standards.org.ai/US/USITC/ScheduleB/{scheduleb.code}
+sameAs: https://standards.org.ai/ScheduleB/{scheduleb.code}
+canonical: https://us.org.ai/USITC/ScheduleB/{scheduleb.code}
+params:
+  - ScheduleB
+schema:
+  scheduleb:
+    code: code
+    name: name
+    htsEquivalent: htsEquivalent
+    unit: unit
+---
+
+# Schedule B {scheduleb.code} - {scheduleb.name}
+
+<ScheduleBHeader code={scheduleb.code} name={scheduleb.name} />
+
+## Export Classification Code
+
+{scheduleb.code}
+
+## Description
+
+{scheduleb.name}
+
+## HTS Import Equivalent
+
+<HTSEquivalentLink code={scheduleb.htsEquivalent} />
+
+## Unit of Quantity
+
+{scheduleb.unit}
+
+## Export Statistics
+
+<ExportsByScheduleB code={scheduleb.code} />
+
+## Top Export Destinations
+
+<TopExportDestinations scheduleb={scheduleb.code} />
+
+## Export Requirements
+
+<ExportRequirements scheduleb={scheduleb.code} />
+
+## Related Schedule B Codes
+
+<RelatedScheduleBCodes current={scheduleb.code} />
+
+## Census Bureau Resources
+
+The Schedule B classification is maintained by the U.S. Census Bureau for export statistics and is based on the international Harmonized System (HS).
+
+<CensusBureauResources scheduleb={scheduleb.code} />
+
+## Customs Documentation
+
+<ExportDocumentation scheduleb={scheduleb.code} />

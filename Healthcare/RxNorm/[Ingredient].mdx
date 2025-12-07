@@ -1,0 +1,81 @@
+---
+layout: ingredient
+source: Healthcare/RxNorm
+$type: Healthcare/RxNorm/Ingredient
+$id: https://standards.org.ai/Healthcare/RxNorm/Ingredient/{ingredient.code}
+sameAs: https://standards.org.ai/DrugIngredient/{ingredient.code}
+canonical: https://standards.org.ai/RxNorm/Ingredient/{ingredient.code}
+params:
+  - Ingredient
+schema:
+  ingredient:
+    code: string
+    rxcui: string
+    name: string
+    unii: string
+    class: array
+    mechanism: string
+    structure: string
+---
+
+# {ingredient.name}
+
+<IngredientHeader rxcui={ingredient.rxcui} name={ingredient.name} />
+
+## RxCUI
+
+**{ingredient.rxcui}**
+
+## Ingredient Details
+
+<div className="ingredient-details">
+  <div className="name">
+    <strong>Ingredient Name:</strong> {ingredient.name}
+  </div>
+  {ingredient.unii && (
+    <div className="unii">
+      <strong>UNII (Unique Ingredient Identifier):</strong> {ingredient.unii}
+    </div>
+  )}
+  {ingredient.mechanism && (
+    <div className="mechanism">
+      <strong>Mechanism of Action:</strong> {ingredient.mechanism}
+    </div>
+  )}
+</div>
+
+{ingredient.class && ingredient.class.length > 0 && (
+  <section className="ingredient-class">
+    <h2>Drug Classes</h2>
+    <ul className="class-list">
+      {ingredient.class.map((cls, idx) => (
+        <li key={idx}>{cls}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
+{ingredient.structure && (
+  <section className="chemical-structure">
+    <h2>Chemical Structure</h2>
+    <div className="structure-info">
+      {ingredient.structure}
+    </div>
+  </section>
+)}
+
+## Products Containing This Ingredient
+
+<ProductsByIngredient rxcui={ingredient.rxcui} />
+
+## Available Dose Forms
+
+<FormsByIngredient rxcui={ingredient.rxcui} />
+
+## Common Strengths
+
+<StrengthsByIngredient rxcui={ingredient.rxcui} />
+
+## Related Ingredients
+
+<RelatedIngredients rxcui={ingredient.rxcui} />

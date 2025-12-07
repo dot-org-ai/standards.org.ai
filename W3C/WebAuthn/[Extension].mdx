@@ -1,0 +1,697 @@
+---
+layout: Extension
+source: W3C/WebAuthn
+$type: W3C/WebAuthn/Extension
+$id: https://standards.org.ai/W3C/WebAuthn/Extension/{Extension.code}
+sameAs: https://standards.org.ai/Extension/{Extension.code}
+canonical: https://w3.org.ai/WebAuthn/Extension/{Extension.code}
+params:
+  - Extension
+schema:
+  Extension:
+    code: string
+    name: string
+    description: string
+    input: object
+    output: object
+    supportedIn: string[]
+    required: boolean
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { PropertiesTable } from '@/components/PropertiesTable'
+import { CodeExample } from '@/components/CodeExample'
+import { SecurityConsiderations } from '@/components/SecurityConsiderations'
+import { RelatedItems } from '@/components/RelatedItems'
+import { SpecificationLinks } from '@/components/SpecificationLinks'
+import { Badge } from '@/components/Badge'
+import { Alert } from '@/components/Alert'
+
+<Header
+  title={Extension.name}
+  subtitle="WebAuthn Extension"
+  code={Extension.code}
+/>
+
+<div className="flex gap-2 my-4">
+  {Extension.supportedIn.includes('registration') && <Badge variant="success">Registration</Badge>}
+  {Extension.supportedIn.includes('authentication') && <Badge variant="success">Authentication</Badge>}
+  {Extension.required && <Badge variant="warning">Required</Badge>}
+</div>
+
+<Description>
+  {Extension.description}
+</Description>
+
+{!Extension.required && (
+  <Alert type="info">
+    This extension is optional. Authenticators may choose not to support it.
+    Always check the extension output to determine if it was processed.
+  </Alert>
+)}
+
+## Extension Inputs
+
+{Extension.input ? (
+  <>
+    <PropertiesTable
+      properties={Object.entries(Extension.input).reduce((acc, [key, value]) => {
+        acc[key] = {
+          type: typeof value === 'object' ? value.type : typeof value,
+          required: typeof value === 'object' ? value.required : false,
+          description: typeof value === 'object' ? value.description : 'Extension input parameter',
+          example: typeof value === 'object' ? value.example : value
+        };
+        return acc;
+      }, {})}
+    />
+
+    <CodeExample language="json">
+{`// Extension input
+${JSON.stringify(Extension.input, null, 2)}`}
+    </CodeExample>
+  </>
+) : (
+  <p>This extension does not require input parameters.</p>
+)}
+
+## Extension Outputs
+
+{Extension.output ? (
+  <>
+    <PropertiesTable
+      properties={Object.entries(Extension.output).reduce((acc, [key, value]) => {
+        acc[key] = {
+          type: typeof value === 'object' ? value.type : typeof value,
+          description: typeof value === 'object' ? value.description : 'Extension output value',
+          example: typeof value === 'object' ? value.example : value
+        };
+        return acc;
+      }, {})}
+    />
+
+    <CodeExample language="json">
+{`// Extension output
+${JSON.stringify(Extension.output, null, 2)}`}
+    </CodeExample>
+  </>
+) : (
+  <p>This extension does not produce output.</p>
+)}
+
+## Usage Examples
+
+{Extension.supportedIn.includes('registration') && (
+  <>
+    ### During Registration
+
+    <CodeExample language="javascript">
+{`// Use ${Extension.name} extension during registration
+const publicKeyCredentialCreationOptions = {
+  challenge: new Uint8Array([/* challenge */]),
+  rp: {
+    name: "Example Corp",
+    id: "example.com"
+  },
+  user: {
+    id: new Uint8Array([/* user ID */]),
+    name: "alice@example.com",
+    displayName: "Alice Smith"
+  },
+  pubKeyCredParams: [
+    { type: "public-key", alg: -7 }
+  ],
+  // Extension configuration
+  extensions: {
+    ${Extension.code}: ${JSON.stringify(Extension.input || true, null, 4).split('\n').join('\n    ')}
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: publicKeyCredentialCreationOptions
+});
+
+// Check extension output
+const extensionResults = credential.getClientExtensionResults();
+console.log('${Extension.code} output:', extensionResults.${Extension.code});
+${Extension.output ? `
+// Example output:
+// ${JSON.stringify(Extension.output, null, 2).split('\n').join('\n// ')}` : ''}`}
+    </CodeExample>
+  </>
+)}
+
+{Extension.supportedIn.includes('authentication') && (
+  <>
+    ### During Authentication
+
+    <CodeExample language="javascript">
+{`// Use ${Extension.name} extension during authentication
+const publicKeyCredentialRequestOptions = {
+  challenge: new Uint8Array([/* challenge */]),
+  allowCredentials: [{
+    type: "public-key",
+    id: credentialId
+  }],
+  // Extension configuration
+  extensions: {
+    ${Extension.code}: ${JSON.stringify(Extension.input || true, null, 4).split('\n').join('\n    ')}
+  }
+};
+
+const assertion = await navigator.credentials.get({
+  publicKey: publicKeyCredentialRequestOptions
+});
+
+// Check extension output
+const extensionResults = assertion.getClientExtensionResults();
+console.log('${Extension.code} output:', extensionResults.${Extension.code});
+${Extension.output ? `
+// Example output:
+// ${JSON.stringify(Extension.output, null, 2).split('\n').join('\n// ')}` : ''}`}
+    </CodeExample>
+  </>
+)}
+
+{Extension.code === 'credProps' && (
+  <>
+    ### Credential Properties Extension
+
+    The `credProps` extension allows you to determine if a credential is discoverable (resident key).
+
+    <CodeExample language="javascript">
+{`// Request credential properties
+const options = {
+  // ... other options ...
+  extensions: {
+    credProps: true
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+if (results.credProps) {
+  console.log('Is discoverable:', results.credProps.rk);
+  // rk: true = resident key (discoverable)
+  // rk: false = not a resident key
+}
+
+// Store this information for later use
+if (results.credProps?.rk) {
+  // This credential supports passwordless authentication
+  await markCredentialAsDiscoverable(credential.id);
+}`}
+    </CodeExample>
+
+    <Alert type="info">
+      Use this extension to determine if passwordless authentication is possible
+      with this credential, even if you requested "preferred" for residentKey.
+    </Alert>
+  </>
+)}
+
+{Extension.code === 'credentialProtectionPolicy' && (
+  <>
+    ### Credential Protection Policy Extension
+
+    This extension allows you to specify the protection level for the credential.
+
+    <CodeExample language="javascript">
+{`// Request credential protection
+const options = {
+  // ... other options ...
+  extensions: {
+    credentialProtectionPolicy: "userVerificationOptional",
+    enforceCredentialProtectionPolicy: true
+  }
+};
+
+// Protection policies:
+// - "userVerificationOptional": UV not required (default)
+// - "userVerificationOptionalWithCredentialIDList": UV not required if credential ID provided
+// - "userVerificationRequired": UV always required
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+console.log('Protection applied:', results.credentialProtectionPolicy);`}
+    </CodeExample>
+  </>
+)}
+
+{Extension.code === 'largeBlob' && (
+  <>
+    ### Large Blob Storage Extension
+
+    Store and retrieve arbitrary data alongside credentials.
+
+    <CodeExample language="javascript">
+{`// Write blob during registration
+const options = {
+  // ... other options ...
+  extensions: {
+    largeBlob: {
+      support: "required"
+    }
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+console.log('Large blob supported:', results.largeBlob.supported);
+
+// Later, write a blob
+const blob = new Uint8Array([/* your data, max ~2KB */]);
+const writeOptions = {
+  // ... other options ...
+  extensions: {
+    largeBlob: {
+      write: blob
+    }
+  }
+};
+
+const assertion = await navigator.credentials.get({
+  publicKey: writeOptions
+});
+
+console.log('Blob written:', assertion.getClientExtensionResults().largeBlob.written);
+
+// Read the blob back
+const readOptions = {
+  // ... other options ...
+  extensions: {
+    largeBlob: {
+      read: true
+    }
+  }
+};
+
+const readAssertion = await navigator.credentials.get({
+  publicKey: readOptions
+});
+
+const storedBlob = readAssertion.getClientExtensionResults().largeBlob.blob;
+console.log('Retrieved blob:', storedBlob);`}
+    </CodeExample>
+
+    <Alert type="warning">
+      Large blobs are typically limited to ~2KB. Use for small amounts of data
+      like encryption keys, not large files.
+    </Alert>
+  </>
+)}
+
+{Extension.code === 'minPinLength' && (
+  <>
+    ### Minimum PIN Length Extension
+
+    Request the authenticator's minimum PIN length requirement.
+
+    <CodeExample language="javascript">
+{`// Request minimum PIN length
+const options = {
+  // ... other options ...
+  extensions: {
+    minPinLength: true
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+if (results.minPinLength) {
+  console.log('Minimum PIN length:', results.minPinLength);
+  // Inform user of PIN requirements
+  if (results.minPinLength > 4) {
+    alert(\`This authenticator requires a PIN of at least \${results.minPinLength} digits\`);
+  }
+}`}
+    </CodeExample>
+  </>
+)}
+
+{Extension.code === 'hmacSecret' && (
+  <>
+    ### HMAC Secret Extension
+
+    Generate a symmetric secret for encryption purposes.
+
+    <CodeExample language="javascript">
+{`// Request HMAC secret during registration
+const options = {
+  // ... other options ...
+  extensions: {
+    hmacCreateSecret: true
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+console.log('HMAC secret enabled:', results.hmacCreateSecret);
+
+// Later, get HMAC secret during authentication
+const salt1 = crypto.getRandomValues(new Uint8Array(32));
+const salt2 = crypto.getRandomValues(new Uint8Array(32)); // optional
+
+const authOptions = {
+  // ... other options ...
+  extensions: {
+    hmacGetSecret: {
+      salt1: salt1,
+      salt2: salt2 // optional
+    }
+  }
+};
+
+const assertion = await navigator.credentials.get({
+  publicKey: authOptions
+});
+
+const hmacResults = assertion.getClientExtensionResults().hmacGetSecret;
+console.log('HMAC output 1:', hmacResults.output1);
+console.log('HMAC output 2:', hmacResults.output2);
+
+// Use the derived secrets for encryption
+const encryptionKey = await crypto.subtle.importKey(
+  'raw',
+  hmacResults.output1,
+  { name: 'AES-GCM' },
+  false,
+  ['encrypt', 'decrypt']
+);`}
+    </CodeExample>
+  </>
+)}
+
+{Extension.code === 'appid' && (
+  <>
+    ### App ID Extension (FIDO U2F Compatibility)
+
+    Support legacy FIDO U2F credentials.
+
+    <CodeExample language="javascript">
+{`// Use during authentication to support legacy U2F credentials
+const options = {
+  challenge: new Uint8Array([/* challenge */]),
+  allowCredentials: [{
+    type: "public-key",
+    id: u2fCredentialId
+  }],
+  extensions: {
+    appid: "https://example.com/u2f-facets.json"
+  }
+};
+
+const assertion = await navigator.credentials.get({
+  publicKey: options
+});
+
+const results = assertion.getClientExtensionResults();
+console.log('App ID used:', results.appid);
+// true = authenticator used appid
+// false = authenticator used rpId`}
+    </CodeExample>
+
+    <Alert type="info">
+      This extension is primarily for backward compatibility with FIDO U2F
+      credentials. New implementations should use standard WebAuthn.
+    </Alert>
+  </>
+)}
+
+{Extension.code === 'appidExclude' && (
+  <>
+    ### App ID Exclude Extension
+
+    Prevent re-registration of U2F credentials.
+
+    <CodeExample language="javascript">
+{`// Use during registration to exclude U2F credentials
+const options = {
+  // ... other options ...
+  excludeCredentials: u2fCredentials, // U2F credential IDs
+  extensions: {
+    appidExclude: "https://example.com/u2f-facets.json"
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+console.log('App ID exclude used:', results.appidExclude);`}
+    </CodeExample>
+  </>
+)}
+
+{Extension.code === 'uvm' && (
+  <>
+    ### User Verification Method Extension
+
+    Get information about how the user was verified.
+
+    <CodeExample language="javascript">
+{`// Request user verification methods
+const options = {
+  // ... other options ...
+  extensions: {
+    uvm: true
+  }
+};
+
+const credential = await navigator.credentials.create({
+  publicKey: options
+});
+
+const results = credential.getClientExtensionResults();
+if (results.uvm) {
+  results.uvm.forEach(entry => {
+    const [userVerificationMethod, keyProtectionType, matcherProtectionType] = entry;
+
+    console.log('Verification method:', userVerificationMethod);
+    // 1 = presence
+    // 2 = fingerprint
+    // 4 = passcode
+    // 8 = voiceprint
+    // 16 = faceprint
+    // 32 = location
+    // 64 = eyeprint
+    // 128 = pattern
+    // 256 = handprint
+
+    console.log('Key protection:', keyProtectionType);
+    // 1 = software
+    // 2 = hardware
+    // 4 = TEE
+    // 8 = secure element
+    // 16 = remote
+
+    console.log('Matcher protection:', matcherProtectionType);
+  });
+}`}
+    </CodeExample>
+  </>
+)}
+
+## Server-Side Processing
+
+{Extension.output && (
+  <>
+    <CodeExample language="javascript">
+{`// Process extension output on server
+function process${Extension.name.replace(/\s/g, '')}Extension(clientExtensionResults) {
+  const extensionOutput = clientExtensionResults.${Extension.code};
+
+  if (!extensionOutput) {
+    // Extension was not processed by authenticator
+    console.log('${Extension.name} extension not supported');
+    return null;
+  }
+
+  ${Extension.code === 'credProps' ? `// Check if credential is discoverable
+  if (extensionOutput.rk === true) {
+    // Store as discoverable credential
+    // This credential can be used for passwordless auth
+    return { discoverable: true };
+  }
+  return { discoverable: false };` :
+  Extension.code === 'largeBlob' ? `// Check if blob was written/read
+  if (extensionOutput.written !== undefined) {
+    return { blobWritten: extensionOutput.written };
+  }
+  if (extensionOutput.blob !== undefined) {
+    return { blobData: extensionOutput.blob };
+  }` :
+  Extension.code === 'uvm' ? `// Process user verification methods
+  const methods = extensionOutput.map(entry => ({
+    verificationMethod: entry[0],
+    keyProtection: entry[1],
+    matcherProtection: entry[2]
+  }));
+  return { verificationMethods: methods };` :
+  `// Process extension output
+  console.log('${Extension.name} output:', extensionOutput);
+  return extensionOutput;`}
+}`}
+    </CodeExample>
+  </>
+)}
+
+## Browser and Authenticator Support
+
+### Browser Support
+
+{Extension.supportedIn.map(ceremony => (
+  <p key={ceremony}>
+    <strong>{ceremony.charAt(0).toUpperCase() + ceremony.slice(1)}:</strong>{' '}
+    Check browser compatibility tables for {Extension.name} support.
+  </p>
+))}
+
+### Checking Support
+
+<CodeExample language="javascript">
+{`// Check if extension is supported
+async function check${Extension.name.replace(/\s/g, '')}Support() {
+  if (!window.PublicKeyCredential) {
+    return false;
+  }
+
+  // Try to use the extension
+  try {
+    const options = {
+      challenge: crypto.getRandomValues(new Uint8Array(32)),
+      rp: { name: "Test", id: window.location.hostname },
+      user: {
+        id: new Uint8Array(16),
+        name: "test",
+        displayName: "Test"
+      },
+      pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+      extensions: {
+        ${Extension.code}: ${JSON.stringify(Extension.input || true)}
+      }
+    };
+
+    // This will fail but we can check extension results
+    const credential = await navigator.credentials.create({
+      publicKey: options
+    }).catch(() => null);
+
+    if (credential) {
+      const results = credential.getClientExtensionResults();
+      return '${Extension.code}' in results;
+    }
+
+    return false;
+  } catch (error) {
+    return false;
+  }
+}`}
+</CodeExample>
+
+## Security Considerations
+
+<SecurityConsiderations>
+
+### Extension Trust
+
+- Only request extensions you actually need
+- Validate all extension outputs on the server
+- Don't assume extensions are always processed
+- Be aware that extensions may expose additional information
+
+{Extension.code === 'largeBlob' && (
+  <>
+    ### Large Blob Security
+
+    - Encrypt sensitive data before storing in blobs
+    - Verify blob integrity when reading
+    - Be aware of size limitations (~2KB)
+    - Consider that blobs may be accessible to other RPs on the same authenticator
+  </>
+)}
+
+{Extension.code === 'hmacSecret' && (
+  <>
+    ### HMAC Secret Security
+
+    - Use unique salts for each encryption operation
+    - Never reuse salts across sessions
+    - Securely store any data encrypted with HMAC secrets
+    - Be aware that HMAC secrets are bound to the credential
+  </>
+)}
+
+{Extension.code === 'credProps' && (
+  <>
+    ### Credential Properties Security
+
+    - Use credential discoverability info to inform UI/UX
+    - Don't assume all authenticators support resident keys
+    - Provide fallback authentication methods
+  </>
+)}
+
+### Privacy Considerations
+
+- Some extensions may reveal information about the authenticator
+- User verification method extension exposes biometric capabilities
+- Consider privacy implications before requesting extensions
+- Follow principle of least privilege - only request what you need
+
+### Compatibility
+
+- Not all authenticators support all extensions
+- Always check extension output to verify processing
+- Implement graceful fallbacks for unsupported extensions
+- Test with various authenticator types
+
+</SecurityConsiderations>
+
+## Best Practices
+
+1. **Check Support:** Always verify extension output is present
+2. **Graceful Degradation:** Don't require extensions unless necessary
+3. **Documentation:** Document which extensions your app uses and why
+4. **Testing:** Test with multiple authenticators and browsers
+5. **Validation:** Validate all extension outputs on the server
+6. **Privacy:** Only request extensions when necessary
+
+## Related Items
+
+<RelatedItems>
+  <RelatedItem type="Ceremony" href="/W3C/WebAuthn/Ceremony/registration">Registration Ceremony</RelatedItem>
+  <RelatedItem type="Ceremony" href="/W3C/WebAuthn/Ceremony/authentication">Authentication Ceremony</RelatedItem>
+  <RelatedItem type="Authenticator" href="/W3C/WebAuthn/Authenticator/platform">Platform Authenticators</RelatedItem>
+  <RelatedItem type="Authenticator" href="/W3C/WebAuthn/Authenticator/cross-platform">Cross-Platform Authenticators</RelatedItem>
+</RelatedItems>
+
+## Specification Links
+
+<SpecificationLinks>
+  <SpecLink href="https://www.w3.org/TR/webauthn-3/">Web Authentication: An API for accessing Public Key Credentials Level 3</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/webauthn-3/#sctn-extensions">WebAuthn Extensions</SpecLink>
+  <SpecLink href="https://fidoalliance.org/specs/fido-v2.1-ps-20210615/fido-client-to-authenticator-protocol-v2.1-ps-errata-20220621.html#sctn-extension-registry">CTAP Extension Registry</SpecLink>
+  <SpecLink href="https://www.w3.org/TR/webauthn-3/#sctn-defined-extensions">Defined Extensions</SpecLink>
+</SpecificationLinks>
+
+---
+
+*This extension is part of the W3C WebAuthn specification. For more information, visit [w3.org.ai](https://w3.org.ai).*

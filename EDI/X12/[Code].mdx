@@ -1,0 +1,48 @@
+---
+layout: code
+source: EDI/X12
+$type: EDI/X12/Code
+$id: https://standards.org.ai/EDI/X12/Code/{code.element}/{code.value}
+sameAs: https://standards.org.ai/Code/{code.element}/{code.value}
+canonical: https://standards.org.ai/X12/Code/{code.element}/{code.value}
+params:
+  - Code
+schema:
+  code:
+    element: ElementID
+    value: CodeValue
+    name: CodeName
+    description: CodeDescription
+---
+
+# {code.value} - {code.name}
+
+<CodeHeader element={code.element} value={code.value} name={code.name} />
+
+## Description
+
+{code.description}
+
+## Element
+
+<ElementLink code={code.element} />
+
+## Usage Context
+
+<CodeUsageContext element={code.element} value={code.value} />
+
+## Industry-Specific Meanings
+
+<IndustryCodeMeanings element={code.element} value={code.value} />
+
+## Examples
+
+<CodeExamples element={code.element} value={code.value} />
+
+## Related Codes
+
+<RelatedCodes element={code.element} current={code.value} />
+
+## Transaction Sets Using This Code
+
+<TransactionSetsByCode element={code.element} value={code.value} />

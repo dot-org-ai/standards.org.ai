@@ -1,0 +1,39 @@
+---
+layout: entityStatus
+source: US/GSA
+$type: US/GSA/EntityStatus
+$id: https://standards.org.ai/US/GSA/EntityStatus/{status.code}
+sameAs: https://standards.org.ai/EntityStatus/{status.code}
+canonical: https://us.org.ai/GSA/EntityStatus/{status.code}
+params:
+  - EntityStatus
+schema:
+  status:
+    code: code
+    name: name
+    description: description
+---
+
+# {status.name}
+
+<EntityStatusHeader code={status.code} name={status.name} />
+
+## Description
+
+{status.description}
+
+## Implications
+
+<EntityStatusImplications code={status.code} />
+
+## Requirements
+
+<EntityStatusRequirements code={status.code} />
+
+## Entities with Status
+
+<EntitiesByStatus code={status.code} />
+
+## Related Statuses
+
+<RelatedEntityStatuses code={status.code} />

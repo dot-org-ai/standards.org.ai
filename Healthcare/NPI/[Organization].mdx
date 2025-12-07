@@ -1,0 +1,178 @@
+---
+layout: organization
+source: Healthcare/NPI
+$type: Healthcare/NPI/Organization
+$id: https://standards.org.ai/Healthcare/NPI/Organization/{organization.code}
+sameAs: https://standards.org.ai/HealthcareOrganization/{organization.code}
+canonical: https://standards.org.ai/NPI/Organization/{organization.code}
+params:
+  - Organization
+schema:
+  organization:
+    code: string
+    npi: string
+    organizationName: string
+    otherOrganizationName: string
+    organizationType: string
+    taxonomy: array
+    enumerationDate: string
+    lastUpdateDate: string
+    status: string
+    address: array
+    authorized: object
+    contact: object
+    subpart: boolean
+    parentOrganization: string
+---
+
+# {organization.organizationName}
+
+<OrganizationHeader
+  npi={organization.npi}
+  name={organization.organizationName}
+  type={organization.organizationType}
+/>
+
+## NPI Number
+
+**{organization.npi}**
+
+## Organization Details
+
+<div className="organization-info">
+  <div className="name">
+    <strong>Legal Business Name:</strong> {organization.organizationName}
+  </div>
+  {organization.otherOrganizationName && (
+    <div className="other-name">
+      <strong>Other Name(s):</strong> {organization.otherOrganizationName}
+    </div>
+  )}
+  {organization.organizationType && (
+    <div className="org-type">
+      <strong>Organization Type:</strong> {organization.organizationType}
+    </div>
+  )}
+  {organization.subpart !== undefined && (
+    <div className="subpart">
+      <strong>Subpart:</strong> {organization.subpart ? 'Yes' : 'No'}
+    </div>
+  )}
+  {organization.status && (
+    <div className="status">
+      <strong>Status:</strong> {organization.status}
+    </div>
+  )}
+</div>
+
+{organization.parentOrganization && (
+  <section className="parent-organization">
+    <h2>Parent Organization</h2>
+    <OrganizationLink npi={organization.parentOrganization} />
+  </section>
+)}
+
+## Primary Taxonomy
+
+{organization.taxonomy && organization.taxonomy.length > 0 && (
+  <div className="primary-taxonomy">
+    {organization.taxonomy.filter(t => t.primary).map((tax, idx) => (
+      <div key={idx} className="taxonomy-primary">
+        <TaxonomyLink code={tax.code} />
+        <p>{tax.description}</p>
+      </div>
+    ))}
+  </div>
+)}
+
+## All Taxonomy Codes
+
+{organization.taxonomy && organization.taxonomy.length > 0 && (
+  <div className="taxonomy-list">
+    {organization.taxonomy.map((tax, idx) => (
+      <div key={idx} className="taxonomy-item">
+        <TaxonomyLink code={tax.code} primary={tax.primary} />
+        {tax.license && <span className="license">License: {tax.license}</span>}
+        {tax.state && <span className="state">State: {tax.state}</span>}
+      </div>
+    ))}
+  </div>
+)}
+
+## Locations
+
+{organization.address && organization.address.length > 0 && (
+  <div className="locations">
+    {organization.address.map((addr, idx) => (
+      <div key={idx} className="location-card">
+        <h3>{addr.type === 'LOCATION' ? 'Practice Location' : 'Mailing Address'}</h3>
+        <address>
+          {addr.line1 && <div>{addr.line1}</div>}
+          {addr.line2 && <div>{addr.line2}</div>}
+          {addr.city && addr.state && addr.postalCode && (
+            <div>{addr.city}, {addr.state} {addr.postalCode}</div>
+          )}
+          {addr.country && <div>{addr.country}</div>}
+          {addr.phone && <div>Phone: {addr.phone}</div>}
+          {addr.fax && <div>Fax: {addr.fax}</div>}
+        </address>
+      </div>
+    ))}
+  </div>
+)}
+
+{organization.authorized && (
+  <section className="authorized-official">
+    <h2>Authorized Official</h2>
+    <div className="official-details">
+      {organization.authorized.name && (
+        <p><strong>Name:</strong> {organization.authorized.name}</p>
+      )}
+      {organization.authorized.title && (
+        <p><strong>Title:</strong> {organization.authorized.title}</p>
+      )}
+      {organization.authorized.phone && (
+        <p><strong>Phone:</strong> {organization.authorized.phone}</p>
+      )}
+    </div>
+  </section>
+)}
+
+{organization.contact && (
+  <section className="contact-person">
+    <h2>Contact Person</h2>
+    <div className="contact-details">
+      {organization.contact.name && (
+        <p><strong>Name:</strong> {organization.contact.name}</p>
+      )}
+      {organization.contact.title && (
+        <p><strong>Title:</strong> {organization.contact.title}</p>
+      )}
+      {organization.contact.phone && (
+        <p><strong>Phone:</strong> {organization.contact.phone}</p>
+      )}
+      {organization.contact.email && (
+        <p><strong>Email:</strong> <a href={`mailto:${organization.contact.email}`}>{organization.contact.email}</a></p>
+      )}
+    </div>
+  </section>
+)}
+
+## Enumeration Details
+
+<div className="enumeration-info">
+  {organization.enumerationDate && (
+    <p><strong>Enumeration Date:</strong> {organization.enumerationDate}</p>
+  )}
+  {organization.lastUpdateDate && (
+    <p><strong>Last Update:</strong> {organization.lastUpdateDate}</p>
+  )}
+</div>
+
+## Affiliated Providers
+
+<ProvidersByOrganization npi={organization.npi} />
+
+## Subparts
+
+<SubpartsByOrganization parentNpi={organization.npi} />

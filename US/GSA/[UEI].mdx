@@ -1,0 +1,51 @@
+---
+layout: uei
+source: US/GSA
+$type: US/GSA/UEI
+$id: https://standards.org.ai/US/GSA/UEI
+sameAs: https://standards.org.ai/UEI
+canonical: https://us.org.ai/GSA/UEI
+params:
+  - UEI
+schema:
+  uei:
+    format: format
+    checkDigit: checkDigit
+    validation: validation
+---
+
+# Unique Entity Identifier (UEI)
+
+<UEIHeader format={uei.format} />
+
+## Format
+
+{uei.format}
+
+## Validation Rules
+
+{uei.validation}
+
+## Check Digit Algorithm
+
+{uei.checkDigit}
+
+## Registration
+
+<UEIRegistrationInfo />
+
+## SAM.gov Integration
+
+<SAMIntegration />
+
+## Migration from DUNS
+
+<DUNSMigrationInfo />
+
+## Validation Tool
+
+<UEIValidator />
+
+## Examples
+
+<UEIExamples />

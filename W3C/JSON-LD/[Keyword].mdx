@@ -1,0 +1,943 @@
+---
+layout: keyword
+source: W3C/JSON-LD
+$type: W3C/JSON-LD/Keyword
+$id: https://standards.org.ai/W3C/JSON-LD/Keyword/{keyword.code}
+sameAs: https://standards.org.ai/Keyword/{keyword.code}
+canonical: https://w3.org.ai/JSON-LD/Keyword/{keyword.code}
+params:
+  - Keyword
+schema:
+  keyword:
+    code: string
+    name: string
+    description: string
+    usage: string
+    valueType: string
+    specification: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Syntax } from '@/components/standards/Syntax'
+import { Description } from '@/components/standards/Description'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { PropertyTable } from '@/components/standards/PropertyTable'
+import { RelatedItems } from '@/components/standards/RelatedItems'
+import { SpecificationLink } from '@/components/standards/SpecificationLink'
+import { Metadata } from '@/components/standards/Metadata'
+import { Alert } from '@/components/standards/Alert'
+
+<Header
+  title={keyword.name}
+  category="JSON-LD Keyword"
+  type="Keyword"
+  standard="W3C JSON-LD 1.1"
+/>
+
+<Metadata
+  items={[
+    { label: 'Keyword', value: keyword.name },
+    { label: 'Value Type', value: keyword.valueType },
+    { label: 'Category', value: 'Core Keyword' },
+    { label: 'Standard', value: 'JSON-LD 1.1' },
+    { label: 'Status', value: 'W3C Recommendation' }
+  ]}
+/>
+
+## Syntax
+
+<Syntax language="json">
+{keyword.name === '@context' ? `{
+  "@context": {
+    "property": "http://schema.org/property",
+    "name": "http://schema.org/name"
+  }
+}` : keyword.name === '@id' ? `{
+  "@id": "https://example.org/resource/123"
+}` : keyword.name === '@type' ? `{
+  "@type": "Person"
+}` : keyword.name === '@value' ? `{
+  "@value": "Example text",
+  "@language": "en"
+}` : keyword.name === '@language' ? `{
+  "@value": "Hello",
+  "@language": "en"
+}` : keyword.name === '@graph' ? `{
+  "@graph": [
+    { "@id": "http://example.org/resource1" },
+    { "@id": "http://example.org/resource2" }
+  ]
+}` : keyword.name === '@base' ? `{
+  "@context": {
+    "@base": "https://example.org/"
+  }
+}` : keyword.name === '@vocab' ? `{
+  "@context": {
+    "@vocab": "http://schema.org/"
+  }
+}` : `{
+  "${keyword.name}": "value"
+}`}
+</Syntax>
+
+{keyword.name === '@context' && (
+  <Alert type="info">
+  The @context keyword maps terms to IRIs and defines how JSON-LD documents should be interpreted as RDF. It is typically the first property in a JSON-LD document.
+  </Alert>
+)}
+
+{keyword.name === '@id' && (
+  <Alert type="warning">
+  The @id keyword specifies the IRI (identifier) of a node. IRIs should be absolute or resolve against the base IRI defined in the context.
+  </Alert>
+)}
+
+{keyword.name === '@type' && (
+  <Alert type="info">
+  The @type keyword specifies the type(s) of a node. It maps to rdf:type in RDF. Values can be a string or an array of strings.
+  </Alert>
+)}
+
+## Description
+
+<Description>
+{keyword.description}
+
+The {keyword.name} keyword is {keyword.name === '@context' ? 'fundamental to JSON-LD, enabling the mapping of JSON properties to RDF vocabulary terms. It establishes the semantic meaning of the data' : keyword.name === '@id' ? 'used to uniquely identify resources with IRIs (Internationalized Resource Identifiers). Every node can have an identifier' : keyword.name === '@type' ? 'used to set the type of a node object. In RDF, this corresponds to the rdf:type property' : keyword.name === '@value' ? 'used in value objects to specify the actual value of a property, often combined with @type or @language' : keyword.name === '@language' ? 'used to specify the language of a string value, enabling multilingual support in JSON-LD' : keyword.name === '@graph' ? 'used to express multiple named or unnamed graphs within a JSON-LD document' : keyword.name === '@base' ? 'used in the context to set the base IRI for resolving relative IRI references' : keyword.name === '@vocab' ? 'used in the context to set the default vocabulary for undefined terms' : 'a core component of JSON-LD syntax'}.
+</Description>
+
+## Usage
+
+{keyword.usage}
+
+### Value Type
+
+**Type**: `{keyword.valueType}`
+
+{keyword.name === '@context' ? 'The @context value can be a string (URL to external context), an object (inline context definition), or an array combining both.' : keyword.name === '@id' ? 'The @id value must be a string containing an absolute IRI or a relative IRI reference that resolves against the base IRI.' : keyword.name === '@type' ? 'The @type value can be a string or an array of strings, each representing a type IRI (absolute or compact).' : keyword.name === '@value' ? 'The @value can be any JSON value: string, number, boolean, or null.' : keyword.name === '@language' ? 'The @language value must be a string containing a valid BCP47 language tag (e.g., "en", "es-MX", "zh-Hans").' : keyword.name === '@graph' ? 'The @graph value must be an object or array of objects, each representing a node in the graph.' : `The ${keyword.name} value is ${keyword.valueType}.`}
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="json" title={`Basic ${keyword.name} Example`}>
+{keyword.name === '@context' ? `{
+  "@context": {
+    "name": "http://schema.org/name",
+    "email": "http://schema.org/email",
+    "homepage": {
+      "@id": "http://schema.org/url",
+      "@type": "@id"
+    }
+  },
+  "@id": "https://example.org/people/john",
+  "@type": "Person",
+  "name": "John Doe",
+  "email": "john@example.org",
+  "homepage": "https://johndoe.com"
+}` : keyword.name === '@id' ? `{
+  "@context": "https://schema.org",
+  "@id": "https://example.org/products/12345",
+  "@type": "Product",
+  "name": "Wireless Headphones",
+  "sku": "WH-12345",
+  "offers": {
+    "@type": "Offer",
+    "@id": "https://example.org/offers/67890",
+    "price": 99.99,
+    "priceCurrency": "USD"
+  }
+}` : keyword.name === '@type' ? `{
+  "@context": "https://schema.org",
+  "@type": ["Person", "Author"],
+  "name": "Jane Smith",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Acme Corp"
+  },
+  "jobTitle": "Senior Developer"
+}` : keyword.name === '@value' ? `{
+  "@context": {
+    "modified": {
+      "@id": "http://purl.org/dc/terms/modified",
+      "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+    }
+  },
+  "@id": "https://example.org/article/1",
+  "modified": {
+    "@value": "2024-01-15T10:30:00Z",
+    "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+  }
+}` : keyword.name === '@language' ? `{
+  "@context": {
+    "title": "http://purl.org/dc/terms/title"
+  },
+  "@id": "https://example.org/book/1",
+  "title": [
+    {
+      "@value": "The Great Book",
+      "@language": "en"
+    },
+    {
+      "@value": "Le Grand Livre",
+      "@language": "fr"
+    },
+    {
+      "@value": "Das Große Buch",
+      "@language": "de"
+    }
+  ]
+}` : keyword.name === '@graph' ? `{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@id": "https://example.org/alice",
+      "@type": "Person",
+      "name": "Alice Johnson",
+      "knows": { "@id": "https://example.org/bob" }
+    },
+    {
+      "@id": "https://example.org/bob",
+      "@type": "Person",
+      "name": "Bob Smith",
+      "knows": { "@id": "https://example.org/alice" }
+    }
+  ]
+}` : keyword.name === '@base' ? `{
+  "@context": {
+    "@base": "https://example.org/data/",
+    "@vocab": "https://schema.org/"
+  },
+  "@id": "products/123",
+  "@type": "Product",
+  "name": "Widget",
+  "url": "products/123/details"
+}` : keyword.name === '@vocab' ? `{
+  "@context": {
+    "@vocab": "http://schema.org/"
+  },
+  "@type": "Person",
+  "name": "Alice",
+  "jobTitle": "Engineer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Tech Company"
+  }
+}` : `{
+  "${keyword.name}": "example value"
+}`}
+</CodeExample>
+
+### Advanced Usage
+
+<CodeExample language="json" title={`Advanced ${keyword.name} Example`}>
+{keyword.name === '@context' ? `{
+  "@context": [
+    "https://schema.org",
+    {
+      "@base": "https://example.org/",
+      "foaf": "http://xmlns.com/foaf/0.1/",
+      "homepage": {
+        "@id": "foaf:homepage",
+        "@type": "@id"
+      },
+      "friend": {
+        "@id": "foaf:knows",
+        "@type": "@id",
+        "@container": "@set"
+      },
+      "created": {
+        "@id": "http://purl.org/dc/terms/created",
+        "@type": "http://www.w3.org/2001/XMLSchema#dateTime"
+      }
+    }
+  ],
+  "@id": "alice",
+  "@type": "Person",
+  "name": "Alice Williams",
+  "homepage": "https://alice.example.org",
+  "friend": ["bob", "charlie"],
+  "created": "2024-01-15T08:00:00Z"
+}` : keyword.name === '@id' ? `{
+  "@context": {
+    "@base": "https://api.example.org/",
+    "@vocab": "https://schema.org/",
+    "parent": {
+      "@type": "@id"
+    }
+  },
+  "@id": "resources/nested/item-123",
+  "@type": "CreativeWork",
+  "name": "Nested Resource",
+  "parent": "../category/456",
+  "hasPart": [
+    { "@id": "resources/nested/item-123/part-1" },
+    { "@id": "resources/nested/item-123/part-2" }
+  ]
+}` : keyword.name === '@type' ? `{
+  "@context": {
+    "@vocab": "http://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#"
+  },
+  "@id": "https://example.org/items/special-123",
+  "@type": [
+    "Product",
+    "CreativeWork",
+    "http://example.org/vocab/SpecialItem"
+  ],
+  "name": "Multi-typed Item",
+  "additionalType": "https://example.org/types/Premium"
+}` : keyword.name === '@value' ? `{
+  "@context": {
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "measurement": {
+      "@id": "http://example.org/measurement",
+      "@type": "xsd:decimal"
+    },
+    "description": {
+      "@id": "http://purl.org/dc/terms/description",
+      "@container": "@language"
+    }
+  },
+  "@id": "https://example.org/sensor/temp-01",
+  "measurement": {
+    "@value": "23.5",
+    "@type": "xsd:decimal"
+  },
+  "description": {
+    "en": "Temperature sensor reading",
+    "es": "Lectura del sensor de temperatura",
+    "fr": "Relevé du capteur de température"
+  }
+}` : keyword.name === '@language' ? `{
+  "@context": {
+    "@vocab": "http://schema.org/",
+    "description": {
+      "@container": "@language"
+    }
+  },
+  "@id": "https://example.org/products/global-widget",
+  "@type": "Product",
+  "name": {
+    "en": "Global Widget",
+    "es": "Widget Global",
+    "fr": "Widget Mondial",
+    "de": "Globales Widget",
+    "ja": "グローバルウィジェット",
+    "zh": "全球小部件"
+  },
+  "description": {
+    "en": "A versatile widget for international markets",
+    "es": "Un widget versátil para mercados internacionales",
+    "fr": "Un widget polyvalent pour les marchés internationaux"
+  }
+}` : keyword.name === '@graph' ? `{
+  "@context": "https://schema.org",
+  "@id": "https://example.org/graphs/dataset-1",
+  "@graph": [
+    {
+      "@id": "https://example.org/company/acme",
+      "@type": "Organization",
+      "name": "Acme Corporation",
+      "employee": [
+        { "@id": "https://example.org/people/alice" },
+        { "@id": "https://example.org/people/bob" }
+      ]
+    },
+    {
+      "@id": "https://example.org/people/alice",
+      "@type": "Person",
+      "name": "Alice Johnson",
+      "worksFor": { "@id": "https://example.org/company/acme" }
+    },
+    {
+      "@id": "https://example.org/people/bob",
+      "@type": "Person",
+      "name": "Bob Smith",
+      "worksFor": { "@id": "https://example.org/company/acme" }
+    }
+  ]
+}` : keyword.name === '@base' ? `{
+  "@context": [
+    {
+      "@base": "https://data.example.org/2024/",
+      "@vocab": "http://schema.org/"
+    },
+    {
+      "dc": "http://purl.org/dc/terms/"
+    }
+  ],
+  "@id": "datasets/climate/jan",
+  "@type": "Dataset",
+  "name": "January Climate Data",
+  "distribution": {
+    "@type": "DataDownload",
+    "@id": "datasets/climate/jan/download.csv",
+    "encodingFormat": "text/csv"
+  },
+  "dc:source": "sensors/temp-array-01"
+}` : keyword.name === '@vocab' ? `{
+  "@context": {
+    "@vocab": "http://schema.org/",
+    "custom": "http://example.org/custom/",
+    "ext": "http://example.org/extensions/"
+  },
+  "@id": "https://example.org/mixed-vocab",
+  "@type": "Product",
+  "name": "Mixed Vocabulary Example",
+  "description": "Uses default schema.org vocab",
+  "custom:specialProperty": "Custom namespace property",
+  "ext:extendedData": {
+    "@type": "ext:CustomType",
+    "ext:value": 42
+  }
+}` : `{
+  "${keyword.name}": "advanced example"
+}`}
+</CodeExample>
+
+### Real-World Use Case
+
+<CodeExample language="json" title={`${keyword.name} in Production`}>
+{keyword.name === '@context' ? `{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    {
+      "@language": "en",
+      "schema": "http://schema.org/",
+      "security": "https://w3id.org/security#",
+      "toot": "http://joinmastodon.org/ns#",
+      "featured": {
+        "@id": "toot:featured",
+        "@type": "@id"
+      },
+      "publicKey": {
+        "@id": "security:publicKey",
+        "@type": "@id"
+      }
+    }
+  ],
+  "@id": "https://mastodon.example/@alice",
+  "@type": "Person",
+  "preferredUsername": "alice",
+  "inbox": "https://mastodon.example/@alice/inbox",
+  "publicKey": {
+    "@id": "https://mastodon.example/@alice#main-key",
+    "@type": "Key",
+    "owner": "https://mastodon.example/@alice",
+    "publicKeyPem": "-----BEGIN PUBLIC KEY-----\\n...\\n-----END PUBLIC KEY-----"
+  }
+}` : keyword.name === '@id' ? `{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "@id": "https://news.example.com/2024/tech/article-12345#main",
+  "headline": "Breaking Technology News",
+  "author": {
+    "@type": "Person",
+    "@id": "https://news.example.com/authors/jane-smith#identity",
+    "name": "Jane Smith"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://news.example.com/#organization",
+    "name": "Example News",
+    "logo": {
+      "@type": "ImageObject",
+      "@id": "https://news.example.com/logo.png",
+      "url": "https://news.example.com/logo.png"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://news.example.com/2024/tech/article-12345"
+  }
+}` : keyword.name === '@type' ? `{
+  "@context": "https://schema.org",
+  "@id": "https://recipes.example.com/chocolate-chip-cookies",
+  "@type": ["Recipe", "HowTo"],
+  "name": "Classic Chocolate Chip Cookies",
+  "recipeCategory": "Dessert",
+  "recipeCuisine": "American",
+  "recipeIngredient": [
+    "2 cups flour",
+    "1 cup butter",
+    "2 cups chocolate chips"
+  ],
+  "recipeInstructions": [
+    {
+      "@type": "HowToStep",
+      "text": "Preheat oven to 350°F"
+    },
+    {
+      "@type": "HowToStep",
+      "text": "Mix ingredients"
+    }
+  ],
+  "author": {
+    "@type": "Person",
+    "name": "Chef Alice"
+  }
+}` : `{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "${keyword.name}": "production example"
+}`}
+</CodeExample>
+
+## Use Cases
+
+### Common Patterns
+
+{keyword.name === '@context' ? `
+1. **Vocabulary Mapping**: Define term-to-IRI mappings for your JSON data
+2. **Type Coercion**: Specify that certain properties should be treated as IRIs or typed literals
+3. **Language Maps**: Set default language for string values
+4. **Context Reuse**: Reference external contexts hosted at stable URLs
+5. **Namespace Management**: Define prefixes for common vocabularies
+
+### Best Practices
+
+- **External Contexts**: Host reusable contexts at stable, versioned URLs
+- **Ordering**: Place @context first in your JSON-LD documents
+- **Combination**: Combine multiple contexts using arrays
+- **Caching**: Design contexts to be cacheable for performance
+- **Versioning**: Version your context URLs to prevent breaking changes
+` : keyword.name === '@id' ? `
+1. **Resource Identification**: Assign unique, persistent IRIs to resources
+2. **Linking**: Create relationships between resources using @id references
+3. **Fragment Identifiers**: Use # fragments to identify parts of documents
+4. **Relative IRIs**: Use with @base for clean, relative identifiers
+5. **Deduplication**: Enable RDF processors to merge information about the same resource
+
+### Best Practices
+
+- **Persistence**: Use persistent, dereferenceable IRIs when possible
+- **HTTPS**: Prefer https:// over http:// for security
+- **Structure**: Design meaningful IRI structures (e.g., /type/id pattern)
+- **Uniqueness**: Ensure IRIs are globally unique
+- **Resolution**: Make IRIs dereferenceable to return useful data
+` : keyword.name === '@type' ? `
+1. **Type Declaration**: Declare the semantic type(s) of resources
+2. **Schema.org Integration**: Use Schema.org types for SEO and rich snippets
+3. **Multiple Types**: Assign multiple types when resources fit several categories
+4. **Custom Types**: Define custom types for domain-specific needs
+5. **Type Hierarchies**: Leverage type inheritance in vocabularies
+
+### Best Practices
+
+- **Standard Vocabularies**: Use Schema.org, FOAF, Dublin Core when applicable
+- **Specificity**: Choose the most specific type available
+- **Multiple Types**: Include both general and specific types when relevant
+- **Custom Types**: Document and publish custom type definitions
+- **Consistency**: Use consistent types across similar resources
+` : keyword.name === '@value' ? `
+1. **Typed Literals**: Specify datatypes for numeric, date, and other typed values
+2. **Language Tags**: Combine with @language for multilingual strings
+3. **Explicit Values**: Distinguish between value and metadata
+4. **Custom Datatypes**: Use with @type for domain-specific datatypes
+5. **Null Handling**: Handle absence of values appropriately
+
+### Best Practices
+
+- **Type Specification**: Always specify @type for non-string values
+- **XSD Datatypes**: Use standard XSD datatypes when applicable
+- **Language Tags**: Use @language instead of @type for language-tagged strings
+- **Consistency**: Use consistent typing across similar properties
+- **Validation**: Validate typed values against their declared types
+` : keyword.name === '@language' ? `
+1. **Internationalization**: Support multiple languages in a single document
+2. **Language Maps**: Use @container: @language for efficient multilingual data
+3. **Content Negotiation**: Enable language-specific content delivery
+4. **Accessibility**: Provide content in users' preferred languages
+5. **Translation Management**: Structure data for translation workflows
+
+### Best Practices
+
+- **BCP47 Tags**: Use valid BCP47 language tags (en, en-US, zh-Hans, etc.)
+- **Language Maps**: Prefer language maps over arrays of value objects
+- **Fallbacks**: Include English (en) as a common fallback language
+- **Consistency**: Use consistent language tags throughout your data
+- **Coverage**: Provide translations for user-facing content
+` : keyword.name === '@graph' ? `
+1. **Named Graphs**: Organize related data into distinct graphs
+2. **Metadata**: Separate metadata from primary content
+3. **Multi-Entity Documents**: Package multiple related entities together
+4. **Provenance**: Track data provenance with graph-level metadata
+5. **Graph Collections**: Represent collections of graphs
+
+### Best Practices
+
+- **Graph Naming**: Use meaningful @id values for named graphs
+- **Organization**: Group related entities in the same graph
+- **Metadata**: Use graph containers for graph-level metadata
+- **Validation**: Validate individual graphs separately
+- **Merging**: Design graphs to merge cleanly when combined
+` : keyword.name === '@base' ? `
+1. **Relative IRIs**: Enable use of relative IRI references in documents
+2. **Document Portability**: Make documents relocatable without changing content
+3. **API Design**: Simplify API responses with relative references
+4. **Storage Efficiency**: Reduce document size with shorter identifiers
+5. **Testing**: Use different bases for development and production
+
+### Best Practices
+
+- **Trailing Slash**: Include trailing slash for directory-style bases
+- **Absolute URLs**: Set @base to an absolute IRI
+- **Document Location**: Consider using document location as implicit base
+- **Resolution**: Ensure relative IRIs resolve correctly
+- **Consistency**: Use consistent base patterns across related documents
+` : `
+### Best Practices
+
+- Use ${keyword.name} consistently throughout your JSON-LD documents
+- Follow W3C specifications for proper usage
+- Validate your JSON-LD with standard validators
+- Document your usage patterns for team consistency
+`}
+
+## Integration Examples
+
+### With JavaScript
+
+<CodeExample language="javascript" title="Processing {keyword.name} in JavaScript">
+{`import jsonld from 'jsonld';
+
+const document = ${JSON.stringify(
+  keyword.name === '@context' ? {
+    "@context": { "name": "http://schema.org/name" },
+    "name": "Example"
+  } : keyword.name === '@id' ? {
+    "@context": "https://schema.org",
+    "@id": "https://example.org/item/123",
+    "@type": "Thing"
+  } : { [keyword.name]: "example" },
+  null,
+  2
+)};
+
+// Expand the document to RDF
+const expanded = await jsonld.expand(document);
+console.log('Expanded:', expanded);
+
+// Compact with a new context
+const compacted = await jsonld.compact(document, {
+  "@context": "https://schema.org"
+});
+console.log('Compacted:', compacted);
+
+${keyword.name === '@context' ? `
+// Frame the document
+const framed = await jsonld.frame(document, {
+  "@context": "https://schema.org",
+  "@type": "Person"
+});
+console.log('Framed:', framed);
+` : ''}
+${keyword.name === '@id' ? `
+// Normalize for comparison
+const normalized = await jsonld.normalize(document, {
+  algorithm: 'URDNA2015',
+  format: 'application/n-quads'
+});
+console.log('Normalized:', normalized);
+` : ''}
+// Convert to N-Quads
+const nquads = await jsonld.toRDF(document, {
+  format: 'application/n-quads'
+});
+console.log('N-Quads:', nquads);`}
+</CodeExample>
+
+### With Python
+
+<CodeExample language="python" title="Processing {keyword.name} in Python">
+{`from pyld import jsonld
+import json
+
+document = ${JSON.stringify(
+  keyword.name === '@context' ? {
+    "@context": { "name": "http://schema.org/name" },
+    "name": "Example"
+  } : keyword.name === '@id' ? {
+    "@context": "https://schema.org",
+    "@id": "https://example.org/item/123",
+    "@type": "Thing"
+  } : { [keyword.name]: "example" },
+  null,
+  2
+)}
+
+# Expand to RDF
+expanded = jsonld.expand(document)
+print("Expanded:", json.dumps(expanded, indent=2))
+
+# Compact with context
+context = {"@context": "https://schema.org"}
+compacted = jsonld.compact(document, context)
+print("Compacted:", json.dumps(compacted, indent=2))
+
+${keyword.name === '@context' ? `
+# Frame the document
+frame = {
+    "@context": "https://schema.org",
+    "@type": "Person"
+}
+framed = jsonld.frame(document, frame)
+print("Framed:", json.dumps(framed, indent=2))
+` : ''}
+# Convert to RDF triples
+nquads = jsonld.to_rdf(document, {
+    'format': 'application/n-quads'
+})
+print("N-Quads:", nquads)`}
+</CodeExample>
+
+## Related Keywords
+
+<RelatedItems
+  items={[
+    keyword.name !== '@context' ? { type: 'Keyword', code: 'CONTEXT', label: '@context - Define context' } : { type: 'Keyword', code: 'ID', label: '@id - Resource identifier' },
+    keyword.name !== '@id' ? { type: 'Keyword', code: 'ID', label: '@id - Resource identifier' } : { type: 'Keyword', code: 'TYPE', label: '@type - Resource type' },
+    keyword.name !== '@type' ? { type: 'Keyword', code: 'TYPE', label: '@type - Resource type' } : { type: 'Keyword', code: 'VALUE', label: '@value - Literal value' },
+    keyword.name !== '@value' ? { type: 'Keyword', code: 'VALUE', label: '@value - Literal value' } : { type: 'Keyword', code: 'LANGUAGE', label: '@language - Language tag' },
+    keyword.name !== '@language' ? { type: 'Keyword', code: 'LANGUAGE', label: '@language - Language tag' } : { type: 'Keyword', code: 'GRAPH', label: '@graph - Graph container' },
+    keyword.name !== '@graph' ? { type: 'Keyword', code: 'GRAPH', label: '@graph - Graph container' } : { type: 'Keyword', code: 'CONTEXT', label: '@context - Define context' },
+    { type: 'Context', code: 'SCHEMA_ORG', label: 'Schema.org - Common vocabulary' },
+    { type: 'Context', code: 'ACTIVITY_STREAMS', label: 'Activity Streams - Social data' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="JSON-LD 1.1 - ${keyword.name}"
+  url={`https://www.w3.org/TR/json-ld11/#${keyword.name === '@context' ? 'the-context' : keyword.name === '@id' ? 'node-identifiers' : keyword.name === '@type' ? 'specifying-the-type' : keyword.name === '@value' ? 'value-objects' : keyword.name === '@language' ? 'string-internationalization' : keyword.name === '@graph' ? 'named-graphs' : keyword.name === '@base' ? 'base-iri' : keyword.name === '@vocab' ? 'default-vocabulary' : 'keywords'}`}
+  section={keyword.specification}
+  organization="W3C"
+/>
+
+### Core JSON-LD Keywords
+
+- **@context**: Define the context for interpreting JSON as RDF
+- **@id**: Specify the IRI identifier of a node
+- **@type**: Specify the type(s) of a node
+- **@value**: Specify the value of a value object
+- **@language**: Specify the language of a string value
+- **@graph**: Express a graph
+- **@list**: Express an ordered list
+- **@set**: Express an unordered set
+- **@reverse**: Express reverse properties
+- **@index**: Provide an index for data organization
+- **@base**: Set the base IRI
+- **@vocab**: Set the default vocabulary
+- **@container**: Specify how arrays should be interpreted
+- **@nest**: Nest properties for organizational purposes
+- **@prefix**: Define compact IRI prefixes
+- **@propagate**: Control context propagation
+- **@protected**: Protect terms from being overridden
+- **@version**: Specify JSON-LD version
+
+### Additional Resources
+
+- [JSON-LD 1.1 Specification](https://www.w3.org/TR/json-ld11/)
+- [JSON-LD Best Practices](https://w3c.github.io/json-ld-bp/)
+- [JSON-LD Playground](https://json-ld.org/playground/)
+- [JSON-LD Framing](https://www.w3.org/TR/json-ld11-framing/)
+- [JSON-LD API](https://www.w3.org/TR/json-ld11-api/)
+
+## Notes
+
+### Processing Model
+
+{keyword.name === '@context' ? `
+The @context is processed according to these rules:
+
+1. **Context Scoping**: Contexts are scoped to the node where they appear
+2. **Merging**: Multiple contexts (in arrays) are merged left-to-right
+3. **Overriding**: Later contexts override earlier ones
+4. **Propagation**: Contexts propagate to nested nodes unless overridden
+5. **Loading**: External contexts are loaded and cached
+
+Example context processing:
+\`\`\`json
+{
+  "@context": [
+    "https://schema.org",           // Base context
+    {
+      "custom": "http://ex.org/",   // Additional mappings
+      "name": "custom:fullName"     // Override schema.org name
+    }
+  ]
+}
+\`\`\`
+` : keyword.name === '@id' ? `
+The @id keyword follows these resolution rules:
+
+1. **Absolute IRIs**: Used as-is (http://example.org/resource)
+2. **Relative IRIs**: Resolved against @base (resource-123)
+3. **Compact IRIs**: Expanded using context (schema:Person)
+4. **Blank Nodes**: Can use blank node identifiers (_:b0)
+5. **Keywords**: Cannot be used as node identifiers
+
+IRI Resolution Example:
+\`\`\`json
+{
+  "@context": {
+    "@base": "https://example.org/",
+    "schema": "http://schema.org/"
+  },
+  "@id": "items/123",              // → https://example.org/items/123
+  "@type": "schema:Product"         // → http://schema.org/Product
+}
+\`\`\`
+` : keyword.name === '@type' ? `
+The @type keyword can be used in two contexts:
+
+1. **Node Type** (RDF Type):
+\`\`\`json
+{
+  "@type": "Person"  // rdf:type Person
+}
+\`\`\`
+
+2. **Datatype** (in context):
+\`\`\`json
+{
+  "@context": {
+    "modified": {
+      "@id": "dc:modified",
+      "@type": "xsd:dateTime"  // Datatype specification
+    }
+  }
+}
+\`\`\`
+
+Multiple types are supported:
+\`\`\`json
+{
+  "@type": ["Person", "Author", "Employee"]
+}
+\`\`\`
+` : keyword.name === '@value' ? `
+The @value keyword is used in value objects with optional modifiers:
+
+1. **With @type** (typed literal):
+\`\`\`json
+{
+  "@value": "2024-01-15",
+  "@type": "xsd:date"
+}
+\`\`\`
+
+2. **With @language** (language-tagged string):
+\`\`\`json
+{
+  "@value": "Hello",
+  "@language": "en"
+}
+\`\`\`
+
+3. **Plain value** (simple literal):
+\`\`\`json
+{
+  "@value": "Simple string"
+}
+\`\`\`
+
+Note: @type and @language cannot be used together.
+` : keyword.name === '@language' ? `
+Language tags follow BCP47 specification:
+
+**Common Patterns**:
+- Simple: "en", "fr", "de", "ja", "zh"
+- Regional: "en-US", "en-GB", "fr-CA", "es-MX"
+- Script: "zh-Hans" (Simplified), "zh-Hant" (Traditional)
+- Full: "en-US-x-custom" (with private use)
+
+**Language Maps**:
+\`\`\`json
+{
+  "@context": {
+    "description": {
+      "@id": "schema:description",
+      "@container": "@language"
+    }
+  },
+  "description": {
+    "en": "English description",
+    "es": "Descripción en español",
+    "fr": "Description en français"
+  }
+}
+\`\`\`
+` : `
+${keyword.name} is processed according to JSON-LD algorithms defined in the specification. Refer to the W3C documentation for detailed processing rules.
+`}
+
+### Validation and Tooling
+
+Popular JSON-LD validation and processing tools:
+
+- **jsonld.js**: JavaScript implementation
+- **PyLD**: Python implementation
+- **JSON-LD Playground**: Online validator and converter
+- **RDF validators**: General RDF validation tools
+- **Schema.org validator**: For Schema.org structured data
+
+### Common Pitfalls
+
+{keyword.name === '@context' ? `
+1. **Missing Context**: Forgetting to include @context makes JSON uninterpretable as RDF
+2. **Context Order**: Later contexts override earlier ones - order matters
+3. **External Loading**: External contexts must be accessible and stable
+4. **Caching Issues**: Context changes can break cached interpretations
+5. **Scoping Confusion**: Not understanding context scope and propagation
+` : keyword.name === '@id' ? `
+1. **Relative vs Absolute**: Confusing relative and absolute IRIs
+2. **Missing Base**: Using relative IRIs without defining @base
+3. **Non-Unique IRIs**: Reusing IRIs for different resources
+4. **Fragment Misuse**: Incorrect use of # fragments
+5. **Blank Nodes**: Overusing blank nodes instead of proper IRIs
+` : keyword.name === '@type' ? `
+1. **Wrong Context**: Using types not defined in the active context
+2. **Type vs Datatype**: Confusing node type with value datatype
+3. **Single String**: Forgetting that @type can be an array
+4. **Missing Vocabulary**: Not importing vocabulary contexts for custom types
+5. **Inconsistent Types**: Using different type names for same concept
+` : keyword.name === '@value' ? `
+1. **Type and Language Together**: Trying to use both @type and @language
+2. **Nested Values**: Nesting @value objects (not allowed)
+3. **Missing @value**: Using @type or @language without @value
+4. **Wrong Datatypes**: Using invalid or inappropriate XSD datatypes
+5. **JSON Types**: Not understanding JSON type to XSD type mapping
+` : `
+Common mistakes when using ${keyword.name}:
+- Not following W3C specifications
+- Inconsistent usage across documents
+- Missing required companion keywords
+- Incorrect value types
+- Poor error handling
+`}
+
+### Performance Considerations
+
+{keyword.name === '@context' ? `
+- **Cache External Contexts**: Implement aggressive caching for remote contexts
+- **Inline Small Contexts**: Consider inlining small contexts to avoid HTTP requests
+- **Context Reuse**: Design reusable contexts to maximize cache hits
+- **Processing Cost**: Context processing has overhead - optimize for production
+- **Validation**: Validate contexts during development, not production
+` : keyword.name === '@id' ? `
+- **IRI Length**: Shorter IRIs reduce document size
+- **Base URIs**: Use @base to shorten relative references
+- **Deduplication**: Same @id enables RDF processors to merge data
+- **Indexing**: IRIs should be designed for efficient database indexing
+- **Resolution**: Dereferenceable IRIs add HTTP overhead
+` : `
+- **Document Size**: ${keyword.name} usage affects JSON-LD document size
+- **Processing Time**: Complex structures require more processing
+- **Caching**: Design for effective caching where possible
+- **Validation**: Validate during development, not in production
+`}

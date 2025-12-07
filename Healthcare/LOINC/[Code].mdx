@@ -1,0 +1,110 @@
+---
+layout: code
+source: LOINC
+$type: LOINC/Code
+$id: https://standards.org.ai/LOINC/Code/{code.num}
+sameAs: https://standards.org.ai/Code/{code.num}
+canonical: https://standards.org.ai/LOINC/Code/{code.num}
+params:
+  - Code
+schema:
+  code:
+    num: LOINC_NUM
+    component: COMPONENT
+    property: PROPERTY
+    timeAspect: TIME_ASPCT
+    system: SYSTEM
+    scaleType: SCALE_TYP
+    method: METHOD_TYP
+    longCommonName: LONG_COMMON_NAME
+    shortName: SHORTNAME
+    status: STATUS
+    class: CLASS
+    consumerName: CONSUMER_NAME
+    exampleUnits: EXAMPLE_UNITS
+    relatedNames: RELATEDNAMES2
+---
+
+# {code.longCommonName}
+
+<LOINCCodeHeader num={code.num} name={code.longCommonName} status={code.status} />
+
+## LOINC Number
+
+{code.num}
+
+## Long Common Name
+
+{code.longCommonName}
+
+## Short Name
+
+{code.shortName}
+
+## Consumer Name
+
+{code.consumerName}
+
+## Component
+
+{code.component}
+
+## Property
+
+{code.property}
+
+## Time Aspect
+
+{code.timeAspect}
+
+## System
+
+{code.system}
+
+## Scale Type
+
+{code.scaleType}
+
+## Method
+
+{code.method}
+
+## Class
+
+{code.class}
+
+## Status
+
+{code.status}
+
+## Example Units
+
+{code.exampleUnits}
+
+## Related Names
+
+{code.relatedNames}
+
+## Panels Containing This Code
+
+<PanelList code={code.num} />
+
+## Answer Lists
+
+<AnswerListByCode code={code.num} />
+
+## Parts
+
+<PartsByCode code={code.num} />
+
+## Mapped SNOMED Concepts
+
+<SNOMEDByLOINC code={code.num} />
+
+## Mapped ICD Codes
+
+<ICDByLOINC code={code.num} />
+
+## Clinical Use Cases
+
+<LOINCClinicalUseCases code={code.num} />

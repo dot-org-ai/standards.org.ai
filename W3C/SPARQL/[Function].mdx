@@ -1,0 +1,277 @@
+---
+layout: function
+source: W3C/SPARQL
+$type: W3C/SPARQL/Function
+$id: https://standards.org.ai/W3C/SPARQL/Function/{function.code}
+sameAs: https://standards.org.ai/Function/{function.code}
+canonical: https://w3.org.ai/SPARQL/Function/{function.code}
+params:
+  - Function
+schema:
+  function:
+    code: string
+    name: string
+    category: string
+    arguments: array
+    returnType: string
+    description: string
+    specification: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Syntax } from '@/components/standards/Syntax'
+import { Description } from '@/components/standards/Description'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { ArgumentTable } from '@/components/standards/ArgumentTable'
+import { RelatedItems } from '@/components/standards/RelatedItems'
+import { SpecificationLink } from '@/components/standards/SpecificationLink'
+import { Metadata } from '@/components/standards/Metadata'
+
+<Header
+  title={function.name}
+  category={function.category}
+  type="SPARQL Built-in Function"
+  standard="W3C SPARQL 1.1"
+/>
+
+<Metadata
+  items={[
+    { label: 'Category', value: function.category },
+    { label: 'Return Type', value: function.returnType },
+    { label: 'Arguments', value: function.arguments.length.toString() },
+    { label: 'Standard', value: 'SPARQL 1.1' },
+    { label: 'Status', value: 'W3C Recommendation' }
+  ]}
+/>
+
+## Syntax
+
+<Syntax language="sparql">
+{`${function.name}(${function.arguments.map(arg => arg.name).join(', ')})`}
+</Syntax>
+
+## Description
+
+<Description>
+{function.description}
+</Description>
+
+## Arguments
+
+<ArgumentTable
+  arguments={function.arguments.map(arg => ({
+    name: arg.name,
+    type: arg.type,
+    required: arg.required !== false,
+    description: arg.description
+  }))}
+/>
+
+## Return Value
+
+**Type**: `{function.returnType}`
+
+Returns {function.returnType === 'xsd:string' ? 'a string value' :
+         function.returnType === 'xsd:boolean' ? 'a boolean value (true/false)' :
+         function.returnType === 'xsd:integer' ? 'an integer value' :
+         function.returnType === 'xsd:decimal' ? 'a decimal number' :
+         function.returnType === 'xsd:dateTime' ? 'a date-time value' :
+         function.returnType === 'IRI' ? 'an IRI (Internationalized Resource Identifier)' :
+         'a value of type ' + function.returnType}.
+
+## Examples
+
+### Basic Usage
+
+<CodeExample language="sparql" title="Basic Example">
+{`# Using ${function.name} to process data
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?item ?result
+WHERE {
+  ?item rdfs:label ?label .
+  BIND(${function.name}(${function.arguments[0]?.type === 'literal' ? '?label' : function.arguments[0]?.type === 'IRI' ? '?item' : '?value'}) AS ?result)
+}
+LIMIT 10`}
+</CodeExample>
+
+### Advanced Usage
+
+<CodeExample language="sparql" title="Advanced Example with Multiple Functions">
+{`# Complex query using ${function.name} with other functions
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?resource ?processed ?combined
+WHERE {
+  ?resource schema:name ?name ;
+            schema:description ?desc .
+
+  # Apply ${function.name} function
+  BIND(${function.name}(${function.arguments[0]?.name || '?name'}) AS ?processed)
+
+  # Combine with other operations
+  BIND(CONCAT(STR(?processed), " - ", SUBSTR(?desc, 1, 50)) AS ?combined)
+
+  ${function.category === 'String' ? 'FILTER(STRLEN(?name) > 3)' :
+    function.category === 'Numeric' ? 'FILTER(?processed > 0)' :
+    function.category === 'DateTime' ? 'FILTER(?processed > NOW())' :
+    'FILTER(BOUND(?processed))'}
+}
+ORDER BY ?processed
+LIMIT 20`}
+</CodeExample>
+
+### Filtering with ${function.name}
+
+<CodeExample language="sparql" title="Using in FILTER Expressions">
+{`# Filter results based on ${function.name} output
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?person ?value
+WHERE {
+  ?person foaf:name ?name ;
+          foaf:${function.category === 'String' ? 'mbox' : function.category === 'Numeric' ? 'age' : 'birthday'} ?value .
+
+  # Filter using ${function.name}
+  FILTER(${function.name}(${function.arguments[0]?.name || '?value'})${function.returnType === 'xsd:boolean' ? '' : function.category === 'String' ? ' = "expected"' : function.category === 'Numeric' ? ' > 10' : ' != ""'})
+}
+ORDER BY ${function.name}(${function.arguments[0]?.name || '?value'})
+LIMIT 25`}
+</CodeExample>
+
+## Use Cases
+
+### Common Patterns
+
+1. **Data Transformation**: {function.category === 'String' ? 'Transform and normalize text values in your RDF data' : function.category === 'Numeric' ? 'Perform mathematical calculations on numeric literals' : function.category === 'DateTime' ? 'Extract and manipulate date/time components' : function.category === 'Hash' ? 'Generate hash values for data integrity' : 'Process and validate data values'}
+
+2. **Query Filtering**: Use {function.name} in FILTER expressions to refine result sets based on {function.category === 'String' ? 'string patterns and comparisons' : function.category === 'Numeric' ? 'numeric calculations' : function.category === 'DateTime' ? 'temporal conditions' : 'specific criteria'}
+
+3. **Result Enrichment**: Enhance query results by deriving new values with {function.name}
+
+4. **Data Validation**: {function.category === 'String' ? 'Validate and clean string data' : function.category === 'Numeric' ? 'Ensure numeric values are within expected ranges' : function.category === 'DateTime' ? 'Verify temporal data consistency' : 'Check data integrity and format'}
+
+### Best Practices
+
+- **Type Safety**: Ensure arguments match expected types ({function.arguments.map(arg => arg.type).join(', ')})
+- **Performance**: {function.category === 'String' ? 'String operations can be expensive; use filters early' : function.category === 'Numeric' ? 'Numeric operations are generally fast; prefer them for filtering' : 'Consider performance implications on large datasets'}
+- **Error Handling**: Check for BOUND variables before applying {function.name}
+- **Null Values**: {function.name} may return error on unbound or incompatible values
+- **Optimization**: Combine with other functions strategically to minimize computation
+
+## Related Functions
+
+<RelatedItems
+  items={[
+    function.category === 'String' ? { type: 'Function', code: 'STRLEN', label: 'STRLEN() - Get string length' } :
+    function.category === 'Numeric' ? { type: 'Function', code: 'ABS', label: 'ABS() - Absolute value' } :
+    function.category === 'DateTime' ? { type: 'Function', code: 'NOW', label: 'NOW() - Current date-time' } :
+    function.category === 'Hash' ? { type: 'Function', code: 'MD5', label: 'MD5() - MD5 hash' } :
+    { type: 'Function', code: 'BOUND', label: 'BOUND() - Test binding' },
+
+    function.category === 'String' ? { type: 'Function', code: 'CONCAT', label: 'CONCAT() - Concatenate strings' } :
+    function.category === 'Numeric' ? { type: 'Function', code: 'ROUND', label: 'ROUND() - Round number' } :
+    function.category === 'DateTime' ? { type: 'Function', code: 'YEAR', label: 'YEAR() - Extract year' } :
+    function.category === 'Hash' ? { type: 'Function', code: 'SHA1', label: 'SHA1() - SHA1 hash' } :
+    { type: 'Function', code: 'STR', label: 'STR() - Convert to string' },
+
+    function.category === 'String' ? { type: 'Function', code: 'UCASE', label: 'UCASE() - Convert to uppercase' } :
+    function.category === 'Numeric' ? { type: 'Function', code: 'CEIL', label: 'CEIL() - Ceiling function' } :
+    function.category === 'DateTime' ? { type: 'Function', code: 'MONTH', label: 'MONTH() - Extract month' } :
+    { type: 'Function', code: 'DATATYPE', label: 'DATATYPE() - Get datatype' },
+
+    { type: 'Keyword', code: 'FILTER', label: 'FILTER - Filter results' },
+    { type: 'Keyword', code: 'BIND', label: 'BIND - Assign variables' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="SPARQL 1.1 Query Language - Built-in Functions"
+  url="https://www.w3.org/TR/sparql11-query/#func-rdfTerms"
+  section={function.specification}
+  organization="W3C"
+/>
+
+### Function Categories in SPARQL 1.1
+
+- **String Functions**: STRLEN, SUBSTR, UCASE, LCASE, STRSTARTS, STRENDS, CONTAINS, CONCAT, ENCODE_FOR_URI, REPLACE
+- **Numeric Functions**: ABS, ROUND, CEIL, FLOOR, RAND
+- **DateTime Functions**: NOW, YEAR, MONTH, DAY, HOURS, MINUTES, SECONDS, TIMEZONE, TZ
+- **Hash Functions**: MD5, SHA1, SHA256, SHA384, SHA512
+- **RDF Term Functions**: isIRI, isBlank, isLiteral, isNumeric, STR, LANG, DATATYPE, IRI, BNODE, STRDT, STRLANG, UUID, STRUUID
+- **Logical Functions**: IF, COALESCE, EXISTS, NOT EXISTS, BOUND, sameTerm
+
+### Additional Resources
+
+- [SPARQL 1.1 Function Reference](https://www.w3.org/TR/sparql11-query/#SparqlOps)
+- [XPath Functions in SPARQL](https://www.w3.org/TR/sparql11-query/#func-xpath)
+- [Custom Functions](https://www.w3.org/TR/sparql11-query/#extensionFunctions)
+
+## Notes
+
+### Type Coercion
+
+{function.category === 'String' ? `
+String functions in SPARQL expect string or literal inputs. If you pass an IRI, use STR() to convert it first:
+\`\`\`sparql
+BIND(${function.name}(STR(?iri)) AS ?result)
+\`\`\`
+` : function.category === 'Numeric' ? `
+Numeric functions require numeric literals (xsd:integer, xsd:decimal, xsd:float, xsd:double). Ensure your data is properly typed:
+\`\`\`sparql
+FILTER(DATATYPE(?value) IN (xsd:integer, xsd:decimal))
+\`\`\`
+` : function.category === 'DateTime' ? `
+DateTime functions work with xsd:dateTime, xsd:date, and xsd:time values. Ensure proper literal typing:
+\`\`\`sparql
+BIND("2024-01-01T00:00:00Z"^^xsd:dateTime AS ?dt)
+\`\`\`
+` : `
+Always verify the data type of arguments passed to ${function.name} to avoid runtime errors.
+`}
+
+### Error Handling
+
+If {function.name} encounters incompatible input types or values, it may:
+- Return an error and eliminate the solution from results
+- Return a special error value
+- Cause the entire query to fail (endpoint-dependent)
+
+Use BOUND() to check variable binding before applying functions:
+```sparql
+FILTER(BOUND(?var) && ${function.name}(?var) ${function.returnType === 'xsd:boolean' ? '' : '!= ""'})
+```
+
+### Performance Considerations
+
+{function.category === 'String' ? `
+String functions can be computationally expensive, especially on large datasets. Consider:
+- Applying FILTER conditions before string operations
+- Using indexes if your SPARQL endpoint supports them
+- Limiting result sets before applying string transformations
+` : function.category === 'Numeric' ? `
+Numeric operations are generally fast and efficient. However:
+- Avoid unnecessary conversions between numeric types
+- Use appropriate data types in your RDF data
+- Consider pre-computing values if used repeatedly
+` : function.category === 'Hash' ? `
+Hash functions are cryptographically secure but computationally intensive:
+- Cache results when possible
+- Use simpler functions if cryptographic security isn't needed
+- Consider the trade-off between hash quality and performance
+` : `
+Function evaluation occurs for each solution:
+- Minimize function calls in tight loops
+- Use BIND to store computed values
+- Filter data early to reduce function applications
+`}
+
+### Browser Compatibility
+
+SPARQL functions execute server-side on SPARQL endpoints. JavaScript libraries can construct queries but don't affect function execution.

@@ -1,0 +1,502 @@
+---
+layout: restriction
+source: W3C/OWL
+$type: W3C/OWL/Restriction
+$id: https://standards.org.ai/W3C/OWL/Restriction/{Restriction.code}
+sameAs: https://standards.org.ai/Restriction/{Restriction.code}
+canonical: https://w3.org.ai/OWL/Restriction/{Restriction.code}
+params:
+  - Restriction
+schema:
+  Restriction:
+    code: string
+    type: string
+    onProperty: string
+    cardinality: number
+    minCardinality: number
+    maxCardinality: number
+    allValuesFrom: string
+    someValuesFrom: string
+    hasValue: string
+    onClass: string
+---
+
+import { RestrictionHeader } from '@/components/semantic-web/RestrictionHeader'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<RestrictionHeader
+  type={Restriction.type}
+  onProperty={Restriction.onProperty}
+/>
+
+## Description
+
+This defines an **OWL restriction** (also known as a class expression or anonymous class), which places constraints on property values for instances of a class. Restrictions are fundamental to expressing complex class definitions in OWL ontologies.
+
+## Restriction Type
+
+{Restriction.type === 'universal' && (
+  <div className="bg-blue-50 p-4 rounded">
+    <h3>Universal Restriction (allValuesFrom)</h3>
+    <p><strong>Constraint</strong>: All values of the property must be of the specified type.</p>
+    <p><strong>Semantics</strong>: If an individual has any value for this property, all such values must satisfy the constraint.</p>
+  </div>
+)}
+
+{Restriction.type === 'existential' && (
+  <div className="bg-green-50 p-4 rounded">
+    <h3>Existential Restriction (someValuesFrom)</h3>
+    <p><strong>Constraint</strong>: At least one value of the property must be of the specified type.</p>
+    <p><strong>Semantics</strong>: The individual must have at least one property value that satisfies the constraint.</p>
+  </div>
+)}
+
+{Restriction.type === 'cardinality' && (
+  <div className="bg-purple-50 p-4 rounded">
+    <h3>Cardinality Restriction</h3>
+    <p><strong>Constraint</strong>: The property must have exactly {Restriction.cardinality} value(s).</p>
+    <p><strong>Semantics</strong>: Restricts the number of distinct values the property can have.</p>
+  </div>
+)}
+
+{Restriction.type === 'minCardinality' && (
+  <div className="bg-yellow-50 p-4 rounded">
+    <h3>Minimum Cardinality Restriction</h3>
+    <p><strong>Constraint</strong>: The property must have at least {Restriction.minCardinality} value(s).</p>
+    <p><strong>Semantics</strong>: Sets a lower bound on the number of property values.</p>
+  </div>
+)}
+
+{Restriction.type === 'maxCardinality' && (
+  <div className="bg-orange-50 p-4 rounded">
+    <h3>Maximum Cardinality Restriction</h3>
+    <p><strong>Constraint</strong>: The property must have at most {Restriction.maxCardinality} value(s).</p>
+    <p><strong>Semantics</strong>: Sets an upper bound on the number of property values.</p>
+  </div>
+)}
+
+{Restriction.type === 'hasValue' && (
+  <div className="bg-red-50 p-4 rounded">
+    <h3>Value Restriction (hasValue)</h3>
+    <p><strong>Constraint</strong>: The property must have the specific value {Restriction.hasValue}.</p>
+    <p><strong>Semantics</strong>: Defines class membership based on having a particular property value.</p>
+  </div>
+)}
+
+{Restriction.type === 'qualifiedCardinality' && (
+  <div className="bg-indigo-50 p-4 rounded">
+    <h3>Qualified Cardinality Restriction</h3>
+    <p><strong>Constraint</strong>: The property must have exactly {Restriction.cardinality} value(s) of type {Restriction.onClass}.</p>
+    <p><strong>Semantics</strong>: Like cardinality but only counts values of a specific class.</p>
+  </div>
+)}
+
+## Restriction Details
+
+### Property
+
+This restriction applies to property: **`{Restriction.onProperty}`**
+
+### Constraints
+
+{Restriction.allValuesFrom && (
+  <p><strong>All Values From</strong>: <code>{Restriction.allValuesFrom}</code></p>
+)}
+
+{Restriction.someValuesFrom && (
+  <p><strong>Some Values From</strong>: <code>{Restriction.someValuesFrom}</code></p>
+)}
+
+{Restriction.hasValue && (
+  <p><strong>Has Value</strong>: <code>{Restriction.hasValue}</code></p>
+)}
+
+{Restriction.cardinality !== undefined && (
+  <p><strong>Cardinality</strong>: {Restriction.cardinality}</p>
+)}
+
+{Restriction.minCardinality !== undefined && (
+  <p><strong>Minimum Cardinality</strong>: {Restriction.minCardinality}</p>
+)}
+
+{Restriction.maxCardinality !== undefined && (
+  <p><strong>Maximum Cardinality</strong>: {Restriction.maxCardinality}</p>
+)}
+
+{Restriction.onClass && (
+  <p><strong>On Class</strong> (for qualified restrictions): <code>{Restriction.onClass}</code></p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Universal Restriction (allValuesFrom)
+
+```turtle
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+# Class definition with universal restriction
+ex:VegetarianPizza a owl:Class ;
+    rdfs:subClassOf ex:Pizza ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasTopping ;
+        owl:allValuesFrom ex:VegetarianTopping
+    ] .
+
+# All toppings must be vegetarian
+ex:margherita a ex:VegetarianPizza ;
+    ex:hasTopping ex:mozzarella ,
+                  ex:tomato ,
+                  ex:basil .
+
+# Invalid: would violate restriction
+# ex:notVegetarian a ex:VegetarianPizza ;
+#     ex:hasTopping ex:pepperoni .  # Not a VegetarianTopping
+```
+
+### Existential Restriction (someValuesFrom)
+
+```turtle
+# Class definition with existential restriction
+ex:InterestingPizza a owl:Class ;
+    rdfs:subClassOf ex:Pizza ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasTopping ;
+        owl:someValuesFrom ex:SpecialTopping
+    ] .
+
+# Must have at least one special topping
+ex:gourmet a ex:InterestingPizza ;
+    ex:hasTopping ex:truffle ,      # SpecialTopping
+                  ex:mozzarella ,   # Regular topping
+                  ex:tomato .       # Regular topping
+```
+
+### Cardinality Restriction
+
+```turtle
+# Exactly N values
+ex:Triangle a owl:Class ;
+    rdfs:subClassOf ex:Polygon ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasVertex ;
+        owl:cardinality 3
+    ] .
+
+# Valid: exactly 3 vertices
+ex:myTriangle a ex:Triangle ;
+    ex:hasVertex ex:v1 , ex:v2 , ex:v3 .
+```
+
+### Minimum Cardinality
+
+```turtle
+# At least N values
+ex:ValidCommittee a owl:Class ;
+    rdfs:subClassOf ex:Committee ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasMember ;
+        owl:minCardinality 3
+    ] .
+
+# Valid: 3 or more members
+ex:committee1 a ex:ValidCommittee ;
+    ex:hasMember ex:person1 ,
+                 ex:person2 ,
+                 ex:person3 ,
+                 ex:person4 .
+```
+
+### Maximum Cardinality
+
+```turtle
+# At most N values
+ex:MonogamousMarriage a owl:Class ;
+    rdfs:subClassOf ex:Marriage ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasSpouse ;
+        owl:maxCardinality 2
+    ] .
+
+# Valid: 1 or 2 spouses
+ex:marriage1 a ex:MonogamousMarriage ;
+    ex:hasSpouse ex:person1 , ex:person2 .
+```
+
+### Range Restriction (min + max)
+
+```turtle
+# Between N and M values
+ex:BasketballTeam a owl:Class ;
+    rdfs:subClassOf ex:Team ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPlayer ;
+        owl:minCardinality 5
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasPlayer ;
+        owl:maxCardinality 15
+    ] .
+```
+
+### Value Restriction (hasValue)
+
+```turtle
+# Has specific value
+ex:ItalianCitizen a owl:Class ;
+    rdfs:subClassOf ex:Person ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasCitizenship ;
+        owl:hasValue ex:Italy
+    ] .
+
+# Automatically an ItalianCitizen
+ex:mario a ex:Person ;
+    ex:hasCitizenship ex:Italy .
+```
+
+### Qualified Cardinality
+
+```turtle
+# OWL 2 qualified cardinality
+ex:TwoChildFamily a owl:Class ;
+    rdfs:subClassOf ex:Family ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasMember ;
+        owl:qualifiedCardinality 2 ;
+        owl:onClass ex:Child
+    ] .
+
+# Valid: exactly 2 children
+ex:family1 a ex:TwoChildFamily ;
+    ex:hasMember ex:parent1 ,  # Not counted (not a Child)
+                 ex:parent2 ,  # Not counted
+                 ex:child1 ,   # Counted
+                 ex:child2 .   # Counted
+```
+
+### Complex Restrictions
+
+```turtle
+# Multiple restrictions combined
+ex:LuxuryCar a owl:Class ;
+    rdfs:subClassOf ex:Car ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasFeature ;
+        owl:someValuesFrom ex:LeatherSeats
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:hasFeature ;
+        owl:someValuesFrom ex:SunRoof
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ex:price ;
+        owl:someValuesFrom [
+            a rdfs:Datatype ;
+            owl:onDatatype xsd:decimal ;
+            owl:withRestrictions ([xsd:minInclusive 50000])
+        ]
+    ] .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xmlns:ex="http://example.org/">
+  <owl:Class rdf:about="http://example.org/VegetarianPizza">
+    <rdfs:subClassOf>
+      <owl:Restriction>
+        <owl:onProperty rdf:resource="http://example.org/hasTopping"/>
+        <owl:allValuesFrom rdf:resource="http://example.org/VegetarianTopping"/>
+      </owl:Restriction>
+    </rdfs:subClassOf>
+  </owl:Class>
+</rdf:RDF>
+```
+
+### SPARQL Queries
+
+```sparql
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Find all classes with restrictions on a property
+SELECT ?class ?restriction
+WHERE {
+  ?class rdfs:subClassOf ?restriction .
+  ?restriction a owl:Restriction ;
+               owl:onProperty {Restriction.onProperty} .
+}
+
+# Find all restriction types
+SELECT ?class ?restrictionType ?value
+WHERE {
+  ?class rdfs:subClassOf ?restriction .
+  ?restriction a owl:Restriction ;
+               owl:onProperty {Restriction.onProperty} ;
+               ?restrictionType ?value .
+  FILTER(?restrictionType IN (owl:allValuesFrom, owl:someValuesFrom,
+                               owl:hasValue, owl:cardinality))
+}
+
+# Validate instances against cardinality
+SELECT ?instance (COUNT(?value) AS ?count)
+WHERE {
+  ?instance a ?class .
+  ?class rdfs:subClassOf ?restriction .
+  ?restriction owl:onProperty ?prop ;
+               owl:minCardinality ?min .
+  OPTIONAL { ?instance ?prop ?value }
+}
+GROUP BY ?instance
+HAVING (COUNT(?value) < ?min)
+```
+
+</UsageExamples>
+
+## Reasoning and Inference
+
+### Universal Restriction Semantics
+
+For `allValuesFrom`:
+- If individual has NO values for the property, the restriction is satisfied
+- If individual has values, ALL must be of the specified type
+
+```turtle
+# Empty property satisfies universal restriction
+ex:pizza a ex:VegetarianPizza .
+# No hasTopping values = valid (vacuously true)
+```
+
+### Existential Restriction Semantics
+
+For `someValuesFrom`:
+- Individual MUST have at least one value of the specified type
+- Having zero values violates the restriction
+
+### Cardinality Reasoning
+
+Reasoners can:
+1. Check consistency (e.g., cardinality violations)
+2. Infer class membership based on property counts
+3. Merge individuals when cardinality is 1 and values differ
+
+## Description Logic
+
+Restrictions can be expressed in Description Logic notation:
+
+- **Universal**: `∀hasTopping.VegetarianTopping`
+- **Existential**: `∃hasTopping.SpecialTopping`
+- **Cardinality**: `=3 hasVertex`
+- **Min Cardinality**: `≥5 hasPlayer`
+- **Max Cardinality**: `≤15 hasPlayer`
+- **Has Value**: `∃hasCitizenship.{Italy}`
+
+## Best Practices
+
+1. **Universal vs Existential**: Choose carefully
+   - Use `allValuesFrom` when all values must conform
+   - Use `someValuesFrom` when at least one value must conform
+
+2. **Open World Assumption**: Remember OWL operates under OWA
+   - Absence of information ≠ false
+   - `allValuesFrom` with no values is satisfied
+
+3. **Cardinality and Equality**: Be aware of unique name assumption
+   - OWL doesn't assume different URIs = different individuals
+   - Use `owl:differentFrom` or functional properties
+
+4. **Qualified Cardinality**: Use OWL 2 for type-specific counting
+
+5. **Performance**: Complex restrictions can slow reasoning
+   - Consider materialization
+   - Use OWL 2 profiles (EL, QL, RL) when appropriate
+
+6. **Validation**: Use reasoners to check consistency
+   - Unsatisfiable classes
+   - Individuals violating restrictions
+
+## Common Patterns
+
+### Property Chain with Restriction
+
+```turtle
+ex:hasGrandparent owl:propertyChainAxiom (ex:hasParent ex:hasParent) .
+
+ex:PersonWithGrandparents a owl:Class ;
+    rdfs:subClassOf [
+        owl:onProperty ex:hasGrandparent ;
+        owl:minCardinality 1
+    ] .
+```
+
+### Enumeration with hasValue
+
+```turtle
+ex:PrimaryColor a owl:Class ;
+    owl:unionOf (
+        [owl:onProperty ex:isColor ; owl:hasValue ex:Red]
+        [owl:onProperty ex:isColor ; owl:hasValue ex:Blue]
+        [owl:onProperty ex:isColor ; owl:hasValue ex:Yellow]
+    ) .
+```
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/2002/07/owl#Restriction', label: 'owl:Restriction' },
+    { uri: 'http://www.w3.org/2002/07/owl#onProperty', label: 'owl:onProperty' },
+    { uri: 'http://www.w3.org/2002/07/owl#allValuesFrom', label: 'owl:allValuesFrom' },
+    { uri: 'http://www.w3.org/2002/07/owl#someValuesFrom', label: 'owl:someValuesFrom' },
+    { uri: 'http://www.w3.org/2002/07/owl#cardinality', label: 'owl:cardinality' },
+    { uri: 'http://www.w3.org/2002/07/owl#hasValue', label: 'owl:hasValue' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="OWL 2 Web Ontology Language Structural Specification and Functional-Style Syntax"
+  url="https://www.w3.org/TR/owl2-syntax/"
+  section="class-expressions"
+/>
+
+### Normative References
+
+- [OWL 2 Web Ontology Language Primer - Property Restrictions](https://www.w3.org/TR/owl2-primer/#Property_Restrictions)
+- [OWL 2 Web Ontology Language Direct Semantics - Class Expressions](https://www.w3.org/TR/owl2-direct-semantics/#Class_Expressions)
+- [OWL 2 Web Ontology Language Profiles](https://www.w3.org/TR/owl2-profiles/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/2002/07/owl#`
+- **Status**: W3C Recommendation
+- **Version**: OWL 2
+- **OWL 2 Profiles**: Check compatibility with EL, QL, RL
+
+## Additional Resources
+
+- [OWL 2 Primer - Restrictions](https://www.w3.org/TR/owl2-primer/#Property_Restrictions)
+- [A Semantic Web Primer (Book)](http://www.semanticwebprimer.org/)
+- [Protégé Documentation on Restrictions](https://protege.stanford.edu/)

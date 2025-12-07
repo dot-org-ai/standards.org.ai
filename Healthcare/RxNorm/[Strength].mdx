@@ -1,0 +1,73 @@
+---
+layout: strength
+source: Healthcare/RxNorm
+$type: Healthcare/RxNorm/Strength
+$id: https://standards.org.ai/Healthcare/RxNorm/Strength/{strength.code}
+sameAs: https://standards.org.ai/DrugStrength/{strength.code}
+canonical: https://standards.org.ai/RxNorm/Strength/{strength.code}
+params:
+  - Strength
+schema:
+  strength:
+    code: string
+    rxcui: string
+    name: string
+    numeratorValue: number
+    numeratorUnit: string
+    denominatorValue: number
+    denominatorUnit: string
+    ingredient: string
+    form: string
+---
+
+# {strength.name}
+
+<StrengthHeader rxcui={strength.rxcui} name={strength.name} />
+
+## RxCUI
+
+**{strength.rxcui}**
+
+## Strength Details
+
+<div className="strength-details">
+  <div className="name">
+    <strong>Strength:</strong> {strength.name}
+  </div>
+  {strength.numeratorValue && strength.numeratorUnit && (
+    <div className="numerator">
+      <strong>Numerator:</strong> {strength.numeratorValue} {strength.numeratorUnit}
+    </div>
+  )}
+  {strength.denominatorValue && strength.denominatorUnit && (
+    <div className="denominator">
+      <strong>Denominator:</strong> {strength.denominatorValue} {strength.denominatorUnit}
+    </div>
+  )}
+</div>
+
+{strength.ingredient && (
+  <section className="ingredient">
+    <h2>Active Ingredient</h2>
+    <IngredientLink code={strength.ingredient} />
+  </section>
+)}
+
+{strength.form && (
+  <section className="dose-form">
+    <h2>Dose Form</h2>
+    <FormLink code={strength.form} />
+  </section>
+)}
+
+## Products with This Strength
+
+<ProductsByStrength rxcui={strength.rxcui} />
+
+## Alternative Strengths
+
+<AlternativeStrengths ingredient={strength.ingredient} form={strength.form} current={strength.rxcui} />
+
+## Conversion Information
+
+<StrengthConversions rxcui={strength.rxcui} />

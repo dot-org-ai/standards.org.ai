@@ -1,0 +1,423 @@
+---
+layout: aggregate
+source: W3C/SPARQL
+$type: W3C/SPARQL/Aggregate
+$id: https://standards.org.ai/W3C/SPARQL/Aggregate/{aggregate.code}
+sameAs: https://standards.org.ai/Aggregate/{aggregate.code}
+canonical: https://w3.org.ai/SPARQL/Aggregate/{aggregate.code}
+params:
+  - Aggregate
+schema:
+  aggregate:
+    code: string
+    name: string
+    arguments: array
+    returnType: string
+    description: string
+    specification: string
+---
+
+import { Header } from '@/components/standards/Header'
+import { Syntax } from '@/components/standards/Syntax'
+import { Description } from '@/components/standards/Description'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { ArgumentTable } from '@/components/standards/ArgumentTable'
+import { RelatedItems } from '@/components/standards/RelatedItems'
+import { SpecificationLink } from '@/components/standards/SpecificationLink'
+import { Metadata } from '@/components/standards/Metadata'
+import { Alert } from '@/components/standards/Alert'
+
+<Header
+  title={aggregate.name}
+  category="Aggregate Function"
+  type="SPARQL Aggregation"
+  standard="W3C SPARQL 1.1"
+/>
+
+<Metadata
+  items={[
+    { label: 'Category', value: 'Aggregate Function' },
+    { label: 'Return Type', value: aggregate.returnType },
+    { label: 'Arguments', value: aggregate.arguments.length.toString() },
+    { label: 'Requires GROUP BY', value: 'Yes' },
+    { label: 'Standard', value: 'SPARQL 1.1' },
+    { label: 'Status', value: 'W3C Recommendation' }
+  ]}
+/>
+
+## Syntax
+
+<Syntax language="sparql">
+{`${aggregate.name}(${aggregate.arguments.map(arg => arg.name).join(', ')})`}
+</Syntax>
+
+<Alert type="info">
+Aggregate functions like {aggregate.name} must be used with GROUP BY clause or in conjunction with other aggregates in the SELECT clause.
+</Alert>
+
+## Description
+
+<Description>
+{aggregate.description}
+
+Aggregate functions in SPARQL operate on groups of solutions to produce a single aggregated value per group. The {aggregate.name} function is particularly useful for {aggregate.name === 'COUNT' ? 'counting the number of items in each group' : aggregate.name === 'SUM' ? 'calculating the total sum of numeric values' : aggregate.name === 'AVG' ? 'computing the average of numeric values' : aggregate.name === 'MIN' ? 'finding the minimum value in each group' : aggregate.name === 'MAX' ? 'finding the maximum value in each group' : aggregate.name === 'GROUP_CONCAT' ? 'concatenating string values into a single result' : aggregate.name === 'SAMPLE' ? 'selecting an arbitrary value from the group' : 'processing grouped data'}.
+</Description>
+
+## Arguments
+
+<ArgumentTable
+  arguments={aggregate.arguments.map(arg => ({
+    name: arg.name,
+    type: arg.type,
+    required: arg.required !== false,
+    description: arg.description
+  }))}
+/>
+
+## Return Value
+
+**Type**: `{aggregate.returnType}`
+
+Returns {aggregate.returnType === 'xsd:integer' ? 'an integer representing the aggregated count' :
+         aggregate.returnType === 'xsd:decimal' || aggregate.returnType === 'numeric' ? 'a numeric value from the aggregation' :
+         aggregate.returnType === 'xsd:string' ? 'a string containing the concatenated values' :
+         aggregate.returnType === 'any' ? 'a value with the same type as the input expression' :
+         'an aggregated value'}.
+
+## Examples
+
+### Basic Aggregation
+
+<CodeExample language="sparql" title="Simple GROUP BY with {aggregate.name}">
+{`# Count items by category using ${aggregate.name}
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?type (${aggregate.name}(${aggregate.arguments[0]?.name === 'DISTINCT ?x' ? 'DISTINCT ?item' : aggregate.arguments[0]?.name || '?item'}) AS ?${aggregate.name === 'COUNT' ? 'count' : aggregate.name === 'SUM' ? 'total' : aggregate.name === 'AVG' ? 'average' : aggregate.name === 'MIN' ? 'minimum' : aggregate.name === 'MAX' ? 'maximum' : aggregate.name === 'GROUP_CONCAT' ? 'concatenated' : 'result'})
+WHERE {
+  ?item rdf:type ?type ${aggregate.name === 'SUM' || aggregate.name === 'AVG' || aggregate.name === 'MIN' || aggregate.name === 'MAX' ? `;
+        schema:price ?price` : ''} .
+}
+GROUP BY ?type
+ORDER BY DESC(?${aggregate.name === 'COUNT' ? 'count' : aggregate.name === 'SUM' ? 'total' : aggregate.name === 'AVG' ? 'average' : aggregate.name === 'MIN' ? 'minimum' : aggregate.name === 'MAX' ? 'maximum' : 'result'})
+LIMIT 20`}
+</CodeExample>
+
+### Advanced Aggregation
+
+<CodeExample language="sparql" title="Multiple Aggregates with HAVING">
+{`# Complex aggregation with multiple functions
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+PREFIX schema: <http://schema.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?category
+       (${aggregate.name}(${aggregate.arguments[0]?.name || '?value'}) AS ?agg_result)
+       (COUNT(?item) AS ?item_count)
+       ${aggregate.name !== 'AVG' ? '(AVG(?value) AS ?avg_value)' : ''}
+WHERE {
+  ?item schema:category ?category ${aggregate.name === 'COUNT' && aggregate.arguments[0]?.name === 'DISTINCT ?x' ? '' : `;
+        schema:value ?value`} .
+
+  # Filter items within date range
+  ?item schema:datePublished ?date .
+  FILTER(?date >= "2024-01-01"^^xsd:date && ?date <= "2024-12-31"^^xsd:date)
+}
+GROUP BY ?category
+HAVING(${aggregate.name}(${aggregate.arguments[0]?.name || '?value'}) > ${aggregate.name === 'COUNT' ? '10' : aggregate.name === 'SUM' ? '1000' : aggregate.name === 'AVG' ? '50' : '0'})
+ORDER BY DESC(?agg_result)
+LIMIT 25`}
+</CodeExample>
+
+### With DISTINCT Modifier
+
+<CodeExample language="sparql" title="Using DISTINCT with {aggregate.name}">
+{`# Use DISTINCT to eliminate duplicates before aggregation
+PREFIX dc: <http://purl.org/dc/elements/1.1/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?publisher (${aggregate.name}(DISTINCT ${aggregate.arguments[0]?.type === 'expression' ? '?author' : aggregate.name === 'COUNT' ? '?book' : '?value'}) AS ?${aggregate.name === 'COUNT' ? 'unique_count' : 'distinct_result'})
+WHERE {
+  ?book dc:publisher ?publisher ${aggregate.name !== 'COUNT' ? `;
+        dc:creator ?author` : ''} ${aggregate.name === 'SUM' || aggregate.name === 'AVG' || aggregate.name === 'MIN' || aggregate.name === 'MAX' ? `;
+        schema:numberOfPages ?value` : ''} .
+}
+GROUP BY ?publisher
+HAVING(${aggregate.name}(DISTINCT ${aggregate.arguments[0]?.type === 'expression' ? '?author' : '?book'}) >= 5)
+ORDER BY DESC(?${aggregate.name === 'COUNT' ? 'unique_count' : 'distinct_result'})`}
+</CodeExample>
+
+### Nested Aggregation with Subqueries
+
+<CodeExample language="sparql" title="Subquery with {aggregate.name}">
+{`# Use ${aggregate.name} in subquery for complex analysis
+PREFIX schema: <http://schema.org/>
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?category ?${aggregate.name === 'COUNT' ? 'total_count' : 'agg_value'} ?percentage
+WHERE {
+  {
+    SELECT ?category (${aggregate.name}(${aggregate.arguments[0]?.name || '?item'}) AS ?${aggregate.name === 'COUNT' ? 'total_count' : 'agg_value'})
+    WHERE {
+      ?item schema:category ?category ${aggregate.name !== 'COUNT' ? `;
+            schema:value ?value` : ''} .
+    }
+    GROUP BY ?category
+  }
+
+  {
+    SELECT (${aggregate.name}(${aggregate.arguments[0]?.name || '?item'}) AS ?grand_total)
+    WHERE {
+      ?item a schema:Thing ${aggregate.name !== 'COUNT' ? `;
+            schema:value ?value` : ''} .
+    }
+  }
+
+  BIND((?${aggregate.name === 'COUNT' ? 'total_count' : 'agg_value'} / ?grand_total * 100) AS ?percentage)
+}
+ORDER BY DESC(?percentage)`}
+</CodeExample>
+
+## Use Cases
+
+### Statistical Analysis
+
+{aggregate.name} is ideal for:
+
+1. **Data Summarization**: {aggregate.name === 'COUNT' ? 'Count the number of resources, distinct values, or occurrences' : aggregate.name === 'SUM' ? 'Calculate total amounts, quantities, or cumulative values' : aggregate.name === 'AVG' ? 'Compute mean values for metrics and measurements' : aggregate.name === 'MIN' ? 'Find minimum values for comparisons and thresholds' : aggregate.name === 'MAX' ? 'Identify maximum values for limits and extremes' : aggregate.name === 'GROUP_CONCAT' ? 'Combine multiple values into comma-separated or custom-delimited lists' : 'Extract sample values from groups'}
+
+2. **Reporting**: Generate summary reports with grouped statistics
+
+3. **Analytics**: {aggregate.name === 'COUNT' ? 'Distribution analysis and frequency counting' : aggregate.name === 'SUM' ? 'Total calculations and cumulative metrics' : aggregate.name === 'AVG' ? 'Trend analysis and average computations' : aggregate.name === 'MIN' || aggregate.name === 'MAX' ? 'Range analysis and outlier detection' : aggregate.name === 'GROUP_CONCAT' ? 'Data consolidation and list creation' : 'Data sampling and representative value selection'}
+
+4. **Dashboard Metrics**: Power real-time dashboards with aggregated KPIs
+
+### Integration Patterns
+
+```sparql
+# Combine ${aggregate.name} with other query features
+PREFIX ex: <http://example.org/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT ?group
+       (${aggregate.name}(${aggregate.arguments[0]?.name || '?value'}) AS ?aggregate)
+       (COUNT(*) AS ?count)
+WHERE {
+  ?item ex:group ?group ;
+        ex:value ?value ;
+        ex:status "active" .
+
+  # Use OPTIONAL for flexible grouping
+  OPTIONAL { ?item ex:priority ?priority }
+
+  FILTER(?value > 0)
+}
+GROUP BY ?group
+HAVING(COUNT(*) > 5)
+ORDER BY DESC(?aggregate)
+```
+
+## Best Practices
+
+### Performance Optimization
+
+1. **Filter Before Grouping**: Apply WHERE filters before GROUP BY to reduce data volume
+   ```sparql
+   WHERE {
+     ?item ex:category ?cat .
+     FILTER(?cat IN ("CategoryA", "CategoryB"))  # Filter early
+   }
+   GROUP BY ?cat
+   ```
+
+2. **Use DISTINCT Wisely**: {aggregate.name === 'COUNT' ? 'DISTINCT can be expensive; use only when duplicate elimination is needed' : 'Apply DISTINCT only when necessary for your use case'}
+
+3. **Index Utilization**: Structure queries to leverage SPARQL endpoint indexes
+
+4. **Limit Result Sets**: Use LIMIT to restrict results for better performance
+
+### Error Handling
+
+- **Null Values**: {aggregate.name} {aggregate.name === 'COUNT' ? 'counts all non-null values' : 'ignores unbound values in calculations'}
+- **Type Compatibility**: {aggregate.name === 'SUM' || aggregate.name === 'AVG' || aggregate.name === 'MIN' || aggregate.name === 'MAX' ? 'Ensure values are numeric or comparable' : aggregate.name === 'GROUP_CONCAT' ? 'Works with any RDF term, converts to strings' : 'Verify input types match expected types'}
+- **Empty Groups**: {aggregate.name === 'COUNT' ? 'Returns 0 for empty groups' : aggregate.name === 'SUM' ? 'Returns 0 for empty numeric groups' : aggregate.name === 'AVG' ? 'Returns no value for empty groups' : aggregate.name === 'GROUP_CONCAT' ? 'Returns empty string for empty groups' : 'Returns no value for empty groups'}
+
+### Query Patterns
+
+```sparql
+# Pattern: Multiple aggregates for comprehensive analysis
+SELECT ?category
+       (COUNT(?item) AS ?count)
+       (${aggregate.name}(${aggregate.arguments[0]?.name || '?value'}) AS ?${aggregate.name.toLowerCase()})
+       (MIN(?date) AS ?first_seen)
+       (MAX(?date) AS ?last_seen)
+WHERE {
+  ?item ex:category ?category ;
+        ex:date ?date ${aggregate.name !== 'COUNT' ? `;
+        ex:value ?value` : ''} .
+}
+GROUP BY ?category
+```
+
+## Related Functions
+
+<RelatedItems
+  items={[
+    aggregate.name !== 'COUNT' ? { type: 'Aggregate', code: 'COUNT', label: 'COUNT() - Count values' } : { type: 'Aggregate', code: 'SUM', label: 'SUM() - Sum values' },
+    aggregate.name !== 'SUM' ? { type: 'Aggregate', code: 'SUM', label: 'SUM() - Sum values' } : { type: 'Aggregate', code: 'AVG', label: 'AVG() - Average values' },
+    aggregate.name !== 'AVG' ? { type: 'Aggregate', code: 'AVG', label: 'AVG() - Average values' } : { type: 'Aggregate', code: 'MIN', label: 'MIN() - Minimum value' },
+    aggregate.name !== 'MIN' ? { type: 'Aggregate', code: 'MIN', label: 'MIN() - Minimum value' } : { type: 'Aggregate', code: 'MAX', label: 'MAX() - Maximum value' },
+    aggregate.name !== 'MAX' ? { type: 'Aggregate', code: 'MAX', label: 'MAX() - Maximum value' } : { type: 'Aggregate', code: 'GROUP_CONCAT', label: 'GROUP_CONCAT() - Concatenate values' },
+    { type: 'Keyword', code: 'GROUP_BY', label: 'GROUP BY - Group solutions' },
+    { type: 'Keyword', code: 'HAVING', label: 'HAVING - Filter groups' },
+    { type: 'Function', code: 'BOUND', label: 'BOUND() - Test binding' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="SPARQL 1.1 Query Language - Aggregate Functions"
+  url="https://www.w3.org/TR/sparql11-query/#aggregates"
+  section={aggregate.specification}
+  organization="W3C"
+/>
+
+### Aggregate Function Reference
+
+All SPARQL 1.1 aggregate functions:
+
+- **COUNT**: Count the number of values in a group
+- **SUM**: Calculate the sum of numeric values
+- **AVG**: Compute the arithmetic mean
+- **MIN**: Find the minimum value
+- **MAX**: Find the maximum value
+- **GROUP_CONCAT**: Concatenate string values with optional separator
+- **SAMPLE**: Select an arbitrary value from the group
+
+### Additional Resources
+
+- [SPARQL 1.1 Aggregates Specification](https://www.w3.org/TR/sparql11-query/#aggregates)
+- [GROUP BY Semantics](https://www.w3.org/TR/sparql11-query/#groupby)
+- [HAVING Clause](https://www.w3.org/TR/sparql11-query/#having)
+- [Aggregate Error Handling](https://www.w3.org/TR/sparql11-query/#aggregateAlgebra)
+
+## Notes
+
+### Grouping Requirements
+
+{aggregate.name} must be used in one of these contexts:
+
+1. **With GROUP BY**: Most common pattern
+   ```sparql
+   SELECT ?group (${aggregate.name}(?var) AS ?agg)
+   WHERE { ?s ?p ?var ; ex:group ?group }
+   GROUP BY ?group
+   ```
+
+2. **Global Aggregation**: Without GROUP BY for entire result set
+   ```sparql
+   SELECT (${aggregate.name}(?var) AS ?agg)
+   WHERE { ?s ?p ?var }
+   ```
+
+3. **In Subqueries**: Nested aggregation for complex queries
+
+### Variable Scope
+
+- Variables in aggregate expressions must be:
+  - Grouped variables (in GROUP BY)
+  - Bound in the group graph pattern
+  - Other aggregate expressions
+
+```sparql
+# Valid: ?category is grouped, ?value is aggregated
+SELECT ?category (${aggregate.name}(?value) AS ?result)
+GROUP BY ?category
+
+# Invalid: ?other_var not grouped or aggregated
+# SELECT ?category ?other_var (${aggregate.name}(?value) AS ?result)
+```
+
+### {aggregate.name === 'GROUP_CONCAT' ? 'Separator Configuration' : 'Special Considerations'}
+
+{aggregate.name === 'GROUP_CONCAT' ? `
+GROUP_CONCAT accepts an optional SEPARATOR parameter:
+
+\`\`\`sparql
+# Default separator is space " "
+(GROUP_CONCAT(?name) AS ?names)
+
+# Custom separator
+(GROUP_CONCAT(?name; SEPARATOR=", ") AS ?names)
+
+# Multi-character separator
+(GROUP_CONCAT(?name; SEPARATOR=" | ") AS ?names)
+\`\`\`
+
+The DISTINCT keyword can be combined with SEPARATOR:
+\`\`\`sparql
+(GROUP_CONCAT(DISTINCT ?name; SEPARATOR=", ") AS ?unique_names)
+\`\`\`
+` : aggregate.name === 'COUNT' ? `
+COUNT has special behavior:
+
+\`\`\`sparql
+# Count all solutions (including duplicates)
+(COUNT(*) AS ?total)
+
+# Count non-null values
+(COUNT(?var) AS ?count)
+
+# Count distinct values
+(COUNT(DISTINCT ?var) AS ?unique_count)
+\`\`\`
+
+COUNT(*) is the only aggregate that counts all solutions regardless of variable binding.
+` : aggregate.name === 'SAMPLE' ? `
+SAMPLE returns an arbitrary value from the group:
+
+- The selected value is non-deterministic
+- Useful when any value from the group is acceptable
+- Often combined with GROUP BY for representative sampling
+- Result may vary between query executions
+
+\`\`\`sparql
+# Get one arbitrary name per category
+SELECT ?category (SAMPLE(?name) AS ?example_name)
+WHERE { ?item ex:category ?category ; ex:name ?name }
+GROUP BY ?category
+\`\`\`
+` : `
+${aggregate.name} operates on {aggregate.returnType === 'numeric' ? 'numeric values only. Non-numeric values cause errors' : 'values of appropriate types'}.
+
+Ensure your data is properly typed:
+\`\`\`sparql
+FILTER(isNumeric(?value))
+\`\`\`
+
+Or use explicit type conversion if needed.
+`}
+
+### Performance Tips
+
+{aggregate.name === 'COUNT' ? `
+- COUNT(*) is often faster than COUNT(?var)
+- COUNT(DISTINCT) requires additional processing for deduplication
+- Consider using SAMPLE if exact counts aren't needed
+` : aggregate.name === 'GROUP_CONCAT' ? `
+- Long concatenated strings can impact memory
+- Consider LIMIT on subqueries feeding GROUP_CONCAT
+- Use shorter separators when possible
+- Be aware of endpoint-specific length limits
+` : aggregate.name === 'SUM' || aggregate.name === 'AVG' ? `
+- Ensure numeric types are consistent
+- Filter non-numeric values early
+- Consider precision requirements (decimal vs. float)
+- Watch for overflow with very large sums
+` : `
+- Filter data before aggregation when possible
+- Use appropriate indexes on grouped fields
+- Limit result sets to necessary data
+- Monitor query execution time
+`}

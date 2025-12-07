@@ -1,0 +1,505 @@
+---
+layout: success-criterion
+source: W3C/WCAG
+$type: W3C/WCAG/SuccessCriterion
+$id: https://standards.org.ai/W3C/WCAG/SuccessCriterion/{criterion.code}
+sameAs: https://standards.org.ai/SuccessCriterion/{criterion.code}
+canonical: https://w3.org.ai/WCAG/SuccessCriterion/{criterion.code}
+params:
+  - SuccessCriterion
+schema:
+  criterion:
+    code: string
+    number: string
+    name: string
+    level: string
+    guideline: string
+    guidelineNumber: string
+    principle: string
+    description: string
+    sufficient: array
+    advisory: array
+    failures: array
+    version: string
+---
+
+import { Header } from '@/components/Header'
+import { Description } from '@/components/Description'
+import { ConformanceLevelBadge } from '@/components/wcag/ConformanceLevelBadge'
+import { TechniquesList } from '@/components/wcag/TechniquesList'
+import { SpecificationLink } from '@/components/SpecificationLink'
+import { Breadcrumb } from '@/components/Breadcrumb'
+import { TestingProcedure } from '@/components/wcag/TestingProcedure'
+import { CodeExample } from '@/components/CodeExample'
+
+<Breadcrumb
+  items={[
+    { label: 'WCAG', href: '/W3C/WCAG' },
+    { label: `Principle ${criterion.principleNumber}`, href: `/W3C/WCAG/Principle/${criterion.principle}` },
+    { label: `Guideline ${criterion.guidelineNumber}`, href: `/W3C/WCAG/Guideline/${criterion.guideline}` },
+    { label: `SC ${criterion.number}`, href: `/W3C/WCAG/SuccessCriterion/${criterion.code}` }
+  ]}
+/>
+
+<Header
+  title={`${criterion.number} ${criterion.name}`}
+  type="Success Criterion"
+  code={criterion.code}
+  badge={<ConformanceLevelBadge level={criterion.level} />}
+/>
+
+## Conformance Level
+
+<ConformanceLevelBadge level={criterion.level} detailed />
+
+This success criterion is a **Level {criterion.level}** requirement under WCAG {criterion.version}.
+
+## Success Criterion Statement
+
+<Description>
+  {criterion.description}
+</Description>
+
+## Intent
+
+### Purpose
+
+This success criterion ensures that {criterion.name.toLowerCase()} so that:
+
+- Users with disabilities can perceive and understand content
+- Content is operable by all users regardless of input method
+- Information is presented in ways users can comprehend
+- Content works reliably with current and future technologies
+
+### Who Benefits
+
+This criterion primarily helps:
+
+- **Screen Reader Users**: People who are blind or have low vision
+- **Keyboard-Only Users**: People with motor disabilities
+- **Voice Control Users**: People using speech recognition software
+- **Cognitive Disabilities**: People who benefit from clear structure
+- **Mobile Users**: People accessing content on touch devices
+- **Elderly Users**: People with age-related impairments
+
+### Business Benefits
+
+Meeting this criterion provides:
+
+- Expanded market reach to users with disabilities
+- Improved SEO and search engine compatibility
+- Better usability for all users
+- Reduced legal and compliance risks
+- Enhanced brand reputation
+- Future-proof content architecture
+
+## Sufficient Techniques
+
+<TechniquesList techniques={criterion.sufficient} type="sufficient" />
+
+You must use **at least one** sufficient technique (or combination) to meet this success criterion:
+
+{criterion.sufficient.map((technique, index) => (
+  <div key={technique.id} className="technique-item">
+    ### {index + 1}. {technique.title} ({technique.id})
+
+    **Technology**: {technique.technology}
+
+    {technique.description}
+
+    <CodeExample
+      title={`Example: ${technique.title}`}
+      code={technique.example}
+      language={technique.language}
+    />
+  </div>
+))}
+
+## Advisory Techniques
+
+<TechniquesList techniques={criterion.advisory} type="advisory" />
+
+These techniques go beyond the requirements but improve accessibility:
+
+{criterion.advisory.map((technique) => (
+  <div key={technique.id} className="technique-item">
+    - **{technique.id}**: {technique.title}
+  </div>
+))}
+
+## Common Failures
+
+<TechniquesList techniques={criterion.failures} type="failure" />
+
+Avoid these common failures that violate this success criterion:
+
+{criterion.failures.map((failure) => (
+  <div key={failure.id} className="failure-item">
+    ### {failure.id}: {failure.title}
+
+    {failure.description}
+
+    <CodeExample
+      title="Incorrect Implementation"
+      code={failure.badExample}
+      language={failure.language}
+      variant="error"
+    />
+
+    <CodeExample
+      title="Correct Implementation"
+      code={failure.goodExample}
+      language={failure.language}
+      variant="success"
+    />
+  </div>
+))}
+
+## Testing Procedures
+
+<TestingProcedure criterion={criterion.code} />
+
+### Manual Testing
+
+1. **Visual Inspection**
+   - Review the page/component layout
+   - Identify elements covered by this criterion
+   - Check for obvious violations
+
+2. **Keyboard Testing**
+   ```
+   - Navigate using Tab key only
+   - Activate controls with Enter/Space
+   - Verify all interactive elements are reachable
+   - Check that focus order is logical
+   ```
+
+3. **Screen Reader Testing**
+   - Test with NVDA (Windows) or VoiceOver (Mac)
+   - Navigate through all content
+   - Verify information is announced correctly
+   - Check that relationships are clear
+
+4. **Visual Verification**
+   - Test at 200% zoom level
+   - Check in high contrast mode
+   - Verify with color blindness simulators
+   - Test on different screen sizes
+
+### Automated Testing
+
+```javascript
+// Example test using axe-core
+describe('SC {criterion.number}: {criterion.name}', () => {
+  it('should pass automated accessibility checks', async () => {
+    const results = await axe.run(document, {
+      runOnly: {
+        type: 'tag',
+        values: ['wcag{criterion.level.toLowerCase()}', 'wcag{criterion.number.replace('.', '')}']
+      }
+    })
+
+    expect(results.violations).toHaveLength(0)
+  })
+})
+```
+
+```typescript
+// Playwright/Cypress example
+test('Success Criterion {criterion.number}', async ({ page }) => {
+  await page.goto('/test-page')
+
+  const accessibilityScanResults = await new AxeBuilder({ page })
+    .withTags(['wcag{criterion.level.toLowerCase()}', 'wcag{criterion.number.replace('.', '')}'])
+    .analyze()
+
+  expect(accessibilityScanResults.violations).toEqual([])
+})
+```
+
+### Tools for Testing
+
+| Tool | Type | Purpose |
+|------|------|---------|
+| **axe DevTools** | Browser Extension | Automated scanning |
+| **WAVE** | Browser Extension | Visual feedback |
+| **Lighthouse** | Built-in Chrome | Comprehensive audit |
+| **NVDA** | Screen Reader | Windows testing |
+| **JAWS** | Screen Reader | Professional testing |
+| **VoiceOver** | Screen Reader | Mac/iOS testing |
+| **Accessibility Insights** | Desktop/Web | Guided testing |
+
+## Implementation Examples
+
+### HTML Example
+
+```html
+<!-- Good Example: Meeting SC {criterion.number} -->
+<article aria-labelledby="article-title">
+  <h2 id="article-title">{criterion.name} Example</h2>
+
+  <p>
+    This example demonstrates proper implementation of
+    success criterion {criterion.number}.
+  </p>
+
+  <!-- Accessible implementation -->
+  <button
+    type="button"
+    aria-label="Descriptive action"
+    aria-describedby="button-help"
+  >
+    Action
+  </button>
+
+  <span id="button-help" class="sr-only">
+    Additional context about this action
+  </span>
+</article>
+```
+
+### React Example
+
+```jsx
+import { useId } from 'react'
+
+const AccessibleComponent = ({ title, content, action }) => {
+  const titleId = useId()
+  const descId = useId()
+
+  return (
+    <section aria-labelledby={titleId}>
+      <h2 id={titleId}>{title}</h2>
+      <p id={descId}>{content}</p>
+
+      <button
+        onClick={action}
+        aria-describedby={descId}
+        type="button"
+      >
+        Accessible Action
+      </button>
+    </section>
+  )
+}
+
+// Usage
+<AccessibleComponent
+  title="{criterion.name}"
+  content="Meets SC {criterion.number} requirements"
+  action={() => console.log('Action performed')}
+/>
+```
+
+### Vue Example
+
+```vue
+<template>
+  <div role="region" :aria-labelledby="headingId">
+    <h2 :id="headingId">{{ title }}</h2>
+
+    <p>{{ description }}</p>
+
+    <button
+      @click="handleAction"
+      :aria-describedby="descId"
+      type="button"
+    >
+      {{ buttonText }}
+    </button>
+  </div>
+</template>
+
+<script setup>
+import { ref, useId } from 'vue'
+
+const headingId = useId()
+const descId = useId()
+
+const props = defineProps({
+  title: String,
+  description: String,
+  buttonText: String
+})
+
+const handleAction = () => {
+  // Accessible action implementation
+  console.log('SC {criterion.number} compliant action')
+}
+</script>
+```
+
+### Angular Example
+
+```typescript
+import { Component } from '@angular/core'
+
+@Component({
+  selector: 'app-accessible-component',
+  template: `
+    <section [attr.aria-labelledby]="headingId">
+      <h2 [id]="headingId">{{ title }}</h2>
+
+      <p [id]="descId">{{ content }}</p>
+
+      <button
+        (click)="performAction()"
+        [attr.aria-describedby]="descId"
+        type="button"
+      >
+        {{ buttonLabel }}
+      </button>
+    </section>
+  `
+})
+export class AccessibleComponent {
+  headingId = 'heading-' + crypto.randomUUID()
+  descId = 'desc-' + crypto.randomUUID()
+
+  title = '{criterion.name}'
+  content = 'Meets SC {criterion.number}'
+  buttonLabel = 'Accessible Action'
+
+  performAction(): void {
+    // Implementation following SC {criterion.number}
+    console.log('Action performed accessibly')
+  }
+}
+```
+
+## Common Challenges and Solutions
+
+### Challenge 1: Dynamic Content
+
+**Problem**: Content that changes without page reload may not be announced.
+
+**Solution**:
+```html
+<div
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+>
+  <!-- Dynamic content updates announced to screen readers -->
+</div>
+```
+
+### Challenge 2: Complex Widgets
+
+**Problem**: Custom widgets may not have proper accessibility semantics.
+
+**Solution**:
+```jsx
+const AccessibleTabPanel = () => {
+  const [activeTab, setActiveTab] = useState(0)
+
+  return (
+    <div>
+      <div role="tablist" aria-label="Content sections">
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            role="tab"
+            aria-selected={activeTab === index}
+            aria-controls={`panel-${index}`}
+            id={`tab-${index}`}
+            onClick={() => setActiveTab(index)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {tabs.map((tab, index) => (
+        <div
+          key={index}
+          role="tabpanel"
+          id={`panel-${index}`}
+          aria-labelledby={`tab-${index}`}
+          hidden={activeTab !== index}
+        >
+          {tab.content}
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+### Challenge 3: Form Validation
+
+**Problem**: Error messages not associated with form fields.
+
+**Solution**:
+```html
+<div class="form-field">
+  <label for="email">Email Address</label>
+  <input
+    type="email"
+    id="email"
+    aria-describedby="email-error email-help"
+    aria-invalid="true"
+  />
+  <span id="email-help">We'll never share your email.</span>
+  <span id="email-error" role="alert">
+    Please enter a valid email address.
+  </span>
+</div>
+```
+
+## Relationship to Other Criteria
+
+### Related Success Criteria
+
+- **{criterion.guidelineNumber}.1**: Often works together with this criterion
+- **1.1.1 Non-text Content**: Text alternatives support this criterion
+- **4.1.2 Name, Role, Value**: Programmatic determination complements this
+- **2.4.6 Headings and Labels**: Clear labels help meet intent
+
+### Dependencies
+
+This criterion may depend on:
+- Proper semantic HTML structure
+- Correct use of ARIA attributes
+- Keyboard accessibility implementation
+- Focus management
+
+## Resources
+
+### Official Documentation
+
+<SpecificationLink
+  href={`https://www.w3.org/TR/WCAG${criterion.version.replace('.', '')}/#${criterion.code}`}
+  title={`WCAG ${criterion.version} - SC ${criterion.number}: ${criterion.name}`}
+  organization="W3C"
+  standard="WCAG"
+  version={criterion.version}
+/>
+
+### Understanding Document
+
+- [Understanding SC {criterion.number}](https://www.w3.org/WAI/WCAG{criterion.version.replace('.', '')}/Understanding/{criterion.code})
+- [How to Meet SC {criterion.number}](https://www.w3.org/WAI/WCAG{criterion.version.replace('.', '')}/quickref/#{criterion.code})
+
+### Techniques and Failures
+
+- [All Techniques for {criterion.number}](https://www.w3.org/WAI/WCAG{criterion.version.replace('.', '')}/Techniques/)
+- [Common Failures for {criterion.number}](https://www.w3.org/WAI/WCAG{criterion.version.replace('.', '')}/Techniques/failures/)
+
+## Quick Reference
+
+| Property | Value |
+|----------|-------|
+| Success Criterion | {criterion.number} {criterion.name} |
+| Level | {criterion.level} |
+| Guideline | {criterion.guidelineNumber} |
+| Principle | {criterion.principle} |
+| Version | WCAG {criterion.version} |
+| Status | W3C Recommendation |
+| Sufficient Techniques | {criterion.sufficient.length} |
+| Advisory Techniques | {criterion.advisory.length} |
+| Common Failures | {criterion.failures.length} |
+
+---
+
+*Meeting this success criterion is {criterion.level === 'A' ? 'essential' : criterion.level === 'AA' ? 'recommended' : 'optimal'} for WCAG {criterion.version} Level {criterion.level} conformance.*

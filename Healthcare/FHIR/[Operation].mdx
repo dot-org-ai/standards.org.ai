@@ -1,0 +1,173 @@
+---
+layout: operation
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/Operation
+$id: https://standards.org.ai/Healthcare/FHIR/Operation/{operation.code}
+sameAs: https://standards.org.ai/Operation/{operation.code}
+canonical: https://standards.org.ai/FHIR/Operation/{operation.code}
+params:
+  - Operation
+schema:
+  operation:
+    code: code
+    name: name
+    title: title
+    description: description
+    status: status
+    kind: string
+    experimental: boolean
+    publisher: string
+    purpose: string
+    affectsState: boolean
+    code: string
+    comment: string
+    base: url
+    resource: array
+    system: boolean
+    type: boolean
+    instance: boolean
+    inputProfile: url
+    outputProfile: url
+    parameter: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIROperationHeader } from '@/components/healthcare/fhir/OperationHeader'
+import { FHIROperationParameters } from '@/components/healthcare/fhir/OperationParameters'
+import { FHIROperationExamples } from '@/components/healthcare/fhir/OperationExamples'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIROperationHeader
+  code={operation.code}
+  name={operation.name}
+  title={operation.title}
+  status={operation.status}
+  kind={operation.kind}
+/>
+
+<Description content={operation.description} />
+
+## Operation Information
+
+- **Code**: `${operation.code}`
+- **Status**: <StatusBadge status={operation.status} />
+- **Kind**: {operation.kind}
+- **Affects State**: {operation.affectsState ? 'Yes' : 'No'}
+- **Experimental**: {operation.experimental ? 'Yes' : 'No'}
+- **Publisher**: {operation.publisher || 'HL7 International'}
+
+### Invocation
+
+- **System Level**: {operation.system ? 'Yes' : 'No'}
+- **Type Level**: {operation.type ? 'Yes' : 'No'}
+- **Instance Level**: {operation.instance ? 'Yes' : 'No'}
+
+{operation.resource && operation.resource.length > 0 && (
+  <>- **Applicable Resources**: {operation.resource.join(', ')}</>
+)}
+
+{operation.purpose && (
+  <>
+    ## Purpose
+
+    {operation.purpose}
+  </>
+)}
+
+{operation.comment && (
+  <>
+    ## Comment
+
+    {operation.comment}
+  </>
+)}
+
+## Parameters
+
+<FHIROperationParameters
+  parameters={operation.parameter}
+  inputProfile={operation.inputProfile}
+  outputProfile={operation.outputProfile}
+/>
+
+## Usage Examples
+
+<FHIROperationExamples
+  code={operation.code}
+  system={operation.system}
+  type={operation.type}
+  instance={operation.instance}
+  resource={operation.resource?.[0]}
+/>
+
+### System Level Invocation
+
+{operation.system && (
+  <CodeExample
+    title="System Level"
+    language="http"
+    code={operation.examples?.system}
+  />
+)}
+
+### Type Level Invocation
+
+{operation.type && (
+  <CodeExample
+    title="Type Level"
+    language="http"
+    code={operation.examples?.type}
+  />
+)}
+
+### Instance Level Invocation
+
+{operation.instance && (
+  <CodeExample
+    title="Instance Level"
+    language="http"
+    code={operation.examples?.instance}
+  />
+)}
+
+## Request/Response Examples
+
+<CodeExample
+  title="Request Body"
+  language="json"
+  code={operation.examples?.request}
+/>
+
+<CodeExample
+  title="Response Body"
+  language="json"
+  code={operation.examples?.response}
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR Operations',
+      url: 'https://www.hl7.org/fhir/operations.html'
+    },
+    {
+      name: 'Operation Registry',
+      url: 'https://www.hl7.org/fhir/operationslist.html'
+    },
+    {
+      name: 'This Operation Definition',
+      url: operation.url
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Operations Framework](https://www.hl7.org/fhir/operations.html)
+- [OperationDefinition Resource](https://www.hl7.org/fhir/operationdefinition.html)

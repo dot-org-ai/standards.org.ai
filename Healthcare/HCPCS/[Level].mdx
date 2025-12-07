@@ -1,0 +1,69 @@
+---
+layout: level
+source: Healthcare/HCPCS
+$type: Healthcare/HCPCS/Level
+$id: https://standards.org.ai/Healthcare/HCPCS/Level/{level.code}
+sameAs: https://standards.org.ai/HCPCSLevel/{level.code}
+canonical: https://us.org.ai/CMS/HCPCS/Level/{level.code}
+params:
+  - Level
+schema:
+  level:
+    code: string
+    title: string
+    description: string
+    rangeStart: string
+    rangeEnd: string
+    maintainer: string
+---
+
+# {level.title}
+
+<LevelHeader code={level.code} title={level.title} />
+
+## Level Code
+
+**{level.code}**
+
+## Description
+
+{level.description}
+
+## Code Range
+
+{level.rangeStart && level.rangeEnd && (
+  <div className="code-range">
+    <strong>Codes:</strong> {level.rangeStart} - {level.rangeEnd}
+  </div>
+)}
+
+{level.maintainer && (
+  <div className="maintainer">
+    <strong>Maintained By:</strong> {level.maintainer}
+  </div>
+)}
+
+## Level I vs Level II
+
+<div className="level-comparison">
+  <div className="level-info">
+    <h3>HCPCS Level I</h3>
+    <p>CPT codes maintained by the American Medical Association (AMA). These codes describe medical, surgical, and diagnostic services.</p>
+  </div>
+  <div className="level-info">
+    <h3>HCPCS Level II</h3>
+    <p>National codes maintained by CMS. These codes describe products, supplies, and services not included in CPT codes, such as ambulance services, durable medical equipment, prosthetics, orthotics, and supplies.</p>
+  </div>
+</div>
+
+## Codes in This Level
+
+<CodesByLevel level={level.code} />
+
+## Categories
+
+<CategoriesByLevel level={level.code} />
+
+## Usage Statistics
+
+<LevelStatistics level={level.code} />

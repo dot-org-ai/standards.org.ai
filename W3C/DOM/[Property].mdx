@@ -1,0 +1,172 @@
+---
+layout: property
+source: W3C/DOM
+$type: W3C/DOM/Property
+$id: https://standards.org.ai/W3C/DOM/Property/{property.code}
+sameAs: https://standards.org.ai/Property/{property.code}
+canonical: https://w3.org.ai/DOM/Property/{property.code}
+params:
+  - Property
+schema:
+  property:
+    code: name
+    name: name
+    interface: string
+    type: string
+    readOnly: boolean
+    description: string
+    defaultValue: string
+    nullable: boolean
+    static: boolean
+    specifications: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { PropertySignature } from '@/components/w3c/dom/PropertySignature'
+import { PropertyDetails } from '@/components/w3c/dom/PropertyDetails'
+import { RelatedProperties } from '@/components/w3c/dom/RelatedProperties'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { BrowserCompatibility } from '@/components/standards/BrowserCompatibility'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+
+<Header
+  type="DOM Property"
+  code={property.name}
+  name={`${property.interface}.${property.name}`}
+  standard="W3C DOM"
+/>
+
+<Description content={property.description} />
+
+## Property Signature
+
+<PropertySignature
+  property={property.name}
+  interface={property.interface}
+  type={property.type}
+  readOnly={property.readOnly}
+  static={property.static}
+/>
+
+## Property Details
+
+<PropertyDetails
+  type={property.type}
+  readOnly={property.readOnly}
+  nullable={property.nullable}
+  defaultValue={property.defaultValue}
+  static={property.static}
+/>
+
+## Usage Examples
+
+<CodeExample
+  title={`Reading ${property.name}`}
+  language="javascript"
+  code={property.examples?.read}
+/>
+
+{!property.readOnly && property.examples?.write && (
+  <CodeExample
+    title={`Setting ${property.name}`}
+    language="javascript"
+    code={property.examples.write}
+  />
+)}
+
+{property.examples?.advanced && (
+  <CodeExample
+    title="Advanced usage"
+    language="javascript"
+    code={property.examples.advanced}
+  />
+)}
+
+{property.examples?.observer && (
+  <CodeExample
+    title="Observing changes"
+    language="javascript"
+    code={property.examples.observer}
+  />
+)}
+
+## Common Use Cases
+
+{property.useCases?.map((useCase, index) => (
+  <div key={index} className="use-case">
+    <h3>{useCase.title}</h3>
+    <p>{useCase.description}</p>
+    {useCase.example && (
+      <CodeExample
+        language="javascript"
+        code={useCase.example}
+      />
+    )}
+  </div>
+))}
+
+## Type Information
+
+{property.typeDetails && (
+  <div className="type-details">
+    <p><strong>Type:</strong> {property.type}</p>
+    {property.typeDetails.description && (
+      <p>{property.typeDetails.description}</p>
+    )}
+    {property.typeDetails.possibleValues && (
+      <>
+        <h3>Possible Values</h3>
+        <ul>
+          {property.typeDetails.possibleValues.map((value, index) => (
+            <li key={index}>
+              <code>{value.value}</code>: {value.description}
+            </li>
+          ))}
+        </ul>
+      </>
+    )}
+  </div>
+)}
+
+## Notes
+
+{property.notes?.map((note, index) => (
+  <div key={index} className="note">
+    <p>{note}</p>
+  </div>
+))}
+
+{property.readOnly && (
+  <div className="readonly-notice">
+    This property is read-only and cannot be modified directly.
+  </div>
+)}
+
+## Related Properties
+
+<RelatedProperties
+  interface={property.interface}
+  currentProperty={property.name}
+  related={property.relatedProperties}
+/>
+
+## Browser Compatibility
+
+<BrowserCompatibility
+  feature={`api.${property.interface}.${property.name}`}
+  standard="W3C DOM"
+/>
+
+## Specifications
+
+<SpecificationLinks
+  specifications={property.specifications}
+  standard="DOM"
+/>
+
+## See Also
+
+- [DOM Living Standard: {property.interface}.{property.name}](https://dom.spec.whatwg.org/#{property.interface.toLowerCase()})
+- [MDN Web Docs: {property.interface}.{property.name}](https://developer.mozilla.org/en-US/docs/Web/API/{property.interface}/{property.name})
+- [{property.interface} interface](/W3C/DOM/Interface/{property.interface})

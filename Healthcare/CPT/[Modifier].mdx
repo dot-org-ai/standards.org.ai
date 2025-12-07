@@ -1,0 +1,56 @@
+---
+layout: modifier
+source: Healthcare/CPT
+$type: Healthcare/CPT/Modifier
+$id: https://standards.org.ai/Healthcare/CPT/Modifier/{modifier.code}
+sameAs: https://standards.org.ai/CPTModifier/{modifier.code}
+canonical: https://standards.org.ai/CPT/Modifier/{modifier.code}
+params:
+  - Modifier
+schema:
+  modifier:
+    code: string
+    title: string
+    description: string
+    type: string
+    level: string
+---
+
+# {modifier.title}
+
+<ModifierHeader code={modifier.code} title={modifier.title} />
+
+## Modifier Code
+
+**{modifier.code}**
+
+## Description
+
+{modifier.description}
+
+## Details
+
+<div className="modifier-details">
+  {modifier.type && (
+    <div className="modifier-type">
+      <strong>Type:</strong> {modifier.type}
+    </div>
+  )}
+  {modifier.level && (
+    <div className="modifier-level">
+      <strong>Level:</strong> {modifier.level}
+    </div>
+  )}
+</div>
+
+## Usage Guidelines
+
+<ModifierGuidelines modifier={modifier.code} />
+
+## Applicable Procedures
+
+<ProceduresByModifier modifier={modifier.code} />
+
+## Billing Impact
+
+<ModifierBillingImpact modifier={modifier.code} />

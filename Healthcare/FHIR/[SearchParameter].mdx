@@ -1,0 +1,145 @@
+---
+layout: searchParameter
+source: Healthcare/FHIR
+$type: Healthcare/FHIR/SearchParameter
+$id: https://standards.org.ai/Healthcare/FHIR/SearchParameter/{searchParameter.code}
+sameAs: https://standards.org.ai/SearchParameter/{searchParameter.code}
+canonical: https://standards.org.ai/FHIR/SearchParameter/{searchParameter.code}
+params:
+  - SearchParameter
+schema:
+  searchParameter:
+    code: code
+    name: name
+    title: title
+    description: description
+    status: status
+    experimental: boolean
+    publisher: string
+    purpose: string
+    type: string
+    expression: string
+    xpath: string
+    xpathUsage: string
+    target: array
+    comparator: array
+    modifier: array
+    chain: array
+    component: array
+    base: array
+---
+
+import { Header } from '@/components/standards/Header'
+import { Description } from '@/components/standards/Description'
+import { FHIRSearchParameterHeader } from '@/components/healthcare/fhir/SearchParameterHeader'
+import { FHIRSearchParameterDetails } from '@/components/healthcare/fhir/SearchParameterDetails'
+import { FHIRSearchExamples } from '@/components/healthcare/fhir/SearchExamples'
+import { CodeExample } from '@/components/standards/CodeExample'
+import { SpecificationLinks } from '@/components/standards/SpecificationLinks'
+import { StatusBadge } from '@/components/standards/StatusBadge'
+
+<FHIRSearchParameterHeader
+  code={searchParameter.code}
+  name={searchParameter.name}
+  title={searchParameter.title}
+  status={searchParameter.status}
+  type={searchParameter.type}
+/>
+
+<Description content={searchParameter.description} />
+
+## Search Parameter Information
+
+- **Code**: `{searchParameter.code}`
+- **Type**: {searchParameter.type}
+- **Status**: <StatusBadge status={searchParameter.status} />
+- **Experimental**: {searchParameter.experimental ? 'Yes' : 'No'}
+- **Publisher**: {searchParameter.publisher || 'HL7 International'}
+- **Base Resources**: {searchParameter.base?.join(', ')}
+
+{searchParameter.purpose && (
+  <>
+    ## Purpose
+
+    {searchParameter.purpose}
+  </>
+)}
+
+## Expression
+
+```fhirpath
+{searchParameter.expression}
+```
+
+{searchParameter.xpath && (
+  <>
+    ## XPath Expression
+
+    ```xpath
+    {searchParameter.xpath}
+    ```
+
+    **XPath Usage**: {searchParameter.xpathUsage}
+  </>
+)}
+
+## Details
+
+<FHIRSearchParameterDetails
+  type={searchParameter.type}
+  target={searchParameter.target}
+  comparator={searchParameter.comparator}
+  modifier={searchParameter.modifier}
+  chain={searchParameter.chain}
+  component={searchParameter.component}
+/>
+
+## Usage Examples
+
+<FHIRSearchExamples
+  code={searchParameter.code}
+  type={searchParameter.type}
+  base={searchParameter.base}
+/>
+
+### Basic Search
+
+<CodeExample
+  title={`Searching with ${searchParameter.code}`}
+  language="http"
+  code={searchParameter.examples?.basic}
+/>
+
+{searchParameter.examples?.advanced && (
+  <CodeExample
+    title="Advanced Search"
+    language="http"
+    code={searchParameter.examples.advanced}
+  />
+)}
+
+## Specifications
+
+<SpecificationLinks
+  specifications={[
+    {
+      name: 'FHIR Search',
+      url: 'https://www.hl7.org/fhir/search.html'
+    },
+    {
+      name: 'Search Parameter Registry',
+      url: 'https://www.hl7.org/fhir/searchparameter-registry.html'
+    },
+    {
+      name: 'This Search Parameter',
+      url: searchParameter.url
+    }
+  ]}
+  standard="FHIR"
+/>
+
+## See Also
+
+- [FHIR Search](https://www.hl7.org/fhir/search.html)
+- [Search Parameter Types](https://www.hl7.org/fhir/search.html#ptypes)
+- [FHIRPath](https://www.hl7.org/fhir/fhirpath.html)

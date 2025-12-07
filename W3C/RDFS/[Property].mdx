@@ -1,0 +1,334 @@
+---
+layout: property
+source: W3C/RDFS
+$type: W3C/RDFS/Property
+$id: https://standards.org.ai/W3C/RDFS/Property/{Property.code}
+sameAs: https://standards.org.ai/Property/{Property.code}
+canonical: https://w3.org.ai/RDFS/Property/{Property.code}
+params:
+  - Property
+schema:
+  Property:
+    code: string
+    uri: string
+    label: string
+    comment: string
+    domain: array
+    range: array
+---
+
+import { PropertyHeader } from '@/components/semantic-web/PropertyHeader'
+import { PropertySignature } from '@/components/semantic-web/PropertySignature'
+import { UsageExamples } from '@/components/semantic-web/UsageExamples'
+import { RelatedTerms } from '@/components/semantic-web/RelatedTerms'
+import { SpecificationLink } from '@/components/semantic-web/SpecificationLink'
+
+<PropertyHeader
+  uri={Property.uri}
+  label={Property.label}
+  type="RDFS Property"
+/>
+
+## Description
+
+{Property.comment}
+
+This property is part of the RDFS (RDF Schema) vocabulary, used to describe relationships between resources and provide metadata about RDF vocabularies.
+
+## Property Signature
+
+<PropertySignature
+  domain={Property.domain}
+  range={Property.range}
+/>
+
+### Domain
+
+{Property.domain && Property.domain.length > 0 ? (
+  <>
+    <p>This property should be used with subjects of the following types:</p>
+    <ul>
+      {Property.domain.map((d) => (
+        <li key={d}>
+          <code>{d}</code>
+          <p className="text-sm text-gray-600">If a resource uses this property, it is inferred to be of type {d}</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This property has no domain restriction. It can be used with resources of any type (implicitly <code>rdfs:Resource</code>).</p>
+)}
+
+### Range
+
+{Property.range && Property.range.length > 0 ? (
+  <>
+    <p>Values of this property should be of the following types:</p>
+    <ul>
+      {Property.range.map((r) => (
+        <li key={r}>
+          <code>{r}</code>
+          <p className="text-sm text-gray-600">Objects of this property are inferred to be of type {r}</p>
+        </li>
+      ))}
+    </ul>
+  </>
+) : (
+  <p>This property has no range restriction. Values can be of any type (implicitly <code>rdfs:Resource</code>).</p>
+)}
+
+## Usage Examples
+
+<UsageExamples>
+
+### Basic Usage in Turtle
+
+```turtle
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+# Simple usage
+ex:subject {Property.uri} ex:object .
+
+# With literal value
+ex:resource {Property.uri} "Example value"@en .
+
+# Multiple values
+ex:multiValue {Property.uri} ex:value1 ,
+                            ex:value2 ,
+                            ex:value3 .
+
+# Complete example with metadata
+ex:myResource a ex:MyClass ;
+    rdfs:label "My Resource"@en ;
+    {Property.uri} "Property value"@en .
+```
+
+### Defining a Specialized Property
+
+```turtle
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ex: <http://example.org/> .
+
+ex:myProperty a rdf:Property ;
+    rdfs:label "My Specialized Property"@en ;
+    rdfs:comment "A more specific version of {Property.label}"@en ;
+    rdfs:subPropertyOf {Property.uri} ;
+    rdfs:domain ex:MyDomainClass ;
+    rdfs:range ex:MyRangeClass .
+
+# Usage inherits semantics from {Property.uri}
+ex:instance ex:myProperty ex:value .
+```
+
+### Usage in RDF/XML
+
+```xml
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:ex="http://example.org/">
+  <rdf:Description rdf:about="http://example.org/subject">
+    <{Property.uri} rdf:resource="http://example.org/object"/>
+  </rdf:Description>
+
+  <rdf:Description rdf:about="http://example.org/resource">
+    <{Property.uri} xml:lang="en">Example value</{Property.uri}>
+  </rdf:Description>
+</rdf:RDF>
+```
+
+### Usage in JSON-LD
+
+```json
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "ex": "http://example.org/"
+  },
+  "@id": "ex:subject",
+  "{Property.uri}": {
+    "@id": "ex:object"
+  }
+}
+```
+
+### SPARQL Query Examples
+
+```sparql
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+# Find all uses of this property
+SELECT ?subject ?value
+WHERE {
+  ?subject {Property.uri} ?value .
+}
+
+# Find resources with specific property value
+SELECT ?resource
+WHERE {
+  ?resource {Property.uri} "target value"@en .
+}
+
+# Property path with inference
+SELECT ?subject ?relatedObject
+WHERE {
+  ?subject {Property.uri}+ ?relatedObject .
+}
+
+# Count usage by type
+SELECT ?type (COUNT(?instance) AS ?count)
+WHERE {
+  ?instance {Property.uri} ?value .
+  ?instance rdf:type ?type .
+}
+GROUP BY ?type
+ORDER BY DESC(?count)
+```
+
+</UsageExamples>
+
+## Inference and Reasoning
+
+RDFS reasoning engines apply the following inferences for this property:
+
+### Domain Inference
+
+If `?x {Property.uri} ?y` and this property has domain `D`, then `?x rdf:type D`.
+
+### Range Inference
+
+If `?x {Property.uri} ?y` and this property has range `R`, then `?y rdf:type R`.
+
+### Sub-Property Inheritance
+
+If `P rdfs:subPropertyOf {Property.uri}` and `?x P ?y`, then `?x {Property.uri} ?y`.
+
+## Semantic Constraints
+
+Understanding the semantics of this property:
+
+1. **Open World Assumption**: Absence of a triple doesn't mean it's false
+2. **Multiple Values**: Unless otherwise stated, properties can have multiple values
+3. **Type Inference**: Domain and range assertions enable automatic type inference
+4. **Inheritance**: Sub-properties inherit domain and range constraints
+
+## Best Practices
+
+When using `{Property.label}`:
+
+1. **Consistency**: Use consistent datatypes for literal values
+2. **Language Tags**: Always include language tags for human-readable text
+3. **Cardinality**: Use OWL or SHACL if you need to restrict cardinality
+4. **Documentation**: Provide examples in your vocabulary documentation
+5. **Versioning**: Consider property versioning for evolving vocabularies
+
+## Common Patterns
+
+### Symmetric Relationships
+
+```turtle
+ex:knows a rdf:Property ;
+    rdfs:subPropertyOf {Property.uri} ;
+    a owl:SymmetricProperty .
+
+ex:alice ex:knows ex:bob .
+# Implies: ex:bob ex:knows ex:alice
+```
+
+### Inverse Properties
+
+```turtle
+ex:isParentOf a rdf:Property ;
+    rdfs:subPropertyOf {Property.uri} ;
+    owl:inverseOf ex:isChildOf .
+
+ex:parent ex:isParentOf ex:child .
+# Implies: ex:child ex:isChildOf ex:parent
+```
+
+### Property Chains
+
+```turtle
+# Using OWL property chains
+ex:hasGrandparent owl:propertyChainAxiom (ex:hasParent ex:hasParent) .
+```
+
+## Validation
+
+### SHACL Shape Example
+
+```turtle
+ex:PropertyShape a sh:PropertyShape ;
+    sh:path {Property.uri} ;
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:nodeKind sh:IRI ;
+    sh:class ex:ExpectedClass .
+```
+
+### ShEx Example
+
+```shex
+ex:MyShape {
+  {Property.uri} @ex:TargetShape * ;
+}
+```
+
+## Related Terms
+
+<RelatedTerms
+  terms={[
+    { uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property', label: 'rdf:Property' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#domain', label: 'rdfs:domain' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#range', label: 'rdfs:range' },
+    { uri: 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf', label: 'rdfs:subPropertyOf' }
+  ]}
+/>
+
+## Specification
+
+<SpecificationLink
+  title="RDF Schema 1.1"
+  url="https://www.w3.org/TR/rdf-schema/"
+  section={Property.code}
+/>
+
+### Normative References
+
+- [RDF Schema 1.1](https://www.w3.org/TR/rdf-schema/)
+- [RDF 1.1 Concepts and Abstract Syntax](https://www.w3.org/TR/rdf11-concepts/)
+- [RDF 1.1 Semantics](https://www.w3.org/TR/rdf11-mt/)
+
+## Technical Details
+
+- **Namespace**: `http://www.w3.org/2000/01/rdf-schema#`
+- **URI**: `{Property.uri}`
+- **Status**: W3C Recommendation
+- **Version**: RDFS 1.1
+
+## Implementation Notes
+
+### Triple Store Support
+
+Most triple stores support RDFS reasoning:
+
+- **Apache Jena**: Configurable RDFS reasoner
+- **RDF4J**: Built-in RDFS inference
+- **GraphDB**: RDFS with optimizations
+- **Virtuoso**: RDFS reasoning support
+
+### Performance Considerations
+
+1. **Materialization**: Pre-compute inferences for better query performance
+2. **Indexing**: Index frequently queried properties
+3. **Batch Operations**: Use batch inserts for large datasets
+4. **Query Optimization**: Structure queries to minimize reasoning overhead
+
+## Additional Resources
+
+- [RDF Schema Primer](https://www.w3.org/TR/rdf-schema/)
+- [Best Practices for Publishing Linked Data](https://www.w3.org/TR/ld-bp/)
+- [SPARQL 1.1 Query Language](https://www.w3.org/TR/sparql11-query/)

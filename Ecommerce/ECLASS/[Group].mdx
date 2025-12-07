@@ -1,0 +1,71 @@
+---
+layout: group
+source: Ecommerce/ECLASS
+$type: ECLASS/Group
+$id: https://standards.org.ai/Ecommerce/ECLASS/Group/{group.code}
+sameAs: https://standards.org.ai/Group/{group.code}
+canonical: https://standards.org.ai/ECLASS/Group/{group.code}
+params:
+  - Group
+schema:
+  group:
+    code: GroupCode
+    name: GroupName
+    description: GroupDescription
+    segmentCode: SegmentCode
+    mainGroupCode: MainGroupCode
+    version: Version
+---
+
+# {group.name}
+
+<Header
+  type="eCl@ss Group"
+  code={group.code}
+  name={group.name}
+  standard="eCl@ss"
+/>
+
+## Description
+
+{group.description}
+
+## eCl@ss Code
+
+{group.code}
+
+## Hierarchy
+
+<EclassHierarchy
+  segment={group.segmentCode}
+  mainGroup={group.mainGroupCode}
+  group={group.code}
+  level="group"
+/>
+
+## Parent Main Group
+
+<MainGroupLink code={group.mainGroupCode} />
+
+## Sub-Groups
+
+<SubGroupList group={group.code} />
+
+## All Classes
+
+<ClassList group={group.code} />
+
+## Properties
+
+<PropertyList group={group.code} />
+
+## Related Standards
+
+<RelatedStandards
+  eclassCode={group.code}
+  type="Group"
+/>
+
+## Version
+
+eCl@ss {group.version || 'Latest'}

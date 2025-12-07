@@ -1,0 +1,54 @@
+---
+layout: branch
+source: Finance/SWIFT
+$type: Finance/SWIFT/Branch
+$id: https://standards.org.ai/Finance/SWIFT/Branch/{branch.branchCode}
+sameAs: https://standards.org.ai/Branch/{branch.branchCode}
+canonical: https://standards.org.ai/SWIFT/Branch/{branch.branchCode}
+params:
+  - Branch
+schema:
+  branch:
+    branchCode: branchCode
+    branchName: branchName
+    institutionBIC: institutionBIC
+    address: address
+    city: city
+    country: country
+---
+
+# {branch.branchName}
+
+<BranchHeader
+  code={branch.branchCode}
+  name={branch.branchName}
+  institutionBIC={branch.institutionBIC}
+/>
+
+## Branch Code
+
+{branch.branchCode}
+
+## Parent Institution
+
+<InstitutionLink bic={branch.institutionBIC} />
+
+## Address
+
+{branch.address}
+
+## Location
+
+<LocationInfo city={branch.city} country={branch.country} />
+
+## Services
+
+<BranchServices branchCode={branch.branchCode} />
+
+## Operating Hours
+
+<BranchOperatingHours branchCode={branch.branchCode} />
+
+## Contact Information
+
+<BranchContacts branchCode={branch.branchCode} />
