@@ -1,0 +1,64 @@
+---
+layout: country
+source: ISO/3166-1
+$type: ISO/Country
+$id: https://standards.org.ai/ISO/Country/{country.alpha2}
+sameAs: Country/{country.alpha2}
+params:
+  - Country
+schema:
+  country:
+    alpha2: ISO3166-1-Alpha-2
+    alpha3: ISO3166-1-Alpha-3
+    numeric: ISO3166-1-numeric
+    name: official_name_en
+    capital: Capital
+    continent: Continent
+    region: Region Name
+    subregion: Sub-region Name
+    currency: ISO4217-currency_alphabetic_code
+    tld: TLD
+    languages: Languages
+    wikidataId: wikidata_id
+---
+
+# {country.name}
+
+<CountryHeader alpha2={country.alpha2} alpha3={country.alpha3} name={country.name} />
+
+## Codes
+
+- ISO 3166-1 Alpha-2: {country.alpha2}
+- ISO 3166-1 Alpha-3: {country.alpha3}
+- ISO 3166-1 Numeric: {country.numeric}
+
+## Geography
+
+- Capital: {country.capital}
+- Continent: {country.continent}
+- Region: {country.region}
+- Sub-region: {country.subregion}
+
+## Currency
+
+<CurrencyLink code={country.currency} />
+
+## Languages
+
+{country.languages}
+
+## Top-Level Domain
+
+{country.tld}
+
+## Subdivisions
+
+<SubdivisionList country={country.alpha2} />
+
+## Locations (UN/LOCODE)
+
+<LOCODEList country={country.alpha2} />
+
+## External Links
+
+<WikidataLink id={country.wikidataId} />

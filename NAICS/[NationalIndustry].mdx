@@ -1,0 +1,42 @@
+---
+layout: nationalIndustry
+source: NAICS
+$type: NAICS/NationalIndustry
+$id: https://standards.org.ai/NAICS/NationalIndustry/{nationalIndustry.code}
+sameAs: NationalIndustry/{nationalIndustry.code}
+params:
+  - NationalIndustry
+schema:
+  nationalIndustry:
+    code: 2022NAICSCode
+    title: 2022NAICSTitle
+    naicsIndustry: naicsIndustryCode
+---
+
+# {nationalIndustry.title}
+
+<NationalIndustryHeader code={nationalIndustry.code} title={nationalIndustry.title} />
+
+## NAICS Code
+
+{nationalIndustry.code}
+
+## Full Hierarchy
+
+<NAICSHierarchy code={nationalIndustry.code} />
+
+## Parent NAICS Industry
+
+<NAICSIndustryLink code={nationalIndustry.naicsIndustry} />
+
+## Related SOC Occupations
+
+<OccupationsByNationalIndustry code={nationalIndustry.code} />
+
+## Employment Statistics
+
+<NationalIndustryEmployment code={nationalIndustry.code} />
+
+## Sibling National Industries
+
+<SiblingNationalIndustries naicsIndustry={nationalIndustry.naicsIndustry} current={nationalIndustry.code} />

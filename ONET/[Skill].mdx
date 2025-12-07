@@ -1,0 +1,37 @@
+---
+layout: skill
+source: ONET
+$type: ONET/Skill
+$id: https://standards.org.ai/ONET/Skill/{elementId}
+sameAs: Skill/{elementId}
+params:
+  - Skill
+schema:
+  elementId: elementID
+  name: elementName
+  description: description
+---
+
+# {name}
+
+<SkillHeader elementId={elementId} name={name} />
+
+## Description
+
+{description}
+
+## Occupations Requiring This Skill
+
+<OccupationsBySkill elementId={elementId} />
+
+## Related Work Activities
+
+<WorkActivitiesBySkill elementId={elementId} />
+
+## Related Work Contexts
+
+<WorkContextsBySkill elementId={elementId} />
+
+## Related Skills
+
+<RelatedSkills elementId={elementId} />

@@ -1,0 +1,28 @@
+---
+layout: industry
+source: APQC
+$type: APQC/Industry
+$id: https://standards.org.ai/APQC/Industry/{industry.name}
+sameAs: Industry/{industry.name}
+params:
+  - Industry
+schema:
+  industry:
+    name: industry
+---
+
+# {industry.name}
+
+<IndustryHeader name={industry.name} />
+
+## Processes for This Industry
+
+<ProcessesByIndustry industry={industry.name} />
+
+## Industry-Specific Metrics
+
+<MetricsByIndustry industry={industry.name} />
+
+## Related Industries
+
+<RelatedIndustries industry={industry.name} />

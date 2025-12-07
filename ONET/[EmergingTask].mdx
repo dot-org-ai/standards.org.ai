@@ -1,0 +1,35 @@
+---
+layout: emergingTask
+source: ONET
+$type: ONET/EmergingTask
+$id: https://standards.org.ai/ONET/EmergingTask/{emergingTask.id}
+sameAs: EmergingTask/{emergingTask.id}
+params:
+  - EmergingTask
+schema:
+  emergingTask:
+    id: taskID
+    task: task
+    category: category
+    occupation: oNETSOCCode
+---
+
+# {emergingTask.task}
+
+<EmergingTaskHeader id={emergingTask.id} category={emergingTask.category} />
+
+## Task Category
+
+{emergingTask.category}
+
+## Associated Occupation
+
+<OccupationLink code={emergingTask.occupation} />
+
+## Related Emerging Tasks
+
+<RelatedEmergingTasks taskId={emergingTask.id} />
+
+## Related Core Tasks
+
+<RelatedCoreTasks taskId={emergingTask.id} />

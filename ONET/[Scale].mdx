@@ -1,0 +1,31 @@
+---
+layout: scale
+source: ONET
+$type: ONET/Scale
+$id: https://standards.org.ai/ONET/Scale/{scale.id}
+sameAs: Scale/{scale.id}
+params:
+  - Scale
+schema:
+  scale:
+    id: scaleID
+    name: scaleName
+    minimum: minimum
+    maximum: maximum
+---
+
+# {scale.name}
+
+<ScaleHeader id={scale.id} name={scale.name} />
+
+## Range
+
+Minimum: {scale.minimum} | Maximum: {scale.maximum}
+
+## Scale Categories
+
+<ScaleCategories scaleId={scale.id} />
+
+## Elements Using This Scale
+
+<ElementsByScale scaleId={scale.id} />

@@ -1,0 +1,46 @@
+---
+layout: commodity
+source: UNSPSC
+$type: UNSPSC/Commodity
+$id: https://standards.org.ai/UNSPSC/Commodity/{commodity.code}
+sameAs: Commodity/{commodity.code}
+params:
+  - Commodity
+schema:
+  commodity:
+    code: commodityCode
+    title: commodityTitle
+    definition: definition
+    segment: segmentCode
+    family: familyCode
+    class: classCode
+---
+
+# {commodity.title}
+
+<CommodityHeader code={commodity.code} title={commodity.title} />
+
+## Definition
+
+{commodity.definition}
+
+## Hierarchy
+
+<UNSPSCHierarchy
+  segment={commodity.segment}
+  family={commodity.family}
+  unspscClass={commodity.class}
+  commodity={commodity.code}
+/>
+
+## Parent Class
+
+<ClassLink code={commodity.class} />
+
+## Sibling Commodities
+
+<SiblingCommodities unspscClass={commodity.class} current={commodity.code} />
+
+## Related ONET Tools & Technologies
+
+<ToolsByCommodity commodity={commodity.code} />

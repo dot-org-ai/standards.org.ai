@@ -1,0 +1,33 @@
+---
+layout: subCluster
+source: AdvanceCTE
+$type: AdvanceCTE/SubCluster
+$id: https://standards.org.ai/AdvanceCTE/SubCluster/{subCluster.name}
+sameAs: SubCluster/{subCluster.name}
+params:
+  - SubCluster
+schema:
+  subCluster:
+    name: subCluster
+    cluster: careerCluster
+---
+
+# {subCluster.name}
+
+<SubClusterHeader name={subCluster.name} cluster={subCluster.cluster} />
+
+## Parent Career Cluster
+
+<CareerClusterLink name={subCluster.cluster} />
+
+## SOC Occupations
+
+<OccupationsBySubCluster subCluster={subCluster.name} />
+
+## Related Sub-Clusters
+
+<RelatedSubClusters cluster={subCluster.cluster} current={subCluster.name} />
+
+## Programs of Study
+
+<ProgramsOfStudy subCluster={subCluster.name} />

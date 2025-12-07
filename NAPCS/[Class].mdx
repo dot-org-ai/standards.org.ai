@@ -1,0 +1,35 @@
+---
+layout: class
+source: NAPCS
+$type: NAPCS/Class
+$id: https://standards.org.ai/NAPCS/Class/{napcsClass.code}
+sameAs: Class/{napcsClass.code}
+params:
+  - Class
+schema:
+  napcsClass:
+    code: code
+    title: codeTitle
+    definition: codeDefinition
+    group: parent
+---
+
+# {napcsClass.title}
+
+<ClassHeader code={napcsClass.code} title={napcsClass.title} />
+
+## Definition
+
+{napcsClass.definition}
+
+## Parent Group
+
+<GroupLink code={napcsClass.group} />
+
+## Subclasses
+
+<SubclassList napcsClass={napcsClass.code} />
+
+## Sibling Classes
+
+<SiblingClasses group={napcsClass.group} current={napcsClass.code} />

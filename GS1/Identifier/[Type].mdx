@@ -1,0 +1,38 @@
+---
+layout: identifierType
+source: GS1/Identifier
+$type: GS1/Identifier/Type
+$id: https://standards.org.ai/GS1/Identifier/Type/{identifierType.id}
+sameAs: IdentifierType/{identifierType.id}
+params:
+  - Type
+schema:
+  identifierType:
+    id: identifier
+    class: class
+    description: description
+---
+
+# {identifierType.id}
+
+<IdentifierTypeHeader id={identifierType.id} identifierClass={identifierType.class} />
+
+## Description
+
+{identifierType.description}
+
+## Identifies
+
+{identifierType.class}
+
+## Format Specification
+
+<IdentifierFormat identifierId={identifierType.id} />
+
+## Usage Examples
+
+<IdentifierExamples identifierId={identifierType.id} />
+
+## Related Identifiers
+
+<RelatedIdentifiers identifierId={identifierType.id} />

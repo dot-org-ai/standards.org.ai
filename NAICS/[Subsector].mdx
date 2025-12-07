@@ -1,0 +1,34 @@
+---
+layout: subsector
+source: NAICS
+$type: NAICS/Subsector
+$id: https://standards.org.ai/NAICS/Subsector/{subsector.code}
+sameAs: Subsector/{subsector.code}
+params:
+  - Subsector
+schema:
+  subsector:
+    code: 2022NAICSCode
+    title: 2022NAICSTitle
+    sector: sectorCode
+---
+
+# {subsector.title}
+
+<SubsectorHeader code={subsector.code} title={subsector.title} />
+
+## NAICS Code
+
+{subsector.code}
+
+## Parent Sector
+
+<SectorLink code={subsector.sector} />
+
+## Industry Groups
+
+<IndustryGroupList subsector={subsector.code} />
+
+## Sibling Subsectors
+
+<SiblingSubsectors sector={subsector.sector} current={subsector.code} />

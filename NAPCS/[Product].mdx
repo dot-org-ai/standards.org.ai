@@ -1,0 +1,45 @@
+---
+layout: product
+source: NAPCS
+$type: NAPCS/Product
+$id: https://standards.org.ai/NAPCS/Product/{product.code}
+sameAs: Product/{product.code}
+params:
+  - Product
+schema:
+  product:
+    code: code
+    title: codeTitle
+    definition: codeDefinition
+    level: level
+    structure: hierarchicalStructure
+    parent: parent
+---
+
+# {product.title}
+
+<ProductHeader code={product.code} title={product.title} level={product.level} />
+
+## Definition
+
+{product.definition}
+
+## Hierarchy Level
+
+{product.structure} (Level {product.level})
+
+## Product Hierarchy
+
+<NAPCSHierarchy code={product.code} />
+
+## Parent Product
+
+<ParentProduct code={product.parent} />
+
+## Child Products
+
+<ChildProducts code={product.code} />
+
+## Related Industries
+
+<IndustriesByProduct code={product.code} />

@@ -1,0 +1,40 @@
+---
+layout: careerCluster
+source: AdvanceCTE
+$type: AdvanceCTE/CareerCluster
+$id: https://standards.org.ai/AdvanceCTE/CareerCluster/{cluster.name}
+sameAs: CareerCluster/{cluster.name}
+params:
+  - CareerCluster
+schema:
+  cluster:
+    name: careerCluster
+---
+
+# {cluster.name}
+
+<CareerClusterHeader name={cluster.name} />
+
+## Sub-Clusters
+
+<SubClusterList cluster={cluster.name} />
+
+## SOC Occupations
+
+<OccupationsByCluster cluster={cluster.name} />
+
+## CIP Programs
+
+<CIPsByCluster cluster={cluster.name} />
+
+## NAICS Industries
+
+<NAICSByCluster cluster={cluster.name} />
+
+## Related Career Clusters
+
+<RelatedCareerClusters cluster={cluster.name} />
+
+## Career Pathways
+
+<CareerPathways cluster={cluster.name} />

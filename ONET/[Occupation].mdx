@@ -1,0 +1,53 @@
+---
+layout: occupation
+source: ONET
+$type: ONET/Occupation
+$id: https://standards.org.ai/ONET/Occupation/{code}
+sameAs: Occupation/{code}
+params:
+  - Occupation
+schema:
+  code: oNETSOCCode
+  title: title
+  description: description
+---
+
+# {title}
+
+<OccupationHeader code={code} title={title} />
+
+## Description
+
+{description}
+
+## Tasks
+
+<TaskList occupation={code} />
+
+## Knowledge
+
+<KnowledgeList occupation={code} />
+
+## Skills
+
+<SkillsList occupation={code} />
+
+## Abilities
+
+<AbilitiesList occupation={code} />
+
+## Work Activities
+
+<WorkActivitiesList occupation={code} />
+
+## Work Context
+
+<WorkContextList occupation={code} />
+
+## Job Zone
+
+<JobZone occupation={code} />
+
+## Related Occupations
+
+<RelatedOccupations occupation={code} />

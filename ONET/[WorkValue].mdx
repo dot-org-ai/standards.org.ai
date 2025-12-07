@@ -1,0 +1,34 @@
+---
+layout: workValue
+source: ONET
+$type: ONET/WorkValue
+$id: https://standards.org.ai/ONET/WorkValue/{workValue.id}
+sameAs: WorkValue/{workValue.id}
+params:
+  - WorkValue
+schema:
+  workValue:
+    id: elementID
+    name: elementName
+    description: description
+---
+
+# {workValue.name}
+
+<WorkValueHeader id={workValue.id} name={workValue.name} />
+
+## Description
+
+{workValue.description}
+
+## Occupations Valuing This
+
+<OccupationsByWorkValue valueId={workValue.id} />
+
+## Related Work Values
+
+<RelatedWorkValues valueId={workValue.id} />
+
+## Related Interests
+
+<InterestsByWorkValue valueId={workValue.id} />

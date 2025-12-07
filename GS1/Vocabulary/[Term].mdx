@@ -1,0 +1,41 @@
+---
+layout: term
+source: GS1/Vocabulary
+$type: GS1/Vocabulary/Term
+$id: https://standards.org.ai/GS1/Vocabulary/Term/{term.id}
+sameAs: Term/{term.id}
+params:
+  - Term
+schema:
+  term:
+    id: id
+    label: label
+    type: type
+    description: description
+    verb: verb
+    noun: noun
+---
+
+# {term.label}
+
+<TermHeader id={term.id} label={term.label} type={term.type} />
+
+## Description
+
+{term.description}
+
+## Type
+
+{term.type}
+
+## Verb/Noun
+
+Verb: {term.verb} | Noun: {term.noun}
+
+## Related Terms
+
+<RelatedTerms termId={term.id} />
+
+## Usage in Events
+
+<EventsByTerm termId={term.id} />

@@ -1,0 +1,35 @@
+---
+layout: subclass
+source: NAPCS
+$type: NAPCS/Subclass
+$id: https://standards.org.ai/NAPCS/Subclass/{subclass.code}
+sameAs: Subclass/{subclass.code}
+params:
+  - Subclass
+schema:
+  subclass:
+    code: code
+    title: codeTitle
+    definition: codeDefinition
+    class: parent
+---
+
+# {subclass.title}
+
+<SubclassHeader code={subclass.code} title={subclass.title} />
+
+## Definition
+
+{subclass.definition}
+
+## Parent Class
+
+<ClassLink code={subclass.class} />
+
+## Details
+
+<DetailList subclass={subclass.code} />
+
+## Sibling Subclasses
+
+<SiblingSubclasses napcsClass={subclass.class} current={subclass.code} />

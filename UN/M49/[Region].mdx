@@ -1,0 +1,37 @@
+---
+layout: region
+source: UN/M49
+$type: UN/M49/Region
+$id: https://standards.org.ai/UN/M49/Region/{region.code}
+sameAs: Region/{region.code}
+params:
+  - Region
+schema:
+  region:
+    code: region-code
+    name: region
+    subregionCode: sub-region-code
+    subregion: sub-region
+    intermediateCode: intermediate-region-code
+    intermediate: intermediate-region
+---
+
+# {region.name}
+
+<RegionHeader code={region.code} name={region.name} />
+
+## M49 Code
+
+{region.code}
+
+## Sub-regions
+
+<SubregionList region={region.code} />
+
+## Countries in This Region
+
+<CountriesByRegion regionCode={region.code} />
+
+## Statistics
+
+<RegionStats regionCode={region.code} />

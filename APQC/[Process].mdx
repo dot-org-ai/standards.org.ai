@@ -1,0 +1,64 @@
+---
+layout: process
+source: APQC
+$type: APQC/Process
+$id: https://standards.org.ai/APQC/Process/{process.hierarchyId}
+sameAs: Process/{process.hierarchyId}
+params:
+  - Process
+schema:
+  process:
+    id: pcfId
+    hierarchyId: hierarchyId
+    name: name
+    description: description
+    level: level
+    parent: parent
+    category: category
+    industry: industry
+    metricsAvailable: metricsAvailable
+---
+
+# {process.name}
+
+<ProcessHeader id={process.id} hierarchyId={process.hierarchyId} name={process.name} />
+
+## Process ID
+
+{process.hierarchyId}
+
+## Description
+
+{process.description}
+
+## Category
+
+{process.category}
+
+## Industry
+
+{process.industry}
+
+## Level
+
+{process.level}
+
+## Process Hierarchy
+
+<APQCHierarchy hierarchyId={process.hierarchyId} />
+
+## Parent Process
+
+<ParentProcess hierarchyId={process.parent} />
+
+## Child Processes
+
+<ChildProcesses hierarchyId={process.hierarchyId} />
+
+## Metrics
+
+<ProcessMetrics processId={process.id} available={process.metricsAvailable} />
+
+## Best Practices
+
+<ProcessBestPractices processId={process.id} />

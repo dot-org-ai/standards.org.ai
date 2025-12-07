@@ -1,0 +1,40 @@
+---
+layout: education
+source: BLS/Education
+$type: BLS/Education
+$id: https://standards.org.ai/BLS/Education/{education.code}
+sameAs: Education/{education.code}
+params:
+  - Education
+schema:
+  education:
+    code: OCC_CODE
+    title: OCC_TITLE
+    typicalEducation: TYPICAL_EDUCATION
+    workExperience: WORK_EXPERIENCE
+    onJobTraining: ON_JOB_TRAINING
+---
+
+# {education.title}
+
+<EducationHeader code={education.code} title={education.title} />
+
+## Typical Entry-Level Education
+
+{education.typicalEducation}
+
+## Work Experience Required
+
+{education.workExperience}
+
+## On-the-Job Training
+
+{education.onJobTraining}
+
+## Related ONET Occupation
+
+<ONETOccupationLink code={education.code} />
+
+## Similar Education Requirements
+
+<SimilarEducationOccupations education={education.typicalEducation} />

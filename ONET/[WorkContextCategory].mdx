@@ -1,0 +1,30 @@
+---
+layout: workContextCategory
+source: ONET
+$type: ONET/WorkContextCategory
+$id: https://standards.org.ai/ONET/WorkContextCategory/{category.id}
+sameAs: WorkContextCategory/{category.id}
+params:
+  - WorkContextCategory
+schema:
+  category:
+    id: elementID
+    name: elementName
+    description: description
+---
+
+# {category.name}
+
+<WorkContextCategoryHeader id={category.id} name={category.name} />
+
+## Description
+
+{category.description}
+
+## Work Contexts in This Category
+
+<WorkContextsByCategory categoryId={category.id} />
+
+## Related Categories
+
+<RelatedWorkContextCategories categoryId={category.id} />

@@ -1,0 +1,39 @@
+---
+layout: language
+source: ISO/639
+$type: ISO/Language
+$id: https://standards.org.ai/ISO/Language/{language.alpha2}
+sameAs: Language/{language.alpha2}
+params:
+  - Language
+schema:
+  language:
+    alpha2: alpha2
+    alpha3b: alpha3-b
+    alpha3t: alpha3-t
+    nameEn: English
+    nameFr: French
+---
+
+# {language.nameEn}
+
+<LanguageHeader alpha2={language.alpha2} name={language.nameEn} />
+
+## Codes
+
+- ISO 639-1 (Alpha-2): {language.alpha2}
+- ISO 639-2/B (Bibliographic): {language.alpha3b}
+- ISO 639-2/T (Terminology): {language.alpha3t}
+
+## Names
+
+- English: {language.nameEn}
+- French: {language.nameFr}
+
+## Countries Using This Language
+
+<CountriesByLanguage language={language.alpha2} />
+
+## Related Languages
+
+<RelatedLanguages language={language.alpha2} />

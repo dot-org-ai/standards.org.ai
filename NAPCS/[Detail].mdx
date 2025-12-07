@@ -1,0 +1,39 @@
+---
+layout: detail
+source: NAPCS
+$type: NAPCS/Detail
+$id: https://standards.org.ai/NAPCS/Detail/{detail.code}
+sameAs: Detail/{detail.code}
+params:
+  - Detail
+schema:
+  detail:
+    code: code
+    title: codeTitle
+    definition: codeDefinition
+    subclass: parent
+---
+
+# {detail.title}
+
+<DetailHeader code={detail.code} title={detail.title} />
+
+## Definition
+
+{detail.definition}
+
+## Full Hierarchy
+
+<NAPCSHierarchy code={detail.code} />
+
+## Parent Subclass
+
+<SubclassLink code={detail.subclass} />
+
+## Related Industries
+
+<IndustriesByDetail code={detail.code} />
+
+## Sibling Details
+
+<SiblingDetails subclass={detail.subclass} current={detail.code} />

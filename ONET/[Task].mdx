@@ -1,0 +1,34 @@
+---
+layout: task
+source: ONET
+$type: ONET/Task
+$id: https://standards.org.ai/ONET/Task/{id}
+sameAs: Task/{id}
+params:
+  - Task
+schema:
+  id: taskID
+  task: task
+  taskType: taskType
+  occupation: oNETSOCCode
+---
+
+# {task}
+
+<TaskHeader id={id} taskType={taskType} />
+
+## Task Details
+
+<TaskDetails id={id} />
+
+## Associated Occupation
+
+<OccupationLink code={occupation} />
+
+## Detailed Work Activities
+
+<DWAList task={id} />
+
+## Related Tasks
+
+<RelatedTasks task={id} />

@@ -1,0 +1,48 @@
+---
+layout: location
+source: UN/LOCODE
+$type: UN/LOCODE/Location
+$id: https://standards.org.ai/UN/LOCODE/Location/{location.country}{location.code}
+sameAs: Location/{location.country}{location.code}
+params:
+  - Location
+schema:
+  location:
+    country: Country
+    code: Location
+    name: Name
+    nameAscii: NameWoDiacritics
+    subdivision: Subdivision
+    status: Status
+    function: Function
+    coordinates: Coordinates
+    iata: IATA
+---
+
+# {location.name}
+
+<LocationHeader country={location.country} code={location.code} name={location.name} />
+
+## UN/LOCODE
+
+{location.country}{location.code}
+
+## Details
+
+- Country: {location.country}
+- Subdivision: {location.subdivision}
+- Status: {location.status}
+- Function: {location.function}
+- IATA Code: {location.iata}
+
+## Coordinates
+
+{location.coordinates}
+
+## Country
+
+<CountryLink alpha2={location.country} />
+
+## Nearby Locations
+
+<NearbyLocations coordinates={location.coordinates} current={location.code} />

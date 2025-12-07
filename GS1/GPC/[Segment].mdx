@@ -1,0 +1,33 @@
+---
+layout: segment
+source: GS1/GPC
+$type: GS1/GPC/Segment
+$id: https://standards.org.ai/GS1/GPC/Segment/{segment.code}
+sameAs: Segment/{segment.code}
+params:
+  - Segment
+schema:
+  segment:
+    code: SegmentCode
+    title: SegmentTitle
+---
+
+# {segment.title}
+
+<SegmentHeader code={segment.code} title={segment.title} />
+
+## Families
+
+<FamilyList segment={segment.code} />
+
+## All Classes
+
+<ClassList segment={segment.code} />
+
+## All Bricks
+
+<BrickList segment={segment.code} />
+
+## Statistics
+
+<SegmentStats segment={segment.code} />

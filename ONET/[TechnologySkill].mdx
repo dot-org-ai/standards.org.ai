@@ -1,0 +1,31 @@
+---
+layout: technologySkill
+source: ONET
+$type: ONET/TechnologySkill
+$id: https://standards.org.ai/ONET/TechnologySkill/{tech.id}
+sameAs: TechnologySkill/{tech.id}
+params:
+  - TechnologySkill
+schema:
+  tech:
+    id: commodityCode
+    title: commodityTitle
+    example: exampleName
+    hotTechnology: hotTechnology
+---
+
+# {tech.title}
+
+<TechnologySkillHeader id={tech.id} title={tech.title} hotTechnology={tech.hotTechnology} />
+
+## Example
+
+{tech.example}
+
+## Occupations Using This Technology
+
+<OccupationsByTechnology techId={tech.id} />
+
+## Related Technologies
+
+<RelatedTechnologies techId={tech.id} />

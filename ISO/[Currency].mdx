@@ -1,0 +1,39 @@
+---
+layout: currency
+source: ISO/4217
+$type: ISO/Currency
+$id: https://standards.org.ai/ISO/Currency/{currency.code}
+sameAs: Currency/{currency.code}
+params:
+  - Currency
+schema:
+  currency:
+    code: AlphabeticCode
+    numeric: NumericCode
+    name: Currency
+    entity: Entity
+    minorUnit: MinorUnit
+    withdrawalDate: WithdrawalDate
+---
+
+# {currency.name}
+
+<CurrencyHeader code={currency.code} name={currency.name} />
+
+## Codes
+
+- Alphabetic Code: {currency.code}
+- Numeric Code: {currency.numeric}
+
+## Details
+
+- Minor Unit: {currency.minorUnit}
+- Entity: {currency.entity}
+
+## Countries Using This Currency
+
+<CountriesByCurrency currency={currency.code} />
+
+## Historical
+
+<CurrencyHistory code={currency.code} withdrawalDate={currency.withdrawalDate} />

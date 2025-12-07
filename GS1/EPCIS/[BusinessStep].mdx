@@ -1,0 +1,39 @@
+---
+layout: businessStep
+source: GS1/EPCIS
+$type: GS1/EPCIS/BusinessStep
+$id: https://standards.org.ai/GS1/EPCIS/BusinessStep/{businessStep.id}
+sameAs: BusinessStep/{businessStep.id}
+params:
+  - BusinessStep
+schema:
+  businessStep:
+    id: businessStep
+    verb: verb
+    noun: noun
+    description: description
+---
+
+# {businessStep.id}
+
+<BusinessStepHeader id={businessStep.id} verb={businessStep.verb} noun={businessStep.noun} />
+
+## Description
+
+{businessStep.description}
+
+## Verb
+
+{businessStep.verb}
+
+## Noun
+
+{businessStep.noun}
+
+## Related Dispositions
+
+<DispositionsByBusinessStep stepId={businessStep.id} />
+
+## Usage Examples
+
+<BusinessStepExamples stepId={businessStep.id} />

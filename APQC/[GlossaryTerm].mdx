@@ -1,0 +1,30 @@
+---
+layout: glossaryTerm
+source: APQC
+$type: APQC/GlossaryTerm
+$id: https://standards.org.ai/APQC/GlossaryTerm/{glossaryTerm.id}
+sameAs: GlossaryTerm/{glossaryTerm.id}
+params:
+  - GlossaryTerm
+schema:
+  glossaryTerm:
+    id: processElementID
+    name: processElement
+    definition: definition
+---
+
+# {glossaryTerm.name}
+
+<GlossaryTermHeader id={glossaryTerm.id} name={glossaryTerm.name} />
+
+## Definition
+
+{glossaryTerm.definition}
+
+## Related Processes
+
+<ProcessesByTerm termId={glossaryTerm.id} />
+
+## Related Terms
+
+<RelatedGlossaryTerms termId={glossaryTerm.id} />

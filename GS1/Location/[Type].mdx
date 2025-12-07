@@ -1,0 +1,41 @@
+---
+layout: locationType
+source: GS1/Location
+$type: GS1/Location/Type
+$id: https://standards.org.ai/GS1/Location/Type/{locationType.id}
+sameAs: LocationType/{locationType.id}
+params:
+  - Type
+schema:
+  locationType:
+    id: id
+    label: label
+    type: type
+    description: description
+    parentType: parentType
+    glnFunctionalType: glnFunctionalType
+---
+
+# {locationType.label}
+
+<LocationTypeHeader id={locationType.id} label={locationType.label} />
+
+## Description
+
+{locationType.description}
+
+## GLN Functional Type
+
+{locationType.glnFunctionalType}
+
+## Parent Type
+
+<LocationTypeLink id={locationType.parentType} />
+
+## Child Types
+
+<ChildLocationTypes parentId={locationType.id} />
+
+## Related Location Types
+
+<RelatedLocationTypes typeId={locationType.id} />

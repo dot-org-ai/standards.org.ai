@@ -1,0 +1,30 @@
+---
+layout: workStyle
+source: ONET
+$type: ONET/WorkStyle
+$id: https://standards.org.ai/ONET/WorkStyle/{style.id}
+sameAs: WorkStyle/{style.id}
+params:
+  - WorkStyle
+schema:
+  style:
+    id: elementID
+    name: elementName
+    description: description
+---
+
+# {style.name}
+
+<WorkStyleHeader id={style.id} name={style.name} />
+
+## Description
+
+{style.description}
+
+## Occupations Valuing This Style
+
+<OccupationsByWorkStyle styleId={style.id} />
+
+## Related Work Styles
+
+<RelatedWorkStyles styleId={style.id} />

@@ -1,0 +1,46 @@
+---
+layout: metric
+source: APQC
+$type: APQC/Metric
+$id: https://standards.org.ai/APQC/Metric/{metric.id}
+sameAs: Metric/{metric.id}
+params:
+  - Metric
+schema:
+  metric:
+    id: metricID
+    name: metricName
+    category: metricCategory
+    formula: formula
+    units: units
+    processId: processElementID
+    processHierarchy: hierarchyID
+---
+
+# {metric.name}
+
+<MetricHeader id={metric.id} name={metric.name} category={metric.category} />
+
+## Category
+
+{metric.category}
+
+## Formula
+
+{metric.formula}
+
+## Units
+
+{metric.units}
+
+## Associated Process
+
+<ProcessLink hierarchyId={metric.processHierarchy} />
+
+## Related Metrics
+
+<RelatedMetrics metricId={metric.id} />
+
+## Benchmarks
+
+<MetricBenchmarks metricId={metric.id} />

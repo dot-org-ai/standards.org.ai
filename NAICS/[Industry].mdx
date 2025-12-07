@@ -1,0 +1,46 @@
+---
+layout: industry
+source: NAICS
+$type: NAICS/Industry
+$id: https://standards.org.ai/NAICS/Industry/{industry.code}
+sameAs: Industry/{industry.code}
+params:
+  - Industry
+schema:
+  industry:
+    code: 2022NAICSCode
+    title: 2022NAICSTitle
+    change: changeIndicator
+---
+
+# {industry.title}
+
+<IndustryHeader code={industry.code} title={industry.title} />
+
+## NAICS Code
+
+{industry.code}
+
+## Industry Hierarchy
+
+<NAICSHierarchy code={industry.code} />
+
+## Parent Industry
+
+<ParentIndustry code={industry.code} />
+
+## Child Industries
+
+<ChildIndustries code={industry.code} />
+
+## Related SOC Occupations
+
+<OccupationsByNAICS code={industry.code} />
+
+## Related Career Clusters
+
+<CareerClustersByNAICS code={industry.code} />
+
+## Employment Statistics
+
+<NAICSEmployment code={industry.code} />

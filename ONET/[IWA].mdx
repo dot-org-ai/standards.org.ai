@@ -1,0 +1,30 @@
+---
+layout: iwa
+source: ONET
+$type: ONET/IWA
+$id: https://standards.org.ai/ONET/IWA/{iwa.id}
+sameAs: IWA/{iwa.id}
+params:
+  - IWA
+schema:
+  iwa:
+    id: iWAID
+    title: iWATitle
+    element: elementID
+---
+
+# {iwa.title}
+
+<IWAHeader id={iwa.id} title={iwa.title} />
+
+## Parent Work Activity
+
+<WorkActivityLink elementId={iwa.element} />
+
+## Detailed Work Activities
+
+<DWAsByIWA iwa={iwa.id} />
+
+## Occupations Performing This Activity
+
+<OccupationsByIWA iwa={iwa.id} />

@@ -1,0 +1,39 @@
+---
+layout: disposition
+source: GS1/EPCIS
+$type: GS1/EPCIS/Disposition
+$id: https://standards.org.ai/GS1/EPCIS/Disposition/{disposition.id}
+sameAs: Disposition/{disposition.id}
+params:
+  - Disposition
+schema:
+  disposition:
+    id: disposition
+    verb: verb
+    noun: noun
+    description: description
+---
+
+# {disposition.id}
+
+<DispositionHeader id={disposition.id} verb={disposition.verb} noun={disposition.noun} />
+
+## Description
+
+{disposition.description}
+
+## Verb
+
+{disposition.verb}
+
+## Noun
+
+{disposition.noun}
+
+## Related Business Steps
+
+<BusinessStepsByDisposition dispositionId={disposition.id} />
+
+## Usage Examples
+
+<DispositionExamples dispositionId={disposition.id} />

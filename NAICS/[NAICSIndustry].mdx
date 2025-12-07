@@ -1,0 +1,34 @@
+---
+layout: naicsIndustry
+source: NAICS
+$type: NAICS/NAICSIndustry
+$id: https://standards.org.ai/NAICS/NAICSIndustry/{naicsIndustry.code}
+sameAs: NAICSIndustry/{naicsIndustry.code}
+params:
+  - NAICSIndustry
+schema:
+  naicsIndustry:
+    code: 2022NAICSCode
+    title: 2022NAICSTitle
+    industryGroup: industryGroupCode
+---
+
+# {naicsIndustry.title}
+
+<NAICSIndustryHeader code={naicsIndustry.code} title={naicsIndustry.title} />
+
+## NAICS Code
+
+{naicsIndustry.code}
+
+## Parent Industry Group
+
+<IndustryGroupLink code={naicsIndustry.industryGroup} />
+
+## National Industries
+
+<NationalIndustryList naicsIndustry={naicsIndustry.code} />
+
+## Sibling Industries
+
+<SiblingNAICSIndustries industryGroup={naicsIndustry.industryGroup} current={naicsIndustry.code} />

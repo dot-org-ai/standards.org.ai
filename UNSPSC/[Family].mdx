@@ -1,0 +1,38 @@
+---
+layout: family
+source: UNSPSC
+$type: UNSPSC/Family
+$id: https://standards.org.ai/UNSPSC/Family/{family.code}
+sameAs: Family/{family.code}
+params:
+  - Family
+schema:
+  family:
+    code: familyCode
+    title: familyTitle
+    segment: segmentCode
+---
+
+# {family.title}
+
+<FamilyHeader code={family.code} title={family.title} />
+
+## Hierarchy
+
+<UNSPSCHierarchy segment={family.segment} family={family.code} />
+
+## Parent Segment
+
+<SegmentLink code={family.segment} />
+
+## Classes
+
+<ClassList family={family.code} />
+
+## All Commodities
+
+<CommodityList family={family.code} />
+
+## Sibling Families
+
+<SiblingFamilies segment={family.segment} current={family.code} />

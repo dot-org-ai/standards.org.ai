@@ -1,3 +1,6 @@
+# Source data (large files, can be re-downloaded)
+.source/
+
 # Logs
 logs
 *.log

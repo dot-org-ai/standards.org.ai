@@ -1,0 +1,35 @@
+---
+layout: education
+source: ONET
+$type: ONET/Education
+$id: https://standards.org.ai/ONET/Education/{education.id}
+sameAs: Education/{education.id}
+params:
+  - Education
+schema:
+  education:
+    id: elementID
+    name: elementName
+    description: description
+    category: category
+---
+
+# {education.name}
+
+<EducationHeader id={education.id} name={education.name} />
+
+## Description
+
+{education.description}
+
+## Category
+
+{education.category}
+
+## Occupations Requiring This Education
+
+<OccupationsByEducation educationId={education.id} />
+
+## Related Training Requirements
+
+<RelatedTraining educationId={education.id} />

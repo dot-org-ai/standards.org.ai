@@ -1,0 +1,38 @@
+---
+layout: family
+source: GS1/GPC
+$type: GS1/GPC/Family
+$id: https://standards.org.ai/GS1/GPC/Family/{family.code}
+sameAs: Family/{family.code}
+params:
+  - Family
+schema:
+  family:
+    code: FamilyCode
+    title: FamilyTitle
+    segment: SegmentCode
+---
+
+# {family.title}
+
+<FamilyHeader code={family.code} title={family.title} />
+
+## Hierarchy
+
+<GPCHierarchy segment={family.segment} family={family.code} />
+
+## Parent Segment
+
+<SegmentLink code={family.segment} />
+
+## Classes
+
+<ClassList family={family.code} />
+
+## All Bricks
+
+<BrickList family={family.code} />
+
+## Sibling Families
+
+<SiblingFamilies segment={family.segment} current={family.code} />

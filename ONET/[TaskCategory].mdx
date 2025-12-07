@@ -1,0 +1,26 @@
+---
+layout: taskCategory
+source: ONET
+$type: ONET/TaskCategory
+$id: https://standards.org.ai/ONET/TaskCategory/{taskCategory.id}
+sameAs: TaskCategory/{taskCategory.id}
+params:
+  - TaskCategory
+schema:
+  taskCategory:
+    id: scaleID
+    name: category
+    description: categoryDescription
+---
+
+# {taskCategory.name}
+
+<TaskCategoryHeader id={taskCategory.id} name={taskCategory.name} />
+
+## Description
+
+{taskCategory.description}
+
+## Tasks in This Category
+
+<TasksByCategory categoryId={taskCategory.id} />

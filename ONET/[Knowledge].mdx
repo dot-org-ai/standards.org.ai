@@ -1,0 +1,33 @@
+---
+layout: knowledge
+source: ONET
+$type: ONET/Knowledge
+$id: https://standards.org.ai/ONET/Knowledge/{elementId}
+sameAs: Knowledge/{elementId}
+params:
+  - Knowledge
+schema:
+  elementId: elementID
+  name: elementName
+  description: description
+---
+
+# {name}
+
+<KnowledgeHeader elementId={elementId} name={name} />
+
+## Description
+
+{description}
+
+## Occupations Requiring This Knowledge
+
+<OccupationsByKnowledge elementId={elementId} />
+
+## Related Skills
+
+<SkillsByKnowledge elementId={elementId} />
+
+## Related Knowledge Areas
+
+<RelatedKnowledge elementId={elementId} />

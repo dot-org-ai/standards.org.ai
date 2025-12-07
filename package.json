@@ -1,0 +1,23 @@
+{
+  "name": "standards.org.ai",
+  "version": "1.0.0",
+  "description": "Standards organization data transformation and normalization",
+  "type": "module",
+  "scripts": {
+    "generate": "bun run .scripts/generate.ts",
+    "generate:onet": "bun run .scripts/onet.ts",
+    "generate:apqc": "bun run .scripts/apqc.ts",
+    "generate:gs1": "bun run .scripts/gs1.ts",
+    "generate:naics": "bun run .scripts/naics.ts",
+    "generate:napcs": "bun run .scripts/napcs.ts",
+    "generate:unspsc": "bun run .scripts/unspsc.ts",
+    "generate:bls": "bun run .scripts/bls.ts",
+    "generate:advancecte": "bun run .scripts/advancecte.ts",
+    "generate:iso": "bun run .scripts/iso.ts",
+    "generate:un": "bun run .scripts/un.ts",
+    "generate:iana": "bun run .scripts/iana.ts"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  }
+}

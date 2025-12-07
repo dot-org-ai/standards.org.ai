@@ -1,0 +1,38 @@
+---
+layout: riasec
+source: ONET
+$type: ONET/RIASEC
+$id: https://standards.org.ai/ONET/RIASEC/{riasec.code}
+sameAs: RIASEC/{riasec.code}
+params:
+  - RIASEC
+schema:
+  riasec:
+    code: riasecCode
+    name: riasecName
+    description: description
+---
+
+# {riasec.name}
+
+<RIASECHeader code={riasec.code} name={riasec.name} />
+
+## Description
+
+{riasec.description}
+
+## Keywords
+
+<RIASECKeywords code={riasec.code} />
+
+## Interests in This Type
+
+<InterestsByRIASEC code={riasec.code} />
+
+## Occupations With This Interest Type
+
+<OccupationsByRIASEC code={riasec.code} />
+
+## Related RIASEC Types
+
+<RelatedRIASEC code={riasec.code} />

@@ -1,0 +1,30 @@
+---
+layout: tool
+source: ONET
+$type: ONET/Tool
+$id: https://standards.org.ai/ONET/Tool/{tool.id}
+sameAs: Tool/{tool.id}
+params:
+  - Tool
+schema:
+  tool:
+    id: commodityCode
+    title: commodityTitle
+    example: exampleName
+---
+
+# {tool.title}
+
+<ToolHeader id={tool.id} title={tool.title} />
+
+## Example
+
+{tool.example}
+
+## Occupations Using This Tool
+
+<OccupationsByTool toolId={tool.id} />
+
+## Related Tools
+
+<RelatedTools toolId={tool.id} />

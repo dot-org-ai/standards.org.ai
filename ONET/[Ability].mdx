@@ -1,0 +1,37 @@
+---
+layout: ability
+source: ONET
+$type: ONET/Ability
+$id: https://standards.org.ai/ONET/Ability/{elementId}
+sameAs: Ability/{elementId}
+params:
+  - Ability
+schema:
+  elementId: elementID
+  name: elementName
+  description: description
+---
+
+# {name}
+
+<AbilityHeader elementId={elementId} name={name} />
+
+## Description
+
+{description}
+
+## Occupations Requiring This Ability
+
+<OccupationsByAbility elementId={elementId} />
+
+## Related Work Activities
+
+<WorkActivitiesByAbility elementId={elementId} />
+
+## Related Work Contexts
+
+<WorkContextsByAbility elementId={elementId} />
+
+## Related Abilities
+
+<RelatedAbilities elementId={elementId} />

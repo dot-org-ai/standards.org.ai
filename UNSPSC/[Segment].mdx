@@ -1,0 +1,33 @@
+---
+layout: segment
+source: UNSPSC
+$type: UNSPSC/Segment
+$id: https://standards.org.ai/UNSPSC/Segment/{segment.code}
+sameAs: Segment/{segment.code}
+params:
+  - Segment
+schema:
+  segment:
+    code: segmentCode
+    title: segmentTitle
+---
+
+# {segment.title}
+
+<SegmentHeader code={segment.code} title={segment.title} />
+
+## Families
+
+<FamilyList segment={segment.code} />
+
+## All Classes
+
+<ClassList segment={segment.code} />
+
+## All Commodities
+
+<CommodityList segment={segment.code} />
+
+## Statistics
+
+<SegmentStats segment={segment.code} />

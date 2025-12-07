@@ -1,0 +1,26 @@
+---
+layout: alternateTitle
+source: ONET
+$type: ONET/AlternateTitle
+$id: https://standards.org.ai/ONET/AlternateTitle/{alternateTitle.title}
+sameAs: AlternateTitle/{alternateTitle.title}
+params:
+  - AlternateTitle
+schema:
+  alternateTitle:
+    title: alternateTitle
+    shortTitle: shortTitle
+    occupation: oNETSOCCode
+---
+
+# {alternateTitle.title}
+
+<AlternateTitleHeader title={alternateTitle.title} shortTitle={alternateTitle.shortTitle} />
+
+## Primary Occupation
+
+<OccupationLink code={alternateTitle.occupation} />
+
+## Similar Titles
+
+<SimilarTitles title={alternateTitle.title} />

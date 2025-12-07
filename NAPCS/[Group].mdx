@@ -1,0 +1,34 @@
+---
+layout: group
+source: NAPCS
+$type: NAPCS/Group
+$id: https://standards.org.ai/NAPCS/Group/{group.code}
+sameAs: Group/{group.code}
+params:
+  - Group
+schema:
+  group:
+    code: code
+    title: codeTitle
+    definition: codeDefinition
+---
+
+# {group.title}
+
+<GroupHeader code={group.code} title={group.title} />
+
+## Definition
+
+{group.definition}
+
+## Classes
+
+<NAPCSClassList group={group.code} />
+
+## All Products
+
+<ProductList group={group.code} />
+
+## Statistics
+
+<GroupStats group={group.code} />

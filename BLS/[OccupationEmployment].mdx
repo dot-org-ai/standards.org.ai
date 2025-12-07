@@ -1,0 +1,60 @@
+---
+layout: occupationEmployment
+source: BLS/OES
+$type: BLS/OccupationEmployment
+$id: https://standards.org.ai/BLS/OccupationEmployment/{occupation.code}
+sameAs: OccupationEmployment/{occupation.code}
+params:
+  - OccupationEmployment
+schema:
+  occupation:
+    code: OCC_CODE
+    title: OCC_TITLE
+    group: OCC_GROUP
+    employment: TOT_EMP
+    meanWage: A_MEAN
+    medianWage: A_MEDIAN
+    pct10: A_PCT10
+    pct25: A_PCT25
+    pct75: A_PCT75
+    pct90: A_PCT90
+---
+
+# {occupation.title}
+
+<OccupationEmploymentHeader code={occupation.code} title={occupation.title} />
+
+## Employment
+
+<EmploymentStats employment={occupation.employment} />
+
+## Wages
+
+<WageStats
+  mean={occupation.meanWage}
+  median={occupation.medianWage}
+  pct10={occupation.pct10}
+  pct25={occupation.pct25}
+  pct75={occupation.pct75}
+  pct90={occupation.pct90}
+/>
+
+## Employment by Industry
+
+<EmploymentByIndustry occupation={occupation.code} />
+
+## Employment by State
+
+<EmploymentByState occupation={occupation.code} />
+
+## Employment by Metro Area
+
+<EmploymentByMetro occupation={occupation.code} />
+
+## Related ONET Occupation
+
+<ONETOccupationLink code={occupation.code} />
+
+## Wage Trends
+
+<WageTrends occupation={occupation.code} />

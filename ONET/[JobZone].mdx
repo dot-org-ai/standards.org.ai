@@ -1,0 +1,46 @@
+---
+layout: jobZone
+source: ONET
+$type: ONET/JobZone
+$id: https://standards.org.ai/ONET/JobZone/{jobZone.id}
+sameAs: JobZone/{jobZone.id}
+params:
+  - JobZone
+schema:
+  jobZone:
+    id: jobZone
+    name: name
+    experience: experience
+    education: education
+    training: jobTraining
+    examples: examples
+    svpRange: svpRange
+---
+
+# {jobZone.name}
+
+<JobZoneHeader id={jobZone.id} name={jobZone.name} />
+
+## Experience Required
+
+{jobZone.experience}
+
+## Education Required
+
+{jobZone.education}
+
+## Training Required
+
+{jobZone.training}
+
+## SVP Range
+
+{jobZone.svpRange}
+
+## Example Occupations
+
+{jobZone.examples}
+
+## All Occupations in This Zone
+
+<OccupationsByJobZone zoneId={jobZone.id} />

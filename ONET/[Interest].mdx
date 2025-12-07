@@ -1,0 +1,38 @@
+---
+layout: interest
+source: ONET
+$type: ONET/Interest
+$id: https://standards.org.ai/ONET/Interest/{interest.id}
+sameAs: Interest/{interest.id}
+params:
+  - Interest
+schema:
+  interest:
+    id: elementID
+    name: elementName
+    description: description
+---
+
+# {interest.name}
+
+<InterestHeader id={interest.id} name={interest.name} />
+
+## Description
+
+{interest.description}
+
+## RIASEC Type
+
+<RIASECType interestId={interest.id} />
+
+## Occupations With This Interest
+
+<OccupationsByInterest interestId={interest.id} />
+
+## Illustrative Activities
+
+<IllustrativeActivities interestId={interest.id} />
+
+## Related Interests
+
+<RelatedInterests interestId={interest.id} />

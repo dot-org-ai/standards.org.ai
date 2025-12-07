@@ -1,0 +1,39 @@
+---
+layout: class
+source: UNSPSC
+$type: UNSPSC/Class
+$id: https://standards.org.ai/UNSPSC/Class/{unspscClass.code}
+sameAs: Class/{unspscClass.code}
+params:
+  - Class
+schema:
+  unspscClass:
+    code: classCode
+    title: classTitle
+    segment: segmentCode
+    family: familyCode
+---
+
+# {unspscClass.title}
+
+<ClassHeader code={unspscClass.code} title={unspscClass.title} />
+
+## Hierarchy
+
+<UNSPSCHierarchy
+  segment={unspscClass.segment}
+  family={unspscClass.family}
+  unspscClass={unspscClass.code}
+/>
+
+## Parent Family
+
+<FamilyLink code={unspscClass.family} />
+
+## Commodities
+
+<CommodityList unspscClass={unspscClass.code} />
+
+## Sibling Classes
+
+<SiblingClasses family={unspscClass.family} current={unspscClass.code} />

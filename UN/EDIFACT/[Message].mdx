@@ -1,0 +1,38 @@
+---
+layout: message
+source: UN/EDIFACT
+$type: UN/EDIFACT/Message
+$id: https://standards.org.ai/UN/EDIFACT/Message/{message.code}
+sameAs: Message/{message.code}
+params:
+  - Message
+schema:
+  message:
+    code: code
+    description: description
+    revision: revision
+---
+
+# {message.code}
+
+<MessageHeader code={message.code} description={message.description} />
+
+## Description
+
+{message.description}
+
+## Revision
+
+{message.revision}
+
+## Message Structure
+
+<EDIFACTStructure messageCode={message.code} />
+
+## Related Messages
+
+<RelatedMessages messageCode={message.code} />
+
+## Usage Examples
+
+<MessageExamples messageCode={message.code} />

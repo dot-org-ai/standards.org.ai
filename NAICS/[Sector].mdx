@@ -1,0 +1,37 @@
+---
+layout: sector
+source: NAICS
+$type: NAICS/Sector
+$id: https://standards.org.ai/NAICS/Sector/{sector.code}
+sameAs: Sector/{sector.code}
+params:
+  - Sector
+schema:
+  sector:
+    code: 2022NAICSCode
+    title: 2022NAICSTitle
+---
+
+# {sector.title}
+
+<SectorHeader code={sector.code} title={sector.title} />
+
+## NAICS Code
+
+{sector.code}
+
+## Subsectors
+
+<SubsectorList sector={sector.code} />
+
+## All Industries
+
+<IndustryList sector={sector.code} />
+
+## Employment Statistics
+
+<SectorEmployment sector={sector.code} />
+
+## Related Career Clusters
+
+<CareerClustersBySector sector={sector.code} />

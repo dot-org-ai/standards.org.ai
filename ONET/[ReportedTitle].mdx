@@ -1,0 +1,30 @@
+---
+layout: reportedTitle
+source: ONET
+$type: ONET/ReportedTitle
+$id: https://standards.org.ai/ONET/ReportedTitle/{reportedTitle.title}
+sameAs: ReportedTitle/{reportedTitle.title}
+params:
+  - ReportedTitle
+schema:
+  reportedTitle:
+    title: reportedJobTitle
+    occupation: oNETSOCCode
+    count: shownInSurvey
+---
+
+# {reportedTitle.title}
+
+<ReportedTitleHeader title={reportedTitle.title} />
+
+## Primary Occupation
+
+<OccupationLink code={reportedTitle.occupation} />
+
+## Survey Count
+
+{reportedTitle.count}
+
+## Similar Reported Titles
+
+<SimilarReportedTitles title={reportedTitle.title} />

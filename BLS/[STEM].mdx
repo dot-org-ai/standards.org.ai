@@ -1,0 +1,43 @@
+---
+layout: stem
+source: BLS/STEM
+$type: BLS/STEM
+$id: https://standards.org.ai/BLS/STEM/{stem.code}
+sameAs: STEM/{stem.code}
+params:
+  - STEM
+schema:
+  stem:
+    code: OCC_CODE
+    title: OCC_TITLE
+    stemType: STEM_TYPE
+    domain: STEM_DOMAIN
+---
+
+# {stem.title}
+
+<STEMHeader code={stem.code} title={stem.title} stemType={stem.stemType} />
+
+## STEM Classification
+
+{stem.stemType}
+
+## STEM Domain
+
+{stem.domain}
+
+## Employment Statistics
+
+<STEMEmploymentStats code={stem.code} />
+
+## Related ONET Occupation
+
+<ONETOccupationLink code={stem.code} />
+
+## Related STEM Occupations
+
+<RelatedSTEMOccupations domain={stem.domain} current={stem.code} />
+
+## STEM Employment by State
+
+<STEMByState code={stem.code} />

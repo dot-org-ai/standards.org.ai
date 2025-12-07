@@ -1,0 +1,50 @@
+---
+layout: brick
+source: GS1/GPC
+$type: GS1/GPC/Brick
+$id: https://standards.org.ai/GS1/GPC/Brick/{brick.code}
+sameAs: Brick/{brick.code}
+params:
+  - Brick
+schema:
+  brick:
+    code: BrickCode
+    title: BrickTitle
+    definition: BrickDefinition
+    segment: SegmentCode
+    family: FamilyCode
+    class: ClassCode
+---
+
+# {brick.title}
+
+<BrickHeader code={brick.code} title={brick.title} />
+
+## Definition
+
+{brick.definition}
+
+## Hierarchy
+
+<GPCHierarchy
+  segment={brick.segment}
+  family={brick.family}
+  brickClass={brick.class}
+  brick={brick.code}
+/>
+
+## Attributes
+
+<BrickAttributes brick={brick.code} />
+
+## Related Products
+
+<RelatedProducts brick={brick.code} />
+
+## Parent Class
+
+<ClassLink code={brick.class} />
+
+## Sibling Bricks
+
+<SiblingBricks brickClass={brick.class} current={brick.code} />
