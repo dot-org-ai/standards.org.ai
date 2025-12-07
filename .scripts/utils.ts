@@ -16,6 +16,7 @@ export const NAMESPACES = {
   IANA: 'iana.org.ai',
   EDIFACT: 'un.org.ai',
   W3C: 'w3.org.ai',
+  W3C_ALT: 'w3c.org.ai',  // Alternative W3C namespace used in some files
   FHIR: 'fhir.org.ai',
   X12: 'x12.org.ai',
   EANCOM: 'eancom.org.ai',
@@ -55,18 +56,48 @@ export interface RelationshipRecord {
   relationshipType?: string
 }
 
+// Symbol to word mappings for ID generation
+const SYMBOL_MAPPINGS: Record<string, string> = {
+  '%': 'Percent',
+  '#': 'Hash',
+  '@': 'At',
+  '&': 'And',
+  '+': 'Plus',
+  '*': 'Star',
+  '<': 'Less_Than',
+  '>': 'Greater_Than',
+  '=': 'Equals',
+  '!': 'Not',
+  '?': 'Question',
+  '$': 'Dollar',
+  '€': 'Euro',
+  '£': 'Pound',
+  '¥': 'Yen',
+}
+
 /**
  * Convert a string to Wikipedia-style name (Title_Case_With_Underscores)
  * Examples:
  *   "chief executives" -> "Chief_Executives"
  *   "software-developer" -> "Software_Developer"
  *   "IT Manager" -> "IT_Manager"
+ *   "%" -> "Percent"
  */
 export function toWikipediaStyleId(str: string): string {
   if (!str) return ''
 
-  return str
-    .trim()
+  // Check for exact symbol matches first
+  if (SYMBOL_MAPPINGS[str.trim()]) {
+    return SYMBOL_MAPPINGS[str.trim()]
+  }
+
+  // Replace known symbols with words
+  let processed = str.trim()
+  for (const [symbol, word] of Object.entries(SYMBOL_MAPPINGS)) {
+    processed = processed.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `)
+  }
+
+  return processed
     // Replace multiple spaces, dashes, slashes with single space
     .replace(/[\s\-\/]+/g, ' ')
     // Remove special characters except apostrophes and parentheses
