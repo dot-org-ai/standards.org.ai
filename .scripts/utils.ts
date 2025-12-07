@@ -16,7 +16,6 @@ export const NAMESPACES = {
   IANA: 'iana.org.ai',
   EDIFACT: 'un.org.ai',
   W3C: 'w3.org.ai',
-  W3C_ALT: 'w3c.org.ai',  // Alternative W3C namespace used in some files
   FHIR: 'fhir.org.ai',
   X12: 'x12.org.ai',
   EANCOM: 'eancom.org.ai',

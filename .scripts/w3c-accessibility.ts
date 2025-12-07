@@ -20,7 +20,7 @@ import {
   ensureOutputDirs,
 } from './utils'
 
-const NS = 'w3c.org.ai'
+const NS = 'w3.org.ai'
 const SOURCE_DIR = getSourcePath('W3C')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
