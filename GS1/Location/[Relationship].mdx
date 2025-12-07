@@ -1,0 +1,36 @@
+---
+layout: locationRelationship
+source: GS1/Location
+$type: GS1/Location/Relationship
+$id: https://standards.org.ai/GS1/Location/Relationship/{relationship.id}
+sameAs: LocationRelationship/{relationship.id}
+params:
+  - Relationship
+schema:
+  relationship:
+    id: id
+    name: name
+    description: description
+    sourceType: sourceType
+    targetType: targetType
+---
+
+# {relationship.name}
+
+<RelationshipHeader id={relationship.id} name={relationship.name} />
+
+## Description
+
+{relationship.description}
+
+## Source Type
+
+<LocationTypeLink id={relationship.sourceType} />
+
+## Target Type
+
+<LocationTypeLink id={relationship.targetType} />
+
+## Usage Examples
+
+<RelationshipExamples relationshipId={relationship.id} />

@@ -1,0 +1,39 @@
+---
+layout: schema
+source: GS1
+$type: GS1/Schema
+$id: https://standards.org.ai/GS1/Schema/{schema.id}
+sameAs: Schema/{schema.id}
+params:
+  - Schema
+schema:
+  schema:
+    id: id
+    name: name
+    type: type
+    description: description
+---
+
+# {schema.name}
+
+<SchemaHeader id={schema.id} name={schema.name} type={schema.type} />
+
+## Description
+
+{schema.description}
+
+## Type
+
+{schema.type}
+
+## Properties
+
+<SchemaProperties schemaId={schema.id} />
+
+## Related Schemas
+
+<RelatedSchemas schemaId={schema.id} />
+
+## Usage Examples
+
+<SchemaExamples schemaId={schema.id} />

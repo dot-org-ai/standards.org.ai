@@ -1,0 +1,29 @@
+---
+layout: category
+source: APQC
+$type: APQC/Category
+$id: https://standards.org.ai/APQC/Category/{category.name}
+sameAs: Category/{category.name}
+params:
+  - Category
+schema:
+  category:
+    name: category
+    description: description
+---
+
+# {category.name}
+
+<CategoryHeader name={category.name} />
+
+## Description
+
+{category.description}
+
+## Processes in This Category
+
+<ProcessesByCategory category={category.name} />
+
+## Metrics
+
+<MetricsByCategory category={category.name} />

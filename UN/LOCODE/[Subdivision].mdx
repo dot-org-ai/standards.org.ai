@@ -1,0 +1,37 @@
+---
+layout: subdivision
+source: UN/LOCODE
+$type: UN/LOCODE/Subdivision
+$id: https://standards.org.ai/UN/LOCODE/Subdivision/{subdivision.country}-{subdivision.code}
+sameAs: Subdivision/{subdivision.country}-{subdivision.code}
+params:
+  - Subdivision
+schema:
+  subdivision:
+    country: CountryCode
+    code: SubdivisionCode
+    name: SubdivisionName
+    type: SubdivisionType
+---
+
+# {subdivision.name}
+
+<SubdivisionHeader country={subdivision.country} code={subdivision.code} name={subdivision.name} />
+
+## Codes
+
+- Country: {subdivision.country}
+- Subdivision Code: {subdivision.code}
+- Full Code: {subdivision.country}-{subdivision.code}
+
+## Type
+
+{subdivision.type}
+
+## Parent Country
+
+<CountryLink alpha2={subdivision.country} />
+
+## Locations in This Subdivision
+
+<LocationsBySubdivision country={subdivision.country} subdivision={subdivision.code} />

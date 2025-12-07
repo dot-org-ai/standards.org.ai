@@ -1,0 +1,43 @@
+---
+layout: cip
+source: AdvanceCTE
+$type: AdvanceCTE/CIP
+$id: https://standards.org.ai/AdvanceCTE/CIP/{cip.code}
+sameAs: CIP/{cip.code}
+params:
+  - CIP
+schema:
+  cip:
+    code: cIPCode2020)
+    title: cIPTitle2020)
+    cluster: careerCluster
+    subCluster: subCluster
+---
+
+# {cip.title}
+
+<CIPHeader code={cip.code} title={cip.title} />
+
+## CIP Code
+
+{cip.code}
+
+## Career Cluster
+
+<CareerClusterLink name={cip.cluster} />
+
+## Sub-Cluster
+
+<SubClusterLink name={cip.subCluster} />
+
+## Related SOC Occupations
+
+<OccupationsByCIP cip={cip.code} />
+
+## Related Programs
+
+<ProgramsByCIP cip={cip.code} />
+
+## Similar CIP Codes
+
+<SimilarCIPs cip={cip.code} />

@@ -1,0 +1,30 @@
+---
+layout: functionalType
+source: GS1/GLN
+$type: GS1/GLN/FunctionalType
+$id: https://standards.org.ai/GS1/GLN/FunctionalType/{functionalType.id}
+sameAs: FunctionalType/{functionalType.id}
+params:
+  - FunctionalType
+schema:
+  functionalType:
+    id: id
+    name: name
+    description: description
+---
+
+# {functionalType.name}
+
+<FunctionalTypeHeader id={functionalType.id} name={functionalType.name} />
+
+## Description
+
+{functionalType.description}
+
+## Location Types Using This
+
+<LocationTypesByFunctionalType functionalTypeId={functionalType.id} />
+
+## Usage Examples
+
+<FunctionalTypeExamples functionalTypeId={functionalType.id} />

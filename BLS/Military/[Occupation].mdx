@@ -1,0 +1,56 @@
+---
+layout: militaryOccupation
+source: BLS/Military
+$type: BLS/Military/Occupation
+$id: https://standards.org.ai/BLS/Military/Occupation/{military.code}
+sameAs: MilitaryOccupation/{military.code}
+params:
+  - Occupation
+schema:
+  military:
+    code: DODOCC
+    title: DODOCC_TITLE
+    service: SVC
+    mpc: MPC
+    moc: MOC
+    mocTitle: MOC_TITLE
+    status: STATUS
+    soc1: SOC1
+    soc1Title: SOC1_TITLE
+    soc2: SOC2
+    soc2Title: SOC2_TITLE
+    onet1: ONET1
+    onet1Title: ONET1_TITLE
+---
+
+# {military.title}
+
+<MilitaryOccupationHeader code={military.code} title={military.title} service={military.service} />
+
+## Military Codes
+
+- DOD Occupation Code: {military.code}
+- Service: {military.service}
+- MPC: {military.mpc}
+- MOC: {military.moc}
+
+## Status
+
+{military.status}
+
+## Civilian Equivalents (SOC)
+
+<SOCLink code={military.soc1} title={military.soc1Title} />
+<SOCLink code={military.soc2} title={military.soc2Title} />
+
+## O*NET Occupations
+
+<ONETOccupationLink code={military.onet1} title={military.onet1Title} />
+
+## Related Military Occupations
+
+<RelatedMilitaryOccupations code={military.code} />
+
+## Transition Resources
+
+<TransitionResources militaryCode={military.code} />
