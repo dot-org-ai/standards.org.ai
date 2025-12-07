@@ -2,13 +2,14 @@
 layout: education
 source: ONET
 $type: ONET/Education
-$id: https://standards.org.ai/ONET/Education/{education.id}
-sameAs: Education/{education.id}
+$id: https://standards.org.ai/ONET/Education/{education.code}
+sameAs: https://standards.org.ai/Education/{education.code}
+canonical: https://onet.org.ai/Education/{education.code}
 params:
   - Education
 schema:
   education:
-    id: elementID
+    code: elementID
     name: elementName
     description: description
     category: category
@@ -16,7 +17,7 @@ schema:
 
 # {education.name}
 
-<EducationHeader id={education.id} name={education.name} />
+<EducationHeader id={education.code} name={education.name} />
 
 ## Description
 
@@ -28,8 +29,8 @@ schema:
 
 ## Occupations Requiring This Education
 
-<OccupationsByEducation educationId={education.id} />
+<OccupationsByEducation educationId={education.code} />
 
 ## Related Training Requirements
 
-<RelatedTraining educationId={education.id} />
+<RelatedTraining educationId={education.code} />

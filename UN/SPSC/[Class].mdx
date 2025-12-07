@@ -1,39 +1,40 @@
 ---
 layout: class
-source: UNSPSC
-$type: UNSPSC/Class
-$id: https://standards.org.ai/UNSPSC/Class/{unspscClass.code}
-sameAs: Class/{unspscClass.code}
+source: UN/SPSC
+$type: UN/SPSC/Class
+$id: https://standards.org.ai/UN/SPSC/Class/{spscClass.code}
+sameAs: https://standards.org.ai/Class/{spscClass.code}
+canonical: https://un.org.ai/SPSC/Class/{spscClass.code}
 params:
   - Class
 schema:
-  unspscClass:
+  spscClass:
     code: classCode
     title: classTitle
     segment: segmentCode
     family: familyCode
 ---
 
-# {unspscClass.title}
+# {spscClass.title}
 
-<ClassHeader code={unspscClass.code} title={unspscClass.title} />
+<ClassHeader code={spscClass.code} title={spscClass.title} />
 
 ## Hierarchy
 
-<UNSPSCHierarchy
-  segment={unspscClass.segment}
-  family={unspscClass.family}
-  unspscClass={unspscClass.code}
+<SPSCHierarchy
+  segment={spscClass.segment}
+  family={spscClass.family}
+  spscClass={spscClass.code}
 />
 
 ## Parent Family
 
-<FamilyLink code={unspscClass.family} />
+<FamilyLink code={spscClass.family} />
 
 ## Commodities
 
-<CommodityList unspscClass={unspscClass.code} />
+<CommodityList spscClass={spscClass.code} />
 
 ## Sibling Classes
 
-<SiblingClasses family={unspscClass.family} current={unspscClass.code} />
+<SiblingClasses family={spscClass.family} current={spscClass.code} />

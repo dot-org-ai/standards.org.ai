@@ -2,20 +2,21 @@
 layout: tool
 source: ONET
 $type: ONET/Tool
-$id: https://standards.org.ai/ONET/Tool/{tool.id}
-sameAs: Tool/{tool.id}
+$id: https://standards.org.ai/ONET/Tool/{tool.code}
+sameAs: https://standards.org.ai/Tool/{tool.code}
+canonical: https://onet.org.ai/Tool/{tool.code}
 params:
   - Tool
 schema:
   tool:
-    id: commodityCode
+    code: commodityCode
     title: commodityTitle
     example: exampleName
 ---
 
 # {tool.title}
 
-<ToolHeader id={tool.id} title={tool.title} />
+<ToolHeader id={tool.code} title={tool.title} />
 
 ## Example
 
@@ -23,8 +24,8 @@ schema:
 
 ## Occupations Using This Tool
 
-<OccupationsByTool toolId={tool.id} />
+<OccupationsByTool toolId={tool.code} />
 
 ## Related Tools
 
-<RelatedTools toolId={tool.id} />
+<RelatedTools toolId={tool.code} />

@@ -2,12 +2,14 @@
 layout: category
 source: APQC
 $type: APQC/Category
-$id: https://standards.org.ai/APQC/Category/{category.name}
-sameAs: Category/{category.name}
+$id: https://standards.org.ai/APQC/Category/{category.code}
+sameAs: https://standards.org.ai/Category/{category.code}
+canonical: https://apqc.org.ai/Category/{category.code}
 params:
   - Category
 schema:
   category:
+    code: category
     name: category
     description: description
 ---

@@ -2,20 +2,21 @@
 layout: workContextCategory
 source: ONET
 $type: ONET/WorkContextCategory
-$id: https://standards.org.ai/ONET/WorkContextCategory/{category.id}
-sameAs: WorkContextCategory/{category.id}
+$id: https://standards.org.ai/ONET/WorkContextCategory/{category.code}
+sameAs: https://standards.org.ai/WorkContextCategory/{category.code}
+canonical: https://onet.org.ai/WorkContextCategory/{category.code}
 params:
   - WorkContextCategory
 schema:
   category:
-    id: elementID
+    code: elementID
     name: elementName
     description: description
 ---
 
 # {category.name}
 
-<WorkContextCategoryHeader id={category.id} name={category.name} />
+<WorkContextCategoryHeader id={category.code} name={category.name} />
 
 ## Description
 
@@ -23,8 +24,8 @@ schema:
 
 ## Work Contexts in This Category
 
-<WorkContextsByCategory categoryId={category.id} />
+<WorkContextsByCategory categoryId={category.code} />
 
 ## Related Categories
 
-<RelatedWorkContextCategories categoryId={category.id} />
+<RelatedWorkContextCategories categoryId={category.code} />

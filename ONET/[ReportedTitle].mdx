@@ -2,12 +2,14 @@
 layout: reportedTitle
 source: ONET
 $type: ONET/ReportedTitle
-$id: https://standards.org.ai/ONET/ReportedTitle/{reportedTitle.title}
-sameAs: ReportedTitle/{reportedTitle.title}
+$id: https://standards.org.ai/ONET/ReportedTitle/{reportedTitle.code}
+sameAs: https://standards.org.ai/ReportedTitle/{reportedTitle.code}
+canonical: https://onet.org.ai/ReportedTitle/{reportedTitle.code}
 params:
   - ReportedTitle
 schema:
   reportedTitle:
+    code: reportedJobTitle
     title: reportedJobTitle
     occupation: oNETSOCCode
     count: shownInSurvey

@@ -2,13 +2,14 @@
 layout: scale
 source: ONET
 $type: ONET/Scale
-$id: https://standards.org.ai/ONET/Scale/{scale.id}
-sameAs: Scale/{scale.id}
+$id: https://standards.org.ai/ONET/Scale/{scale.code}
+sameAs: https://standards.org.ai/Scale/{scale.code}
+canonical: https://onet.org.ai/Scale/{scale.code}
 params:
   - Scale
 schema:
   scale:
-    id: scaleID
+    code: scaleID
     name: scaleName
     minimum: minimum
     maximum: maximum
@@ -16,7 +17,7 @@ schema:
 
 # {scale.name}
 
-<ScaleHeader id={scale.id} name={scale.name} />
+<ScaleHeader id={scale.code} name={scale.name} />
 
 ## Range
 
@@ -24,8 +25,8 @@ Minimum: {scale.minimum} | Maximum: {scale.maximum}
 
 ## Scale Categories
 
-<ScaleCategories scaleId={scale.id} />
+<ScaleCategories scaleId={scale.code} />
 
 ## Elements Using This Scale
 
-<ElementsByScale scaleId={scale.id} />
+<ElementsByScale scaleId={scale.code} />

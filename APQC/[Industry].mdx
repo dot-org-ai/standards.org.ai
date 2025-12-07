@@ -2,12 +2,14 @@
 layout: industry
 source: APQC
 $type: APQC/Industry
-$id: https://standards.org.ai/APQC/Industry/{industry.name}
-sameAs: Industry/{industry.name}
+$id: https://standards.org.ai/APQC/Industry/{industry.code}
+sameAs: https://standards.org.ai/Industry/{industry.code}
+canonical: https://apqc.org.ai/Industry/{industry.code}
 params:
   - Industry
 schema:
   industry:
+    code: industry
     name: industry
 ---
 

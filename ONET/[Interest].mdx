@@ -2,20 +2,21 @@
 layout: interest
 source: ONET
 $type: ONET/Interest
-$id: https://standards.org.ai/ONET/Interest/{interest.id}
-sameAs: Interest/{interest.id}
+$id: https://standards.org.ai/ONET/Interest/{interest.code}
+sameAs: https://standards.org.ai/Interest/{interest.code}
+canonical: https://onet.org.ai/Interest/{interest.code}
 params:
   - Interest
 schema:
   interest:
-    id: elementID
+    code: elementID
     name: elementName
     description: description
 ---
 
 # {interest.name}
 
-<InterestHeader id={interest.id} name={interest.name} />
+<InterestHeader id={interest.code} name={interest.name} />
 
 ## Description
 
@@ -23,16 +24,16 @@ schema:
 
 ## RIASEC Type
 
-<RIASECType interestId={interest.id} />
+<RIASECType interestId={interest.code} />
 
 ## Occupations With This Interest
 
-<OccupationsByInterest interestId={interest.id} />
+<OccupationsByInterest interestId={interest.code} />
 
 ## Illustrative Activities
 
-<IllustrativeActivities interestId={interest.id} />
+<IllustrativeActivities interestId={interest.code} />
 
 ## Related Interests
 
-<RelatedInterests interestId={interest.id} />
+<RelatedInterests interestId={interest.code} />

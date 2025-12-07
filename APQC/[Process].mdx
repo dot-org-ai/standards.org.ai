@@ -2,13 +2,15 @@
 layout: process
 source: APQC
 $type: APQC/Process
-$id: https://standards.org.ai/APQC/Process/{process.hierarchyId}
-sameAs: Process/{process.hierarchyId}
+$id: https://standards.org.ai/APQC/Process/{process.code}
+sameAs: https://standards.org.ai/Process/{process.code}
+canonical: https://apqc.org.ai/Process/{process.code}
 params:
   - Process
 schema:
   process:
     id: pcfId
+    code: hierarchyId
     hierarchyId: hierarchyId
     name: name
     description: description

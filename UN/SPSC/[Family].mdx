@@ -1,9 +1,10 @@
 ---
 layout: family
-source: UNSPSC
-$type: UNSPSC/Family
-$id: https://standards.org.ai/UNSPSC/Family/{family.code}
-sameAs: Family/{family.code}
+source: UN/SPSC
+$type: UN/SPSC/Family
+$id: https://standards.org.ai/UN/SPSC/Family/{family.code}
+sameAs: https://standards.org.ai/Family/{family.code}
+canonical: https://un.org.ai/SPSC/Family/{family.code}
 params:
   - Family
 schema:
@@ -19,7 +20,7 @@ schema:
 
 ## Hierarchy
 
-<UNSPSCHierarchy segment={family.segment} family={family.code} />
+<SPSCHierarchy segment={family.segment} family={family.code} />
 
 ## Parent Segment
 

@@ -2,12 +2,14 @@
 layout: metric
 source: APQC
 $type: APQC/Metric
-$id: https://standards.org.ai/APQC/Metric/{metric.id}
-sameAs: Metric/{metric.id}
+$id: https://standards.org.ai/APQC/Metric/{metric.code}
+sameAs: https://standards.org.ai/Metric/{metric.code}
+canonical: https://apqc.org.ai/Metric/{metric.code}
 params:
   - Metric
 schema:
   metric:
+    code: metricID
     id: metricID
     name: metricName
     category: metricCategory

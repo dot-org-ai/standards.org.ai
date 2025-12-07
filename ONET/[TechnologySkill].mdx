@@ -2,13 +2,14 @@
 layout: technologySkill
 source: ONET
 $type: ONET/TechnologySkill
-$id: https://standards.org.ai/ONET/TechnologySkill/{tech.id}
-sameAs: TechnologySkill/{tech.id}
+$id: https://standards.org.ai/ONET/TechnologySkill/{tech.code}
+sameAs: https://standards.org.ai/TechnologySkill/{tech.code}
+canonical: https://onet.org.ai/TechnologySkill/{tech.code}
 params:
   - TechnologySkill
 schema:
   tech:
-    id: commodityCode
+    code: commodityCode
     title: commodityTitle
     example: exampleName
     hotTechnology: hotTechnology
@@ -16,7 +17,7 @@ schema:
 
 # {tech.title}
 
-<TechnologySkillHeader id={tech.id} title={tech.title} hotTechnology={tech.hotTechnology} />
+<TechnologySkillHeader id={tech.code} title={tech.title} hotTechnology={tech.hotTechnology} />
 
 ## Example
 
@@ -24,8 +25,8 @@ schema:
 
 ## Occupations Using This Technology
 
-<OccupationsByTechnology techId={tech.id} />
+<OccupationsByTechnology techId={tech.code} />
 
 ## Related Technologies
 
-<RelatedTechnologies techId={tech.id} />
+<RelatedTechnologies techId={tech.code} />

@@ -2,13 +2,14 @@
 layout: emergingTask
 source: ONET
 $type: ONET/EmergingTask
-$id: https://standards.org.ai/ONET/EmergingTask/{emergingTask.id}
-sameAs: EmergingTask/{emergingTask.id}
+$id: https://standards.org.ai/ONET/EmergingTask/{emergingTask.code}
+sameAs: https://standards.org.ai/EmergingTask/{emergingTask.code}
+canonical: https://onet.org.ai/EmergingTask/{emergingTask.code}
 params:
   - EmergingTask
 schema:
   emergingTask:
-    id: taskID
+    code: taskID
     task: task
     category: category
     occupation: oNETSOCCode
@@ -16,7 +17,7 @@ schema:
 
 # {emergingTask.task}
 
-<EmergingTaskHeader id={emergingTask.id} category={emergingTask.category} />
+<EmergingTaskHeader id={emergingTask.code} category={emergingTask.category} />
 
 ## Task Category
 
@@ -28,8 +29,8 @@ schema:
 
 ## Related Emerging Tasks
 
-<RelatedEmergingTasks taskId={emergingTask.id} />
+<RelatedEmergingTasks taskId={emergingTask.code} />
 
 ## Related Core Tasks
 
-<RelatedCoreTasks taskId={emergingTask.id} />
+<RelatedCoreTasks taskId={emergingTask.code} />

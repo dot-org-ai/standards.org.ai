@@ -2,20 +2,21 @@
 layout: workContext
 source: ONET
 $type: ONET/WorkContext
-$id: https://standards.org.ai/ONET/WorkContext/{context.id}
-sameAs: WorkContext/{context.id}
+$id: https://standards.org.ai/ONET/WorkContext/{context.code}
+sameAs: https://standards.org.ai/WorkContext/{context.code}
+canonical: https://onet.org.ai/WorkContext/{context.code}
 params:
   - WorkContext
 schema:
   context:
-    id: elementID
+    code: elementID
     name: elementName
     description: description
 ---
 
 # {context.name}
 
-<WorkContextHeader id={context.id} name={context.name} />
+<WorkContextHeader id={context.code} name={context.name} />
 
 ## Description
 
@@ -23,12 +24,12 @@ schema:
 
 ## Occupations With This Context
 
-<OccupationsByWorkContext contextId={context.id} />
+<OccupationsByWorkContext contextId={context.code} />
 
 ## Related Abilities
 
-<AbilitiesByWorkContext contextId={context.id} />
+<AbilitiesByWorkContext contextId={context.code} />
 
 ## Related Skills
 
-<SkillsByWorkContext contextId={context.id} />
+<SkillsByWorkContext contextId={context.code} />

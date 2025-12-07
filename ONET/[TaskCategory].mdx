@@ -2,20 +2,21 @@
 layout: taskCategory
 source: ONET
 $type: ONET/TaskCategory
-$id: https://standards.org.ai/ONET/TaskCategory/{taskCategory.id}
-sameAs: TaskCategory/{taskCategory.id}
+$id: https://standards.org.ai/ONET/TaskCategory/{taskCategory.code}
+sameAs: https://standards.org.ai/TaskCategory/{taskCategory.code}
+canonical: https://onet.org.ai/TaskCategory/{taskCategory.code}
 params:
   - TaskCategory
 schema:
   taskCategory:
-    id: scaleID
+    code: scaleID
     name: category
     description: categoryDescription
 ---
 
 # {taskCategory.name}
 
-<TaskCategoryHeader id={taskCategory.id} name={taskCategory.name} />
+<TaskCategoryHeader id={taskCategory.code} name={taskCategory.name} />
 
 ## Description
 
@@ -23,4 +24,4 @@ schema:
 
 ## Tasks in This Category
 
-<TasksByCategory categoryId={taskCategory.id} />
+<TasksByCategory categoryId={taskCategory.code} />

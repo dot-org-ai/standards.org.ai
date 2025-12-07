@@ -2,13 +2,14 @@
 layout: jobZone
 source: ONET
 $type: ONET/JobZone
-$id: https://standards.org.ai/ONET/JobZone/{jobZone.id}
-sameAs: JobZone/{jobZone.id}
+$id: https://standards.org.ai/ONET/JobZone/{jobZone.code}
+sameAs: https://standards.org.ai/JobZone/{jobZone.code}
+canonical: https://onet.org.ai/JobZone/{jobZone.code}
 params:
   - JobZone
 schema:
   jobZone:
-    id: jobZone
+    code: jobZone
     name: name
     experience: experience
     education: education
@@ -19,7 +20,7 @@ schema:
 
 # {jobZone.name}
 
-<JobZoneHeader id={jobZone.id} name={jobZone.name} />
+<JobZoneHeader id={jobZone.code} name={jobZone.name} />
 
 ## Experience Required
 
@@ -43,4 +44,4 @@ schema:
 
 ## All Occupations in This Zone
 
-<OccupationsByJobZone zoneId={jobZone.id} />
+<OccupationsByJobZone zoneId={jobZone.code} />

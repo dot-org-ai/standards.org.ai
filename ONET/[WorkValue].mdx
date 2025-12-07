@@ -2,20 +2,21 @@
 layout: workValue
 source: ONET
 $type: ONET/WorkValue
-$id: https://standards.org.ai/ONET/WorkValue/{workValue.id}
-sameAs: WorkValue/{workValue.id}
+$id: https://standards.org.ai/ONET/WorkValue/{workValue.code}
+sameAs: https://standards.org.ai/WorkValue/{workValue.code}
+canonical: https://onet.org.ai/WorkValue/{workValue.code}
 params:
   - WorkValue
 schema:
   workValue:
-    id: elementID
+    code: elementID
     name: elementName
     description: description
 ---
 
 # {workValue.name}
 
-<WorkValueHeader id={workValue.id} name={workValue.name} />
+<WorkValueHeader id={workValue.code} name={workValue.name} />
 
 ## Description
 
@@ -23,12 +24,12 @@ schema:
 
 ## Occupations Valuing This
 
-<OccupationsByWorkValue valueId={workValue.id} />
+<OccupationsByWorkValue valueId={workValue.code} />
 
 ## Related Work Values
 
-<RelatedWorkValues valueId={workValue.id} />
+<RelatedWorkValues valueId={workValue.code} />
 
 ## Related Interests
 
-<InterestsByWorkValue valueId={workValue.id} />
+<InterestsByWorkValue valueId={workValue.code} />

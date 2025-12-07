@@ -2,12 +2,14 @@
 layout: country
 source: ISO/3166-1
 $type: ISO/Country
-$id: https://standards.org.ai/ISO/Country/{country.alpha2}
-sameAs: Country/{country.alpha2}
+$id: https://standards.org.ai/ISO/Country/{country.code}
+sameAs: https://standards.org.ai/Country/{country.code}
+canonical: https://iso.org.ai/Country/{country.code}
 params:
   - Country
 schema:
   country:
+    code: ISO3166-1-Alpha-2
     alpha2: ISO3166-1-Alpha-2
     alpha3: ISO3166-1-Alpha-3
     numeric: ISO3166-1-numeric

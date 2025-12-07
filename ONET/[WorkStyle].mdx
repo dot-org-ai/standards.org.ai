@@ -2,20 +2,21 @@
 layout: workStyle
 source: ONET
 $type: ONET/WorkStyle
-$id: https://standards.org.ai/ONET/WorkStyle/{style.id}
-sameAs: WorkStyle/{style.id}
+$id: https://standards.org.ai/ONET/WorkStyle/{style.code}
+sameAs: https://standards.org.ai/WorkStyle/{style.code}
+canonical: https://onet.org.ai/WorkStyle/{style.code}
 params:
   - WorkStyle
 schema:
   style:
-    id: elementID
+    code: elementID
     name: elementName
     description: description
 ---
 
 # {style.name}
 
-<WorkStyleHeader id={style.id} name={style.name} />
+<WorkStyleHeader id={style.code} name={style.name} />
 
 ## Description
 
@@ -23,8 +24,8 @@ schema:
 
 ## Occupations Valuing This Style
 
-<OccupationsByWorkStyle styleId={style.id} />
+<OccupationsByWorkStyle styleId={style.code} />
 
 ## Related Work Styles
 
-<RelatedWorkStyles styleId={style.id} />
+<RelatedWorkStyles styleId={style.code} />

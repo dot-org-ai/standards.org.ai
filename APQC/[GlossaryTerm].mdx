@@ -2,12 +2,14 @@
 layout: glossaryTerm
 source: APQC
 $type: APQC/GlossaryTerm
-$id: https://standards.org.ai/APQC/GlossaryTerm/{glossaryTerm.id}
-sameAs: GlossaryTerm/{glossaryTerm.id}
+$id: https://standards.org.ai/APQC/GlossaryTerm/{glossaryTerm.code}
+sameAs: https://standards.org.ai/GlossaryTerm/{glossaryTerm.code}
+canonical: https://apqc.org.ai/GlossaryTerm/{glossaryTerm.code}
 params:
   - GlossaryTerm
 schema:
   glossaryTerm:
+    code: processElementID
     id: processElementID
     name: processElement
     definition: definition
