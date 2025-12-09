@@ -317,6 +317,7 @@ function transformPeppolBusinessProcesses(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(`${row.description} Profile: ${row.profile}`),
       code: row.code,
+      includedIn: getAggregationsForType('BusinessProcess'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.BusinessProcesses.tsv'), records)

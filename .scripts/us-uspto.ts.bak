@@ -27,7 +27,6 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
-  getAggregationsForType,
 } from './utils'
 
 const NS = NAMESPACES.USPTO

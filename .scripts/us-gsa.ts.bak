@@ -13,7 +13,6 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
-  getAggregationsForType,
   type StandardRecord,
   type RelationshipRecord,
 } from './utils'
