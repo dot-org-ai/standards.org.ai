@@ -12,12 +12,17 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
   type RelationshipRecord,
 } from './utils'
 
-// Use standards.org.ai as the namespace for all Finance standards
-const NS = 'standards.org.ai'
+// Define namespaces for finance standards
+const ISO20022_NS = NAMESPACES.ISO20022
+const LEI_NS = NAMESPACES.LEI
+const ISIN_NS = NAMESPACES.ISIN
+const MCC_NS = NAMESPACES.MCC
+const SWIFT_NS = NAMESPACES.SWIFT
 
 const SOURCE_DIR = getSourcePath('Finance')
 const DATA_DIR = getDataPath()

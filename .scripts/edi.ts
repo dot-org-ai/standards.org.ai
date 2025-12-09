@@ -12,13 +12,15 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
-// EDI Namespaces - using standards.org.ai as requested
-const NS_X12 = 'standards.org.ai'
-const NS_EANCOM = 'standards.org.ai'
-const NS_PEPPOL = 'standards.org.ai'
+// EDI Namespaces - proper namespace mapping
+const NS_X12 = NAMESPACES.X12 // x12.org.ai
+const NS_EDIFACT = NAMESPACES.EDIFACT // un.org.ai
+const NS_EANCOM = NAMESPACES.EANCOM // gs1.org.ai
+const NS_PEPPOL = NAMESPACES.Peppol // edi.org.ai
 
 const SOURCE_DIR_X12 = getSourcePath('EDI/X12')
 const SOURCE_DIR_EANCOM = getSourcePath('EDI/EANCOM')
@@ -124,6 +126,7 @@ function transformX12TransactionSets(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(row.description),
       code: row.code,
+      includedIn: getAggregationsForType('TransactionSet'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.X12.TransactionSets.tsv'), records)
