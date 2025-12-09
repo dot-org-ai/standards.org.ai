@@ -344,6 +344,7 @@ function transformPeppolParticipantSchemes(): void {
       name: `${row.schemeID} - ${row.schemeName}`,
       description: cleanDescription(`${row.schemeName} (${row.issuingOrganization}). Status: ${row.status}`),
       code: row.icd,
+      includedIn: getAggregationsForType('ParticipantScheme'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.ParticipantSchemes.tsv'), records)
@@ -370,6 +371,7 @@ function transformPeppolCodelists(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(`${row.description} (${row.codelistName})`),
       code: row.code,
+      includedIn: getAggregationsForType('Codelist'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.Codelists.tsv'), records)
