@@ -208,6 +208,7 @@ function transformEANCOMMessages(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(row.description),
       code: row.code,
+      includedIn: getAggregationsForType('Message'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.EANCOM.Messages.tsv'), records)
@@ -234,6 +235,7 @@ function transformEANCOMSegments(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(row.description),
       code: row.code,
+      includedIn: getAggregationsForType('Segment'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.EANCOM.Segments.tsv'), records)
@@ -260,6 +262,7 @@ function transformEANCOMDataElements(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(`${row.description} Type: ${row.dataType}, Length: ${row.minLength}-${row.maxLength}`),
       code: row.code,
+      includedIn: getAggregationsForType('DataElement'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.EANCOM.DataElements.tsv'), records)
@@ -287,6 +290,7 @@ function transformPeppolDocuments(): void {
       name: row.name,
       description: cleanDescription(`${row.description} Version: ${row.version}`),
       code: row.code,
+      includedIn: getAggregationsForType('Document'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.Documents.tsv'), records)
