@@ -25,6 +25,29 @@ interface NAICSRow {
   '2022NAICSTitle': string
 }
 
+interface NAICSDescriptionRow {
+  Code: string
+  Title: string
+  Description: string
+}
+
+// Load descriptions map from the descriptions file
+function loadDescriptions(): Map<string, string> {
+  const descMap = new Map<string, string>()
+  try {
+    const descData = parseTSV<NAICSDescriptionRow>(join(SOURCE_DIR, 'NAICS.Descriptions.tsv'))
+    for (const row of descData) {
+      if (row.Code && row.Description && row.Description !== 'NULL') {
+        descMap.set(row.Code, row.Description)
+      }
+    }
+    console.log(`Loaded ${descMap.size} NAICS descriptions`)
+  } catch (e) {
+    console.log('Warning: Could not load NAICS descriptions:', e)
+  }
+  return descMap
+}
+
 function getNAICSLevel(code: string): string {
   const codeLength = code.length
   switch (codeLength) {
@@ -48,7 +71,7 @@ function getParentCode(code: string): string | null {
   return code.slice(0, -1)
 }
 
-function transformIndustries(): void {
+function transformIndustries(descMap: Map<string, string>): void {
   console.log('Transforming NAICS Industries...')
   const data = parseTSV<NAICSRow>(join(SOURCE_DIR, 'NAICS.Industries.tsv'))
 
@@ -73,7 +96,7 @@ function transformIndustries(): void {
       type: getNAICSLevel(row['2022NAICSCode']),
       id: toWikipediaStyleId(cleanTitle(row['2022NAICSTitle'])),
       name: cleanTitle(row['2022NAICSTitle']),
-      description: '',
+      description: cleanDescription(descMap.get(row['2022NAICSCode']) || ''),
       code: row['2022NAICSCode'],
       includedIn: getAggregationsForType('Industry'),
     }))
@@ -107,7 +130,7 @@ function transformIndustries(): void {
   )
 }
 
-function transformSectors(): void {
+function transformSectors(descMap: Map<string, string>): void {
   console.log('Extracting NAICS Sectors...')
   const data = parseTSV<NAICSRow>(join(SOURCE_DIR, 'NAICS.Industries.tsv'))
 
@@ -124,7 +147,7 @@ function transformSectors(): void {
       type: 'Sector',
       id: toWikipediaStyleId(cleanTitle(row['2022NAICSTitle'])),
       name: cleanTitle(row['2022NAICSTitle']),
-      description: '',
+      description: cleanDescription(descMap.get(row['2022NAICSCode']) || ''),
       code: row['2022NAICSCode'],
       includedIn: getAggregationsForType('Sector'),
     }))
@@ -136,8 +159,11 @@ export async function transformNAICS(): Promise<void> {
   console.log('=== NAICS Transformation ===')
   ensureOutputDirs()
 
-  transformIndustries()
-  transformSectors()
+  // Load descriptions first
+  const descMap = loadDescriptions()
+
+  transformIndustries(descMap)
+  transformSectors(descMap)
 
   console.log('=== NAICS Transformation Complete ===\n')
 }

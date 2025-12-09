@@ -31,5 +31,8 @@
   },
   "devDependencies": {
     "bun-types": "latest"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
   }
 }
