@@ -62,12 +62,13 @@ function transformISO20022(): void {
   if (existsSync(businessAreasFile)) {
     const businessAreas = parseTSV<ISO20022BusinessAreaRow>(businessAreasFile)
     const businessAreaRecords: StandardRecord[] = businessAreas.map(ba => ({
-      ns: NS,
+      ns: ISO20022_NS,
       type: 'ISO20022.BusinessArea',
       id: toWikipediaStyleId(ba.Name),
       name: ba.Name,
       description: cleanDescription(ba.Description),
       code: ba.Code,
+      includedIn: getAggregationsForType('BusinessArea'),
     }))
     writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.BusinessAreas.tsv'), businessAreaRecords)
     console.log(`  - Processed ${businessAreaRecords.length} business areas`)
@@ -78,12 +79,13 @@ function transformISO20022(): void {
   if (existsSync(messageDefsFile)) {
     const messageDefs = parseTSV<ISO20022MessageDefinitionRow>(messageDefsFile)
     const messageDefRecords: StandardRecord[] = messageDefs.map(md => ({
-      ns: NS,
+      ns: ISO20022_NS,
       type: 'ISO20022.Message',
       id: toWikipediaStyleId(md.Name),
       name: md.Name,
       description: cleanDescription(md.Description),
       code: md.MessageID,
+      includedIn: getAggregationsForType('Message'),
     }))
     writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.Messages.tsv'), messageDefRecords)
     console.log(`  - Processed ${messageDefRecords.length} messages`)
@@ -98,10 +100,10 @@ function transformISO20022(): void {
         if (!businessArea) return null
 
         return {
-          fromNs: NS,
+          fromNs: ISO20022_NS,
           fromType: 'ISO20022.Message',
           fromId: toWikipediaStyleId(md.Name),
-          toNs: NS,
+          toNs: ISO20022_NS,
           toType: 'ISO20022.BusinessArea',
           toId: toWikipediaStyleId(businessArea.Name),
           relationshipType: 'belongs_to',
@@ -124,12 +126,13 @@ function transformISO20022(): void {
   if (existsSync(dataTypesFile)) {
     const dataTypes = parseTSV<ISO20022DataTypeRow>(dataTypesFile)
     const dataTypeRecords: StandardRecord[] = dataTypes.map(dt => ({
-      ns: NS,
+      ns: ISO20022_NS,
       type: 'ISO20022.DataType',
       id: toWikipediaStyleId(dt.DataType),
       name: dt.DataType,
       description: cleanDescription(dt.Description),
       code: dt.DataType,
+      includedIn: getAggregationsForType('DataType'),
     }))
     writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.DataTypes.tsv'), dataTypeRecords)
     console.log(`  - Processed ${dataTypeRecords.length} data types`)

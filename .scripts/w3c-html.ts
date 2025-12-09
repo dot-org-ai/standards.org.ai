@@ -17,10 +17,11 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
 } from './utils'
 
-// Add W3C namespace
-const NS = 'w3.org.ai'
+// Use W3C namespace from NAMESPACES
+const NS = NAMESPACES.W3C
 const SOURCE_DIR = getSourcePath('W3C')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -254,6 +255,7 @@ function transformHTMLElements(): void {
     name: `<${el.tag}>`,
     description: cleanDescription(`${el.description}${el.deprecated ? ' (Deprecated)' : ''}${el.experimental ? ' (Experimental)' : ''}`),
     code: el.tag,
+    includedIn: getAggregationsForType('Element'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.HTMLElements.tsv'), records)
