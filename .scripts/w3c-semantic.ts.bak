@@ -19,7 +19,7 @@ import {
   getAggregationsForType,
 } from './utils'
 
-const NS = NAMESPACES.W3C
+const NS = 'w3.org.ai'
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
 

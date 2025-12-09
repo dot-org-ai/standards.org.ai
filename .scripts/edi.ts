@@ -153,6 +153,7 @@ function transformX12Segments(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(row.description),
       code: row.code,
+      includedIn: getAggregationsForType('Segment'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.X12.Segments.tsv'), records)
@@ -179,6 +180,7 @@ function transformX12Elements(): void {
       name: `${row.code} - ${row.name}`,
       description: cleanDescription(`${row.description} Type: ${row.dataType}, Length: ${row.minLength}-${row.maxLength}`),
       code: row.code,
+      includedIn: getAggregationsForType('Element'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'EDI.X12.Elements.tsv'), records)
