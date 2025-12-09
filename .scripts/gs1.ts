@@ -11,6 +11,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
@@ -158,6 +159,7 @@ function transformGPCHierarchy(): void {
     name: row.segmentTitle,
     description: cleanDescription(row.segmentDefinition),
     code: row.segmentCode,
+    includedIn: getAggregationsForType('Product'),
   }))
   writeStandardTSV(join(DATA_DIR, 'GS1.Segments.tsv'), segmentRecords)
 
@@ -169,6 +171,7 @@ function transformGPCHierarchy(): void {
     name: row.familyTitle,
     description: cleanDescription(row.familyDefinition),
     code: row.familyCode,
+    includedIn: getAggregationsForType('Product'),
   }))
   writeStandardTSV(join(DATA_DIR, 'GS1.Families.tsv'), familyRecords)
 
@@ -180,6 +183,7 @@ function transformGPCHierarchy(): void {
     name: row.classTitle,
     description: cleanDescription(row.classDefinition),
     code: row.classCode,
+    includedIn: getAggregationsForType('Product'),
   }))
   writeStandardTSV(join(DATA_DIR, 'GS1.Classes.tsv'), classRecords)
 
@@ -191,6 +195,7 @@ function transformGPCHierarchy(): void {
     name: row.brickTitle,
     description: cleanDescription(`Includes: ${row.brickDefinitionIncludes || ''} Excludes: ${row.brickDefinitionExcludes || ''}`),
     code: row.brickCode,
+    includedIn: getAggregationsForType('Product'),
   }))
   writeStandardTSV(join(DATA_DIR, 'GS1.Bricks.tsv'), brickRecords)
 

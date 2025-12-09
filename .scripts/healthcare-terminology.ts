@@ -12,12 +12,13 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
-const NS_ICD = 'standards.org.ai'
-const NS_SNOMED = 'standards.org.ai'
-const NS_LOINC = 'standards.org.ai'
+const NS_ICD = NAMESPACES.ICD
+const NS_SNOMED = NAMESPACES.SNOMED
+const NS_LOINC = NAMESPACES.LOINC
 const SOURCE_DIR = getSourcePath('Healthcare')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -84,6 +85,7 @@ function transformICDChapters(): void {
         name: row.title,
         description: cleanDescription(`Chapter ${row.chapter_number}: ${row.code_range}`),
         code: row.chapter_number,
+        includedIn: getAggregationsForType('Chapter'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'ICD.Chapters.tsv'), records)
@@ -109,6 +111,7 @@ function transformICDCodes(): void {
         name: row.short_description || row.code,
         description: cleanDescription(row.long_description || ''),
         code: row.code,
+        includedIn: getAggregationsForType('Code'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'ICD.Codes.tsv'), records)
@@ -138,6 +141,7 @@ function transformSNOMEDConcepts(): void {
         name: row.fully_specified_name,
         description: cleanDescription(row.description),
         code: row.concept_id,
+        includedIn: getAggregationsForType('Concept'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'SNOMED.Concepts.tsv'), records)
@@ -167,6 +171,7 @@ function transformLOINCParts(): void {
         name: row.part_type,
         description: cleanDescription(row.description || ''),
         code: row.part_type,
+        includedIn: getAggregationsForType('Part'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'LOINC.Parts.tsv'), records)
@@ -192,6 +197,7 @@ function transformLOINCCategories(): void {
         name: row.category,
         description: cleanDescription(row.description || ''),
         code: row.category,
+        includedIn: getAggregationsForType('Category'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'LOINC.Categories.tsv'), records)

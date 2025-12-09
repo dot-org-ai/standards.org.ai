@@ -11,6 +11,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
   type RelationshipRecord,
 } from './utils'
@@ -153,6 +154,7 @@ function transformOccupations(): void {
     name: row.title,
     description: cleanDescription(row.description),
     code: row.oNETSOCCode,
+    includedIn: getAggregationsForType('Occupation'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Occupations.tsv'), records)
@@ -180,6 +182,7 @@ function transformSkills(): void {
     name: skill.name,
     description: '',
     code: skill.id,
+    includedIn: getAggregationsForType('Skill'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Skills.tsv'), records)
@@ -227,6 +230,7 @@ function transformKnowledge(): void {
     name: k.name,
     description: '',
     code: k.id,
+    includedIn: getAggregationsForType('Knowledge'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Knowledge.tsv'), records)
@@ -274,6 +278,7 @@ function transformAbilities(): void {
     name: a.name,
     description: '',
     code: a.id,
+    includedIn: getAggregationsForType('Ability'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Abilities.tsv'), records)

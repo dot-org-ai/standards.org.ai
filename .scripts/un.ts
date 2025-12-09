@@ -20,6 +20,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
 } from './utils'
 
 const NS = NAMESPACES.UN
@@ -139,6 +140,7 @@ function transformLOCODE(): void {
       name,
       description: funcDesc,
       code,
+      includedIn: getAggregationsForType('Location'),
     })
 
     // Relationship to country

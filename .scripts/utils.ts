@@ -1,47 +1,125 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 
-// Namespaces for each source
+// Canonical namespaces for each source (authoritative domains)
 export const NAMESPACES = {
-  ONET: 'us.org.ai',
-  APQC: 'apqc.org.ai',
-  GS1: 'gs1.org.ai',
-  NAICS: 'standards.org.ai',
-  BLS: 'us.org.ai/BLS',
-  NAPCS: 'standards.org.ai',
-  UNSPSC: 'standards.org.ai',
-  AdvanceCTE: 'standards.org.ai',
-  ISO: 'standards.org.ai',
-  UN: 'standards.org.ai',
-  IANA: 'iana.org.ai',
-  EDIFACT: 'standards.org.ai',
-  W3C: 'w3.org.ai',
-  FHIR: 'fhir.org.ai',
-  X12: 'x12.org.ai',
-  EANCOM: 'eancom.org.ai',
-  Peppol: 'peppol.org.ai',
-  ICD: 'icd.org.ai',
-  SNOMED: 'snomed.org.ai',
-  LOINC: 'loinc.org.ai',
-  ISO20022: 'iso20022.org.ai',
-  LEI: 'lei.org.ai',
-  ISIN: 'isin.org.ai',
-  MCC: 'mcc.org.ai',
-  SWIFT: 'swift.org.ai',
+  // US Government (canonical)
+  ONET: 'onet.org.ai',
+  BLS: 'us.org.ai',
   SEC: 'us.org.ai',
   SBA: 'us.org.ai',
   USPTO: 'us.org.ai',
   USITC: 'us.org.ai',
+  Census: 'us.org.ai',
+  GSA: 'us.org.ai',
+
+  // Industry & Commerce (canonical)
+  APQC: 'apqc.org.ai',
+  GS1: 'gs1.org.ai',
+  NAICS: 'naics.org.ai',
+  NAPCS: 'napcs.org.ai',
+  UNSPSC: 'un.org.ai',
+  AdvanceCTE: 'education.org.ai',
+
+  // International Standards (canonical)
+  ISO: 'iso.org.ai',
+  ISO3166: 'iso.org.ai',
+  ISO4217: 'iso.org.ai',
+  ISO639: 'iso.org.ai',
+  UN: 'un.org.ai',
+  LOCODE: 'un.org.ai',
+  M49: 'un.org.ai',
+
+  // Web & Internet (canonical)
+  IANA: 'iana.org.ai',
+  W3C: 'w3.org.ai',
+  SchemaOrg: 'schema.org.ai',
+
+  // Healthcare (canonical)
+  FHIR: 'hl7.org.ai',
+  HL7: 'hl7.org.ai',
+  ICD: 'healthcare.org.ai',
+  SNOMED: 'healthcare.org.ai',
+  LOINC: 'healthcare.org.ai',
+  RxNorm: 'healthcare.org.ai',
+  NDC: 'healthcare.org.ai',
+  NPI: 'healthcare.org.ai',
+  CPT: 'healthcare.org.ai',
+  HCPCS: 'healthcare.org.ai',
+
+  // EDI (canonical)
+  X12: 'x12.org.ai',
+  EDIFACT: 'un.org.ai',
+  EANCOM: 'gs1.org.ai',
+  Peppol: 'edi.org.ai',
+
+  // Finance (canonical)
+  ISO20022: 'iso.org.ai',
+  LEI: 'finance.org.ai',
+  ISIN: 'finance.org.ai',
+  MCC: 'finance.org.ai',
+  SWIFT: 'finance.org.ai',
+
+  // Education (canonical)
+  ISCED: 'education.org.ai',
+  CEDS: 'education.org.ai',
+  CASE: 'education.org.ai',
+
+  // Ecommerce (canonical)
+  ECLASS: 'commerce.org.ai',
+  ETIM: 'commerce.org.ai',
 } as const
 
 // Standard output columns
 export interface StandardRecord {
-  ns: string
-  type: string
-  id: string
-  name: string
-  description: string
-  code: string
+  ns: string              // Canonical namespace (e.g., 'apqc.org.ai')
+  type: string            // Type within namespace (e.g., 'Process')
+  id: string              // Unique ID (e.g., 'Develop_And_Manage_Products')
+  name: string            // Display name
+  description: string     // Description text
+  code: string            // Original code from source
+  sameAs?: string         // Link to canonical source (for superset items)
+  includedIn?: string     // Pipe-separated aggregation domains this belongs to
+}
+
+// Helper to build full $id URL
+export function buildId(ns: string, type: string, id: string): string {
+  return `https://${ns}/${type}/${id}`
+}
+
+// Helper to build sameAs URL for superset items
+export function buildSameAs(canonicalNs: string, type: string, id: string): string {
+  return `https://${canonicalNs}/${type}/${id}`
+}
+
+// Type-to-domain mappings for aggregation
+export const TYPE_AGGREGATIONS: Record<string, string[]> = {
+  Process: ['business.org.ai', 'manufacturing.org.ai', 'process.org.ai'],
+  Industry: ['business.org.ai', 'industries.org.ai'],
+  Sector: ['business.org.ai', 'industries.org.ai'],
+  Occupation: ['business.org.ai', 'occupations.org.ai'],
+  Skill: ['business.org.ai', 'skills.org.ai', 'education.org.ai'],
+  Ability: ['business.org.ai', 'education.org.ai'],
+  Knowledge: ['business.org.ai', 'education.org.ai'],
+  Product: ['business.org.ai', 'products.org.ai', 'retail.org.ai'],
+  Service: ['business.org.ai', 'services.org.ai'],
+  Resource: ['healthcare.org.ai'],
+  Code: ['healthcare.org.ai'],
+  Message: ['finance.org.ai'],
+  Country: ['business.org.ai'],
+  Currency: ['finance.org.ai'],
+  Language: ['business.org.ai', 'education.org.ai'],
+  Type: ['web.org.ai', 'tech.org.ai'],
+  Property: ['web.org.ai', 'tech.org.ai'],
+  Element: ['web.org.ai', 'tech.org.ai'],
+  TransactionSet: ['logistics.org.ai', 'edi.org.ai'],
+  Location: ['logistics.org.ai', 'business.org.ai'],
+}
+
+// Get aggregation domains for a type
+export function getAggregationsForType(type: string): string {
+  const domains = TYPE_AGGREGATIONS[type] || ['business.org.ai']
+  return domains.join('|')
 }
 
 // Relationship record
@@ -319,10 +397,21 @@ export function writeTSV(filePath: string, records: Record<string, string | unde
 }
 
 /**
- * Write standard records (with ns, type, id, name, description, code)
+ * Write standard records (with ns, type, id, name, description, code, sameAs, includedIn)
  */
 export function writeStandardTSV(filePath: string, records: StandardRecord[]): void {
-  writeTSV(filePath, records, ['ns', 'type', 'id', 'name', 'description', 'code'])
+  // Convert records to include optional fields as empty strings
+  const normalizedRecords = records.map(r => ({
+    ns: r.ns,
+    type: r.type,
+    id: r.id,
+    name: r.name,
+    description: r.description,
+    code: r.code,
+    sameAs: r.sameAs || '',
+    includedIn: r.includedIn || '',
+  }))
+  writeTSV(filePath, normalizedRecords, ['ns', 'type', 'id', 'name', 'description', 'code', 'sameAs', 'includedIn'])
 }
 
 /**

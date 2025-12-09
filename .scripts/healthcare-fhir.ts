@@ -23,9 +23,10 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
 } from './utils'
 
-const NS = 'standards.org.ai'
+const NS = NAMESPACES.FHIR
 const SOURCE_DIR = getSourcePath('Healthcare/FHIR')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -62,6 +63,7 @@ function transformResources(): void {
         name: row.resource_name,
         description: cleanDescription(row.description || ''),
         code: row.resource_name,
+        includedIn: getAggregationsForType('Resource'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'FHIR.Resources.tsv'), records)
@@ -89,6 +91,7 @@ function transformDataTypes(): void {
         name: row.datatype_name,
         description: cleanDescription(row.description || ''),
         code: row.datatype_name,
+        includedIn: getAggregationsForType('DataType'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'FHIR.DataTypes.tsv'), records)

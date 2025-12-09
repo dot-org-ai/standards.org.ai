@@ -10,6 +10,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
@@ -64,6 +65,7 @@ function transformProducts(): void {
       name: row['Code title'],
       description: cleanDescription(row['Code definition']),
       code: row.Code,
+      includedIn: getAggregationsForType('Product'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'NAPCS.Products.tsv'), records)
@@ -108,6 +110,7 @@ function transformGroups(): void {
       name: row['Code title'],
       description: cleanDescription(row['Code definition']),
       code: row.Code,
+      includedIn: getAggregationsForType('Product'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'NAPCS.Groups.tsv'), groupRecords)

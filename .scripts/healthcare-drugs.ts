@@ -11,15 +11,16 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
 // Define namespaces for healthcare standards
-const NDC_NS = 'standards.org.ai'
-const RXNORM_NS = 'standards.org.ai'
-const NPI_NS = 'standards.org.ai'
-const CPT_NS = 'standards.org.ai'
-const HCPCS_NS = 'standards.org.ai'
+const NDC_NS = NAMESPACES.NDC
+const RXNORM_NS = NAMESPACES.RxNorm
+const NPI_NS = NAMESPACES.NPI
+const CPT_NS = NAMESPACES.CPT
+const HCPCS_NS = NAMESPACES.HCPCS
 
 const SOURCE_DIR = getSourcePath('Healthcare')
 const NDC_SOURCE_DIR = getSourcePath('Healthcare/NDC')
@@ -111,6 +112,7 @@ function transformNDCProducts(): void {
           `${row.generic_name} - ${row.dosage_form || 'Drug Product'} (NDC: ${row.product_ndc})`
         ),
         code: row.product_ndc,
+        includedIn: getAggregationsForType('Product'),
       }
     })
 
@@ -134,6 +136,7 @@ function transformRxNormTermTypes(): void {
       name: row.term_type,
       description: cleanDescription(row.description || ''),
       code: row.term_type,
+      includedIn: getAggregationsForType('TermType'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'RxNorm.TermTypes.tsv'), records)
@@ -158,6 +161,7 @@ function transformNPITaxonomyCodes(): void {
         `${row.grouping}${row.classification ? ' - ' + row.classification : ''}${row.specialization ? ' - ' + row.specialization : ''}`
       ),
       code: row.code,
+      includedIn: getAggregationsForType('Taxonomy'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'NPI.Taxonomies.tsv'), records)
@@ -180,6 +184,7 @@ function transformCPTCategories(): void {
       name: row.category_name,
       description: cleanDescription(row.description || ''),
       code: row.category_range,
+      includedIn: getAggregationsForType('Category'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'CPT.Categories.tsv'), records)
@@ -202,6 +207,7 @@ function transformHCPCSCodes(): void {
       name: row.short_description || row.code,
       description: cleanDescription(row.long_description || ''),
       code: row.code,
+      includedIn: getAggregationsForType('Code'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'HCPCS.Codes.tsv'), records)

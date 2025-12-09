@@ -12,13 +12,14 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
-// Add namespaces for e-commerce standards
-const ECLASS_NS = 'eclass.org.ai'
-const ETIM_NS = 'etim.org.ai'
-const SCHEMA_NS = 'schema.org.ai'
+// Use NAMESPACES from utils for e-commerce standards
+const ECLASS_NS = NAMESPACES.ECLASS
+const ETIM_NS = NAMESPACES.ETIM
+const SCHEMA_NS = NAMESPACES.SchemaOrg
 
 const SOURCE_DIR = getSourcePath('Ecommerce')
 const DATA_DIR = getDataPath()
@@ -55,6 +56,7 @@ function transformEclass(): void {
           name: row.name,
           description: cleanDescription(row.description),
           code: row.code,
+          includedIn: getAggregationsForType('Product'),
         }))
 
       if (segmentRecords.length > 0) {
@@ -134,6 +136,7 @@ function transformEtim(): void {
           name: row.name,
           description: cleanDescription(row.description),
           code: row.code,
+          includedIn: getAggregationsForType('Product'),
         }))
 
       if (groupRecords.length > 0) {
@@ -168,6 +171,7 @@ function transformEtim(): void {
           name: row.class_name,
           description: cleanDescription(row.description),
           code: row.class_code,
+          includedIn: getAggregationsForType('Product'),
         }))
 
       if (classRecords.length > 0) {
@@ -243,6 +247,7 @@ function transformSchemaOrg(): void {
             name: name,
             description: cleanDescription(description),
             code: row.id.replace('schema:', ''),
+            includedIn: getAggregationsForType('Type'),
           }
         })
 
@@ -300,6 +305,7 @@ function transformSchemaOrg(): void {
           name: row.label || row.id.replace('schema:', ''),
           description: cleanDescription(row.comment),
           code: row.id.replace('schema:', ''),
+          includedIn: getAggregationsForType('Property'),
         }))
 
       if (propertyRecords.length > 0) {

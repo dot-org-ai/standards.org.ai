@@ -10,6 +10,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
@@ -77,6 +78,7 @@ function transformProcesses(): void {
     name: row.name,
     description: cleanDescription(row.elementDescription),
     code: row.pcfId,
+    includedIn: getAggregationsForType('Process'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'APQC.Processes.tsv'), records)

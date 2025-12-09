@@ -18,6 +18,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
 } from './utils'
 
 const NS = NAMESPACES.ISO
@@ -90,6 +91,7 @@ function transformCountries(): void {
       name,
       description: cleanDescription(description !== name ? description : ''),
       code: alpha2 || alpha3,
+      includedIn: getAggregationsForType('Country'),
     })
 
     // Relationship to region
@@ -163,6 +165,7 @@ function transformCurrencies(): void {
       name,
       description: `Minor unit: ${record.MinorUnit || 'N/A'}`,
       code,
+      includedIn: getAggregationsForType('Currency'),
     })
   }
 
@@ -195,6 +198,7 @@ function transformLanguages(): void {
       name,
       description: record.French !== name ? record.French : '',
       code,
+      includedIn: getAggregationsForType('Language'),
     })
   }
 

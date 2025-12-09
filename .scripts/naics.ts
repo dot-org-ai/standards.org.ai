@@ -10,6 +10,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
@@ -74,6 +75,7 @@ function transformIndustries(): void {
       name: cleanTitle(row['2022NAICSTitle']),
       description: '',
       code: row['2022NAICSCode'],
+      includedIn: getAggregationsForType('Industry'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'NAICS.Industries.tsv'), records)
@@ -124,6 +126,7 @@ function transformSectors(): void {
       name: cleanTitle(row['2022NAICSTitle']),
       description: '',
       code: row['2022NAICSCode'],
+      includedIn: getAggregationsForType('Sector'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'NAICS.Sectors.tsv'), sectorRecords)
