@@ -192,12 +192,13 @@ function transformLEI(): void {
         ].filter(Boolean).join(' - ')
 
         return {
-          ns: NS,
+          ns: LEI_NS,
           type: 'LEI.RegistrationAuthority',
           id: toWikipediaStyleId(name),
           name: name,
           description: cleanDescription(description),
           code: code.trim(),
+          includedIn: getAggregationsForType('RegistrationAuthority'),
         }
       })
       .filter((auth): auth is StandardRecord => auth !== null)
@@ -212,12 +213,13 @@ function transformLEI(): void {
     const entityTypeRecords: StandardRecord[] = entityTypes
       .filter(et => et.Name && et.Name.trim())
       .map(et => ({
-        ns: NS,
+        ns: LEI_NS,
         type: 'LEI.EntityType',
         id: toWikipediaStyleId(et.Name),
         name: et.Name,
         description: cleanDescription(et.Description),
         code: et.Code,
+        includedIn: getAggregationsForType('EntityType'),
       }))
     writeStandardTSV(join(DATA_DIR, 'Finance.LEI.EntityTypes.tsv'), entityTypeRecords)
     console.log(`  - Processed ${entityTypeRecords.length} entity types`)

@@ -365,6 +365,7 @@ function transformHTMLAttributes(): void {
     name: attr.name,
     description: cleanDescription(`${attr.description}${attr.global ? ' (Global attribute)' : ''}`),
     code: attr.elements.join(','),
+    includedIn: getAggregationsForType('Property'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.HTMLAttributes.tsv'), records)
@@ -777,6 +778,7 @@ function transformSVGElements(): void {
     name: `<${el.tag}>`,
     description: cleanDescription(`${el.description}${el.deprecated ? ' (Deprecated)' : ''}`),
     code: el.tag,
+    includedIn: getAggregationsForType('Element'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.SVGElements.tsv'), records)
@@ -896,6 +898,7 @@ function transformSVGAttributes(): void {
     name: attr.name,
     description: cleanDescription(attr.description || ''),
     code: attr.elements.join(','),
+    includedIn: getAggregationsForType('Property'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.SVGAttributes.tsv'), records)
