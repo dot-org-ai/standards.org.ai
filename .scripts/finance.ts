@@ -248,12 +248,13 @@ function transformISIN(): void {
     const agencyRecords: StandardRecord[] = agencies
       .filter(agency => agency.Agency && agency.Agency.trim())
       .map(agency => ({
-        ns: NS,
+        ns: ISIN_NS,
         type: 'ISIN.IssuingAgency',
         id: toWikipediaStyleId(agency.Agency),
         name: agency.Agency,
         description: cleanDescription(`${agency.Country} (${agency.CountryCode}) - ${agency.Type}`),
         code: agency.CountryCode,
+        includedIn: getAggregationsForType('IssuingAgency'),
       }))
     writeStandardTSV(join(DATA_DIR, 'Finance.ISIN.Agencies.tsv'), agencyRecords)
     console.log(`  - Processed ${agencyRecords.length} issuing agencies`)
@@ -290,12 +291,13 @@ function transformMCC(): void {
     const categoryRecords: StandardRecord[] = categories
       .filter(cat => cat.Category && cat.Category.trim())
       .map(cat => ({
-        ns: NS,
+        ns: MCC_NS,
         type: 'MCC.Category',
         id: toWikipediaStyleId(cat.Category),
         name: cat.Category,
         description: cleanDescription(cat.Description),
         code: `${cat.RangeStart}-${cat.RangeEnd}`,
+        includedIn: getAggregationsForType('Category'),
       }))
     writeStandardTSV(join(DATA_DIR, 'Finance.MCC.Categories.tsv'), categoryRecords)
     console.log(`  - Processed ${categoryRecords.length} categories`)
@@ -308,12 +310,13 @@ function transformMCC(): void {
     const codeRecords: StandardRecord[] = codes
       .filter(code => code.MCC && code.MCC.trim())
       .map(code => ({
-        ns: NS,
+        ns: MCC_NS,
         type: 'MCC.Code',
         id: code.MCC,
         name: code.Description || code.CombinedDescription,
         description: cleanDescription(code.CombinedDescription || code.Description),
         code: code.MCC,
+        includedIn: getAggregationsForType('Code'),
       }))
     writeStandardTSV(join(DATA_DIR, 'Finance.MCC.Codes.tsv'), codeRecords)
     console.log(`  - Processed ${codeRecords.length} codes`)
@@ -336,10 +339,10 @@ function transformMCC(): void {
 
       if (category) {
         codeCategoryRels.push({
-          fromNs: NS,
+          fromNs: MCC_NS,
           fromType: 'MCC.Code',
           fromId: code.MCC,
-          toNs: NS,
+          toNs: MCC_NS,
           toType: 'MCC.Category',
           toId: toWikipediaStyleId(category.Category),
           relationshipType: 'belongs_to',
@@ -387,12 +390,13 @@ function transformSWIFT(): void {
     const countryCodeRecords: StandardRecord[] = countryCodes
       .filter(cc => cc.Code && cc.Code.trim())
       .map(cc => ({
-        ns: NS,
+        ns: SWIFT_NS,
         type: 'SWIFT.CountryCode',
         id: cc.Code,
         name: cc.Country,
         description: cleanDescription(`${cc.Region} - ${cc.Code}`),
         code: cc.Code,
+        includedIn: getAggregationsForType('CountryCode'),
       }))
     writeStandardTSV(join(DATA_DIR, 'Finance.SWIFT.Countries.tsv'), countryCodeRecords)
     console.log(`  - Processed ${countryCodeRecords.length} country codes`)
@@ -405,12 +409,13 @@ function transformSWIFT(): void {
     const structureRecords: StandardRecord[] = structure
       .filter(s => s.Component && s.Component.trim())
       .map(s => ({
-        ns: NS,
+        ns: SWIFT_NS,
         type: 'SWIFT.StructureComponent',
         id: toWikipediaStyleId(s.Component),
         name: s.Component,
         description: cleanDescription(`${s.Description} (Position: ${s.Position}, Length: ${s.Length}, Type: ${s.Type})`),
         code: s.Position,
+        includedIn: getAggregationsForType('StructureComponent'),
       }))
     writeStandardTSV(join(DATA_DIR, 'Finance.SWIFT.Structure.tsv'), structureRecords)
     console.log(`  - Processed ${structureRecords.length} structure components`)

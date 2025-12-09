@@ -24,10 +24,11 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
 } from './utils'
 
-// Add Education namespace
-const EDUCATION_NS = 'standards.org.ai'
+// Use proper education namespace
+const EDUCATION_NS = NAMESPACES.ISCED // education.org.ai
 const SOURCE_DIR = getSourcePath('Education')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
