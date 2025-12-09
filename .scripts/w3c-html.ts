@@ -493,6 +493,7 @@ function transformHTMLEvents(): void {
     name: event.name,
     description: cleanDescription(`${event.description} (Interface: ${event.interface || 'Event'}, Bubbles: ${event.bubbles !== false})`),
     code: event.interface || 'Event',
+    includedIn: getAggregationsForType('Property'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.HTMLEvents.tsv'), records)
@@ -663,6 +664,7 @@ function transformDOMInterfaces(): void {
     name: iface.name,
     description: cleanDescription(`${iface.description}${iface.inherits ? ` (extends ${iface.inherits})` : ''}`),
     code: iface.inherits || '',
+    includedIn: getAggregationsForType('Type'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.DOMInterfaces.tsv'), records)

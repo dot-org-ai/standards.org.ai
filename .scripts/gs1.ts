@@ -207,6 +207,7 @@ function transformGPCHierarchy(): void {
     name: row.attributeTitle,
     description: cleanDescription(row.attributeDefinition),
     code: row.attributeCode,
+    includedIn: getAggregationsForType('Attribute'),
   }))
   writeStandardTSV(join(DATA_DIR, 'GS1.Attributes.tsv'), attributeRecords)
 
@@ -307,6 +308,7 @@ function transformVocabulary(): void {
         name: row.label,
         description: cleanDescription(row.description),
         code: row.id,
+        includedIn: getAggregationsForType('Vocabulary'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.Vocabulary.tsv'), records)
@@ -329,6 +331,7 @@ function transformLocationTypes(): void {
         name: row.label,
         description: cleanDescription(row.description),
         code: row.id,
+        includedIn: getAggregationsForType('LocationType'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.LocationTypes.tsv'), records)
@@ -370,6 +373,7 @@ function transformBusinessSteps(): void {
         name: row.businessStep,
         description: cleanDescription(`${row.verb} ${row.noun}. ${row.description || ''}`),
         code: row.businessStep.toLowerCase(),
+        includedIn: getAggregationsForType('BusinessStep'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.BusinessSteps.tsv'), records)
@@ -399,6 +403,7 @@ function transformDispositions(): void {
         name: row.disposition,
         description: cleanDescription(row.description || `${row.verb} action`),
         code: row.disposition.toLowerCase(),
+        includedIn: getAggregationsForType('Disposition'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.Dispositions.tsv'), records)
@@ -428,6 +433,7 @@ function transformIdentifiers(): void {
         name: row.identifier,
         description: cleanDescription(row.description || ''),
         code: row.identifier,
+        includedIn: getAggregationsForType('IdentifierType'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.IdentifierTypes.tsv'), records)
@@ -457,6 +463,7 @@ function transformGLNFunctionalTypes(): void {
         name: row.label,
         description: cleanDescription(row.description || ''),
         code: row.id,
+        includedIn: getAggregationsForType('GLNFunctionalType'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.GLNFunctionalTypes.tsv'), records)
@@ -486,6 +493,7 @@ function transformLocationRelationships(): void {
         name: row.label,
         description: cleanDescription(row.description || ''),
         code: row.id,
+        includedIn: getAggregationsForType('LocationRelationship'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.LocationRelationships.tsv'), records)
@@ -515,6 +523,7 @@ function transformSchemas(): void {
         name: row.name,
         description: cleanDescription(`${row.description || ''} Version: ${row.version || ''} URL: ${row.url || ''}`),
         code: row.id,
+        includedIn: getAggregationsForType('Schema'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.Schemas.tsv'), records)
@@ -544,6 +553,7 @@ function transformEPCISEventTypes(): void {
         name: row.label,
         description: cleanDescription(`${row.description || ''} Captures: ${row.captures || ''}`),
         code: row.id,
+        includedIn: getAggregationsForType('EventType'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.EPCIS.EventTypes.tsv'), records)
@@ -573,6 +583,7 @@ function transformGTINStructures(): void {
         name: row.label,
         description: cleanDescription(`${row.description || ''} Length: ${row.length} digits. Structure: ${row.structure}. Usage: ${row.usage}`),
         code: row.id,
+        includedIn: getAggregationsForType('IdentifierStructure'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'GS1.GTIN.Structures.tsv'), records)

@@ -186,6 +186,7 @@ function transformHTSSections(): void {
       name: `Section ${row.code} - ${row.name}`,
       description: cleanDescription(row.notes || ''),
       code: row.code,
+      includedIn: getAggregationsForType('HTSSection'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Sections.tsv'), records)
@@ -222,6 +223,7 @@ function transformHTSChapters(): void {
       name: `Chapter ${row.code} - ${row.name}`,
       description: cleanDescription(row.description || row.name),
       code: row.code,
+      includedIn: getAggregationsForType('HTSChapter'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Chapters.tsv'), records)
@@ -251,6 +253,7 @@ function transformHTSHeadings(): void {
       name: row.name,
       description: cleanDescription(row.name),
       code: row.code,
+      includedIn: getAggregationsForType('HTSHeading'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Headings.tsv'), records)
@@ -298,6 +301,7 @@ function transformHTSSubheadings(): void {
       name: row.name,
       description: cleanDescription(row.name),
       code: row.code,
+      includedIn: getAggregationsForType('HTSSubheading'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Subheadings.tsv'), records)
@@ -348,6 +352,7 @@ function transformHTSCodes(): void {
         `${row.name}. Unit: ${row.unit}. General rate: ${row.generalRate}. Special: ${row.specialRate}. Column 2: ${row.column2Rate}`
       ),
       code: row.code,
+      includedIn: getAggregationsForType('HTSCode'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Codes.tsv'), records)
@@ -555,6 +560,7 @@ function transformSpecialPrograms(): void {
       name: row.name,
       description: cleanDescription(`${row.description}. Countries: ${row.countries}. ${row.eligibility}`),
       code: row.code,
+      includedIn: getAggregationsForType('SpecialProgram'),
     }))
 
     writeStandardTSV(join(DATA_DIR, 'USITC.SpecialPrograms.tsv'), records)
@@ -572,6 +578,7 @@ function transformSpecialPrograms(): void {
       name: row.name,
       description: cleanDescription(`${row.description}. Countries: ${row.countries}. ${row.eligibility}`),
       code: row.code,
+      includedIn: getAggregationsForType('SpecialProgram'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.SpecialPrograms.tsv'), records)
@@ -600,6 +607,7 @@ function transformScheduleB(): void {
       name: row.name,
       description: cleanDescription(`${row.name}. Unit: ${row.unit}. HTS Equivalent: ${row.htsEquivalent}`),
       code: row.code,
+      includedIn: getAggregationsForType('ScheduleB'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.ScheduleB.tsv'), records)

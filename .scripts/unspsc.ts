@@ -10,6 +10,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
@@ -63,6 +64,7 @@ function transformUNSPSC(): void {
     name: row.segmentTitle,
     description: '',
     code: row.segmentCode,
+    includedIn: getAggregationsForType('Segment'),
   }))
   writeStandardTSV(join(DATA_DIR, 'UNSPSC.Segments.tsv'), segmentRecords)
 
@@ -74,6 +76,7 @@ function transformUNSPSC(): void {
     name: row.familyTitle,
     description: '',
     code: row.familyCode,
+    includedIn: getAggregationsForType('Family'),
   }))
   writeStandardTSV(join(DATA_DIR, 'UNSPSC.Families.tsv'), familyRecords)
 
@@ -85,6 +88,7 @@ function transformUNSPSC(): void {
     name: row.classTitle,
     description: '',
     code: row.classCode,
+    includedIn: getAggregationsForType('Class'),
   }))
   writeStandardTSV(join(DATA_DIR, 'UNSPSC.Classes.tsv'), classRecords)
 
@@ -96,6 +100,7 @@ function transformUNSPSC(): void {
     name: row.commodityTitle,
     description: cleanDescription(row.definition),
     code: row.commodityCode,
+    includedIn: getAggregationsForType('Product'),
   }))
   writeStandardTSV(join(DATA_DIR, 'UNSPSC.Commodities.tsv'), commodityRecords)
 

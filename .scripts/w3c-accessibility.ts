@@ -197,6 +197,7 @@ function transformWCAGPrinciples(data: WCAGData): void {
     name: principle.title,
     description: cleanDescription(`Principle ${principle.num}: ${principle.title}`),
     code: principle.num,
+    includedIn: getAggregationsForType('Guideline'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.WCAG.Principles.tsv'), records)
@@ -220,6 +221,7 @@ function transformWCAGGuidelines(data: WCAGData): void {
         name: guideline.title,
         description: cleanDescription(`Guideline ${guideline.num}: ${guideline.title}`),
         code: guideline.num,
+        includedIn: getAggregationsForType('Guideline'),
       })
 
       // Relationship to principle
@@ -260,6 +262,7 @@ function transformWCAGSuccessCriteria(data: WCAGData): void {
           name: criterion.title,
           description: cleanDescription(description),
           code: criterion.num,
+          includedIn: getAggregationsForType('Guideline'),
         })
 
         // Relationship to guideline
@@ -415,6 +418,7 @@ function transformWCAGTechniques(data: WCAGData): void {
     name: tech.title || tech.id,
     description: cleanDescription(tech.title || ''),
     code: tech.id,
+    includedIn: getAggregationsForType('Guideline'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.WCAG.Techniques.tsv'), records)
@@ -791,6 +795,7 @@ function transformARIARoles(): void {
     name: role.name,
     description: cleanDescription(role.description),
     code: role.name,
+    includedIn: getAggregationsForType('Property'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.ARIA.Roles.tsv'), records)
@@ -1150,6 +1155,7 @@ function transformARIAAttributes(): void {
     name: state.name,
     description: cleanDescription(state.description),
     code: state.name,
+    includedIn: getAggregationsForType('Property'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.ARIA.States.tsv'), stateRecords)
@@ -1177,6 +1183,7 @@ function transformARIAAttributes(): void {
     name: prop.name,
     description: cleanDescription(prop.description),
     code: prop.name,
+    includedIn: getAggregationsForType('Property'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.ARIA.Properties.tsv'), propertyRecords)

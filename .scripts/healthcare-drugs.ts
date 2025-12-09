@@ -112,7 +112,7 @@ function transformNDCProducts(): void {
           `${row.generic_name} - ${row.dosage_form || 'Drug Product'} (NDC: ${row.product_ndc})`
         ),
         code: row.product_ndc,
-        includedIn: getAggregationsForType('Product'),
+        includedIn: getAggregationsForType('Drug'),
       }
     })
 
@@ -136,7 +136,7 @@ function transformRxNormTermTypes(): void {
       name: row.term_type,
       description: cleanDescription(row.description || ''),
       code: row.term_type,
-      includedIn: getAggregationsForType('TermType'),
+      includedIn: getAggregationsForType('Code'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'RxNorm.TermTypes.tsv'), records)
@@ -161,7 +161,7 @@ function transformNPITaxonomyCodes(): void {
         `${row.grouping}${row.classification ? ' - ' + row.classification : ''}${row.specialization ? ' - ' + row.specialization : ''}`
       ),
       code: row.code,
-      includedIn: getAggregationsForType('Taxonomy'),
+      includedIn: getAggregationsForType('Code'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'NPI.Taxonomies.tsv'), records)
@@ -184,7 +184,7 @@ function transformCPTCategories(): void {
       name: row.category_name,
       description: cleanDescription(row.description || ''),
       code: row.category_range,
-      includedIn: getAggregationsForType('Category'),
+      includedIn: getAggregationsForType('Code'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'CPT.Categories.tsv'), records)

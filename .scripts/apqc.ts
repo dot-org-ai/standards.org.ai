@@ -132,6 +132,7 @@ function transformIndustries(): void {
       name: 'Cross-Industry',
       description: 'Processes applicable across all industries',
       code: 'cross-industry',
+      includedIn: getAggregationsForType('Industry'),
     },
     ...Array.from(industriesSet).map(industry => ({
       ns: NS,
@@ -140,6 +141,7 @@ function transformIndustries(): void {
       name: industry,
       description: `Industry-specific processes for ${industry}`,
       code: industry.toLowerCase().replace(/\s+/g, '-'),
+      includedIn: getAggregationsForType('Industry'),
     })),
   ]
 
@@ -184,6 +186,7 @@ function transformMetrics(): void {
     name: m.metricName,
     description: `${m.formula ? `Formula: ${m.formula}` : ''} ${m.units ? `Units: ${m.units}` : ''}`.trim(),
     code: m.metricID,
+    includedIn: getAggregationsForType('Metric'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'APQC.Metrics.tsv'), records)
@@ -203,6 +206,7 @@ function transformMetrics(): void {
     name: cat,
     description: '',
     code: cat.toLowerCase().replace(/\s+/g, '-'),
+    includedIn: getAggregationsForType('MetricCategory'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'APQC.MetricCategories.tsv'), categoryRecords)
@@ -241,6 +245,7 @@ function transformGlossary(): void {
       name: row.processElement,
       description: cleanDescription(row.definition),
       code: row.processElementID || '',
+      includedIn: getAggregationsForType('GlossaryTerm'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'APQC.Glossary.tsv'), records)

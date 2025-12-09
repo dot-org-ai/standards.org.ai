@@ -19,7 +19,7 @@ import {
 } from './utils'
 
 // Add GSA namespace
-const NS = 'us.org.ai'
+const NS = NAMESPACES.GSA
 const SOURCE_DIR = getSourcePath('GSA')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -129,6 +129,7 @@ function transformPSC(): void {
       name: row.name,
       description: cleanDescription(row.description || ''),
       code: row.code,
+      includedIn: getAggregationsForType('PSC'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.PSC.tsv'), records)
@@ -203,6 +204,7 @@ function transformPSCCategories(): void {
       name: row.name,
       description: row.type || '',
       code: row.code,
+      includedIn: getAggregationsForType('PSCCategory'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.PSCCategory.tsv'), records)
@@ -240,6 +242,7 @@ function transformFSC(): void {
       name: row.name,
       description: cleanDescription(row.description || row.name),
       code: row.code,
+      includedIn: getAggregationsForType('FSC'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.FSCCodes.tsv'), records)
@@ -292,6 +295,7 @@ function transformFSCGroups(): void {
       name: row.name,
       description: '',
       code: row.code,
+      includedIn: getAggregationsForType('FSCGroup'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.FSCGroup.tsv'), records)
@@ -321,6 +325,7 @@ function transformSchedules(): void {
       name: row.name,
       description: cleanDescription(row.description || ''),
       code: row.code,
+      includedIn: getAggregationsForType('Schedule'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.Schedule.tsv'), records)
@@ -350,6 +355,7 @@ function transformSINs(): void {
       name: row.name,
       description: cleanDescription(row.description || ''),
       code: row.code,
+      includedIn: getAggregationsForType('SIN'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.SIN.tsv'), records)
@@ -400,6 +406,7 @@ function transformGWACs(): void {
       name: row.name,
       description: cleanDescription(row.scope || ''),
       code: row.code,
+      includedIn: getAggregationsForType('GWAC'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.GWAC.tsv'), records)
@@ -449,6 +456,7 @@ function transformBPAs(): void {
       name: row.name,
       description: cleanDescription(row.scope || ''),
       code: row.code,
+      includedIn: getAggregationsForType('BPA'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.BPA.tsv'), records)
@@ -499,6 +507,7 @@ function transformEntityStatuses(): void {
       name: row.name,
       description: cleanDescription(row.description || ''),
       code: row.code,
+      includedIn: getAggregationsForType('EntityStatus'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'GSA.EntityStatus.tsv'), records)
@@ -520,6 +529,7 @@ function transformUEI(): void {
       name: 'Unique Entity Identifier',
       description: 'A 12-character alphanumeric identifier assigned to entities registered in SAM.gov. Replaced DUNS numbers in April 2022.',
       code: 'UEI',
+      includedIn: getAggregationsForType('UEI'),
     },
   ]
 

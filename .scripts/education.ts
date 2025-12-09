@@ -173,6 +173,7 @@ function transformISCEDLevels(): void {
     name: level.name,
     description: cleanDescription(level.description),
     code: level.code,
+    includedIn: getAggregationsForType('Level'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.ISCED.Levels.tsv'), levelRecords)
@@ -208,6 +209,7 @@ function transformISCEDFields(): void {
       name: field.name,
       description: cleanDescription(description || field.name),
       code: field.code,
+      includedIn: getAggregationsForType('Field'),
     }
   })
 
@@ -231,6 +233,7 @@ function transformISCEDProgrammes(): void {
     name: programme.orientation,
     description: cleanDescription(programme.description),
     code: programme.code,
+    includedIn: getAggregationsForType('Level'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.ISCED.Programmes.tsv'), programmeRecords)
@@ -253,6 +256,7 @@ function transformCEDSElements(): void {
     name: element.name,
     description: cleanDescription(element.definition),
     code: element.elementId,
+    includedIn: getAggregationsForType('Element'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.CEDS.Elements.tsv'), elementRecords)
@@ -275,6 +279,7 @@ function transformCEDSDomains(): void {
     name: domain.name,
     description: cleanDescription(domain.description),
     code: domain.code,
+    includedIn: getAggregationsForType('Field'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.CEDS.Domains.tsv'), domainRecords)
@@ -297,6 +302,7 @@ function transformCEDSEntities(): void {
     name: entity.name,
     description: cleanDescription(entity.description),
     code: entity.code,
+    includedIn: getAggregationsForType('Type'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.CEDS.Entities.tsv'), entityRecords)
@@ -328,6 +334,7 @@ function transformCEDSOptionSets(): void {
     name: optionSet.optionSetName,
     description: cleanDescription(optionSet.description || optionSet.definition),
     code: optionSet.optionSetName,
+    includedIn: getAggregationsForType('Code'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.CEDS.OptionSets.tsv'), optionSetRecords)
@@ -350,6 +357,7 @@ function transformCASEFrameworks(): void {
     name: framework.name,
     description: cleanDescription(framework.description),
     code: framework.code,
+    includedIn: getAggregationsForType('Framework'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'Education.CASE.Frameworks.tsv'), frameworkRecords)

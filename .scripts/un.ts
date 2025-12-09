@@ -181,6 +181,7 @@ function transformM49Regions(): void {
         name: record.region,
         description: 'UN M49 Region',
         code: record['region-code'],
+        includedIn: getAggregationsForType('Region'),
       })
     }
 
@@ -194,6 +195,7 @@ function transformM49Regions(): void {
         name: record['sub-region'],
         description: 'UN M49 Sub-Region',
         code: record['sub-region-code'],
+        includedIn: getAggregationsForType('Region'),
       })
 
       // Link to parent region
@@ -220,6 +222,7 @@ function transformM49Regions(): void {
         name: record['intermediate-region'],
         description: 'UN M49 Intermediate Region',
         code: record['intermediate-region-code'],
+        includedIn: getAggregationsForType('Region'),
       })
 
       // Link to parent sub-region
@@ -266,6 +269,7 @@ function transformEDIFACT(): void {
       name: msg.code,
       description: cleanDescription(msg.description),
       code: msg.code,
+      includedIn: getAggregationsForType('EDIFACTMessage'),
     })
   }
 
@@ -302,6 +306,7 @@ function transformEDIFACTCategories(): void {
           name,
           description: cleanDescription(cat.description),
           code,
+          includedIn: getAggregationsForType('EDIFACTCategory'),
         })
 
         // Link messages to categories
@@ -361,6 +366,7 @@ function transformLOCODESubdivisions(): void {
         name,
         description: `Type: ${record.SUType || 'N/A'}`,
         code: fullCode,
+        includedIn: getAggregationsForType('Subdivision'),
       })
     }
 
@@ -409,6 +415,7 @@ function transformSPSC(): void {
       name: row.segmentTitle,
       description: '',
       code: row.segmentCode,
+      includedIn: getAggregationsForType('Segment'),
     }))
     writeStandardTSV(join(DATA_DIR, 'UN.SPSCSegments.tsv'), segmentRecords)
 
@@ -420,6 +427,7 @@ function transformSPSC(): void {
       name: row.familyTitle,
       description: '',
       code: row.familyCode,
+      includedIn: getAggregationsForType('Family'),
     }))
     writeStandardTSV(join(DATA_DIR, 'UN.SPSCFamilies.tsv'), familyRecords)
 
@@ -431,6 +439,7 @@ function transformSPSC(): void {
       name: row.classTitle,
       description: '',
       code: row.classCode,
+      includedIn: getAggregationsForType('Class'),
     }))
     writeStandardTSV(join(DATA_DIR, 'UN.SPSCClasses.tsv'), classRecords)
 
@@ -442,6 +451,7 @@ function transformSPSC(): void {
       name: row.commodityTitle,
       description: cleanDescription(row.definition),
       code: row.commodityCode,
+      includedIn: getAggregationsForType('Product'),
     }))
     writeStandardTSV(join(DATA_DIR, 'UN.SPSCCommodities.tsv'), commodityRecords)
 

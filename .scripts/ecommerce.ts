@@ -93,6 +93,7 @@ function transformEclass(): void {
           name: row.name,
           description: cleanDescription(row.description),
           code: row.level,
+          includedIn: getAggregationsForType('Product'),
         }))
 
       if (structureRecords.length > 0) {

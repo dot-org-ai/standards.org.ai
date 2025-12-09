@@ -18,7 +18,7 @@ import {
   type RelationshipRecord,
 } from './utils'
 
-const NS = 'us.org.ai'
+const NS = NAMESPACES.SBA
 const SOURCE_DIR = getSourcePath('SBA')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -116,6 +116,7 @@ function transformSizeStandards(): void {
       name: row.NAICSTitle,
       description: `Size Standard: ${cleanSizeStandard(row.SizeStandard)}`,
       code: row.NAICSCode,
+      includedIn: getAggregationsForType('SizeStandard'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'SBA.SizeStandards.tsv'), records)
@@ -180,6 +181,7 @@ function transformFootnotes(): void {
       name: `Footnote ${row.FootnoteCode}`,
       description: cleanDescription(row.FootnoteText),
       code: row.FootnoteCode,
+      includedIn: getAggregationsForType('IndustryFootnote'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'SBA.IndustryFootnotes.tsv'), records)
@@ -225,6 +227,7 @@ function transformExceptions(): void {
       name: `Exception ${row.ExceptionCode}`,
       description: cleanDescription(row.Description),
       code: row.ExceptionCode,
+      includedIn: getAggregationsForType('ExceptionCode'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'SBA.ExceptionCodes.tsv'), records)
@@ -327,6 +330,7 @@ function transformBusinessTypes(): void {
       name: row.BusinessTypeName,
       description: cleanDescription(row.Description),
       code: row.BusinessTypeCode,
+      includedIn: getAggregationsForType('BusinessType'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'SBA.BusinessTypes.tsv'), records)
@@ -431,6 +435,7 @@ function transformContractTypes(): void {
       name: row.ContractTypeName,
       description: cleanDescription(row.Description),
       code: row.ContractTypeCode,
+      includedIn: getAggregationsForType('ContractType'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'SBA.ContractTypes.tsv'), records)

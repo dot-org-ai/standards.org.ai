@@ -179,6 +179,7 @@ function transformCPCSections(): void {
         name: row.name,
         description: cleanDescription(row.description || ''),
         code: row.code,
+        includedIn: getAggregationsForType('CPCSection'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'USPTO.CPCSections.tsv'), records)
@@ -192,6 +193,7 @@ function transformCPCSections(): void {
       name: section.name,
       description: '',
       code: section.code,
+      includedIn: getAggregationsForType('CPCSection'),
     }))
 
     writeStandardTSV(join(DATA_DIR, 'USPTO.CPCSections.tsv'), records)
@@ -227,6 +229,7 @@ function transformCPCClasses(): void {
     name: cls.name,
     description: '',
     code: cls.code,
+    includedIn: getAggregationsForType('CPCClass'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.CPC.Classes.tsv'), records)
@@ -273,6 +276,7 @@ function transformCPCSubclasses(): void {
     name: sub.name,
     description: '',
     code: sub.code,
+    includedIn: getAggregationsForType('CPCSubclass'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.CPC.Subclasses.tsv'), records)
@@ -319,6 +323,7 @@ function transformCPCGroups(): void {
     name: group.name,
     description: group.isMainGroup ? 'Main Group' : 'Subgroup',
     code: group.code,
+    includedIn: getAggregationsForType('CPCGroup'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.CPC.Groups.tsv'), records)
@@ -381,6 +386,7 @@ function transformUSPCClasses(): void {
     name: cls.name,
     description: `Legacy USPC class. Replaced by CPC: ${cls.cpcEquivalent}`,
     code: cls.code,
+    includedIn: getAggregationsForType('USPCClass'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.USPC.Classes.tsv'), records)
@@ -405,6 +411,7 @@ function transformUSPCSubclasses(): void {
     name: sub.name,
     description: `Legacy USPC subclass. Replaced by CPC: ${sub.cpcEquivalent}`,
     code: sub.code,
+    includedIn: getAggregationsForType('USPCSubclass'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.USPC.Subclasses.tsv'), records)
@@ -455,6 +462,7 @@ function transformNiceClasses(): void {
         name: row.name,
         description: cleanDescription(row.description || ''),
         code: row.code,
+        includedIn: getAggregationsForType('NiceClass'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'USPTO.NiceClasses.tsv'), records)
@@ -468,6 +476,7 @@ function transformNiceClasses(): void {
       name: cls.name,
       description: cls.description,
       code: cls.code,
+      includedIn: getAggregationsForType('NiceClass'),
     }))
 
     writeStandardTSV(join(DATA_DIR, 'USPTO.NiceClasses.tsv'), records)
@@ -494,6 +503,7 @@ function transformUSTrademarkClasses(): void {
     name: cls.name,
     description: cls.description,
     code: cls.code,
+    includedIn: getAggregationsForType('USTrademarkClass'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.USTrademark.Classes.tsv'), records)
@@ -526,6 +536,7 @@ function transformLocarnoClasses(): void {
         name: row.name,
         description: cleanDescription(row.description || row.name),
         code: row.code,
+        includedIn: getAggregationsForType('LocarnoClass'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'USPTO.LocarnoClasses.tsv'), records)
@@ -539,6 +550,7 @@ function transformLocarnoClasses(): void {
       name: cls.name,
       description: '',
       code: cls.code,
+      includedIn: getAggregationsForType('LocarnoClass'),
     }))
 
     writeStandardTSV(join(DATA_DIR, 'USPTO.LocarnoClasses.tsv'), records)
@@ -567,6 +579,7 @@ function transformLocarnoSubclasses(): void {
     name: sub.name,
     description: sub.products,
     code: sub.code,
+    includedIn: getAggregationsForType('LocarnoSubclass'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'USPTO.Locarno.Subclasses.tsv'), records)

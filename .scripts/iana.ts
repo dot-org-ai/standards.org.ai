@@ -17,6 +17,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
 } from './utils'
 
 const NS = NAMESPACES.IANA
@@ -71,6 +72,7 @@ function transformTimezones(): void {
       name: tz.value,
       description: cleanDescription(tz.text),
       code: tz.abbr,
+      includedIn: getAggregationsForType('Timezone'),
     })
 
     // Add individual IANA zone identifiers
@@ -88,6 +90,7 @@ function transformTimezones(): void {
           name: zone,
           description: `UTC${offsetStr}`,
           code: zone,
+          includedIn: getAggregationsForType('Timezone'),
         })
 
         zoneToTimezone.push({

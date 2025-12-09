@@ -326,6 +326,7 @@ function transformWorkActivities(): void {
     name: a.name,
     description: '',
     code: a.id,
+    includedIn: getAggregationsForType('WorkActivity'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.WorkActivities.tsv'), records)
@@ -373,6 +374,7 @@ function transformWorkStyles(): void {
     name: s.name,
     description: '',
     code: s.id,
+    includedIn: getAggregationsForType('WorkStyle'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.WorkStyles.tsv'), records)
@@ -420,6 +422,7 @@ function transformWorkValues(): void {
     name: v.name,
     description: '',
     code: v.id,
+    includedIn: getAggregationsForType('WorkValue'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.WorkValues.tsv'), records)
@@ -467,6 +470,7 @@ function transformInterests(): void {
     name: i.name,
     description: '',
     code: i.id,
+    includedIn: getAggregationsForType('Interest'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Interests.tsv'), records)
@@ -515,6 +519,7 @@ function transformTechnologySkills(): void {
     name: t.name,
     description: t.commodityTitle,
     code: t.commodityCode,
+    includedIn: getAggregationsForType('Technology'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Technologies.tsv'), records)
@@ -569,6 +574,7 @@ function transformJobZones(): void {
     name: `Job Zone ${zone}`,
     description: jobZoneDescriptions[zone] || '',
     code: zone,
+    includedIn: getAggregationsForType('JobZone'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.JobZones.tsv'), records)
@@ -628,6 +634,7 @@ function transformAlternateTitles(): void {
       name: row.alternateTitle,
       description: row.shortTitle || '',
       code: row.oNETSOCCode,
+      includedIn: getAggregationsForType('AlternateTitle'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.AlternateTitles.tsv'), records)
@@ -646,6 +653,7 @@ function transformTasks(): void {
       name: row.task.substring(0, 100) + (row.task.length > 100 ? '...' : ''),
       description: cleanDescription(row.task),
       code: row.taskID,
+      includedIn: getAggregationsForType('Task'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Tasks.tsv'), records)
@@ -684,6 +692,7 @@ function transformReportedTitles(): void {
       name: row.reportedJobTitle,
       description: '',
       code: row.oNETSOCCode,
+      includedIn: getAggregationsForType('ReportedTitle'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.ReportedTitles.tsv'), records)
@@ -708,6 +717,7 @@ function transformTools(): void {
     name: t.example,
     description: t.commodityTitle || '',
     code: t.commodityCode,
+    includedIn: getAggregationsForType('Tool'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Tools.tsv'), records)
@@ -762,6 +772,7 @@ function transformDWA(): void {
     name: dwa.name,
     description: '',
     code: dwa.id,
+    includedIn: getAggregationsForType('DWA'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.DWA.tsv'), records)
@@ -796,6 +807,7 @@ function transformIWA(): void {
     name: iwa.name,
     description: '',
     code: iwa.id,
+    includedIn: getAggregationsForType('IWA'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.IWA.tsv'), records)
@@ -829,6 +841,7 @@ function transformWorkContext(): void {
     name: ctx.name,
     description: `Category: ${ctx.category}`,
     code: ctx.id,
+    includedIn: getAggregationsForType('WorkContext'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.WorkContext.tsv'), records)
@@ -841,6 +854,7 @@ function transformWorkContext(): void {
     name: cat,
     description: '',
     code: cat.toLowerCase().replace(/\s+/g, '-'),
+    includedIn: getAggregationsForType('WorkContextCategory'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.WorkContextCategories.tsv'), categoryRecords)
@@ -888,6 +902,7 @@ function transformEducation(): void {
     name: edu.name,
     description: '',
     code: edu.id,
+    includedIn: getAggregationsForType('Education'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Education.tsv'), records)
@@ -934,6 +949,7 @@ function transformScales(): void {
     name: scale.name,
     description: cleanDescription(scale.description),
     code: scale.id,
+    includedIn: getAggregationsForType('Scale'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Scales.tsv'), records)
@@ -959,6 +975,7 @@ function transformRIASEC(): void {
     name: type.name,
     description: cleanDescription(type.description),
     code: type.code,
+    includedIn: getAggregationsForType('RIASEC'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.RIASEC.tsv'), records)
@@ -983,6 +1000,7 @@ function transformTaskCategories(): void {
     name: cat,
     description: '',
     code: cat.toLowerCase().replace(/\s+/g, '-'),
+    includedIn: getAggregationsForType('TaskCategory'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.TaskCategories.tsv'), records)
@@ -1003,6 +1021,7 @@ function transformEmergingTasks(): void {
         name: row.task.substring(0, 100) + (row.task.length > 100 ? '...' : ''),
         description: cleanDescription(row.task),
         code: row.taskID,
+        includedIn: getAggregationsForType('EmergingTask'),
       }))
 
     writeStandardTSV(join(DATA_DIR, 'ONET.EmergingTasks.tsv'), records)

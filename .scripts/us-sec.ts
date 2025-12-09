@@ -16,7 +16,7 @@ import {
   type StandardRecord,
 } from './utils'
 
-const NS = 'us.org.ai'
+const NS = NAMESPACES.SEC
 const SOURCE_DIR = getSourcePath('SEC')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -425,6 +425,7 @@ function transformFormTypes(): void {
     name: form.name,
     description: form.description,
     code: form.code,
+    includedIn: getAggregationsForType('FormType'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.FormTypes.tsv'), records)
@@ -440,6 +441,7 @@ function transformFilingCategories(): void {
     name: category.name,
     description: category.description,
     code: category.code,
+    includedIn: getAggregationsForType('FilingCategory'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.FilingCategories.tsv'), records)
@@ -455,6 +457,7 @@ function transformFilerTypes(): void {
     name: filer.name,
     description: filer.criteria,
     code: filer.code,
+    includedIn: getAggregationsForType('FilerType'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.FilerTypes.tsv'), records)
@@ -470,6 +473,7 @@ function transformSICDivisions(): void {
     name: division.name,
     description: division.description,
     code: division.code,
+    includedIn: getAggregationsForType('SICDivision'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.SICDivisions.tsv'), records)
@@ -485,6 +489,7 @@ function transformSICMajorGroups(): void {
     name: group.name,
     description: '',
     code: group.code,
+    includedIn: getAggregationsForType('SICMajorGroup'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.SICMajorGroups.tsv'), records)
@@ -538,6 +543,7 @@ function transformSICCodes(): void {
       name: row.name,
       description: cleanDescription(row.description || row.name),
       code: row.code,
+      includedIn: getAggregationsForType('SICCode'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.SICCodes.tsv'), records)

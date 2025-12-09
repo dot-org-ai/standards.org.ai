@@ -94,26 +94,124 @@ export function buildSameAs(canonicalNs: string, type: string, id: string): stri
 
 // Type-to-domain mappings for aggregation
 export const TYPE_AGGREGATIONS: Record<string, string[]> = {
+  // Process types
   Process: ['business.org.ai', 'manufacturing.org.ai', 'process.org.ai'],
+  Category: ['business.org.ai', 'process.org.ai'],
+  ProcessGroup: ['business.org.ai', 'process.org.ai'],
+  Activity: ['business.org.ai', 'process.org.ai'],
+
+  // Industry types
   Industry: ['business.org.ai', 'industries.org.ai'],
   Sector: ['business.org.ai', 'industries.org.ai'],
+
+  // Occupation types (ONET)
   Occupation: ['business.org.ai', 'occupations.org.ai'],
   Skill: ['business.org.ai', 'skills.org.ai', 'education.org.ai'],
   Ability: ['business.org.ai', 'education.org.ai'],
   Knowledge: ['business.org.ai', 'education.org.ai'],
+  WorkActivity: ['business.org.ai', 'occupations.org.ai'],
+  WorkStyle: ['business.org.ai', 'occupations.org.ai'],
+  WorkValue: ['business.org.ai', 'occupations.org.ai'],
+  Interest: ['business.org.ai', 'education.org.ai'],
+  Technology: ['business.org.ai', 'tech.org.ai'],
+  JobZone: ['business.org.ai', 'education.org.ai'],
+  AlternateTitle: ['business.org.ai', 'occupations.org.ai'],
+  Task: ['business.org.ai', 'process.org.ai'],
+  ReportedTitle: ['business.org.ai', 'occupations.org.ai'],
+  Tool: ['business.org.ai', 'manufacturing.org.ai'],
+  DWA: ['business.org.ai', 'occupations.org.ai'],
+  IWA: ['business.org.ai', 'occupations.org.ai'],
+  WorkContext: ['business.org.ai', 'occupations.org.ai'],
+  WorkContextCategory: ['business.org.ai', 'occupations.org.ai'],
+  Education: ['education.org.ai', 'business.org.ai'],
+  Scale: ['business.org.ai'],
+  RIASEC: ['education.org.ai', 'business.org.ai'],
+  TaskCategory: ['business.org.ai', 'process.org.ai'],
+  EmergingTask: ['business.org.ai', 'tech.org.ai'],
+
+  // Product types
   Product: ['business.org.ai', 'products.org.ai', 'retail.org.ai'],
+  Segment: ['business.org.ai', 'products.org.ai'],
+  Family: ['business.org.ai', 'products.org.ai'],
+  Class: ['business.org.ai', 'products.org.ai'],
+  Commodity: ['business.org.ai', 'products.org.ai', 'retail.org.ai'],
+  Brick: ['business.org.ai', 'products.org.ai'],
+  Group: ['business.org.ai', 'products.org.ai'],
+  Subclass: ['business.org.ai', 'products.org.ai'],
+  Detail: ['business.org.ai', 'products.org.ai'],
+
+  // Service types
   Service: ['business.org.ai', 'services.org.ai'],
+  ServiceCategory: ['business.org.ai', 'services.org.ai'],
+  SkillCategory: ['business.org.ai', 'skills.org.ai', 'education.org.ai'],
+  ProcessCategory: ['business.org.ai', 'process.org.ai'],
+
+  // APQC types
+  Metric: ['business.org.ai', 'process.org.ai'],
+  MetricCategory: ['business.org.ai', 'process.org.ai'],
+  GlossaryTerm: ['business.org.ai'],
+
+  // GS1 types
+  Attribute: ['business.org.ai', 'products.org.ai'],
+  Vocabulary: ['business.org.ai', 'logistics.org.ai'],
+  LocationType: ['logistics.org.ai', 'business.org.ai'],
+  BusinessStep: ['logistics.org.ai', 'business.org.ai'],
+  Disposition: ['logistics.org.ai', 'business.org.ai'],
+  IdentifierType: ['logistics.org.ai', 'business.org.ai'],
+  GLNFunctionalType: ['logistics.org.ai', 'business.org.ai'],
+  LocationRelationship: ['logistics.org.ai', 'business.org.ai'],
+  Schema: ['tech.org.ai', 'business.org.ai'],
+  EventType: ['logistics.org.ai', 'business.org.ai'],
+  IdentifierStructure: ['logistics.org.ai', 'business.org.ai'],
+
+  // Healthcare types
   Resource: ['healthcare.org.ai'],
   Code: ['healthcare.org.ai'],
+
+  // Finance types
   Message: ['finance.org.ai'],
-  Country: ['business.org.ai'],
   Currency: ['finance.org.ai'],
+
+  // Geography types
+  Country: ['business.org.ai'],
+  Region: ['business.org.ai'],
+  SubRegion: ['business.org.ai'],
+  Subdivision: ['business.org.ai'],
+  Timezone: ['business.org.ai', 'tech.org.ai'],
+  Zone: ['business.org.ai', 'tech.org.ai'],
+
+  // Language/Education types
   Language: ['business.org.ai', 'education.org.ai'],
+  CareerCluster: ['education.org.ai', 'business.org.ai'],
+  SubCluster: ['education.org.ai', 'business.org.ai'],
+
+  // Web/Tech types
   Type: ['web.org.ai', 'tech.org.ai'],
   Property: ['web.org.ai', 'tech.org.ai'],
   Element: ['web.org.ai', 'tech.org.ai'],
+  Guideline: ['web.org.ai', 'tech.org.ai'],
+  SuccessCriterion: ['web.org.ai', 'tech.org.ai'],
+  Technique: ['web.org.ai', 'tech.org.ai'],
+  Principle: ['web.org.ai', 'tech.org.ai'],
+  Enumeration: ['web.org.ai', 'tech.org.ai'],
+  EnumerationMember: ['web.org.ai', 'tech.org.ai'],
+
+  // EDI/Logistics types
   TransactionSet: ['logistics.org.ai', 'edi.org.ai'],
   Location: ['logistics.org.ai', 'business.org.ai'],
+  DataElement: ['logistics.org.ai', 'edi.org.ai'],
+  Document: ['logistics.org.ai', 'edi.org.ai'],
+  BusinessProcess: ['logistics.org.ai', 'business.org.ai'],
+  ParticipantScheme: ['logistics.org.ai', 'business.org.ai'],
+  Codelist: ['logistics.org.ai', 'business.org.ai'],
+  EDIFACTMessage: ['logistics.org.ai', 'edi.org.ai'],
+  EDIFACTCategory: ['logistics.org.ai', 'edi.org.ai'],
+  SPSC: ['business.org.ai', 'products.org.ai'],
+  StructureLevel: ['business.org.ai', 'products.org.ai'],
+
+  // BLS types
+  OESOccupation: ['business.org.ai', 'occupations.org.ai'],
+  STEM: ['education.org.ai', 'tech.org.ai'],
 }
 
 // Get aggregation domains for a type
@@ -133,64 +231,30 @@ export interface RelationshipRecord {
   relationshipType?: string
 }
 
-// Symbol to word mappings for ID generation
-const SYMBOL_MAPPINGS: Record<string, string> = {
-  '%': 'Percent',
-  '#': 'Hash',
-  '@': 'At',
-  '&': 'And',
-  '+': 'Plus',
-  '*': 'Star',
-  '<': 'Less_Than',
-  '>': 'Greater_Than',
-  '=': 'Equals',
-  '!': 'Not',
-  '?': 'Question',
-  '$': 'Dollar',
-  '€': 'Euro',
-  '£': 'Pound',
-  '¥': 'Yen',
-}
-
 /**
- * Convert a string to Wikipedia-style name (Title_Case_With_Underscores)
+ * Convert a string to a URL-safe ID
+ * - Replaces spaces with underscores
+ * - Removes / and ? (URL reserved characters)
+ * - Preserves original case (no capitalization changes)
+ * - Preserves most other characters (parentheses, hyphens, etc.)
+ *
  * Examples:
- *   "chief executives" -> "Chief_Executives"
- *   "software-developer" -> "Software_Developer"
+ *   "chief executives" -> "chief_executives"
+ *   "software-developer" -> "software-developer"
  *   "IT Manager" -> "IT_Manager"
- *   "%" -> "Percent"
+ *   "C++" -> "C++"
+ *   "What is this?" -> "What_is_this"
+ *   "path/to/thing" -> "path_to_thing"
  */
 export function toWikipediaStyleId(str: string): string {
   if (!str) return ''
 
-  // Check for exact symbol matches first
-  if (SYMBOL_MAPPINGS[str.trim()]) {
-    return SYMBOL_MAPPINGS[str.trim()]
-  }
-
-  // Replace known symbols with words
-  let processed = str.trim()
-  for (const [symbol, word] of Object.entries(SYMBOL_MAPPINGS)) {
-    processed = processed.replace(new RegExp(`\\${symbol}`, 'g'), ` ${word} `)
-  }
-
-  return processed
-    // Replace multiple spaces, dashes, slashes with single space
-    .replace(/[\s\-\/]+/g, ' ')
-    // Remove special characters except apostrophes and parentheses
-    .replace(/[^\w\s'()]/g, '')
-    // Split into words
-    .split(/\s+/)
-    // Capitalize each word (preserve acronyms that are already uppercase)
-    .map(word => {
-      if (word.length === 0) return ''
-      // If it's already all uppercase and short (likely acronym), keep it
-      if (word === word.toUpperCase() && word.length <= 4) return word
-      // Otherwise, capitalize first letter
-      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-    })
-    // Join with underscores
-    .join('_')
+  return str
+    .trim()
+    // Replace spaces with underscores
+    .replace(/\s+/g, '_')
+    // Remove / and ? (URL reserved characters)
+    .replace(/[\/\?]/g, '_')
     // Clean up any double underscores
     .replace(/_+/g, '_')
     // Remove leading/trailing underscores

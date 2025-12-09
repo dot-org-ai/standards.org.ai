@@ -12,6 +12,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
   type RelationshipRecord,
 } from './utils'
@@ -121,6 +122,7 @@ function transformEmployment(): void {
       name: row.occupationTitle,
       description: `Total Employment: ${row.totalEmployment?.trim() || 'N/A'}`,
       code: row.socCode,
+      includedIn: getAggregationsForType('Occupation'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'BLS.Occupations.tsv'), records)
@@ -232,6 +234,7 @@ function transformIndustries(): void {
       name: row.industry_name,
       description: '',
       code: row.industry_code,
+      includedIn: getAggregationsForType('Industry'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'BLS.Industries.tsv'), industries)
@@ -278,6 +281,7 @@ function transformOESOccupations(): void {
       name: row.occupation_name,
       description: cleanDescription(row.occupation_description || ''),
       code: row.occupation_code,
+      includedIn: getAggregationsForType('Occupation'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'BLS.OESOccupations.tsv'), occupations)
@@ -312,6 +316,7 @@ function transformEducation(): void {
     name: edu.name,
     description: '',
     code: edu.code,
+    includedIn: getAggregationsForType('Level'),
   }))
 
   writeStandardTSV(join(DATA_DIR, 'BLS.Education.tsv'), educationRecords)
@@ -380,6 +385,7 @@ function transformSTEM(): void {
       name: row.OCC_TITLE,
       description: `Total Employment: ${row.TOT_EMP || 'N/A'}, STEM Employment: ${row.STEM_EMP || 'N/A'}, STEM %: ${row.STEM_PERCENT || 'N/A'}`,
       code: row.OCC_CODE,
+      includedIn: getAggregationsForType('Occupation'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'BLS.STEM.tsv'), stemRecords)

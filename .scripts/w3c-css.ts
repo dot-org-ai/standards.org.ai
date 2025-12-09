@@ -81,6 +81,7 @@ function transformCSSProperties(): void {
         `${row.specification}. Syntax: ${row.syntax}. Initial: ${row.initial}. Inherited: ${row.inherited}. Animatable: ${row.animatable}.`
       ),
       code: row.name,
+      includedIn: getAggregationsForType('Property'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.CSS.Properties.tsv'), records)
@@ -127,6 +128,7 @@ function transformCSSSelectors(): void {
         `${row.description || row.type}. Type: ${row.type}. Specificity: ${row.specificity}.`
       ),
       code: row.pattern,
+      includedIn: getAggregationsForType('Selector'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.CSS.Selectors.tsv'), records)
@@ -171,6 +173,7 @@ function transformCSSFunctions(): void {
         `${row.description}. Parameters: ${row.parameters}. Returns: ${row.returnType}.`
       ),
       code: row.name,
+      includedIn: getAggregationsForType('Property'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.CSS.Functions.tsv'), records)
@@ -213,6 +216,7 @@ function transformCSSAtRules(): void {
       name: row.name,
       description: cleanDescription(`${row.description}. Syntax: ${row.syntax}.`),
       code: row.name,
+      includedIn: getAggregationsForType('Property'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.CSS.AtRules.tsv'), records)
@@ -254,6 +258,7 @@ function transformCSSDataTypes(): void {
       name: row.name,
       description: cleanDescription(`${row.description}. Syntax: ${row.syntax}.`),
       code: row.name,
+      includedIn: getAggregationsForType('Type'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.CSS.DataTypes.tsv'), records)
@@ -297,6 +302,7 @@ function transformCSSUnits(): void {
         `${row.description}. Type: ${row.type}.${row.relativeTo ? ` Relative to: ${row.relativeTo}.` : ''}`
       ),
       code: row.name,
+      includedIn: getAggregationsForType('Type'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'W3C.CSS.Units.tsv'), records)

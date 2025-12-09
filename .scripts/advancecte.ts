@@ -10,6 +10,7 @@ import {
   getDataPath,
   getRelationshipsPath,
   ensureOutputDirs,
+  getAggregationsForType,
   type StandardRecord,
 } from './utils'
 
@@ -76,6 +77,7 @@ function transformCareerClusters(): void {
       name: cluster,
       description: '',
       code: cluster.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      includedIn: getAggregationsForType('Field'),
     }))
     writeStandardTSV(join(DATA_DIR, 'AdvanceCTE.CareerClusters.tsv'), clusterRecords)
 
@@ -87,6 +89,7 @@ function transformCareerClusters(): void {
       name: sc.name,
       description: `Part of ${sc.parent}`,
       code: sc.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+      includedIn: getAggregationsForType('Field'),
     }))
     writeStandardTSV(join(DATA_DIR, 'AdvanceCTE.SubClusters.tsv'), subClusterRecords)
 

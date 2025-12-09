@@ -18,7 +18,7 @@ import {
   type RelationshipRecord,
 } from './utils'
 
-const NS = 'us.org.ai'
+const NS = NAMESPACES.Census
 const SOURCE_DIR = getSourcePath('Census')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
@@ -133,6 +133,7 @@ function transformStates(): void {
       name: row.name,
       description: cleanDescription(`${row.name} (${row.abbreviation}) - FIPS ${row.code}`),
       code: row.code,
+      includedIn: getAggregationsForType('State'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.States.tsv'), records)
@@ -151,6 +152,7 @@ function transformRegions(): void {
       name: region.name,
       description: `Census Region ${region.code}: ${region.name}`,
       code: region.code,
+      includedIn: getAggregationsForType('Region'),
     }
   })
 
@@ -169,6 +171,7 @@ function transformDivisions(): void {
       name: division.name,
       description: `Census Division ${division.code}: ${division.name}`,
       code: division.code,
+      includedIn: getAggregationsForType('Division'),
     }
   })
 
@@ -217,6 +220,7 @@ function transformCounties(): void {
       name: row.name,
       description: cleanDescription(`${row.name}, ${row.state} - FIPS ${row.code}`),
       code: row.code,
+      includedIn: getAggregationsForType('County'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.Counties.tsv'), records)
@@ -272,6 +276,7 @@ function transformPlaces(): void {
       name: row.name,
       description: `${row.name}, ${row.state} - ${row.type} (Pop: ${row.population})`,
       code: row.fips,
+      includedIn: getAggregationsForType('Place'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.Places.tsv'), records)
@@ -353,6 +358,7 @@ function transformCBSA(): void {
       name: row['CBSA Title'],
       description: cleanDescription(`${row['Metropolitan/Micropolitan Statistical Area']}: ${row['CBSA Title']}`),
       code: row['CBSA Code'],
+      includedIn: getAggregationsForType('CBSA'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.CBSAs.tsv'), records)
@@ -390,6 +396,7 @@ function transformCSA(): void {
       name: row.name,
       description: `Combined Statistical Area: ${row.name}`,
       code: row.code,
+      includedIn: getAggregationsForType('CSA'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.CSA.tsv'), records)
@@ -426,6 +433,7 @@ function transformMSA(): void {
       name: row.name,
       description: `Legacy Metropolitan Statistical Area: ${row.name} (now CBSA ${row.cbsa})`,
       code: row.code,
+      includedIn: getAggregationsForType('MSA'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.MSA.tsv'), records)
@@ -478,6 +486,7 @@ function transformCBP(): void {
       name: `County Business Patterns - NAICS ${row.naics}`,
       description: `Establishments: ${row.establishments}, Employment: ${row.employment}, Payroll: ${row.payroll}`,
       code: row.naics,
+      includedIn: getAggregationsForType('CBPIndustry'),
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.CBP.tsv'), records)
