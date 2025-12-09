@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import {
   NAMESPACES,
   parseTSV,
@@ -103,45 +103,39 @@ const DIVISIONS = [
   { code: '9', name: 'Pacific', region: '4' },
 ]
 
-function transformStates(): void {
-  console.log('Transforming Census States...')
+interface StateRow {
+  code: string
+  name: string
+  description: string
+  abbreviation: string
+  statens: string
+}
 
-  const records: StandardRecord[] = STATES.map(state => ({
-    ns: NS,
-    type: 'State',
-    id: toWikipediaStyleId(state.name),
-    name: state.name,
-    description: `${state.name} (${state.abbreviation}) - FIPS ${state.fips}`,
-    code: state.fips,
-  }))
+function transformStates(): void {
+  console.log('Transforming Census States from source file...')
+
+  const sourceFile = join(SOURCE_DIR, 'fips_state_codes.tsv')
+  if (!existsSync(sourceFile)) {
+    console.log('Warning: fips_state_codes.tsv not found, skipping states')
+    return
+  }
+
+  const data = parseTSV<StateRow>(sourceFile)
+  console.log(`Loaded ${data.length} states from source`)
+
+  const records: StandardRecord[] = data
+    .filter(row => row.code && row.name)
+    .map(row => ({
+      ns: NS,
+      type: 'State',
+      id: toWikipediaStyleId(row.name),
+      name: row.name,
+      description: cleanDescription(`${row.name} (${row.abbreviation}) - FIPS ${row.code}`),
+      code: row.code,
+    }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.States.tsv'), records)
-
-  // Create state-region relationships
-  const regionRelationships: RelationshipRecord[] = STATES.map(state => ({
-    fromNs: NS,
-    fromType: 'State',
-    fromId: toWikipediaStyleId(state.name),
-    toNs: NS,
-    toType: 'Region',
-    toId: toWikipediaStyleId(REGIONS.find(r => r.code === state.region)?.name || ''),
-    relationshipType: 'in_region',
-  }))
-
-  writeRelationshipTSV(join(REL_DIR, 'Census.State.Region.tsv'), regionRelationships)
-
-  // Create state-division relationships
-  const divisionRelationships: RelationshipRecord[] = STATES.map(state => ({
-    fromNs: NS,
-    fromType: 'State',
-    fromId: toWikipediaStyleId(state.name),
-    toNs: NS,
-    toType: 'Division',
-    toId: toWikipediaStyleId(DIVISIONS.find(d => d.code === state.division)?.name || ''),
-    relationshipType: 'in_division',
-  }))
-
-  writeRelationshipTSV(join(REL_DIR, 'Census.State.Division.tsv'), divisionRelationships)
+  console.log(`Wrote ${records.length} states to Census.States.tsv`)
 }
 
 function transformRegions(): void {
@@ -193,61 +187,55 @@ function transformDivisions(): void {
   writeRelationshipTSV(join(REL_DIR, 'Census.Division.Region.tsv'), relationships)
 }
 
+interface CountyRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+  state: string
+}
+
 function transformCounties(): void {
-  console.log('Transforming Census Counties...')
+  console.log('Transforming Census Counties from source file...')
 
-  // TODO: This would read from Census county FIPS data files
-  // For now, we'll create placeholder structure
-  console.log('County data requires source files from Census.gov')
-  console.log('Expected file: .source/Census/Counties.tsv')
-  console.log('Format: fips, name, state, stateFips, classCode')
-
-  const sourceFile = join(SOURCE_DIR, 'Counties.tsv')
+  const sourceFile = join(SOURCE_DIR, 'fips_county_codes.tsv')
   if (!existsSync(sourceFile)) {
-    console.log('Skipping counties - file not found')
+    console.log('Warning: fips_county_codes.tsv not found, skipping counties')
     return
   }
 
-  interface CountyRow {
-    fips: string
-    name: string
-    state: string
-    stateFips: string
-    classCode: string
-  }
-
   const data = parseTSV<CountyRow>(sourceFile)
+  console.log(`Loaded ${data.length} counties from source`)
 
   const records: StandardRecord[] = data
-    .filter(row => row.fips && row.name)
+    .filter(row => row.code && row.name && row.state !== 'NA')
     .map(row => ({
       ns: NS,
       type: 'County',
       id: toWikipediaStyleId(`${row.name}_${row.state}`),
       name: row.name,
-      description: `${row.name}, ${row.state} - FIPS ${row.fips}`,
-      code: row.fips,
+      description: cleanDescription(`${row.name}, ${row.state} - FIPS ${row.code}`),
+      code: row.code,
     }))
 
   writeStandardTSV(join(DATA_DIR, 'Census.Counties.tsv'), records)
+  console.log(`Wrote ${records.length} counties to Census.Counties.tsv`)
 
   // Create county-state relationships
   const relationships: RelationshipRecord[] = data
-    .filter(row => row.fips && row.stateFips)
-    .map(row => {
-      const state = STATES.find(s => s.fips === row.stateFips)
-      return {
-        fromNs: NS,
-        fromType: 'County',
-        fromId: toWikipediaStyleId(`${row.name}_${row.state}`),
-        toNs: NS,
-        toType: 'State',
-        toId: toWikipediaStyleId(state?.name || ''),
-        relationshipType: 'in_state',
-      }
-    })
+    .filter(row => row.code && row.state && row.state !== 'NA')
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'County',
+      fromId: toWikipediaStyleId(`${row.name}_${row.state}`),
+      toNs: NS,
+      toType: 'State',
+      toId: toWikipediaStyleId(row.state),
+      relationshipType: 'in_state',
+    }))
 
   writeRelationshipTSV(join(REL_DIR, 'Census.County.State.tsv'), relationships)
+  console.log(`Wrote ${relationships.length} county -> state relationships`)
 }
 
 function transformPlaces(): void {
@@ -288,42 +276,86 @@ function transformPlaces(): void {
   writeStandardTSV(join(DATA_DIR, 'Census.Places.tsv'), records)
 }
 
+interface CBSARow {
+  'CBSA Code': string
+  'Metropolitan Division Code': string
+  'CSA Code': string
+  'CBSA Title': string
+  'Metropolitan/Micropolitan Statistical Area': string
+  'Metropolitan Division Title': string
+  'CSA Title': string
+  'County/County Equivalent': string
+  'State Name': string
+  'FIPS State Code': string
+  'FIPS County Code': string
+  'Central/Outlying County': string
+}
+
 function transformCBSA(): void {
-  console.log('Transforming Census CBSA (Core Based Statistical Areas)...')
+  console.log('Transforming Census CBSA (Core Based Statistical Areas) from source file...')
 
-  // TODO: This would read from Census CBSA delineation files
-  console.log('CBSA data requires source files from Census.gov')
-  console.log('Expected file: .source/Census/CBSA.tsv')
-  console.log('Format: code, name, type, counties, principalCity')
-
-  const sourceFile = join(SOURCE_DIR, 'CBSA.tsv')
+  const sourceFile = join(SOURCE_DIR, 'cbsa_delineation_2023.tsv')
   if (!existsSync(sourceFile)) {
-    console.log('Skipping CBSA - file not found')
+    console.log('Warning: cbsa_delineation_2023.tsv not found, skipping CBSA')
     return
   }
 
-  interface CBSARow {
-    code: string
-    name: string
-    type: string
-    counties: string
-    principalCity: string
+  // Custom parsing for CBSA file which has headers on row 3
+  let content = readFileSync(sourceFile, 'utf-8')
+
+  // Remove BOM if present
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.substring(1)
   }
 
-  const data = parseTSV<CBSARow>(sourceFile)
+  const lines = content.split('\n').filter(line => line.trim())
 
-  const records: StandardRecord[] = data
-    .filter(row => row.code && row.name)
+  // Headers are on line 3 (index 2)
+  if (lines.length < 4) {
+    console.log('Warning: cbsa_delineation_2023.tsv has insufficient data')
+    return
+  }
+
+  const headers = lines[2].split('\t').map(h => h.trim())
+  const data: CBSARow[] = []
+
+  // Start from line 4 (index 3)
+  for (let i = 3; i < lines.length; i++) {
+    const values = lines[i].split('\t')
+    const record: any = {}
+
+    for (let j = 0; j < headers.length; j++) {
+      record[headers[j]] = (values[j] || '').trim()
+    }
+
+    data.push(record as CBSARow)
+  }
+
+  console.log(`Loaded ${data.length} CBSA delineation records from source`)
+
+  // Group by CBSA Code to get unique CBSAs
+  const cbsaMap = new Map<string, CBSARow>()
+  for (const row of data) {
+    const code = row['CBSA Code']
+    // Skip invalid entries
+    if (code && code.match(/^\d+$/) && !cbsaMap.has(code)) {
+      cbsaMap.set(code, row)
+    }
+  }
+
+  const records: StandardRecord[] = Array.from(cbsaMap.values())
+    .filter(row => row['CBSA Code'] && row['CBSA Title'])
     .map(row => ({
       ns: NS,
       type: 'CBSA',
-      id: toWikipediaStyleId(row.name),
-      name: row.name,
-      description: `${row.type}: ${row.name} (Principal City: ${row.principalCity})`,
-      code: row.code,
+      id: toWikipediaStyleId(row['CBSA Title']),
+      name: row['CBSA Title'],
+      description: cleanDescription(`${row['Metropolitan/Micropolitan Statistical Area']}: ${row['CBSA Title']}`),
+      code: row['CBSA Code'],
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'Census.CBSA.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'Census.CBSAs.tsv'), records)
+  console.log(`Wrote ${records.length} unique CBSAs to Census.CBSAs.tsv`)
 }
 
 function transformCSA(): void {

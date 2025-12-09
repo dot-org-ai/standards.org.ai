@@ -88,8 +88,9 @@ interface ReportedTitle {
 
 interface ToolData {
   oNETSOCCode: string
-  commodity: string
+  example: string
   commodityCode: string
+  commodityTitle: string
 }
 
 interface DWAData {
@@ -127,9 +128,18 @@ interface WorkContextData {
 
 interface EducationData {
   oNETSOCCode: string
-  educationLevel: string
+  elementID: string
+  elementName: string
+  scaleID: string
   category: string
   dataValue: string
+  n: string
+  standardError: string
+  lowerCIBound: string
+  upperCIBound: string
+  recommendSuppress: string
+  date: string
+  domainSource: string
 }
 
 function transformOccupations(): void {
@@ -620,7 +630,7 @@ function transformAlternateTitles(): void {
 
 function transformTasks(): void {
   console.log('Transforming ONET Tasks...')
-  const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.Tasks.tsv'))
+  const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.TaskStatements.tsv'))
 
   const records: StandardRecord[] = data
     .filter(row => row.taskID && row.task)
@@ -658,7 +668,7 @@ function transformTasks(): void {
 
 function transformReportedTitles(): void {
   console.log('Transforming ONET Reported Titles...')
-  const data = parseTSV<ReportedTitle>(join(SOURCE_DIR, 'ONET.ReportedTitles.tsv'))
+  const data = parseTSV<ReportedTitle>(join(SOURCE_DIR, 'ONET.SampleOfReportedTitles.tsv'))
 
   const records: StandardRecord[] = data
     .filter(row => row.reportedJobTitle)
@@ -676,22 +686,22 @@ function transformReportedTitles(): void {
 
 function transformTools(): void {
   console.log('Transforming ONET Tools...')
-  const data = parseTSV<ToolData>(join(SOURCE_DIR, 'ONET.Tools.tsv'))
+  const data = parseTSV<ToolData>(join(SOURCE_DIR, 'ONET.ToolsUsed.tsv'))
 
   // Get unique tools
   const toolsMap = new Map<string, ToolData>()
   for (const row of data) {
-    if (row.commodity && !toolsMap.has(row.commodity)) {
-      toolsMap.set(row.commodity, row)
+    if (row.example && !toolsMap.has(row.example)) {
+      toolsMap.set(row.example, row)
     }
   }
 
   const records: StandardRecord[] = Array.from(toolsMap.values()).map(t => ({
     ns: NS,
     type: 'Tool',
-    id: toWikipediaStyleId(t.commodity),
-    name: t.commodity,
-    description: '',
+    id: toWikipediaStyleId(t.example),
+    name: t.example,
+    description: t.commodityTitle || '',
     code: t.commodityCode,
   }))
 
@@ -699,14 +709,14 @@ function transformTools(): void {
 
   // Write occupation-tool relationships
   const relationships: Record<string, string>[] = data
-    .filter(row => row.commodity && row.oNETSOCCode)
+    .filter(row => row.example && row.oNETSOCCode)
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
       fromCode: row.oNETSOCCode,
       toNs: NS,
       toType: 'Tool',
-      toId: toWikipediaStyleId(row.commodity),
+      toId: toWikipediaStyleId(row.example),
       relationshipType: 'uses_tool',
     }))
 
@@ -719,15 +729,23 @@ function transformTools(): void {
 
 function transformDWA(): void {
   console.log('Transforming ONET Detailed Work Activities...')
-  const data = parseTSV<DWAData>(join(SOURCE_DIR, 'ONET.DWA.tsv'))
+
+  // Read DWA reference to get DWA definitions
+  interface DWAReference {
+    elementID: string
+    iWAID: string
+    dWAID: string
+    dWATitle: string
+  }
+  const dwaRef = parseTSV<DWAReference>(join(SOURCE_DIR, 'ONET.DWAReference.tsv'))
 
   // Get unique DWAs
   const dwaMap = new Map<string, { id: string; name: string }>()
-  for (const row of data) {
-    if (!dwaMap.has(row.elementID)) {
-      dwaMap.set(row.elementID, {
-        id: row.elementID,
-        name: row.elementName,
+  for (const row of dwaRef) {
+    if (row.dWAID && row.dWATitle && !dwaMap.has(row.dWAID)) {
+      dwaMap.set(row.dWAID, {
+        id: row.dWAID,
+        name: row.dWATitle,
       })
     }
   }
@@ -742,39 +760,26 @@ function transformDWA(): void {
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.DWA.tsv'), records)
-
-  // Write occupation-DWA relationships
-  const relationships: Record<string, string>[] = data
-    .filter(row => row.scaleID === 'IM')
-    .map(row => ({
-      fromNs: NS,
-      fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
-      toNs: NS,
-      toType: 'DWA',
-      toCode: row.elementID,
-      relationshipType: 'performs_dwa',
-      importance: row.dataValue,
-    }))
-
-  writeTSV(
-    join(REL_DIR, 'ONET.Occupation.DWA.tsv'),
-    relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
-  )
 }
 
 function transformIWA(): void {
   console.log('Transforming ONET Intermediate Work Activities...')
-  const data = parseTSV<DWAData>(join(SOURCE_DIR, 'ONET.IWA.tsv'))
+
+  // Read IWA reference to get IWA definitions
+  interface IWAReference {
+    elementID: string
+    iWAID: string
+    iWATitle: string
+  }
+  const iwaRef = parseTSV<IWAReference>(join(SOURCE_DIR, 'ONET.IWAReference.tsv'))
 
   // Get unique IWAs
   const iwaMap = new Map<string, { id: string; name: string }>()
-  for (const row of data) {
-    if (!iwaMap.has(row.elementID)) {
-      iwaMap.set(row.elementID, {
-        id: row.elementID,
-        name: row.elementName,
+  for (const row of iwaRef) {
+    if (row.iWAID && row.iWATitle && !iwaMap.has(row.iWAID)) {
+      iwaMap.set(row.iWAID, {
+        id: row.iWAID,
+        name: row.iWATitle,
       })
     }
   }
@@ -789,26 +794,6 @@ function transformIWA(): void {
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.IWA.tsv'), records)
-
-  // Write occupation-IWA relationships
-  const relationships: Record<string, string>[] = data
-    .filter(row => row.scaleID === 'IM')
-    .map(row => ({
-      fromNs: NS,
-      fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
-      toNs: NS,
-      toType: 'IWA',
-      toCode: row.elementID,
-      relationshipType: 'performs_iwa',
-      importance: row.dataValue,
-    }))
-
-  writeTSV(
-    join(REL_DIR, 'ONET.Occupation.IWA.tsv'),
-    relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
-  )
 }
 
 function transformWorkContext(): void {
@@ -878,37 +863,40 @@ function transformWorkContext(): void {
 
 function transformEducation(): void {
   console.log('Transforming ONET Education...')
-  const data = parseTSV<EducationData>(join(SOURCE_DIR, 'ONET.Education.tsv'))
+  const data = parseTSV<EducationData>(join(SOURCE_DIR, 'ONET.EducationTrainingAndExperience.tsv'))
 
-  // Get unique education levels
-  const eduSet = new Set<string>()
+  // Get unique education/training elements
+  const eduMap = new Map<string, { id: string; name: string }>()
   for (const row of data) {
-    if (row.educationLevel) {
-      eduSet.add(row.educationLevel)
+    if (row.elementID && row.elementName && !eduMap.has(row.elementID)) {
+      eduMap.set(row.elementID, {
+        id: row.elementID,
+        name: row.elementName,
+      })
     }
   }
 
-  const records: StandardRecord[] = Array.from(eduSet).map(edu => ({
+  const records: StandardRecord[] = Array.from(eduMap.values()).map(edu => ({
     ns: NS,
     type: 'Education',
-    id: toWikipediaStyleId(edu),
-    name: edu,
+    id: toWikipediaStyleId(edu.name),
+    name: edu.name,
     description: '',
-    code: edu.toLowerCase().replace(/\s+/g, '-'),
+    code: edu.id,
   }))
 
   writeStandardTSV(join(DATA_DIR, 'ONET.Education.tsv'), records)
 
   // Write occupation-education relationships
   const relationships: Record<string, string>[] = data
-    .filter(row => row.educationLevel && row.oNETSOCCode)
+    .filter(row => row.elementID && row.oNETSOCCode && row.scaleID === 'RL')
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
       fromCode: row.oNETSOCCode,
       toNs: NS,
       toType: 'Education',
-      toId: toWikipediaStyleId(row.educationLevel),
+      toCode: row.elementID,
       relationshipType: 'requires_education',
       category: row.category || '',
       value: row.dataValue || '',
@@ -917,7 +905,7 @@ function transformEducation(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Education.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType', 'category', 'value']
+    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'category', 'value']
   )
 }
 
@@ -973,7 +961,7 @@ function transformRIASEC(): void {
 
 function transformTaskCategories(): void {
   console.log('Transforming ONET Task Categories...')
-  const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.Tasks.tsv'))
+  const data = parseTSV<TaskData>(join(SOURCE_DIR, 'ONET.TaskStatements.tsv'))
 
   // Get unique task types
   const categorySet = new Set<string>()

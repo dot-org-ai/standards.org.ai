@@ -1,0 +1,45 @@
+---
+layout: eventType
+source: GS1/EPCIS
+$type: GS1/EPCIS/EventType
+$id: https://standards.org.ai/GS1/EPCIS/EventType/{eventType.code}
+sameAs: https://standards.org.ai/EventType/{eventType.code}
+canonical: https://gs1.org.ai/EPCIS/EventType/{eventType.code}
+params:
+  - EventType
+schema:
+  eventType:
+    code: code
+    name: name
+    description: description
+---
+
+# {eventType.name}
+
+<EventTypeHeader name={eventType.name} code={eventType.code} />
+
+## Description
+
+{eventType.description}
+
+## Event Structure
+
+EPCIS events follow a standard structure with core fields:
+- **What**: Which objects (EPCs) are involved
+- **When**: The date and time of the event
+- **Where**: The location where the event occurred
+- **Why**: Business step and disposition indicating the business context
+
+## Usage
+
+{eventType.name} is used in EPCIS to track supply chain events. Each event type has specific fields appropriate to its purpose.
+
+## Related Standards
+
+- EPCIS 2.0 Standard
+- Core Business Vocabulary (CBV)
+- GS1 Digital Link
+
+## Example
+
+<EventTypeExample eventTypeCode={eventType.code} />

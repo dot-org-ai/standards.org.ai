@@ -15,10 +15,10 @@ import {
   type StandardRecord,
 } from './utils'
 
-// EDI Namespaces
-const NS_X12 = 'x12.org.ai'
-const NS_EANCOM = 'eancom.org.ai'
-const NS_PEPPOL = 'peppol.org.ai'
+// EDI Namespaces - using standards.org.ai as requested
+const NS_X12 = 'standards.org.ai'
+const NS_EANCOM = 'standards.org.ai'
+const NS_PEPPOL = 'standards.org.ai'
 
 const SOURCE_DIR_X12 = getSourcePath('EDI/X12')
 const SOURCE_DIR_EANCOM = getSourcePath('EDI/EANCOM')
@@ -31,100 +31,85 @@ interface X12TransactionSetRow {
   code: string
   name: string
   description: string
-  functionalGroup: string
-  purpose: string
+  category: string
 }
 
 interface X12SegmentRow {
-  segmentID: string
-  segmentName: string
+  code: string
+  name: string
   description: string
-  purpose: string
-  maxUse: string
 }
 
 interface X12ElementRow {
-  elementID: string
-  elementName: string
-  description: string
+  code: string
+  name: string
   dataType: string
   minLength: string
   maxLength: string
-}
-
-interface X12CodeRow {
-  elementID: string
-  codeValue: string
-  codeName: string
   description: string
 }
 
 // EANCOM Interfaces
 interface EANCOMMessageRow {
-  messageCode: string
-  messageName: string
+  code: string
+  name: string
   description: string
-  version: string
-  edifactType: string
+  category: string
 }
 
 interface EANCOMSegmentRow {
-  segmentTag: string
-  segmentName: string
+  code: string
+  name: string
   description: string
-  status: string
-  maxOccurrences: string
 }
 
 interface EANCOMDataElementRow {
-  elementID: string
-  elementName: string
+  code: string
+  name: string
+  dataType: string
+  minLength: string
+  maxLength: string
   description: string
-  format: string
-  status: string
 }
 
 // Peppol Interfaces
 interface PeppolDocumentRow {
-  documentID: string
-  documentName: string
+  code: string
+  name: string
   description: string
-  ublVersion: string
-  peppolBIS: string
-  customizationID: string
+  version: string
 }
 
 interface PeppolBusinessProcessRow {
-  bisCode: string
-  bisName: string
+  code: string
+  name: string
   description: string
-  version: string
-  profileID: string
+  profile: string
 }
 
-interface PeppolPartyRow {
-  identifierScheme: string
-  partyID: string
-  partyName: string
-  countryCode: string
-  schemeAgencyID: string
+interface PeppolParticipantSchemeRow {
+  icd: string
+  schemeID: string
+  schemeName: string
+  issuingOrganization: string
+  status: string
 }
 
 interface PeppolCodelistRow {
-  codelistID: string
   codelistName: string
+  code: string
+  name: string
   description: string
-  agencyID: string
-  version: string
+  category: string
 }
 
 // X12 Transformation Functions
 function transformX12TransactionSets(): void {
   console.log('Transforming X12 Transaction Sets...')
-  const sourceFile = join(SOURCE_DIR_X12, 'X12.TransactionSets.tsv')
+  const sourceFile = join(SOURCE_DIR_X12, 'TransactionSets.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('X12.TransactionSets.tsv not found, skipping...')
+    console.log('TransactionSets.tsv not found, skipping...')
     return
   }
 
@@ -141,292 +126,244 @@ function transformX12TransactionSets(): void {
       code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'X12.TransactionSets.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.X12.TransactionSets.tsv'), records)
+  console.log(`Transformed ${records.length} X12 Transaction Sets`)
 }
 
 function transformX12Segments(): void {
   console.log('Transforming X12 Segments...')
-  const sourceFile = join(SOURCE_DIR_X12, 'X12.Segments.tsv')
+  const sourceFile = join(SOURCE_DIR_X12, 'Segments.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('X12.Segments.tsv not found, skipping...')
+    console.log('Segments.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<X12SegmentRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.segmentID && row.segmentName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_X12,
       type: 'Segment',
-      id: toWikipediaStyleId(row.segmentID),
-      name: `${row.segmentID} - ${row.segmentName}`,
-      description: cleanDescription(`${row.description} Purpose: ${row.purpose || ''}`),
-      code: row.segmentID,
+      id: toWikipediaStyleId(row.code),
+      name: `${row.code} - ${row.name}`,
+      description: cleanDescription(row.description),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'X12.Segments.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.X12.Segments.tsv'), records)
+  console.log(`Transformed ${records.length} X12 Segments`)
 }
 
 function transformX12Elements(): void {
   console.log('Transforming X12 Data Elements...')
-  const sourceFile = join(SOURCE_DIR_X12, 'X12.Elements.tsv')
+  const sourceFile = join(SOURCE_DIR_X12, 'Elements.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('X12.Elements.tsv not found, skipping...')
+    console.log('Elements.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<X12ElementRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.elementID && row.elementName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_X12,
       type: 'Element',
-      id: toWikipediaStyleId(`${row.elementID}_${row.elementName}`),
-      name: `${row.elementID} - ${row.elementName}`,
+      id: toWikipediaStyleId(`${row.code}_${row.name}`),
+      name: `${row.code} - ${row.name}`,
       description: cleanDescription(`${row.description} Type: ${row.dataType}, Length: ${row.minLength}-${row.maxLength}`),
-      code: row.elementID,
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'X12.Elements.tsv'), records)
-}
-
-function transformX12Codes(): void {
-  console.log('Transforming X12 Code Lists...')
-  const sourceFile = join(SOURCE_DIR_X12, 'X12.Codes.tsv')
-
-  if (!existsSync(sourceFile)) {
-    console.log('X12.Codes.tsv not found, skipping...')
-    return
-  }
-
-  const data = parseTSV<X12CodeRow>(sourceFile)
-
-  const records: StandardRecord[] = data
-    .filter(row => row.elementID && row.codeValue)
-    .map(row => ({
-      ns: NS_X12,
-      type: 'Code',
-      id: toWikipediaStyleId(`${row.elementID}_${row.codeValue}_${row.codeName}`),
-      name: `${row.codeValue} - ${row.codeName}`,
-      description: cleanDescription(row.description),
-      code: `${row.elementID}:${row.codeValue}`,
-    }))
-
-  writeStandardTSV(join(DATA_DIR, 'X12.Codes.tsv'), records)
-
-  // Write relationships between codes and elements
-  const relationships: Record<string, string>[] = data
-    .filter(row => row.elementID && row.codeValue)
-    .map(row => ({
-      fromNs: NS_X12,
-      fromType: 'Code',
-      fromCode: `${row.elementID}:${row.codeValue}`,
-      toNs: NS_X12,
-      toType: 'Element',
-      toCode: row.elementID,
-      relationshipType: 'code_for_element',
-    }))
-
-  writeTSV(
-    join(REL_DIR, 'X12.Code.Element.tsv'),
-    relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-  )
+  writeStandardTSV(join(DATA_DIR, 'EDI.X12.Elements.tsv'), records)
+  console.log(`Transformed ${records.length} X12 Elements`)
 }
 
 // EANCOM Transformation Functions
 function transformEANCOMMessages(): void {
   console.log('Transforming EANCOM Messages...')
-  const sourceFile = join(SOURCE_DIR_EANCOM, 'EANCOM.Messages.tsv')
+  const sourceFile = join(SOURCE_DIR_EANCOM, 'Messages.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('EANCOM.Messages.tsv not found, skipping...')
+    console.log('Messages.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<EANCOMMessageRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.messageCode && row.messageName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_EANCOM,
       type: 'Message',
-      id: toWikipediaStyleId(`${row.messageCode}_${row.messageName}`),
-      name: `${row.messageCode} - ${row.messageName}`,
-      description: cleanDescription(`${row.description} Version: ${row.version}, EDIFACT Type: ${row.edifactType}`),
-      code: row.messageCode,
+      id: toWikipediaStyleId(`${row.code}_${row.name}`),
+      name: `${row.code} - ${row.name}`,
+      description: cleanDescription(row.description),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'EANCOM.Messages.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.EANCOM.Messages.tsv'), records)
+  console.log(`Transformed ${records.length} EANCOM Messages`)
 }
 
 function transformEANCOMSegments(): void {
   console.log('Transforming EANCOM Segments...')
-  const sourceFile = join(SOURCE_DIR_EANCOM, 'EANCOM.Segments.tsv')
+  const sourceFile = join(SOURCE_DIR_EANCOM, 'Segments.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('EANCOM.Segments.tsv not found, skipping...')
+    console.log('Segments.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<EANCOMSegmentRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.segmentTag && row.segmentName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_EANCOM,
       type: 'Segment',
-      id: toWikipediaStyleId(row.segmentTag),
-      name: `${row.segmentTag} - ${row.segmentName}`,
-      description: cleanDescription(`${row.description} Status: ${row.status}, Max Occurrences: ${row.maxOccurrences}`),
-      code: row.segmentTag,
+      id: toWikipediaStyleId(row.code),
+      name: `${row.code} - ${row.name}`,
+      description: cleanDescription(row.description),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'EANCOM.Segments.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.EANCOM.Segments.tsv'), records)
+  console.log(`Transformed ${records.length} EANCOM Segments`)
 }
 
 function transformEANCOMDataElements(): void {
   console.log('Transforming EANCOM Data Elements...')
-  const sourceFile = join(SOURCE_DIR_EANCOM, 'EANCOM.DataElements.tsv')
+  const sourceFile = join(SOURCE_DIR_EANCOM, 'DataElements.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('EANCOM.DataElements.tsv not found, skipping...')
+    console.log('DataElements.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<EANCOMDataElementRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.elementID && row.elementName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_EANCOM,
       type: 'DataElement',
-      id: toWikipediaStyleId(`${row.elementID}_${row.elementName}`),
-      name: `${row.elementID} - ${row.elementName}`,
-      description: cleanDescription(`${row.description} Format: ${row.format}, Status: ${row.status}`),
-      code: row.elementID,
+      id: toWikipediaStyleId(`${row.code}_${row.name}`),
+      name: `${row.code} - ${row.name}`,
+      description: cleanDescription(`${row.description} Type: ${row.dataType}, Length: ${row.minLength}-${row.maxLength}`),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'EANCOM.DataElements.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.EANCOM.DataElements.tsv'), records)
+  console.log(`Transformed ${records.length} EANCOM Data Elements`)
 }
 
 // Peppol Transformation Functions
 function transformPeppolDocuments(): void {
   console.log('Transforming Peppol Documents...')
-  const sourceFile = join(SOURCE_DIR_PEPPOL, 'Peppol.Documents.tsv')
+  const sourceFile = join(SOURCE_DIR_PEPPOL, 'Documents.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('Peppol.Documents.tsv not found, skipping...')
+    console.log('Documents.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<PeppolDocumentRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.documentID && row.documentName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_PEPPOL,
       type: 'Document',
-      id: toWikipediaStyleId(row.documentName),
-      name: row.documentName,
-      description: cleanDescription(`${row.description} UBL: ${row.ublVersion}, BIS: ${row.peppolBIS}`),
-      code: row.documentID,
+      id: toWikipediaStyleId(row.name),
+      name: row.name,
+      description: cleanDescription(`${row.description} Version: ${row.version}`),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'Peppol.Documents.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.Documents.tsv'), records)
+  console.log(`Transformed ${records.length} Peppol Documents`)
 }
 
 function transformPeppolBusinessProcesses(): void {
   console.log('Transforming Peppol Business Processes...')
-  const sourceFile = join(SOURCE_DIR_PEPPOL, 'Peppol.BusinessProcesses.tsv')
+  const sourceFile = join(SOURCE_DIR_PEPPOL, 'BusinessProcesses.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('Peppol.BusinessProcesses.tsv not found, skipping...')
+    console.log('BusinessProcesses.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<PeppolBusinessProcessRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.bisCode && row.bisName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_PEPPOL,
       type: 'BusinessProcess',
-      id: toWikipediaStyleId(row.bisName),
-      name: `${row.bisCode} - ${row.bisName}`,
-      description: cleanDescription(`${row.description} Version: ${row.version}`),
-      code: row.bisCode,
+      id: toWikipediaStyleId(row.name),
+      name: `${row.code} - ${row.name}`,
+      description: cleanDescription(`${row.description} Profile: ${row.profile}`),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'Peppol.BusinessProcesses.tsv'), records)
-
-  // Write relationships between documents and business processes
-  const relationships: Record<string, string>[] = []
-
-  // This would need actual relationship data from source files
-  // Placeholder for structure demonstration
-
-  if (relationships.length > 0) {
-    writeTSV(
-      join(REL_DIR, 'Peppol.Document.BusinessProcess.tsv'),
-      relationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-    )
-  }
+  writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.BusinessProcesses.tsv'), records)
+  console.log(`Transformed ${records.length} Peppol Business Processes`)
 }
 
-function transformPeppolParties(): void {
-  console.log('Transforming Peppol Parties...')
-  const sourceFile = join(SOURCE_DIR_PEPPOL, 'Peppol.Parties.tsv')
+function transformPeppolParticipantSchemes(): void {
+  console.log('Transforming Peppol Participant Schemes...')
+  const sourceFile = join(SOURCE_DIR_PEPPOL, 'ParticipantSchemes.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('Peppol.Parties.tsv not found, skipping...')
+    console.log('ParticipantSchemes.tsv not found, skipping...')
     return
   }
 
-  const data = parseTSV<PeppolPartyRow>(sourceFile)
+  const data = parseTSV<PeppolParticipantSchemeRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.identifierScheme && row.partyID)
+    .filter(row => row.icd && row.schemeID)
     .map(row => ({
       ns: NS_PEPPOL,
-      type: 'Party',
-      id: toWikipediaStyleId(`${row.identifierScheme}_${row.partyID}`),
-      name: row.partyName || row.partyID,
-      description: cleanDescription(`Scheme: ${row.identifierScheme}, Country: ${row.countryCode}, Agency: ${row.schemeAgencyID}`),
-      code: `${row.identifierScheme}:${row.partyID}`,
+      type: 'ParticipantScheme',
+      id: toWikipediaStyleId(`${row.icd}_${row.schemeID}`),
+      name: `${row.schemeID} - ${row.schemeName}`,
+      description: cleanDescription(`${row.schemeName} (${row.issuingOrganization}). Status: ${row.status}`),
+      code: row.icd,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'Peppol.Parties.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.ParticipantSchemes.tsv'), records)
+  console.log(`Transformed ${records.length} Peppol Participant Schemes`)
 }
 
 function transformPeppolCodelists(): void {
   console.log('Transforming Peppol Codelists...')
-  const sourceFile = join(SOURCE_DIR_PEPPOL, 'Peppol.Codelists.tsv')
+  const sourceFile = join(SOURCE_DIR_PEPPOL, 'Codelists.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('Peppol.Codelists.tsv not found, skipping...')
+    console.log('Codelists.tsv not found, skipping...')
     return
   }
 
   const data = parseTSV<PeppolCodelistRow>(sourceFile)
 
   const records: StandardRecord[] = data
-    .filter(row => row.codelistID && row.codelistName)
+    .filter(row => row.code && row.name)
     .map(row => ({
       ns: NS_PEPPOL,
       type: 'Codelist',
-      id: toWikipediaStyleId(row.codelistName),
-      name: row.codelistName,
-      description: cleanDescription(`${row.description} Agency: ${row.agencyID}, Version: ${row.version}`),
-      code: row.codelistID,
+      id: toWikipediaStyleId(`${row.codelistName}_${row.code}_${row.name}`),
+      name: `${row.code} - ${row.name}`,
+      description: cleanDescription(`${row.description} (${row.codelistName})`),
+      code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'Peppol.Codelists.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'EDI.Peppol.Codelists.tsv'), records)
+  console.log(`Transformed ${records.length} Peppol Codelist entries`)
 }
 
 // Main transformation function
@@ -439,7 +376,6 @@ export async function transformEDI(): Promise<void> {
   transformX12TransactionSets()
   transformX12Segments()
   transformX12Elements()
-  transformX12Codes()
 
   // EANCOM Transformations
   console.log('\n--- EANCOM Standards ---')
@@ -451,7 +387,7 @@ export async function transformEDI(): Promise<void> {
   console.log('\n--- Peppol Standards ---')
   transformPeppolDocuments()
   transformPeppolBusinessProcesses()
-  transformPeppolParties()
+  transformPeppolParticipantSchemes()
   transformPeppolCodelists()
 
   console.log('\n=== EDI Transformation Complete ===\n')

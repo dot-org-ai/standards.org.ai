@@ -1,0 +1,35 @@
+---
+layout: category
+source: UN/EDIFACT
+$type: UN/EDIFACT/Category
+$id: https://standards.org.ai/UN/EDIFACT/Category/{category.code}
+sameAs: https://standards.org.ai/EDIFACTCategory/{category.code}
+canonical: https://un.org.ai/EDIFACT/Category/{category.code}
+params:
+  - Category
+schema:
+  category:
+    code: code
+    name: name
+    description: description
+---
+
+# {category.name}
+
+<CategoryHeader code={category.code} name={category.name} />
+
+## Description
+
+{category.description}
+
+## Message Types in This Category
+
+<MessagesByCategory categoryCode={category.code} />
+
+## Related Categories
+
+<RelatedCategories categoryCode={category.code} />
+
+## Usage Statistics
+
+<CategoryStats categoryCode={category.code} />

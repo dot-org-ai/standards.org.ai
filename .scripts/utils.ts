@@ -3,18 +3,18 @@ import { join, dirname } from 'path'
 
 // Namespaces for each source
 export const NAMESPACES = {
-  ONET: 'onet.org.ai',
+  ONET: 'us.org.ai',
   APQC: 'apqc.org.ai',
   GS1: 'gs1.org.ai',
-  NAICS: 'naics.org.ai',
-  BLS: 'standards.org.ai',
+  NAICS: 'standards.org.ai',
+  BLS: 'us.org.ai/BLS',
   NAPCS: 'standards.org.ai',
   UNSPSC: 'standards.org.ai',
   AdvanceCTE: 'standards.org.ai',
-  ISO: 'iso.org.ai',
-  UN: 'un.org.ai',
+  ISO: 'standards.org.ai',
+  UN: 'standards.org.ai',
   IANA: 'iana.org.ai',
-  EDIFACT: 'un.org.ai',
+  EDIFACT: 'standards.org.ai',
   W3C: 'w3.org.ai',
   FHIR: 'fhir.org.ai',
   X12: 'x12.org.ai',
@@ -123,26 +123,122 @@ export function toWikipediaStyleId(str: string): string {
  * Parse a TSV file into an array of objects
  */
 export function parseTSV<T = Record<string, string>>(filePath: string): T[] {
-  const content = readFileSync(filePath, 'utf-8')
-  const lines = content.split('\n').filter(line => line.trim())
+  let content = readFileSync(filePath, 'utf-8')
 
-  if (lines.length === 0) return []
+  // Remove BOM if present
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.substring(1)
+  }
 
-  const headers = lines[0].split('\t').map(h => h.trim())
+  // Split into lines, but handle quoted fields with embedded newlines
+  const allLines: string[] = []
+  let currentLine = ''
+  let inQuotes = false
+
+  for (let i = 0; i < content.length; i++) {
+    const char = content[i]
+    const nextChar = content[i + 1]
+
+    if (char === '"') {
+      inQuotes = !inQuotes
+      currentLine += char
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (currentLine.trim()) {
+        allLines.push(currentLine)
+      }
+      currentLine = ''
+      // Skip \r\n combinations
+      if (char === '\r' && nextChar === '\n') {
+        i++
+      }
+    } else {
+      currentLine += char
+    }
+  }
+
+  // Add the last line if not empty
+  if (currentLine.trim()) {
+    allLines.push(currentLine)
+  }
+
+  if (allLines.length === 0) return []
+
+  // Parse header row
+  const headers = parseTSVLine(allLines[0]).map(h => {
+    // Trim and remove surrounding quotes if present
+    let header = h.trim()
+    // Remove BOM character if present anywhere in the header (some files have it inside quotes)
+    header = header.replace(/\uFEFF/g, '')
+    // Remove outer quotes (both single and double)
+    if ((header.startsWith('"') && header.endsWith('"')) ||
+        (header.startsWith("'") && header.endsWith("'"))) {
+      header = header.substring(1, header.length - 1)
+    }
+    // Remove any remaining quotes at the edges (for cases like """header""")
+    while ((header.startsWith('"') && header.endsWith('"')) ||
+           (header.startsWith("'") && header.endsWith("'"))) {
+      header = header.substring(1, header.length - 1)
+    }
+    return header.trim()
+  })
+
   const records: T[] = []
 
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split('\t')
+  for (let i = 1; i < allLines.length; i++) {
+    const values = parseTSVLine(allLines[i])
     const record: Record<string, string> = {}
 
     for (let j = 0; j < headers.length; j++) {
-      record[headers[j]] = (values[j] || '').trim()
+      let value = values[j] || ''
+      // Remove surrounding quotes if present
+      value = value.trim()
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.substring(1, value.length - 1)
+        // Unescape any escaped quotes
+        value = value.replace(/""/g, '"')
+      }
+      record[headers[j]] = value
     }
 
     records.push(record as T)
   }
 
   return records
+}
+
+/**
+ * Parse a single TSV line, handling quoted fields
+ */
+function parseTSVLine(line: string): string[] {
+  const fields: string[] = []
+  let currentField = ''
+  let inQuotes = false
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i]
+    const nextChar = line[i + 1]
+
+    if (char === '"') {
+      // Check for escaped quote ("")
+      if (inQuotes && nextChar === '"') {
+        currentField += '"'
+        i++ // Skip the next quote
+      } else {
+        inQuotes = !inQuotes
+        currentField += char
+      }
+    } else if (char === '\t' && !inQuotes) {
+      fields.push(currentField)
+      currentField = ''
+    } else {
+      currentField += char
+    }
+  }
+
+  // Add the last field
+  fields.push(currentField)
+
+  return fields
 }
 
 /**

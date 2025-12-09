@@ -16,11 +16,8 @@ import {
   type RelationshipRecord,
 } from './utils'
 
-const NS_ISO20022 = 'iso20022.org.ai'
-const NS_LEI = 'lei.org.ai'
-const NS_ISIN = 'isin.org.ai'
-const NS_MCC = 'mcc.org.ai'
-const NS_SWIFT = 'swift.org.ai'
+// Use standards.org.ai as the namespace for all Finance standards
+const NS = 'standards.org.ai'
 
 const SOURCE_DIR = getSourcePath('Finance')
 const DATA_DIR = getDataPath()
@@ -30,90 +27,45 @@ const REL_DIR = getRelationshipsPath()
 // ISO 20022 - Financial Services Messages
 // ============================================================================
 
-interface ISO20022MessageRow {
-  code: string
-  name: string
-  businessArea: string
-  definition: string
-  messageSet: string
-}
-
 interface ISO20022BusinessAreaRow {
-  code: string
-  name: string
-  description: string
+  Code: string
+  Name: string
+  Description: string
 }
 
 interface ISO20022MessageDefinitionRow {
-  code: string
-  name: string
-  description: string
-  version: string
-  businessArea: string
+  MessageID: string
+  BusinessArea: string
+  Name: string
+  Description: string
+  Usage: string
 }
 
 interface ISO20022DataTypeRow {
-  code: string
-  name: string
-  description: string
-  baseType: string
-  pattern: string
-  minLength: string
-  maxLength: string
+  DataType: string
+  Category: string
+  Description: string
+  Format: string
+  Example: string
 }
 
 function transformISO20022(): void {
   console.log('Transforming ISO 20022...')
-
-  // Transform Messages
-  const messagesFile = join(SOURCE_DIR, 'ISO20022', 'Messages.tsv')
-  if (existsSync(messagesFile)) {
-    const messages = parseTSV<ISO20022MessageRow>(messagesFile)
-    const messageRecords: StandardRecord[] = messages.map(msg => ({
-      ns: NS_ISO20022,
-      type: 'Message',
-      id: toWikipediaStyleId(msg.name),
-      name: msg.name,
-      description: cleanDescription(msg.definition),
-      code: msg.code,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.Messages.tsv'), messageRecords)
-
-    // Create relationships: Message -> BusinessArea
-    const messageBusinessAreaRels: RelationshipRecord[] = messages
-      .filter(msg => msg.businessArea)
-      .map(msg => ({
-        fromNs: NS_ISO20022,
-        fromType: 'Message',
-        fromId: toWikipediaStyleId(msg.name),
-        toNs: NS_ISO20022,
-        toType: 'BusinessArea',
-        toId: toWikipediaStyleId(msg.businessArea),
-        relationshipType: 'belongs_to',
-      }))
-
-    if (messageBusinessAreaRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'Finance.ISO20022.Message.BusinessArea.tsv'),
-        messageBusinessAreaRels as unknown as Record<string, string>[],
-        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
-      )
-    }
-  }
 
   // Transform Business Areas
   const businessAreasFile = join(SOURCE_DIR, 'ISO20022', 'BusinessAreas.tsv')
   if (existsSync(businessAreasFile)) {
     const businessAreas = parseTSV<ISO20022BusinessAreaRow>(businessAreasFile)
     const businessAreaRecords: StandardRecord[] = businessAreas.map(ba => ({
-      ns: NS_ISO20022,
-      type: 'BusinessArea',
-      id: toWikipediaStyleId(ba.name),
-      name: ba.name,
-      description: cleanDescription(ba.description),
-      code: ba.code,
+      ns: NS,
+      type: 'ISO20022.BusinessArea',
+      id: toWikipediaStyleId(ba.Name),
+      name: ba.Name,
+      description: cleanDescription(ba.Description),
+      code: ba.Code,
     }))
     writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.BusinessAreas.tsv'), businessAreaRecords)
+    console.log(`  - Processed ${businessAreaRecords.length} business areas`)
   }
 
   // Transform Message Definitions
@@ -121,14 +73,45 @@ function transformISO20022(): void {
   if (existsSync(messageDefsFile)) {
     const messageDefs = parseTSV<ISO20022MessageDefinitionRow>(messageDefsFile)
     const messageDefRecords: StandardRecord[] = messageDefs.map(md => ({
-      ns: NS_ISO20022,
-      type: 'MessageDefinition',
-      id: toWikipediaStyleId(md.name),
-      name: md.name,
-      description: cleanDescription(md.description),
-      code: md.code,
+      ns: NS,
+      type: 'ISO20022.Message',
+      id: toWikipediaStyleId(md.Name),
+      name: md.Name,
+      description: cleanDescription(md.Description),
+      code: md.MessageID,
     }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.MessageDefinitions.tsv'), messageDefRecords)
+    writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.Messages.tsv'), messageDefRecords)
+    console.log(`  - Processed ${messageDefRecords.length} messages`)
+
+    // Create relationships: Message -> BusinessArea
+    const businessAreas = parseTSV<ISO20022BusinessAreaRow>(businessAreasFile)
+    const messageBusinessAreaRels: RelationshipRecord[] = messageDefs
+      .filter(md => md.BusinessArea)
+      .map(md => {
+        // Find the business area by code to get its name
+        const businessArea = businessAreas.find(ba => ba.Code === md.BusinessArea)
+        if (!businessArea) return null
+
+        return {
+          fromNs: NS,
+          fromType: 'ISO20022.Message',
+          fromId: toWikipediaStyleId(md.Name),
+          toNs: NS,
+          toType: 'ISO20022.BusinessArea',
+          toId: toWikipediaStyleId(businessArea.Name),
+          relationshipType: 'belongs_to',
+        }
+      })
+      .filter((rel): rel is RelationshipRecord => rel !== null)
+
+    if (messageBusinessAreaRels.length > 0) {
+      writeTSV(
+        join(REL_DIR, 'Finance.ISO20022.Message.BusinessArea.tsv'),
+        messageBusinessAreaRels as unknown as Record<string, string>[],
+        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
+      )
+      console.log(`  - Created ${messageBusinessAreaRels.length} message-business area relationships`)
+    }
   }
 
   // Transform Data Types
@@ -136,14 +119,15 @@ function transformISO20022(): void {
   if (existsSync(dataTypesFile)) {
     const dataTypes = parseTSV<ISO20022DataTypeRow>(dataTypesFile)
     const dataTypeRecords: StandardRecord[] = dataTypes.map(dt => ({
-      ns: NS_ISO20022,
-      type: 'DataType',
-      id: toWikipediaStyleId(dt.name),
-      name: dt.name,
-      description: cleanDescription(dt.description),
-      code: dt.code,
+      ns: NS,
+      type: 'ISO20022.DataType',
+      id: toWikipediaStyleId(dt.DataType),
+      name: dt.DataType,
+      description: cleanDescription(dt.Description),
+      code: dt.DataType,
     }))
     writeStandardTSV(join(DATA_DIR, 'Finance.ISO20022.DataTypes.tsv'), dataTypeRecords)
+    console.log(`  - Processed ${dataTypeRecords.length} data types`)
   }
 }
 
@@ -151,101 +135,84 @@ function transformISO20022(): void {
 // LEI - Legal Entity Identifier
 // ============================================================================
 
-interface LEIEntityRow {
-  lei: string
-  legalName: string
-  entityStatus: string
-  legalJurisdiction: string
-  legalForm: string
-  entityCategory: string
-  registeredAddress: string
-  headquartersAddress: string
-  registrationAuthority: string
-}
-
-interface LEIRelationshipRow {
-  id: string
-  startNode: string
-  endNode: string
-  relationshipType: string
-  relationshipStatus: string
-  relationshipPeriod: string
-  validationDocuments: string
-}
-
 interface LEIRegistrationAuthorityRow {
-  code: string
-  name: string
-  country: string
-  region: string
-  website: string
+  'Registration Authority Code': string
+  Country: string
+  'Country Code': string
+  'Jurisdiction (country or region)': string
+  'International name of Register': string
+  'Local name of Register': string
+  'International name of organisation responsible for the Register': string
+  'Local name of organisation responsible for the Register': string
+  Website: string
+  Comments: string
+}
+
+interface LEIEntityTypeRow {
+  Code: string
+  Name: string
+  Description: string
+  Standard: string
 }
 
 function transformLEI(): void {
   console.log('Transforming LEI...')
 
-  // Transform Entities
-  const entitiesFile = join(SOURCE_DIR, 'LEI', 'Entities.tsv')
-  if (existsSync(entitiesFile)) {
-    const entities = parseTSV<LEIEntityRow>(entitiesFile)
-    const entityRecords: StandardRecord[] = entities.map(entity => ({
-      ns: NS_LEI,
-      type: 'Entity',
-      id: toWikipediaStyleId(entity.legalName),
-      name: entity.legalName,
-      description: cleanDescription(`${entity.entityCategory} - ${entity.legalJurisdiction}`),
-      code: entity.lei,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.LEI.Entities.tsv'), entityRecords)
-  }
-
-  // Transform Relationships
-  const relationshipsFile = join(SOURCE_DIR, 'LEI', 'Relationships.tsv')
-  if (existsSync(relationshipsFile)) {
-    const relationships = parseTSV<LEIRelationshipRow>(relationshipsFile)
-    const relationshipRecords: StandardRecord[] = relationships.map(rel => ({
-      ns: NS_LEI,
-      type: 'Relationship',
-      id: rel.id,
-      name: `${rel.relationshipType}: ${rel.startNode} -> ${rel.endNode}`,
-      description: cleanDescription(`${rel.relationshipStatus} relationship`),
-      code: rel.id,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.LEI.Relationships.tsv'), relationshipRecords)
-
-    // Create entity-to-entity relationships
-    const entityRels: RelationshipRecord[] = relationships.map(rel => ({
-      fromNs: NS_LEI,
-      fromType: 'Entity',
-      fromId: rel.startNode,
-      toNs: NS_LEI,
-      toType: 'Entity',
-      toId: rel.endNode,
-      relationshipType: rel.relationshipType,
-    }))
-
-    if (entityRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'Finance.LEI.Entity.Entity.tsv'),
-        entityRels as unknown as Record<string, string>[],
-        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
-      )
-    }
-  }
-
   // Transform Registration Authorities
   const registrationAuthoritiesFile = join(SOURCE_DIR, 'LEI', 'RegistrationAuthorities.tsv')
   if (existsSync(registrationAuthoritiesFile)) {
-    const authorities = parseTSV<LEIRegistrationAuthorityRow>(registrationAuthoritiesFile)
-    const authorityRecords: StandardRecord[] = authorities.map(auth => ({
-      ns: NS_LEI,
-      type: 'RegistrationAuthority',
-      id: toWikipediaStyleId(auth.name),
-      name: auth.name,
-      description: cleanDescription(`${auth.country} - ${auth.region}`),
-      code: auth.code,
-    }))
+    const authorities = parseTSV<Record<string, string>>(registrationAuthoritiesFile)
+    const authorityRecords: StandardRecord[] = authorities
+      .map(auth => {
+        // Handle the field with potential BOM and quotes - try multiple variations
+        const code = auth['Registration Authority Code'] ||
+                     auth['﻿"Registration Authority Code"'] ||
+                     auth['"﻿""Registration Authority Code"""'] ||
+                     Object.keys(auth).find(k => k.includes('Registration Authority Code')) &&
+                     auth[Object.keys(auth).find(k => k.includes('Registration Authority Code'))!] ||
+                     ''
+
+        if (!code || !code.trim()) return null
+
+        const name = auth['International name of Register'] ||
+                     auth['International name of organisation responsible for the Register'] ||
+                     code
+        const description = [
+          auth.Country,
+          auth['Jurisdiction (country or region)'],
+          auth.Comments
+        ].filter(Boolean).join(' - ')
+
+        return {
+          ns: NS,
+          type: 'LEI.RegistrationAuthority',
+          id: toWikipediaStyleId(name),
+          name: name,
+          description: cleanDescription(description),
+          code: code.trim(),
+        }
+      })
+      .filter((auth): auth is StandardRecord => auth !== null)
     writeStandardTSV(join(DATA_DIR, 'Finance.LEI.RegistrationAuthorities.tsv'), authorityRecords)
+    console.log(`  - Processed ${authorityRecords.length} registration authorities`)
+  }
+
+  // Transform Entity Types
+  const entityTypesFile = join(SOURCE_DIR, 'LEI', 'EntityTypes.tsv')
+  if (existsSync(entityTypesFile)) {
+    const entityTypes = parseTSV<LEIEntityTypeRow>(entityTypesFile)
+    const entityTypeRecords: StandardRecord[] = entityTypes
+      .filter(et => et.Name && et.Name.trim())
+      .map(et => ({
+        ns: NS,
+        type: 'LEI.EntityType',
+        id: toWikipediaStyleId(et.Name),
+        name: et.Name,
+        description: cleanDescription(et.Description),
+        code: et.Code,
+      }))
+    writeStandardTSV(join(DATA_DIR, 'Finance.LEI.EntityTypes.tsv'), entityTypeRecords)
+    console.log(`  - Processed ${entityTypeRecords.length} entity types`)
   }
 }
 
@@ -253,100 +220,33 @@ function transformLEI(): void {
 // ISIN - International Securities Identification Number
 // ============================================================================
 
-interface ISINSecurityRow {
-  isin: string
-  name: string
-  issuer: string
-  securityType: string
-  currency: string
-  countryOfIssue: string
-  maturityDate: string
-  couponRate: string
-  faceValue: string
-}
-
-interface ISINIssuerRow {
-  code: string
-  name: string
-  lei: string
-  country: string
-  sector: string
-  website: string
+interface ISINIssuingAgencyRow {
+  CountryCode: string
+  Country: string
+  Agency: string
+  Type: string
+  Website: string
 }
 
 function transformISIN(): void {
   console.log('Transforming ISIN...')
 
-  // Transform Securities
-  const securitiesFile = join(SOURCE_DIR, 'ISIN', 'Securities.tsv')
-  if (existsSync(securitiesFile)) {
-    const securities = parseTSV<ISINSecurityRow>(securitiesFile)
-    const securityRecords: StandardRecord[] = securities.map(security => ({
-      ns: NS_ISIN,
-      type: 'Security',
-      id: toWikipediaStyleId(security.name),
-      name: security.name,
-      description: cleanDescription(`${security.securityType} - ${security.countryOfIssue}`),
-      code: security.isin,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.ISIN.Securities.tsv'), securityRecords)
-
-    // Create relationships: Security -> Issuer
-    const securityIssuerRels: RelationshipRecord[] = securities
-      .filter(security => security.issuer)
-      .map(security => ({
-        fromNs: NS_ISIN,
-        fromType: 'Security',
-        fromId: toWikipediaStyleId(security.name),
-        toNs: NS_ISIN,
-        toType: 'Issuer',
-        toId: security.issuer,
-        relationshipType: 'issued_by',
+  // Transform Issuing Agencies
+  const agenciesFile = join(SOURCE_DIR, 'ISIN', 'IssuingAgencies.tsv')
+  if (existsSync(agenciesFile)) {
+    const agencies = parseTSV<ISINIssuingAgencyRow>(agenciesFile)
+    const agencyRecords: StandardRecord[] = agencies
+      .filter(agency => agency.Agency && agency.Agency.trim())
+      .map(agency => ({
+        ns: NS,
+        type: 'ISIN.IssuingAgency',
+        id: toWikipediaStyleId(agency.Agency),
+        name: agency.Agency,
+        description: cleanDescription(`${agency.Country} (${agency.CountryCode}) - ${agency.Type}`),
+        code: agency.CountryCode,
       }))
-
-    if (securityIssuerRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'Finance.ISIN.Security.Issuer.tsv'),
-        securityIssuerRels as unknown as Record<string, string>[],
-        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
-      )
-    }
-  }
-
-  // Transform Issuers
-  const issuersFile = join(SOURCE_DIR, 'ISIN', 'Issuers.tsv')
-  if (existsSync(issuersFile)) {
-    const issuers = parseTSV<ISINIssuerRow>(issuersFile)
-    const issuerRecords: StandardRecord[] = issuers.map(issuer => ({
-      ns: NS_ISIN,
-      type: 'Issuer',
-      id: toWikipediaStyleId(issuer.name),
-      name: issuer.name,
-      description: cleanDescription(`${issuer.sector} - ${issuer.country}`),
-      code: issuer.code,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.ISIN.Issuers.tsv'), issuerRecords)
-
-    // Create relationships: Issuer -> LEI
-    const issuerLEIRels: RelationshipRecord[] = issuers
-      .filter(issuer => issuer.lei)
-      .map(issuer => ({
-        fromNs: NS_ISIN,
-        fromType: 'Issuer',
-        fromId: toWikipediaStyleId(issuer.name),
-        toNs: NS_LEI,
-        toType: 'Entity',
-        toId: issuer.lei,
-        relationshipType: 'has_lei',
-      }))
-
-    if (issuerLEIRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'Finance.ISIN.Issuer.LEI.tsv'),
-        issuerLEIRels as unknown as Record<string, string>[],
-        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
-      )
-    }
+    writeStandardTSV(join(DATA_DIR, 'Finance.ISIN.Agencies.tsv'), agencyRecords)
+    console.log(`  - Processed ${agencyRecords.length} issuing agencies`)
   }
 }
 
@@ -355,19 +255,19 @@ function transformISIN(): void {
 // ============================================================================
 
 interface MCCCategoryRow {
-  code: string
-  name: string
-  description: string
-  range: string
+  RangeStart: string
+  RangeEnd: string
+  Category: string
+  Description: string
 }
 
 interface MCCCodeRow {
-  mcc: string
-  name: string
-  description: string
-  category: string
-  usedBy: string
-  interchangeFee: string
+  MCC: string
+  Description: string
+  CombinedDescription: string
+  USDADescription: string
+  IRSDescription: string
+  IRSReportable: string
 }
 
 function transformMCC(): void {
@@ -377,43 +277,65 @@ function transformMCC(): void {
   const categoriesFile = join(SOURCE_DIR, 'MCC', 'Categories.tsv')
   if (existsSync(categoriesFile)) {
     const categories = parseTSV<MCCCategoryRow>(categoriesFile)
-    const categoryRecords: StandardRecord[] = categories.map(cat => ({
-      ns: NS_MCC,
-      type: 'Category',
-      id: toWikipediaStyleId(cat.name),
-      name: cat.name,
-      description: cleanDescription(cat.description),
-      code: cat.code,
-    }))
+    const categoryRecords: StandardRecord[] = categories
+      .filter(cat => cat.Category && cat.Category.trim())
+      .map(cat => ({
+        ns: NS,
+        type: 'MCC.Category',
+        id: toWikipediaStyleId(cat.Category),
+        name: cat.Category,
+        description: cleanDescription(cat.Description),
+        code: `${cat.RangeStart}-${cat.RangeEnd}`,
+      }))
     writeStandardTSV(join(DATA_DIR, 'Finance.MCC.Categories.tsv'), categoryRecords)
+    console.log(`  - Processed ${categoryRecords.length} categories`)
   }
 
   // Transform Codes
   const codesFile = join(SOURCE_DIR, 'MCC', 'Codes.tsv')
   if (existsSync(codesFile)) {
     const codes = parseTSV<MCCCodeRow>(codesFile)
-    const codeRecords: StandardRecord[] = codes.map(code => ({
-      ns: NS_MCC,
-      type: 'Code',
-      id: toWikipediaStyleId(code.name),
-      name: code.name,
-      description: cleanDescription(code.description),
-      code: code.mcc,
-    }))
+    const codeRecords: StandardRecord[] = codes
+      .filter(code => code.MCC && code.MCC.trim())
+      .map(code => ({
+        ns: NS,
+        type: 'MCC.Code',
+        id: code.MCC,
+        name: code.Description || code.CombinedDescription,
+        description: cleanDescription(code.CombinedDescription || code.Description),
+        code: code.MCC,
+      }))
     writeStandardTSV(join(DATA_DIR, 'Finance.MCC.Codes.tsv'), codeRecords)
+    console.log(`  - Processed ${codeRecords.length} codes`)
 
     // Create relationships: Code -> Category
-    const codeCategoryRels: RelationshipRecord[] = codes
-      .filter(code => code.category)
-      .map(code => ({
-        fromNs: NS_MCC,
-        fromType: 'Code',
-        fromId: toWikipediaStyleId(code.name),
-        toNs: NS_MCC,
-        toType: 'Category',
-        toId: toWikipediaStyleId(code.category),
-        relationshipType: 'belongs_to',
-      }))
+    const categories = parseTSV<MCCCategoryRow>(categoriesFile)
+    const codeCategoryRels: RelationshipRecord[] = []
+
+    for (const code of codes) {
+      if (!code.MCC) continue
+      const mccNum = parseInt(code.MCC)
+      if (isNaN(mccNum)) continue
+
+      // Find the category this code belongs to
+      const category = categories.find(cat => {
+        const start = parseInt(cat.RangeStart)
+        const end = parseInt(cat.RangeEnd)
+        return mccNum >= start && mccNum <= end
+      })
+
+      if (category) {
+        codeCategoryRels.push({
+          fromNs: NS,
+          fromType: 'MCC.Code',
+          fromId: code.MCC,
+          toNs: NS,
+          toType: 'MCC.Category',
+          toId: toWikipediaStyleId(category.Category),
+          relationshipType: 'belongs_to',
+        })
+      }
+    }
 
     if (codeCategoryRels.length > 0) {
       writeTSV(
@@ -421,6 +343,7 @@ function transformMCC(): void {
         codeCategoryRels as unknown as Record<string, string>[],
         ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
       )
+      console.log(`  - Created ${codeCategoryRels.length} code-category relationships`)
     }
   }
 }
@@ -429,97 +352,58 @@ function transformMCC(): void {
 // SWIFT - BIC/SWIFT Codes
 // ============================================================================
 
-interface SWIFTInstitutionRow {
-  bic: string
-  institutionName: string
-  country: string
-  city: string
-  lei: string
-  institutionType: string
+interface SWIFTStructureRow {
+  Position: string
+  Length: string
+  Component: string
+  Type: string
+  Description: string
+  Example: string
 }
 
-interface SWIFTBranchRow {
-  branchCode: string
-  branchName: string
-  institutionBIC: string
-  address: string
-  city: string
-  country: string
+interface SWIFTCountryCodeRow {
+  Code: string
+  Country: string
+  Region: string
 }
 
 function transformSWIFT(): void {
   console.log('Transforming SWIFT...')
 
-  // Transform Institutions
-  const institutionsFile = join(SOURCE_DIR, 'SWIFT', 'Institutions.tsv')
-  if (existsSync(institutionsFile)) {
-    const institutions = parseTSV<SWIFTInstitutionRow>(institutionsFile)
-    const institutionRecords: StandardRecord[] = institutions.map(inst => ({
-      ns: NS_SWIFT,
-      type: 'Institution',
-      id: toWikipediaStyleId(inst.institutionName),
-      name: inst.institutionName,
-      description: cleanDescription(`${inst.institutionType} - ${inst.city}, ${inst.country}`),
-      code: inst.bic,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.SWIFT.Institutions.tsv'), institutionRecords)
-
-    // Create relationships: Institution -> LEI
-    const institutionLEIRels: RelationshipRecord[] = institutions
-      .filter(inst => inst.lei)
-      .map(inst => ({
-        fromNs: NS_SWIFT,
-        fromType: 'Institution',
-        fromId: toWikipediaStyleId(inst.institutionName),
-        toNs: NS_LEI,
-        toType: 'Entity',
-        toId: inst.lei,
-        relationshipType: 'has_lei',
+  // Transform Country Codes
+  const countryCodesFile = join(SOURCE_DIR, 'SWIFT', 'CountryCodes.tsv')
+  if (existsSync(countryCodesFile)) {
+    const countryCodes = parseTSV<SWIFTCountryCodeRow>(countryCodesFile)
+    const countryCodeRecords: StandardRecord[] = countryCodes
+      .filter(cc => cc.Code && cc.Code.trim())
+      .map(cc => ({
+        ns: NS,
+        type: 'SWIFT.CountryCode',
+        id: cc.Code,
+        name: cc.Country,
+        description: cleanDescription(`${cc.Region} - ${cc.Code}`),
+        code: cc.Code,
       }))
-
-    if (institutionLEIRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'Finance.SWIFT.Institution.LEI.tsv'),
-        institutionLEIRels as unknown as Record<string, string>[],
-        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
-      )
-    }
+    writeStandardTSV(join(DATA_DIR, 'Finance.SWIFT.Countries.tsv'), countryCodeRecords)
+    console.log(`  - Processed ${countryCodeRecords.length} country codes`)
   }
 
-  // Transform Branches
-  const branchesFile = join(SOURCE_DIR, 'SWIFT', 'Branches.tsv')
-  if (existsSync(branchesFile)) {
-    const branches = parseTSV<SWIFTBranchRow>(branchesFile)
-    const branchRecords: StandardRecord[] = branches.map(branch => ({
-      ns: NS_SWIFT,
-      type: 'Branch',
-      id: toWikipediaStyleId(branch.branchName),
-      name: branch.branchName,
-      description: cleanDescription(`${branch.city}, ${branch.country}`),
-      code: branch.branchCode,
-    }))
-    writeStandardTSV(join(DATA_DIR, 'Finance.SWIFT.Branches.tsv'), branchRecords)
-
-    // Create relationships: Branch -> Institution
-    const branchInstitutionRels: RelationshipRecord[] = branches
-      .filter(branch => branch.institutionBIC)
-      .map(branch => ({
-        fromNs: NS_SWIFT,
-        fromType: 'Branch',
-        fromId: toWikipediaStyleId(branch.branchName),
-        toNs: NS_SWIFT,
-        toType: 'Institution',
-        toId: branch.institutionBIC,
-        relationshipType: 'branch_of',
+  // Transform Structure (BIC/SWIFT code structure)
+  const structureFile = join(SOURCE_DIR, 'SWIFT', 'Structure.tsv')
+  if (existsSync(structureFile)) {
+    const structure = parseTSV<SWIFTStructureRow>(structureFile)
+    const structureRecords: StandardRecord[] = structure
+      .filter(s => s.Component && s.Component.trim())
+      .map(s => ({
+        ns: NS,
+        type: 'SWIFT.StructureComponent',
+        id: toWikipediaStyleId(s.Component),
+        name: s.Component,
+        description: cleanDescription(`${s.Description} (Position: ${s.Position}, Length: ${s.Length}, Type: ${s.Type})`),
+        code: s.Position,
       }))
-
-    if (branchInstitutionRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'Finance.SWIFT.Branch.Institution.tsv'),
-        branchInstitutionRels as unknown as Record<string, string>[],
-        ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
-      )
-    }
+    writeStandardTSV(join(DATA_DIR, 'Finance.SWIFT.Structure.tsv'), structureRecords)
+    console.log(`  - Processed ${structureRecords.length} structure components`)
   }
 }
 

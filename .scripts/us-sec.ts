@@ -1,4 +1,5 @@
 import { join } from 'path'
+import { existsSync } from 'fs'
 import {
   NAMESPACES,
   parseTSV,
@@ -505,36 +506,63 @@ function transformSICMajorGroups(): void {
   )
 }
 
-function transformSICCodes(): void {
-  console.log('Transforming SIC Codes...')
+interface SICRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+  division: string
+  major_group: string
+  industry_group: string
+}
 
-  const records: StandardRecord[] = SIC_CODES.map(sic => ({
-    ns: NS,
-    type: 'SICCode',
-    id: toWikipediaStyleId(sic.name),
-    name: sic.name,
-    description: '',
-    code: sic.code,
-  }))
+function transformSICCodes(): void {
+  console.log('Transforming SIC Codes from source file...')
+
+  const sourceFile = join(SOURCE_DIR, 'sic_codes.tsv')
+  if (!existsSync(sourceFile)) {
+    console.log('Warning: sic_codes.tsv not found, skipping SIC codes')
+    return
+  }
+
+  const data = parseTSV<SICRow>(sourceFile)
+  console.log(`Loaded ${data.length} SIC codes from source`)
+
+  const records: StandardRecord[] = data
+    .filter(row => row.code && row.name)
+    .map(row => ({
+      ns: NS,
+      type: 'SICCode',
+      id: toWikipediaStyleId(row.name),
+      name: row.name,
+      description: cleanDescription(row.description || row.name),
+      code: row.code,
+    }))
 
   writeStandardTSV(join(DATA_DIR, 'SEC.SICCodes.tsv'), records)
+  console.log(`Wrote ${records.length} SIC codes to SEC.SICCodes.tsv`)
 
   // Write relationships between SIC Codes and Major Groups
-  const relationships: Record<string, string>[] = SIC_CODES.map(sic => ({
-    fromNs: NS,
-    fromType: 'SICCode',
-    fromCode: sic.code,
-    toNs: NS,
-    toType: 'SICMajorGroup',
-    toCode: sic.majorGroup,
-    relationshipType: 'child_of',
-  }))
+  const relationships: Record<string, string>[] = data
+    .filter(row => row.code && row.major_group)
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'SICCode',
+      fromCode: row.code,
+      toNs: NS,
+      toType: 'SICMajorGroup',
+      toCode: row.major_group,
+      relationshipType: 'child_of',
+    }))
 
-  writeTSV(
-    join(REL_DIR, 'SEC.SICCode.MajorGroup.tsv'),
-    relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-  )
+  if (relationships.length > 0) {
+    writeTSV(
+      join(REL_DIR, 'SEC.SICCode.MajorGroup.tsv'),
+      relationships,
+      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    )
+    console.log(`Wrote ${relationships.length} SIC Code -> Major Group relationships`)
+  }
 }
 
 function transformFormCategoryRelationships(): void {

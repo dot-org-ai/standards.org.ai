@@ -23,7 +23,11 @@
     "generate:w3c": "bun run .scripts/w3c-semantic.ts",
     "generate:w3c-css": "bun run .scripts/w3c-css.ts",
     "generate:w3c-accessibility": "bun run .scripts/w3c-accessibility.ts",
-    "generate:w3c-html": "bun run .scripts/w3c-html.ts"
+    "generate:w3c-html": "bun run .scripts/w3c-html.ts",
+    "generate:ecommerce": "bun run .scripts/ecommerce.ts",
+    "generate:finance": "bun run .scripts/finance.ts",
+    "generate:education": "bun run .scripts/education.ts",
+    "generate:edi": "bun run .scripts/edi.ts"
   },
   "devDependencies": {
     "bun-types": "latest"

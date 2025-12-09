@@ -190,19 +190,27 @@ function transformHTSSections(): void {
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Sections.tsv'), records)
 }
 
+interface HTSChapterSourceRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+}
+
 /**
  * Transform HTS Chapters (01-99)
  */
 function transformHTSChapters(): void {
-  console.log('Transforming HTS Chapters...')
-  const sourceFile = join(SOURCE_DIR, 'HTS.Chapters.tsv')
+  console.log('Transforming HTS Chapters from source file...')
+  const sourceFile = join(SOURCE_DIR, 'hts_chapters.tsv')
 
   if (!existsSync(sourceFile)) {
-    console.log('HTS.Chapters.tsv not found, skipping...')
+    console.log('Warning: hts_chapters.tsv not found, skipping HTS chapters')
     return
   }
 
-  const data = parseTSV<HTSChapterRow>(sourceFile)
+  const data = parseTSV<HTSChapterSourceRow>(sourceFile)
+  console.log(`Loaded ${data.length} HTS chapters from source`)
 
   const records: StandardRecord[] = data
     .filter(row => row.code && row.name)
@@ -211,30 +219,12 @@ function transformHTSChapters(): void {
       type: 'HTSChapter',
       id: toWikipediaStyleId(`Chapter ${row.code} ${row.name}`),
       name: `Chapter ${row.code} - ${row.name}`,
-      description: cleanDescription(row.notes || ''),
+      description: cleanDescription(row.description || row.name),
       code: row.code,
     }))
 
   writeStandardTSV(join(DATA_DIR, 'USITC.HTS.Chapters.tsv'), records)
-
-  // Create chapter -> section relationships
-  const relationships: Record<string, string>[] = data
-    .filter(row => row.code && row.section)
-    .map(row => ({
-      fromNs: NS,
-      fromType: 'HTSChapter',
-      fromCode: row.code,
-      toNs: NS,
-      toType: 'HTSSection',
-      toCode: row.section,
-      relationshipType: 'child_of',
-    }))
-
-  writeTSV(
-    join(REL_DIR, 'USITC.Chapter.Section.tsv'),
-    relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-  )
+  console.log(`Wrote ${records.length} HTS chapters to USITC.HTSChapters.tsv`)
 }
 
 /**

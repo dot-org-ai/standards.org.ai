@@ -103,6 +103,24 @@ interface SchemaRow {
   url: string
 }
 
+interface EPCISEventTypeRow {
+  id: string
+  label: string
+  type: string
+  description: string
+  captures: string
+}
+
+interface GTINStructureRow {
+  id: string
+  label: string
+  type: string
+  description: string
+  length: string
+  structure: string
+  usage: string
+}
+
 function transformGPCHierarchy(): void {
   console.log('Transforming GS1 GPC Hierarchy...')
   const data = parseTSV<GPCSchemaRow>(join(SOURCE_DIR, 'GS1.Schema.tsv'))
@@ -500,6 +518,64 @@ function transformSchemas(): void {
   }
 }
 
+function transformEPCISEventTypes(): void {
+  console.log('Transforming GS1 EPCIS Event Types...')
+  const sourceFile = join(SOURCE_DIR, 'GS1.EPCIS.EventTypes.tsv')
+
+  if (!existsSync(sourceFile)) {
+    console.log('GS1.EPCIS.EventTypes.tsv not found, skipping...')
+    return
+  }
+
+  try {
+    const data = parseTSV<EPCISEventTypeRow>(sourceFile)
+
+    const records: StandardRecord[] = data
+      .filter(row => row.id && row.label)
+      .map(row => ({
+        ns: NS,
+        type: 'EventType',
+        id: toWikipediaStyleId(row.label),
+        name: row.label,
+        description: cleanDescription(`${row.description || ''} Captures: ${row.captures || ''}`),
+        code: row.id,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'GS1.EPCIS.EventTypes.tsv'), records)
+  } catch (e) {
+    console.log('Error processing EPCIS event types:', e)
+  }
+}
+
+function transformGTINStructures(): void {
+  console.log('Transforming GS1 GTIN Structures...')
+  const sourceFile = join(SOURCE_DIR, 'GS1.GTIN.Structures.tsv')
+
+  if (!existsSync(sourceFile)) {
+    console.log('GS1.GTIN.Structures.tsv not found, skipping...')
+    return
+  }
+
+  try {
+    const data = parseTSV<GTINStructureRow>(sourceFile)
+
+    const records: StandardRecord[] = data
+      .filter(row => row.id && row.label)
+      .map(row => ({
+        ns: NS,
+        type: 'IdentifierStructure',
+        id: row.id,
+        name: row.label,
+        description: cleanDescription(`${row.description || ''} Length: ${row.length} digits. Structure: ${row.structure}. Usage: ${row.usage}`),
+        code: row.id,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'GS1.GTIN.Structures.tsv'), records)
+  } catch (e) {
+    console.log('Error processing GTIN structures:', e)
+  }
+}
+
 export async function transformGS1(): Promise<void> {
   console.log('=== GS1 Transformation ===')
   ensureOutputDirs()
@@ -513,6 +589,8 @@ export async function transformGS1(): Promise<void> {
   transformGLNFunctionalTypes()
   transformLocationRelationships()
   transformSchemas()
+  transformEPCISEventTypes()
+  transformGTINStructures()
 
   console.log('=== GS1 Transformation Complete ===\n')
 }

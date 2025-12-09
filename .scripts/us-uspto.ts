@@ -10,7 +10,7 @@
  * - Locarno: https://www.wipo.int/classifications/locarno/
  */
 
-import { readFileSync } from 'fs'
+import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
 import {
   NAMESPACES,
@@ -151,22 +151,51 @@ interface USPCRecord {
   cpcEquivalent?: string
 }
 
+interface CPCSectionSourceRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+}
+
 /**
  * Transform CPC Sections
  */
 function transformCPCSections(): void {
-  console.log('Transforming CPC Sections...')
+  console.log('Transforming CPC Sections from source file...')
 
-  const records: StandardRecord[] = CPC_SECTIONS.map(section => ({
-    ns: NS,
-    type: 'CPCSection',
-    id: toWikipediaStyleId(section.name),
-    name: section.name,
-    description: '',
-    code: section.code,
-  }))
+  const sourceFile = join(SOURCE_DIR, 'cpc_sections.tsv')
+  if (existsSync(sourceFile)) {
+    const data = parseTSV<CPCSectionSourceRow>(sourceFile)
+    console.log(`Loaded ${data.length} CPC sections from source`)
 
-  writeStandardTSV(join(DATA_DIR, 'USPTO.CPC.Sections.tsv'), records)
+    const records: StandardRecord[] = data
+      .filter(row => row.code && row.name)
+      .map(row => ({
+        ns: NS,
+        type: 'CPCSection',
+        id: toWikipediaStyleId(row.name),
+        name: row.name,
+        description: cleanDescription(row.description || ''),
+        code: row.code,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'USPTO.CPCSections.tsv'), records)
+    console.log(`Wrote ${records.length} CPC sections to USPTO.CPCSections.tsv`)
+  } else {
+    console.log('Warning: cpc_sections.tsv not found, using hardcoded data')
+    const records: StandardRecord[] = CPC_SECTIONS.map(section => ({
+      ns: NS,
+      type: 'CPCSection',
+      id: toWikipediaStyleId(section.name),
+      name: section.name,
+      description: '',
+      code: section.code,
+    }))
+
+    writeStandardTSV(join(DATA_DIR, 'USPTO.CPCSections.tsv'), records)
+    console.log(`Wrote ${records.length} CPC sections (hardcoded fallback)`)
+  }
 }
 
 /**
@@ -397,22 +426,52 @@ function transformUSPCSubclasses(): void {
   )
 }
 
+interface NiceClassSourceRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+  type: string
+}
+
 /**
  * Transform Nice Classification
  */
 function transformNiceClasses(): void {
-  console.log('Transforming Nice Classification...')
+  console.log('Transforming Nice Classification from source file...')
 
-  const records: StandardRecord[] = NICE_CLASSES.map(cls => ({
-    ns: NS,
-    type: 'NiceClass',
-    id: toWikipediaStyleId(cls.name),
-    name: cls.name,
-    description: cls.description,
-    code: cls.code,
-  }))
+  const sourceFile = join(SOURCE_DIR, 'nice_classification.tsv')
+  if (existsSync(sourceFile)) {
+    const data = parseTSV<NiceClassSourceRow>(sourceFile)
+    console.log(`Loaded ${data.length} Nice classes from source`)
 
-  writeStandardTSV(join(DATA_DIR, 'USPTO.Nice.Classes.tsv'), records)
+    const records: StandardRecord[] = data
+      .filter(row => row.code && row.name)
+      .map(row => ({
+        ns: NS,
+        type: 'NiceClass',
+        id: toWikipediaStyleId(row.name),
+        name: row.name,
+        description: cleanDescription(row.description || ''),
+        code: row.code,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'USPTO.NiceClasses.tsv'), records)
+    console.log(`Wrote ${records.length} Nice classes to USPTO.NiceClasses.tsv`)
+  } else {
+    console.log('Warning: nice_classification.tsv not found, using hardcoded data')
+    const records: StandardRecord[] = NICE_CLASSES.map(cls => ({
+      ns: NS,
+      type: 'NiceClass',
+      id: toWikipediaStyleId(cls.name),
+      name: cls.name,
+      description: cls.description,
+      code: cls.code,
+    }))
+
+    writeStandardTSV(join(DATA_DIR, 'USPTO.NiceClasses.tsv'), records)
+    console.log(`Wrote ${records.length} Nice classes (hardcoded fallback)`)
+  }
 }
 
 /**
@@ -439,22 +498,51 @@ function transformUSTrademarkClasses(): void {
   writeStandardTSV(join(DATA_DIR, 'USPTO.USTrademark.Classes.tsv'), records)
 }
 
+interface LocarnoClassSourceRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+}
+
 /**
  * Transform Locarno Classification
  */
 function transformLocarnoClasses(): void {
-  console.log('Transforming Locarno Classes...')
+  console.log('Transforming Locarno Classes from source file...')
 
-  const records: StandardRecord[] = LOCARNO_CLASSES.map(cls => ({
-    ns: NS,
-    type: 'LocarnoClass',
-    id: toWikipediaStyleId(cls.name),
-    name: cls.name,
-    description: '',
-    code: cls.code,
-  }))
+  const sourceFile = join(SOURCE_DIR, 'locarno_classification.tsv')
+  if (existsSync(sourceFile)) {
+    const data = parseTSV<LocarnoClassSourceRow>(sourceFile)
+    console.log(`Loaded ${data.length} Locarno classes from source`)
 
-  writeStandardTSV(join(DATA_DIR, 'USPTO.Locarno.Classes.tsv'), records)
+    const records: StandardRecord[] = data
+      .filter(row => row.code && row.name)
+      .map(row => ({
+        ns: NS,
+        type: 'LocarnoClass',
+        id: toWikipediaStyleId(row.name),
+        name: row.name,
+        description: cleanDescription(row.description || row.name),
+        code: row.code,
+      }))
+
+    writeStandardTSV(join(DATA_DIR, 'USPTO.LocarnoClasses.tsv'), records)
+    console.log(`Wrote ${records.length} Locarno classes to USPTO.LocarnoClasses.tsv`)
+  } else {
+    console.log('Warning: locarno_classification.tsv not found, using hardcoded data')
+    const records: StandardRecord[] = LOCARNO_CLASSES.map(cls => ({
+      ns: NS,
+      type: 'LocarnoClass',
+      id: toWikipediaStyleId(cls.name),
+      name: cls.name,
+      description: '',
+      code: cls.code,
+    }))
+
+    writeStandardTSV(join(DATA_DIR, 'USPTO.LocarnoClasses.tsv'), records)
+    console.log(`Wrote ${records.length} Locarno classes (hardcoded fallback)`)
+  }
 }
 
 /**

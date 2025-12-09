@@ -1,0 +1,53 @@
+type	canonical_domain	superset_domain	aggregation_domains
+# Processes & Tasks
+Process	apqc.org.ai	process.org.ai	business.org.ai|manufacturing.org.ai|healthcare.org.ai|finance.org.ai|retail.org.ai|logistics.org.ai
+Task	-	tasks.org.ai	business.org.ai|manufacturing.org.ai|tech.org.ai
+# Industries & Sectors
+Industry	naics.org.ai	industries.org.ai	business.org.ai
+Sector	naics.org.ai	industries.org.ai	business.org.ai
+# Occupations & Careers
+Occupation	onet.org.ai	occupations.org.ai	business.org.ai|manufacturing.org.ai|healthcare.org.ai|finance.org.ai|retail.org.ai|tech.org.ai
+Skill	onet.org.ai	skills.org.ai	business.org.ai|education.org.ai
+Ability	onet.org.ai	-	business.org.ai|education.org.ai
+Knowledge	onet.org.ai	-	business.org.ai|education.org.ai
+WorkActivity	onet.org.ai	-	business.org.ai
+# Products & Services
+Product	gs1.org.ai	products.org.ai	business.org.ai|manufacturing.org.ai|retail.org.ai
+Service	-	services.org.ai	business.org.ai|retail.org.ai|healthcare.org.ai|finance.org.ai
+Segment	gs1.org.ai	products.org.ai	business.org.ai|retail.org.ai
+Family	gs1.org.ai	products.org.ai	business.org.ai|retail.org.ai
+Class	gs1.org.ai	products.org.ai	business.org.ai|retail.org.ai
+Brick	gs1.org.ai	products.org.ai	business.org.ai|retail.org.ai
+# Healthcare
+Resource	hl7.org.ai	-	healthcare.org.ai
+DataType	hl7.org.ai	-	healthcare.org.ai
+Code	healthcare.org.ai	-	healthcare.org.ai
+Concept	healthcare.org.ai	-	healthcare.org.ai
+Drug	healthcare.org.ai	-	healthcare.org.ai
+# Finance
+Message	iso.org.ai	-	finance.org.ai
+BusinessArea	iso.org.ai	-	finance.org.ai
+RegistrationAuthority	finance.org.ai	-	finance.org.ai
+MerchantCategoryCode	finance.org.ai	-	finance.org.ai|retail.org.ai
+# Web & Schema
+Type	schema.org.ai	-	web.org.ai|tech.org.ai
+Property	schema.org.ai	-	web.org.ai|tech.org.ai
+Element	w3.org.ai	-	web.org.ai|tech.org.ai
+Selector	w3.org.ai	-	web.org.ai|tech.org.ai
+Role	w3.org.ai	-	web.org.ai
+Guideline	w3.org.ai	-	web.org.ai
+# Geography
+Country	iso.org.ai	-	business.org.ai
+Currency	iso.org.ai	-	finance.org.ai
+Language	iso.org.ai	-	business.org.ai|education.org.ai
+State	us.org.ai	-	business.org.ai
+County	us.org.ai	-	business.org.ai
+Location	un.org.ai	-	logistics.org.ai|business.org.ai
+Region	un.org.ai	-	business.org.ai
+# EDI
+TransactionSet	x12.org.ai	-	logistics.org.ai|business.org.ai
+EDIFACTMessage	un.org.ai	-	logistics.org.ai|business.org.ai
+# Education
+Level	education.org.ai	-	education.org.ai
+Field	education.org.ai	-	education.org.ai
+Framework	education.org.ai	-	education.org.ai

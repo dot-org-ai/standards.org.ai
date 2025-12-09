@@ -1,0 +1,49 @@
+---
+layout: identifierStructure
+source: GS1/Identifier
+$type: GS1/Identifier/Structure
+$id: https://standards.org.ai/GS1/Identifier/Structure/{structure.code}
+sameAs: https://standards.org.ai/IdentifierStructure/{structure.code}
+canonical: https://gs1.org.ai/Identifier/Structure/{structure.code}
+params:
+  - Structure
+schema:
+  structure:
+    code: code
+    name: name
+    description: description
+---
+
+# {structure.name}
+
+<IdentifierStructureHeader name={structure.name} code={structure.code} />
+
+## Description
+
+{structure.description}
+
+## Structure Details
+
+The {structure.name} follows a specific digit structure to encode information about products and their manufacturers.
+
+## Usage Guidelines
+
+Different GTIN formats are used in different contexts:
+- Point-of-sale retail scanning
+- Wholesale and distribution
+- International trade
+- E-commerce
+
+## Check Digit Calculation
+
+All GTIN formats include a check digit to validate the identifier and detect errors in scanning or data entry.
+
+## Related Standards
+
+- GS1 General Specifications
+- ISO/IEC 15420 (EAN/UPC Symbology)
+- ISO/IEC 15417 (Code 128 Symbology)
+
+## Examples
+
+<GTINStructureExamples structureCode={structure.code} />

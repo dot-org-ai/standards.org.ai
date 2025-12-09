@@ -10,6 +10,7 @@ import {
   StandardRecord,
   RelationshipRecord,
   parseCSV,
+  parseTSV,
   writeStandardTSV,
   writeRelationshipTSV,
   writeTSV,
@@ -71,11 +72,10 @@ interface EDIFACTData {
 }
 
 interface LOCODESubdivisionRecord {
-  Country: string
-  Code: string
-  Name: string
-  Type: string
-  ParentSubdivision: string
+  SUCountry: string
+  SUCode: string
+  SUName: string
+  SUType: string
 }
 
 interface UNSPSCRow {
@@ -282,32 +282,41 @@ function transformEDIFACTCategories(): void {
     const categories: StandardRecord[] = []
     const messageCategories: RelationshipRecord[] = []
 
-    if (data.categories && Array.isArray(data.categories)) {
-      for (const cat of data.categories) {
-        if (!cat.code) continue
+    if (data.categories && typeof data.categories === 'object') {
+      // Iterate through category keys
+      for (const [catKey, catValue] of Object.entries(data.categories)) {
+        const cat = catValue as any
+        if (!cat.description) continue
 
-        const id = toWikipediaStyleId(cat.name || cat.code)
+        // Use the key as the code, convert to title case for name
+        const code = catKey
+        const name = catKey.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')
+        const id = toWikipediaStyleId(name)
+
         categories.push({
           ns: NS,
           type: 'EDIFACTCategory',
           id,
-          name: cat.name || cat.code,
-          description: cleanDescription(cat.description || ''),
-          code: cat.code,
+          name,
+          description: cleanDescription(cat.description),
+          code,
         })
 
         // Link messages to categories
         if (cat.messages && Array.isArray(cat.messages)) {
-          for (const msgCode of cat.messages) {
-            messageCategories.push({
-              fromNs: NS,
-              fromType: 'EDIFACTMessage',
-              fromId: msgCode,
-              toNs: NS,
-              toType: 'EDIFACTCategory',
-              toId: id,
-              relationshipType: 'belongs_to',
-            })
+          for (const msg of cat.messages) {
+            const msgCode = typeof msg === 'string' ? msg : msg.code
+            if (msgCode) {
+              messageCategories.push({
+                fromNs: NS,
+                fromType: 'EDIFACTMessage',
+                fromId: msgCode,
+                toNs: NS,
+                toType: 'EDIFACTCategory',
+                toId: id,
+                relationshipType: 'belongs_to',
+              })
+            }
           }
         }
       }
@@ -318,7 +327,7 @@ function transformEDIFACTCategories(): void {
       writeRelationshipTSV(join(REL_DIR, 'EDIFACTMessage.Category.tsv'), messageCategories)
     }
   } catch (e) {
-    console.log('Skipping EDIFACT categories - file not found or invalid')
+    console.log('Skipping EDIFACT categories - file not found or invalid:', e)
   }
 }
 
@@ -333,11 +342,11 @@ function transformLOCODESubdivisions(): void {
     const subdivisions: StandardRecord[] = []
 
     for (const record of records) {
-      const country = record.Country
-      const code = record.Code
+      const country = record.SUCountry
+      const code = record.SUCode
       if (!country || !code) continue
 
-      const name = record.Name
+      const name = record.SUName
       if (!name) continue
 
       const fullCode = `${country}-${code}`
@@ -348,7 +357,7 @@ function transformLOCODESubdivisions(): void {
         type: 'Subdivision',
         id,
         name,
-        description: `Type: ${record.Type || 'N/A'}`,
+        description: `Type: ${record.SUType || 'N/A'}`,
         code: fullCode,
       })
     }

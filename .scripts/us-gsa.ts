@@ -207,20 +207,28 @@ function transformPSCCategories(): void {
   writeStandardTSV(join(DATA_DIR, 'GSA.PSCCategory.tsv'), records)
 }
 
+interface FSCSourceRow {
+  code: string
+  name: string
+  description: string
+  parent: string
+}
+
 /**
  * Transform Federal Supply Classification (FSC) codes
  * FSC codes are 4-digit numeric codes
  */
 function transformFSC(): void {
-  console.log('Transforming GSA Federal Supply Classification...')
+  console.log('Transforming GSA Federal Supply Classification from source file...')
 
-  const sourceFile = join(SOURCE_DIR, 'FSC.tsv')
+  const sourceFile = join(SOURCE_DIR, 'fsc_codes.tsv')
   if (!existsSync(sourceFile)) {
-    console.log('Skipping FSC - file not found')
+    console.log('Warning: fsc_codes.tsv not found, skipping FSC')
     return
   }
 
-  const data = parseTSV<FSCRow>(sourceFile)
+  const data = parseTSV<FSCSourceRow>(sourceFile)
+  console.log(`Loaded ${data.length} FSC codes from source`)
 
   const records: StandardRecord[] = data
     .filter(row => row.code && row.name)
@@ -229,22 +237,23 @@ function transformFSC(): void {
       type: 'FSC',
       id: toWikipediaStyleId(row.name),
       name: row.name,
-      description: `Group: ${row.group || 'N/A'}, Class: ${row.class || 'N/A'}`,
+      description: cleanDescription(row.description || row.name),
       code: row.code,
     }))
 
-  writeStandardTSV(join(DATA_DIR, 'GSA.FSC.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'GSA.FSCCodes.tsv'), records)
+  console.log(`Wrote ${records.length} FSC codes to GSA.FSCCodes.tsv`)
 
-  // Write FSC to FSC Group relationships
+  // Write FSC to FSC Group relationships (parent field)
   const groupRelationships: Record<string, string>[] = data
-    .filter(row => row.code && row.group)
+    .filter(row => row.code && row.parent)
     .map(row => ({
       fromNs: NS,
       fromType: 'FSC',
       fromCode: row.code,
       toNs: NS,
       toType: 'FSCGroup',
-      toCode: row.group,
+      toCode: row.parent,
       relationshipType: 'belongs_to_group',
     }))
 
@@ -254,6 +263,7 @@ function transformFSC(): void {
       groupRelationships,
       ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
     )
+    console.log(`Wrote ${groupRelationships.length} FSC -> FSC Group relationships`)
   }
 }
 

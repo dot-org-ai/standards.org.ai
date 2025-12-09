@@ -1,0 +1,29 @@
+alias_path	target_domain	notes
+# business.org.ai aliases
+business.org.ai/industries	industries.org.ai	Industry taxonomy
+business.org.ai/processes	process.org.ai	Business processes
+business.org.ai/occupations	occupations.org.ai	Occupational classifications
+business.org.ai/products	products.org.ai	Product taxonomy
+business.org.ai/services	services.org.ai	Service taxonomy
+business.org.ai/skills	skills.org.ai	Skills taxonomy
+business.org.ai/tasks	tasks.org.ai	Task taxonomy
+# Vertical industry aliases
+manufacturing.org.ai/industries	industries.org.ai	Filtered to manufacturing
+manufacturing.org.ai/processes	process.org.ai	Filtered to manufacturing
+manufacturing.org.ai/occupations	occupations.org.ai	Filtered to manufacturing
+manufacturing.org.ai/products	products.org.ai	Filtered to manufacturing
+healthcare.org.ai/occupations	occupations.org.ai	Filtered to healthcare
+healthcare.org.ai/codes	healthcare.org.ai	ICD/CPT/HCPCS codes
+healthcare.org.ai/drugs	healthcare.org.ai	NDC/RxNorm drugs
+finance.org.ai/messages	iso.org.ai	ISO20022 messages
+finance.org.ai/currencies	iso.org.ai	ISO4217 currencies
+retail.org.ai/products	products.org.ai	Filtered to retail
+retail.org.ai/industries	industries.org.ai	Filtered to retail
+tech.org.ai/occupations	occupations.org.ai	Filtered to tech
+tech.org.ai/skills	skills.org.ai	Filtered to tech
+logistics.org.ai/locations	un.org.ai	UN/LOCODE locations
+logistics.org.ai/transactions	x12.org.ai	EDI transaction sets
+# Direct type aliases
+jobs.org.ai	occupations.org.ai	Jobs = Occupations
+work.org.ai	occupations.org.ai	Work = Occupations
+careers.org.ai	occupations.org.ai	Careers = Occupations

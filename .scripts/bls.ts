@@ -363,7 +363,7 @@ function transformEducation(): void {
 function transformSTEM(): void {
   console.log('Transforming BLS STEM Occupations...')
 
-  const sourceFile = join(SOURCE_DIR, 'BLS.STEM.STEM_occupations_list.tsv')
+  const sourceFile = join(SOURCE_DIR, 'BLS.STEM.Cleaned.tsv')
   if (!existsSync(sourceFile)) {
     console.log('Skipping STEM - file not found')
     return

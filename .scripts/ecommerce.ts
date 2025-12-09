@@ -24,383 +24,85 @@ const SOURCE_DIR = getSourcePath('Ecommerce')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
 
-// eCl@ss Interfaces
-interface EclassRow {
-  segmentCode?: string
-  segmentName?: string
-  segmentDescription?: string
-  mainGroupCode?: string
-  mainGroupName?: string
-  mainGroupDescription?: string
-  groupCode?: string
-  groupName?: string
-  groupDescription?: string
-  subGroupCode?: string
-  subGroupName?: string
-  subGroupDescription?: string
-  classCode?: string
-  className?: string
-  classDescription?: string
-  propertyCode?: string
-  propertyName?: string
-  propertyDescription?: string
-  propertyDataType?: string
-  propertyUnit?: string
-  valueCode?: string
-  valueName?: string
-  valueDescription?: string
-  version?: string
-}
-
-// ETIM Interfaces
-interface EtimClassRow {
-  classCode: string
-  className: string
-  classDescription: string
-  groupCode?: string
-  groupName?: string
-  version?: string
-}
-
-interface EtimFeatureRow {
-  featureCode: string
-  featureName: string
-  featureDescription: string
-  featureType?: string
-  unit?: string
-  version?: string
-}
-
-interface EtimValueRow {
-  valueCode: string
-  valueName: string
-  valueDescription: string
-  featureCode: string
-  sortOrder?: number
-  version?: string
-}
-
-interface EtimUnitRow {
-  unitCode: string
-  unitName: string
-  unitDescription: string
-  symbol?: string
-  unitType?: string
-  siUnit?: boolean
-  version?: string
-}
-
-// Schema.org Interfaces
-interface SchemaTypeRow {
-  id: string
-  name: string
-  description: string
-  parents?: string
-  layer?: string
-  version?: string
-}
-
-interface SchemaPropertyRow {
-  id: string
-  name: string
-  description: string
-  domainIncludes?: string
-  rangeIncludes?: string
-  inverseOf?: string
-  subPropertyOf?: string
-  version?: string
-}
-
-interface SchemaEnumerationRow {
-  id: string
-  name: string
-  description: string
-  parents?: string
-  version?: string
-}
-
-interface SchemaEnumerationMemberRow {
-  id: string
-  name: string
-  description: string
-  enumeration: string
-  version?: string
-}
 
 /**
  * Transform eCl@ss classification data
  */
 function transformEclass(): void {
   console.log('Transforming eCl@ss data...')
-  const sourceFile = join(SOURCE_DIR, 'ECLASS', 'eclass.tsv')
+  const segmentsFile = join(SOURCE_DIR, 'ECLASS', 'Segments.tsv')
+  const structureFile = join(SOURCE_DIR, 'ECLASS', 'Structure.tsv')
 
-  if (!existsSync(sourceFile)) {
-    console.log('eclass.tsv not found, skipping...')
-    return
+  // Transform Segments
+  if (existsSync(segmentsFile)) {
+    try {
+      interface EclassSegmentRow {
+        code: string
+        name: string
+        description: string
+      }
+
+      const segments = parseTSV<EclassSegmentRow>(segmentsFile)
+      console.log(`Processing ${segments.length} eCl@ss segments...`)
+
+      // Transform Segments
+      const segmentRecords: StandardRecord[] = segments
+        .filter(row => row.code && row.name)
+        .map(row => ({
+          ns: ECLASS_NS,
+          type: 'Segment',
+          id: toWikipediaStyleId(row.name),
+          name: row.name,
+          description: cleanDescription(row.description),
+          code: row.code,
+        }))
+
+      if (segmentRecords.length > 0) {
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.ECLASS.Segments.tsv'), segmentRecords)
+        console.log(`Wrote ${segmentRecords.length} eCl@ss segments`)
+      }
+    } catch (e) {
+      console.log('Error processing eCl@ss segments:', e)
+    }
+  } else {
+    console.log('eCl@ss Segments.tsv not found, skipping...')
   }
 
-  try {
-    const data = parseTSV<EclassRow>(sourceFile)
-
-    // Extract unique entities at each level
-    const segmentsMap = new Map<string, EclassRow>()
-    const mainGroupsMap = new Map<string, EclassRow>()
-    const groupsMap = new Map<string, EclassRow>()
-    const subGroupsMap = new Map<string, EclassRow>()
-    const classesMap = new Map<string, EclassRow>()
-    const propertiesMap = new Map<string, EclassRow>()
-    const valuesMap = new Map<string, EclassRow>()
-
-    for (const row of data) {
-      if (row.segmentCode && !segmentsMap.has(row.segmentCode)) {
-        segmentsMap.set(row.segmentCode, row)
+  // Transform Structure (hierarchy information)
+  if (existsSync(structureFile)) {
+    try {
+      interface EclassStructureRow {
+        level: string
+        name: string
+        code_format: string
+        description: string
+        example: string
       }
-      if (row.mainGroupCode && !mainGroupsMap.has(row.mainGroupCode)) {
-        mainGroupsMap.set(row.mainGroupCode, row)
+
+      const structure = parseTSV<EclassStructureRow>(structureFile)
+      console.log(`Processing ${structure.length} eCl@ss structure levels...`)
+
+      const structureRecords: StandardRecord[] = structure
+        .filter(row => row.level && row.name)
+        .map(row => ({
+          ns: ECLASS_NS,
+          type: 'StructureLevel',
+          id: toWikipediaStyleId(row.name),
+          name: row.name,
+          description: cleanDescription(row.description),
+          code: row.level,
+        }))
+
+      if (structureRecords.length > 0) {
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.ECLASS.Structure.tsv'), structureRecords)
+        console.log(`Wrote ${structureRecords.length} eCl@ss structure levels`)
       }
-      if (row.groupCode && !groupsMap.has(row.groupCode)) {
-        groupsMap.set(row.groupCode, row)
-      }
-      if (row.subGroupCode && !subGroupsMap.has(row.subGroupCode)) {
-        subGroupsMap.set(row.subGroupCode, row)
-      }
-      if (row.classCode && !classesMap.has(row.classCode)) {
-        classesMap.set(row.classCode, row)
-      }
-      if (row.propertyCode && !propertiesMap.has(row.propertyCode)) {
-        propertiesMap.set(row.propertyCode, row)
-      }
-      if (row.valueCode && !valuesMap.has(row.valueCode)) {
-        valuesMap.set(row.valueCode, row)
-      }
+    } catch (e) {
+      console.log('Error processing eCl@ss structure:', e)
     }
-
-    // Write Segments
-    if (segmentsMap.size > 0) {
-      const records: StandardRecord[] = Array.from(segmentsMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'Segment',
-        id: toWikipediaStyleId(row.segmentName || ''),
-        name: row.segmentName || '',
-        description: cleanDescription(row.segmentDescription),
-        code: row.segmentCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.Segments.tsv'), records)
-    }
-
-    // Write Main Groups
-    if (mainGroupsMap.size > 0) {
-      const records: StandardRecord[] = Array.from(mainGroupsMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'MainGroup',
-        id: toWikipediaStyleId(row.mainGroupName || ''),
-        name: row.mainGroupName || '',
-        description: cleanDescription(row.mainGroupDescription),
-        code: row.mainGroupCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.MainGroups.tsv'), records)
-    }
-
-    // Write Groups
-    if (groupsMap.size > 0) {
-      const records: StandardRecord[] = Array.from(groupsMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'Group',
-        id: toWikipediaStyleId(row.groupName || ''),
-        name: row.groupName || '',
-        description: cleanDescription(row.groupDescription),
-        code: row.groupCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.Groups.tsv'), records)
-    }
-
-    // Write Sub-Groups
-    if (subGroupsMap.size > 0) {
-      const records: StandardRecord[] = Array.from(subGroupsMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'SubGroup',
-        id: toWikipediaStyleId(row.subGroupName || ''),
-        name: row.subGroupName || '',
-        description: cleanDescription(row.subGroupDescription),
-        code: row.subGroupCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.SubGroups.tsv'), records)
-    }
-
-    // Write Classes
-    if (classesMap.size > 0) {
-      const records: StandardRecord[] = Array.from(classesMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'Class',
-        id: toWikipediaStyleId(row.className || ''),
-        name: row.className || '',
-        description: cleanDescription(row.classDescription),
-        code: row.classCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.Classes.tsv'), records)
-    }
-
-    // Write Properties
-    if (propertiesMap.size > 0) {
-      const records: StandardRecord[] = Array.from(propertiesMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'Property',
-        id: toWikipediaStyleId(row.propertyName || ''),
-        name: row.propertyName || '',
-        description: cleanDescription(row.propertyDescription),
-        code: row.propertyCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.Properties.tsv'), records)
-    }
-
-    // Write Values
-    if (valuesMap.size > 0) {
-      const records: StandardRecord[] = Array.from(valuesMap.values()).map(row => ({
-        ns: ECLASS_NS,
-        type: 'Value',
-        id: toWikipediaStyleId(row.valueName || ''),
-        name: row.valueName || '',
-        description: cleanDescription(row.valueDescription),
-        code: row.valueCode || '',
-      }))
-      writeStandardTSV(join(DATA_DIR, 'ECLASS.Values.tsv'), records)
-    }
-
-    // Write hierarchy relationships
-    const hierarchyRels: Record<string, string>[] = []
-
-    // MainGroup -> Segment
-    for (const row of mainGroupsMap.values()) {
-      if (row.segmentCode && row.mainGroupCode) {
-        hierarchyRels.push({
-          fromNs: ECLASS_NS,
-          fromType: 'MainGroup',
-          fromCode: row.mainGroupCode,
-          toNs: ECLASS_NS,
-          toType: 'Segment',
-          toCode: row.segmentCode,
-          relationshipType: 'child_of',
-        })
-      }
-    }
-
-    // Group -> MainGroup
-    for (const row of groupsMap.values()) {
-      if (row.mainGroupCode && row.groupCode) {
-        hierarchyRels.push({
-          fromNs: ECLASS_NS,
-          fromType: 'Group',
-          fromCode: row.groupCode,
-          toNs: ECLASS_NS,
-          toType: 'MainGroup',
-          toCode: row.mainGroupCode,
-          relationshipType: 'child_of',
-        })
-      }
-    }
-
-    // SubGroup -> Group
-    for (const row of subGroupsMap.values()) {
-      if (row.groupCode && row.subGroupCode) {
-        hierarchyRels.push({
-          fromNs: ECLASS_NS,
-          fromType: 'SubGroup',
-          fromCode: row.subGroupCode,
-          toNs: ECLASS_NS,
-          toType: 'Group',
-          toCode: row.groupCode,
-          relationshipType: 'child_of',
-        })
-      }
-    }
-
-    // Class -> SubGroup
-    for (const row of classesMap.values()) {
-      if (row.subGroupCode && row.classCode) {
-        hierarchyRels.push({
-          fromNs: ECLASS_NS,
-          fromType: 'Class',
-          fromCode: row.classCode,
-          toNs: ECLASS_NS,
-          toType: 'SubGroup',
-          toCode: row.subGroupCode,
-          relationshipType: 'child_of',
-        })
-      }
-    }
-
-    if (hierarchyRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'ECLASS.Hierarchy.tsv'),
-        hierarchyRels,
-        ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-      )
-    }
-
-    // Write Class-Property relationships
-    const classPropertyRels: Record<string, string>[] = []
-    const seenClassProp = new Set<string>()
-
-    for (const row of data) {
-      if (row.classCode && row.propertyCode) {
-        const key = `${row.classCode}-${row.propertyCode}`
-        if (!seenClassProp.has(key)) {
-          seenClassProp.add(key)
-          classPropertyRels.push({
-            fromNs: ECLASS_NS,
-            fromType: 'Class',
-            fromCode: row.classCode,
-            toNs: ECLASS_NS,
-            toType: 'Property',
-            toCode: row.propertyCode,
-            relationshipType: 'has_property',
-          })
-        }
-      }
-    }
-
-    if (classPropertyRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'ECLASS.Class.Property.tsv'),
-        classPropertyRels,
-        ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-      )
-    }
-
-    // Write Property-Value relationships
-    const propertyValueRels: Record<string, string>[] = []
-    const seenPropValue = new Set<string>()
-
-    for (const row of data) {
-      if (row.propertyCode && row.valueCode) {
-        const key = `${row.propertyCode}-${row.valueCode}`
-        if (!seenPropValue.has(key)) {
-          seenPropValue.add(key)
-          propertyValueRels.push({
-            fromNs: ECLASS_NS,
-            fromType: 'Property',
-            fromCode: row.propertyCode,
-            toNs: ECLASS_NS,
-            toType: 'Value',
-            toCode: row.valueCode,
-            relationshipType: 'has_value',
-          })
-        }
-      }
-    }
-
-    if (propertyValueRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'ECLASS.Property.Value.tsv'),
-        propertyValueRels,
-        ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-      )
-    }
-
-    console.log('eCl@ss transformation complete')
-  } catch (e) {
-    console.log('Error processing eCl@ss data:', e)
   }
+
+  console.log('eCl@ss transformation complete')
 }
 
 /**
@@ -408,116 +110,98 @@ function transformEclass(): void {
  */
 function transformEtim(): void {
   console.log('Transforming ETIM data...')
-  const classFile = join(SOURCE_DIR, 'ETIM', 'etim.classes.tsv')
+  const groupsFile = join(SOURCE_DIR, 'ETIM', 'Groups.tsv')
+  const classesFile = join(SOURCE_DIR, 'ETIM', 'Classes.tsv')
 
-  if (!existsSync(classFile)) {
-    console.log('etim.classes.tsv not found, skipping...')
-    return
+  // Transform Groups
+  if (existsSync(groupsFile)) {
+    try {
+      interface EtimGroupRow {
+        code: string
+        name: string
+        description: string
+      }
+
+      const groups = parseTSV<EtimGroupRow>(groupsFile)
+      console.log(`Processing ${groups.length} ETIM groups...`)
+
+      const groupRecords: StandardRecord[] = groups
+        .filter(row => row.code)
+        .map(row => ({
+          ns: ETIM_NS,
+          type: 'Group',
+          id: toWikipediaStyleId(row.name),
+          name: row.name,
+          description: cleanDescription(row.description),
+          code: row.code,
+        }))
+
+      if (groupRecords.length > 0) {
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.ETIM.Groups.tsv'), groupRecords)
+        console.log(`Wrote ${groupRecords.length} ETIM groups`)
+      }
+    } catch (e) {
+      console.log('Error processing ETIM groups:', e)
+    }
   }
 
-  try {
-    // Transform Classes
-    const classes = parseTSV<EtimClassRow>(classFile)
-    const classRecords: StandardRecord[] = classes
-      .filter(row => row.classCode)
-      .map(row => ({
-        ns: ETIM_NS,
-        type: 'Class',
-        id: toWikipediaStyleId(row.className),
-        name: row.className,
-        description: cleanDescription(row.classDescription),
-        code: row.classCode,
-      }))
-
-    if (classRecords.length > 0) {
-      writeStandardTSV(join(DATA_DIR, 'ETIM.Classes.tsv'), classRecords)
-    }
-
-    // Transform Features
-    const featureFile = join(SOURCE_DIR, 'ETIM', 'etim.features.tsv')
-    if (existsSync(featureFile)) {
-      const features = parseTSV<EtimFeatureRow>(featureFile)
-      const featureRecords: StandardRecord[] = features
-        .filter(row => row.featureCode)
-        .map(row => ({
-          ns: ETIM_NS,
-          type: 'Feature',
-          id: toWikipediaStyleId(row.featureName),
-          name: row.featureName,
-          description: cleanDescription(row.featureDescription),
-          code: row.featureCode,
-        }))
-
-      if (featureRecords.length > 0) {
-        writeStandardTSV(join(DATA_DIR, 'ETIM.Features.tsv'), featureRecords)
-      }
-    }
-
-    // Transform Values
-    const valueFile = join(SOURCE_DIR, 'ETIM', 'etim.values.tsv')
-    if (existsSync(valueFile)) {
-      const values = parseTSV<EtimValueRow>(valueFile)
-      const valueRecords: StandardRecord[] = values
-        .filter(row => row.valueCode)
-        .map(row => ({
-          ns: ETIM_NS,
-          type: 'Value',
-          id: toWikipediaStyleId(row.valueName),
-          name: row.valueName,
-          description: cleanDescription(row.valueDescription),
-          code: row.valueCode,
-        }))
-
-      if (valueRecords.length > 0) {
-        writeStandardTSV(join(DATA_DIR, 'ETIM.Values.tsv'), valueRecords)
+  // Transform Classes
+  if (existsSync(classesFile)) {
+    try {
+      interface EtimClassFileRow {
+        group: string
+        class_code: string
+        class_name: string
+        description: string
+        example_products: string
       }
 
-      // Write Feature-Value relationships
-      const featureValueRels: Record<string, string>[] = values
-        .filter(row => row.featureCode && row.valueCode)
+      const classes = parseTSV<EtimClassFileRow>(classesFile)
+      console.log(`Processing ${classes.length} ETIM classes...`)
+
+      const classRecords: StandardRecord[] = classes
+        .filter(row => row.class_code)
+        .map(row => ({
+          ns: ETIM_NS,
+          type: 'Class',
+          id: toWikipediaStyleId(row.class_name),
+          name: row.class_name,
+          description: cleanDescription(row.description),
+          code: row.class_code,
+        }))
+
+      if (classRecords.length > 0) {
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.ETIM.Classes.tsv'), classRecords)
+        console.log(`Wrote ${classRecords.length} ETIM classes`)
+      }
+
+      // Write Class-Group relationships
+      const classGroupRels: Record<string, string>[] = classes
+        .filter(row => row.class_code && row.group)
         .map(row => ({
           fromNs: ETIM_NS,
-          fromType: 'Feature',
-          fromCode: row.featureCode,
+          fromType: 'Class',
+          fromCode: row.class_code,
           toNs: ETIM_NS,
-          toType: 'Value',
-          toCode: row.valueCode,
-          relationshipType: 'has_value',
+          toType: 'Group',
+          toCode: row.group,
+          relationshipType: 'child_of',
         }))
 
-      if (featureValueRels.length > 0) {
+      if (classGroupRels.length > 0) {
         writeTSV(
-          join(REL_DIR, 'ETIM.Feature.Value.tsv'),
-          featureValueRels,
+          join(REL_DIR, 'Ecommerce.ETIM.Class.Group.tsv'),
+          classGroupRels,
           ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
         )
+        console.log(`Wrote ${classGroupRels.length} ETIM class-group relationships`)
       }
+    } catch (e) {
+      console.log('Error processing ETIM classes:', e)
     }
-
-    // Transform Units
-    const unitFile = join(SOURCE_DIR, 'ETIM', 'etim.units.tsv')
-    if (existsSync(unitFile)) {
-      const units = parseTSV<EtimUnitRow>(unitFile)
-      const unitRecords: StandardRecord[] = units
-        .filter(row => row.unitCode)
-        .map(row => ({
-          ns: ETIM_NS,
-          type: 'Unit',
-          id: toWikipediaStyleId(row.unitName),
-          name: row.unitName,
-          description: cleanDescription(row.unitDescription),
-          code: row.unitCode,
-        }))
-
-      if (unitRecords.length > 0) {
-        writeStandardTSV(join(DATA_DIR, 'ETIM.Units.tsv'), unitRecords)
-      }
-    }
-
-    console.log('ETIM transformation complete')
-  } catch (e) {
-    console.log('Error processing ETIM data:', e)
   }
+
+  console.log('ETIM transformation complete')
 }
 
 /**
@@ -525,84 +209,109 @@ function transformEtim(): void {
  */
 function transformSchemaOrg(): void {
   console.log('Transforming Schema.org data...')
-  const typeFile = join(SOURCE_DIR, 'SchemaOrg', 'schema.types.tsv')
+  const typesFile = join(SOURCE_DIR, 'SchemaOrg', 'Types.tsv')
+  const propertiesFile = join(SOURCE_DIR, 'SchemaOrg', 'Properties.tsv')
+  const enumerationsFile = join(SOURCE_DIR, 'SchemaOrg', 'Enumerations.tsv')
+  const enumMembersFile = join(SOURCE_DIR, 'SchemaOrg', 'EnumerationMembers.tsv')
 
-  if (!existsSync(typeFile)) {
-    console.log('schema.types.tsv not found, skipping...')
-    return
+  // Transform Types
+  if (existsSync(typesFile)) {
+    try {
+      interface SchemaTypeFileRow {
+        id: string
+        label: string
+        parent: string
+        comment: string | { '@language': string; '@value': string }
+      }
+
+      const types = parseTSV<SchemaTypeFileRow>(typesFile)
+      console.log(`Processing ${types.length} Schema.org types...`)
+
+      const typeRecords: StandardRecord[] = types
+        .filter(row => row.id)
+        .map(row => {
+          // Handle both string and object formats for comment/label
+          let name = typeof row.label === 'string' ? row.label : (row.label as any)?.['@value'] || row.id.replace('schema:', '')
+          let description = typeof row.comment === 'string'
+            ? row.comment
+            : (row.comment as any)?.['@value'] || ''
+
+          return {
+            ns: SCHEMA_NS,
+            type: 'Type',
+            id: row.id.replace('schema:', ''),
+            name: name,
+            description: cleanDescription(description),
+            code: row.id.replace('schema:', ''),
+          }
+        })
+
+      if (typeRecords.length > 0) {
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.SchemaOrg.Types.tsv'), typeRecords)
+        console.log(`Wrote ${typeRecords.length} Schema.org types`)
+      }
+
+      // Write type hierarchy relationships
+      const typeHierarchyRels: Record<string, string>[] = types
+        .filter(row => row.parent && row.id)
+        .map(row => ({
+          fromNs: SCHEMA_NS,
+          fromType: 'Type',
+          fromCode: row.id.replace('schema:', ''),
+          toNs: SCHEMA_NS,
+          toType: 'Type',
+          toCode: row.parent.replace('schema:', ''),
+          relationshipType: 'subtype_of',
+        }))
+
+      if (typeHierarchyRels.length > 0) {
+        writeTSV(
+          join(REL_DIR, 'Ecommerce.SchemaOrg.Type.Type.tsv'),
+          typeHierarchyRels,
+          ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+        )
+        console.log(`Wrote ${typeHierarchyRels.length} Schema.org type hierarchy relationships`)
+      }
+    } catch (e) {
+      console.log('Error processing Schema.org types:', e)
+    }
   }
 
-  try {
-    // Transform Types
-    const types = parseTSV<SchemaTypeRow>(typeFile)
-    const typeRecords: StandardRecord[] = types
-      .filter(row => row.id)
-      .map(row => ({
-        ns: SCHEMA_NS,
-        type: 'Type',
-        id: row.id,
-        name: row.name,
-        description: cleanDescription(row.description),
-        code: row.id,
-      }))
-
-    if (typeRecords.length > 0) {
-      writeStandardTSV(join(DATA_DIR, 'SchemaOrg.Types.tsv'), typeRecords)
-    }
-
-    // Write type hierarchy relationships
-    const typeHierarchyRels: Record<string, string>[] = []
-    for (const row of types) {
-      if (row.parents && row.id) {
-        const parents = row.parents.split(',').map(p => p.trim())
-        for (const parent of parents) {
-          if (parent) {
-            typeHierarchyRels.push({
-              fromNs: SCHEMA_NS,
-              fromType: 'Type',
-              fromCode: row.id,
-              toNs: SCHEMA_NS,
-              toType: 'Type',
-              toCode: parent,
-              relationshipType: 'subtype_of',
-            })
-          }
-        }
+  // Transform Properties
+  if (existsSync(propertiesFile)) {
+    try {
+      interface SchemaPropertyFileRow {
+        id: string
+        label: string
+        domain: string
+        range: string
+        comment: string
       }
-    }
 
-    if (typeHierarchyRels.length > 0) {
-      writeTSV(
-        join(REL_DIR, 'SchemaOrg.Type.Type.tsv'),
-        typeHierarchyRels,
-        ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
-      )
-    }
+      const properties = parseTSV<SchemaPropertyFileRow>(propertiesFile)
+      console.log(`Processing ${properties.length} Schema.org properties...`)
 
-    // Transform Properties
-    const propertyFile = join(SOURCE_DIR, 'SchemaOrg', 'schema.properties.tsv')
-    if (existsSync(propertyFile)) {
-      const properties = parseTSV<SchemaPropertyRow>(propertyFile)
       const propertyRecords: StandardRecord[] = properties
         .filter(row => row.id)
         .map(row => ({
           ns: SCHEMA_NS,
           type: 'Property',
-          id: row.id,
-          name: row.name,
-          description: cleanDescription(row.description),
-          code: row.id,
+          id: row.id.replace('schema:', ''),
+          name: row.label || row.id.replace('schema:', ''),
+          description: cleanDescription(row.comment),
+          code: row.id.replace('schema:', ''),
         }))
 
       if (propertyRecords.length > 0) {
-        writeStandardTSV(join(DATA_DIR, 'SchemaOrg.Properties.tsv'), propertyRecords)
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.SchemaOrg.Properties.tsv'), propertyRecords)
+        console.log(`Wrote ${propertyRecords.length} Schema.org properties`)
       }
 
       // Write Type-Property relationships (domain)
       const typePropRels: Record<string, string>[] = []
       for (const row of properties) {
-        if (row.domainIncludes && row.id) {
-          const domains = row.domainIncludes.split(',').map(d => d.trim())
+        if (row.domain && row.id) {
+          const domains = row.domain.split(',').map(d => d.trim().replace('schema:', ''))
           for (const domain of domains) {
             if (domain) {
               typePropRels.push({
@@ -611,7 +320,7 @@ function transformSchemaOrg(): void {
                 fromCode: domain,
                 toNs: SCHEMA_NS,
                 toType: 'Property',
-                toCode: row.id,
+                toCode: row.id.replace('schema:', ''),
                 relationshipType: 'has_property',
               })
             }
@@ -621,50 +330,76 @@ function transformSchemaOrg(): void {
 
       if (typePropRels.length > 0) {
         writeTSV(
-          join(REL_DIR, 'SchemaOrg.Type.Property.tsv'),
+          join(REL_DIR, 'Ecommerce.SchemaOrg.Type.Property.tsv'),
           typePropRels,
           ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
         )
+        console.log(`Wrote ${typePropRels.length} Schema.org type-property relationships`)
       }
+    } catch (e) {
+      console.log('Error processing Schema.org properties:', e)
     }
+  }
 
-    // Transform Enumerations
-    const enumFile = join(SOURCE_DIR, 'SchemaOrg', 'schema.enumerations.tsv')
-    if (existsSync(enumFile)) {
-      const enumerations = parseTSV<SchemaEnumerationRow>(enumFile)
+  // Transform Enumerations
+  if (existsSync(enumerationsFile)) {
+    try {
+      interface SchemaEnumerationFileRow {
+        id: string
+        label: string
+        comment: string
+      }
+
+      const enumerations = parseTSV<SchemaEnumerationFileRow>(enumerationsFile)
+      console.log(`Processing ${enumerations.length} Schema.org enumerations...`)
+
       const enumRecords: StandardRecord[] = enumerations
         .filter(row => row.id)
         .map(row => ({
           ns: SCHEMA_NS,
           type: 'Enumeration',
           id: row.id,
-          name: row.name,
-          description: cleanDescription(row.description),
+          name: row.label || row.id,
+          description: cleanDescription(row.comment),
           code: row.id,
         }))
 
       if (enumRecords.length > 0) {
-        writeStandardTSV(join(DATA_DIR, 'SchemaOrg.Enumerations.tsv'), enumRecords)
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.SchemaOrg.Enumerations.tsv'), enumRecords)
+        console.log(`Wrote ${enumRecords.length} Schema.org enumerations`)
       }
+    } catch (e) {
+      console.log('Error processing Schema.org enumerations:', e)
     }
+  }
 
-    // Transform Enumeration Members
-    const memberFile = join(SOURCE_DIR, 'SchemaOrg', 'schema.enumeration_members.tsv')
-    if (existsSync(memberFile)) {
-      const members = parseTSV<SchemaEnumerationMemberRow>(memberFile)
+  // Transform Enumeration Members
+  if (existsSync(enumMembersFile)) {
+    try {
+      interface SchemaEnumMemberFileRow {
+        enumeration: string
+        id: string
+        label: string
+        comment: string
+      }
+
+      const members = parseTSV<SchemaEnumMemberFileRow>(enumMembersFile)
+      console.log(`Processing ${members.length} Schema.org enumeration members...`)
+
       const memberRecords: StandardRecord[] = members
         .filter(row => row.id)
         .map(row => ({
           ns: SCHEMA_NS,
           type: 'EnumerationMember',
           id: row.id,
-          name: row.name,
-          description: cleanDescription(row.description),
+          name: row.label || row.id,
+          description: cleanDescription(row.comment),
           code: row.id,
         }))
 
       if (memberRecords.length > 0) {
-        writeStandardTSV(join(DATA_DIR, 'SchemaOrg.EnumerationMembers.tsv'), memberRecords)
+        writeStandardTSV(join(DATA_DIR, 'Ecommerce.SchemaOrg.EnumerationMembers.tsv'), memberRecords)
+        console.log(`Wrote ${memberRecords.length} Schema.org enumeration members`)
       }
 
       // Write Enumeration-Member relationships
@@ -682,17 +417,18 @@ function transformSchemaOrg(): void {
 
       if (enumMemberRels.length > 0) {
         writeTSV(
-          join(REL_DIR, 'SchemaOrg.Enumeration.Member.tsv'),
+          join(REL_DIR, 'Ecommerce.SchemaOrg.Enumeration.Member.tsv'),
           enumMemberRels,
           ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
         )
+        console.log(`Wrote ${enumMemberRels.length} Schema.org enumeration-member relationships`)
       }
+    } catch (e) {
+      console.log('Error processing Schema.org enumeration members:', e)
     }
-
-    console.log('Schema.org transformation complete')
-  } catch (e) {
-    console.log('Error processing Schema.org data:', e)
   }
+
+  console.log('Schema.org transformation complete')
 }
 
 /**
