@@ -160,10 +160,10 @@ function transformPSC(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'PSC',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'PSCCategory',
-      toCode: row.category,
+      toId: row.category,
       relationshipType: 'belongsToCategory',
     }))
 
@@ -171,7 +171,7 @@ function transformPSC(): void {
     writeTSV(
       join(REL_DIR, 'GSA.PSC.PSCCategory.tsv'),
       categoryRelationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   }
 }
@@ -254,10 +254,10 @@ function transformFSC(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'FSC',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'FSCGroup',
-      toCode: row.parent,
+      toId: row.parent,
       relationshipType: 'belongsToGroup',
     }))
 
@@ -265,7 +265,7 @@ function transformFSC(): void {
     writeTSV(
       join(REL_DIR, 'GSA.FSC.FSCGroup.tsv'),
       groupRelationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
     console.log(`Wrote ${groupRelationships.length} FSC -> FSC Group relationships`)
   }
@@ -366,10 +366,10 @@ function transformSINs(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'SIN',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'Schedule',
-      toCode: row.schedule,
+      toId: row.schedule,
       relationshipType: 'belongsToSchedule',
     }))
 
@@ -377,7 +377,7 @@ function transformSINs(): void {
     writeTSV(
       join(REL_DIR, 'GSA.SIN.Schedule.tsv'),
       scheduleRelationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   }
 }
@@ -467,10 +467,10 @@ function transformBPAs(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'BPA',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'Schedule',
-      toCode: row.schedule,
+      toId: row.schedule,
       relationshipType: 'basedOnSchedule',
     }))
 
@@ -478,7 +478,7 @@ function transformBPAs(): void {
     writeTSV(
       join(REL_DIR, 'GSA.BPA.Schedule.tsv'),
       scheduleRelationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   }
 }

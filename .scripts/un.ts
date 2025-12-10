@@ -122,7 +122,8 @@ function transformLOCODE(): void {
     const name = record.Name || record.NameWoDiacritics
     if (!name) continue
 
-    const id = `${country}_${toWikipediaStyleId(name)}`
+    const subdivision = record.Subdivision
+    const id = `${country}_${toWikipediaStyleId(name)}${subdivision ? '_' + subdivision : ''}`
 
     // Parse function codes to description
     const functions = record.Function || ''
@@ -416,7 +417,7 @@ function transformLOCODESubdivisionRelationships(): void {
 
       if (!subdivName) continue
 
-      const locationId = `${country}_${toWikipediaStyleId(name)}`
+      const locationId = `${country}_${toWikipediaStyleId(name)}${subdivision ? '_' + subdivision : ''}`
       const subdivId = `${country}_${toWikipediaStyleId(subdivName)}`
 
       relationships.push({
@@ -530,10 +531,10 @@ function transformSPSC(): void {
         hierarchyRelationships.push({
           fromNs: NS,
           fromType: 'SPSCFamily',
-          fromCode: row.familyCode,
+          fromId: row.familyCode,
           toNs: NS,
           toType: 'SPSCSegment',
-          toCode: row.segmentCode,
+          toId: row.segmentCode,
           relationshipType: 'childOf',
         })
       }
@@ -545,10 +546,10 @@ function transformSPSC(): void {
         hierarchyRelationships.push({
           fromNs: NS,
           fromType: 'SPSCClass',
-          fromCode: row.classCode,
+          fromId: row.classCode,
           toNs: NS,
           toType: 'SPSCFamily',
-          toCode: row.familyCode,
+          toId: row.familyCode,
           relationshipType: 'childOf',
         })
       }
@@ -560,10 +561,10 @@ function transformSPSC(): void {
         hierarchyRelationships.push({
           fromNs: NS,
           fromType: 'SPSCCommodity',
-          fromCode: row.commodityCode,
+          fromId: row.commodityCode,
           toNs: NS,
           toType: 'SPSCClass',
-          toCode: row.classCode,
+          toId: row.classCode,
           relationshipType: 'childOf',
         })
       }
@@ -572,7 +573,7 @@ function transformSPSC(): void {
     writeTSV(
       join(REL_DIR, 'UN.SPSC.Hierarchy.tsv'),
       hierarchyRelationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   } catch (e) {
     console.log('Skipping SPSC - file not found or invalid:', e)
@@ -589,7 +590,7 @@ export async function transformUN(): Promise<void> {
   transformLOCODESubdivisionRelationships()
   transformEDIFACT()
   transformEDIFACTCategories()
-  transformSPSC()
+  // transformSPSC() - Removed: UNSPSC data is handled by .scripts/unspsc.ts as the canonical source
 
   console.log('\n=== UN Transformation Complete ===')
 }

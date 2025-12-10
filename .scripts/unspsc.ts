@@ -3,7 +3,7 @@ import {
   NAMESPACES,
   parseTSV,
   writeStandardTSV,
-  writeTSV,
+  writeRelationshipTSV,
   toWikipediaStyleId,
   cleanDescription,
   getSourcePath,
@@ -122,10 +122,10 @@ function transformUNSPSC(): void {
       hierarchyRelationships.push({
         fromNs: NS,
         fromType: 'Family',
-        fromCode: row.familyCode,
+        fromId: toWikipediaStyleId(row.familyTitle),
         toNs: NS,
         toType: 'Segment',
-        toCode: row.segmentCode,
+        toId: toWikipediaStyleId(row.segmentTitle),
         relationshipType: 'childOf',
       })
     }
@@ -137,10 +137,10 @@ function transformUNSPSC(): void {
       hierarchyRelationships.push({
         fromNs: NS,
         fromType: 'Class',
-        fromCode: row.classCode,
+        fromId: toWikipediaStyleId(row.classTitle),
         toNs: NS,
         toType: 'Family',
-        toCode: row.familyCode,
+        toId: toWikipediaStyleId(row.familyTitle),
         relationshipType: 'childOf',
       })
     }
@@ -152,19 +152,18 @@ function transformUNSPSC(): void {
       hierarchyRelationships.push({
         fromNs: NS,
         fromType: 'Commodity',
-        fromCode: row.commodityCode,
+        fromId: toWikipediaStyleId(row.commodityTitle),
         toNs: NS,
         toType: 'Class',
-        toCode: row.classCode,
+        toId: toWikipediaStyleId(row.classTitle),
         relationshipType: 'childOf',
       })
     }
   }
 
-  writeTSV(
+  writeRelationshipTSV(
     join(REL_DIR, 'UNSPSC.Hierarchy.tsv'),
-    hierarchyRelationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    hierarchyRelationships as any
   )
 }
 

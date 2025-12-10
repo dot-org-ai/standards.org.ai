@@ -193,10 +193,10 @@ function transformSkills(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Skill',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'requiresSkill',
       importance: row.dataValue,
     }))
@@ -204,7 +204,7 @@ function transformSkills(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Skill.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'importance']
   )
 }
 
@@ -241,10 +241,10 @@ function transformKnowledge(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Knowledge',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'requiresKnowledge',
       importance: row.dataValue,
     }))
@@ -252,7 +252,7 @@ function transformKnowledge(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Knowledge.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'importance']
   )
 }
 
@@ -289,10 +289,10 @@ function transformAbilities(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Ability',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'requiresAbility',
       importance: row.dataValue,
     }))
@@ -300,7 +300,7 @@ function transformAbilities(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Ability.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'importance']
   )
 }
 
@@ -337,10 +337,10 @@ function transformWorkActivities(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'WorkActivity',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'involvesActivity',
       importance: row.dataValue,
     }))
@@ -348,7 +348,7 @@ function transformWorkActivities(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.WorkActivity.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'importance']
   )
 }
 
@@ -385,10 +385,10 @@ function transformWorkStyles(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'WorkStyle',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'requiresStyle',
       importance: row.dataValue,
     }))
@@ -396,7 +396,7 @@ function transformWorkStyles(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.WorkStyle.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'importance']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'importance']
   )
 }
 
@@ -433,10 +433,10 @@ function transformWorkValues(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'WorkValue',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'values',
       extent: row.dataValue,
     }))
@@ -444,7 +444,7 @@ function transformWorkValues(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.WorkValue.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'extent']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'extent']
   )
 }
 
@@ -481,10 +481,10 @@ function transformInterests(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Interest',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'associatedInterest',
       score: row.dataValue,
     }))
@@ -492,7 +492,7 @@ function transformInterests(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Interest.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'score']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'score']
   )
 }
 
@@ -530,7 +530,7 @@ function transformTechnologySkills(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Technology',
       toId: toWikipediaStyleId(row.example),
@@ -542,7 +542,7 @@ function transformTechnologySkills(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Technology.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType', 'hotTechnology', 'inDemand']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'hotTechnology', 'inDemand']
   )
 }
 
@@ -585,17 +585,17 @@ function transformJobZones(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'JobZone',
-      toCode: row.jobZone,
+      toId: row.jobZone,
       relationshipType: 'inJobZone',
     }))
 
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.JobZone.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -606,10 +606,10 @@ function transformRelatedOccupations(): void {
   const relationships: Record<string, string>[] = data.map(row => ({
     fromNs: NS,
     fromType: 'Occupation',
-    fromCode: row.oNETSOCCode,
+    fromId: row.oNETSOCCode,
     toNs: NS,
     toType: 'Occupation',
-    toCode: row.relatedONETSOCCode,
+    toId: row.relatedONETSOCCode,
     relationshipType: 'relatedTo',
     relatednessScore: row.relatednessScore,
   }))
@@ -617,7 +617,7 @@ function transformRelatedOccupations(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Occupation.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'relatednessScore']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'relatednessScore']
   )
 }
 
@@ -664,10 +664,10 @@ function transformTasks(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Task',
-      toCode: row.taskID,
+      toId: row.taskID,
       relationshipType: 'performsTask',
       taskType: row.taskType || '',
     }))
@@ -675,7 +675,7 @@ function transformTasks(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Task.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'taskType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'taskType']
   )
 }
 
@@ -728,7 +728,7 @@ function transformTools(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Tool',
       toId: toWikipediaStyleId(row.example),
@@ -738,7 +738,7 @@ function transformTools(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Tool.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -865,10 +865,10 @@ function transformWorkContext(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'WorkContext',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'hasContext',
       context: row.dataValue,
     }))
@@ -876,7 +876,7 @@ function transformWorkContext(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.WorkContext.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'context']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'context']
   )
 }
 
@@ -913,10 +913,10 @@ function transformEducation(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Occupation',
-      fromCode: row.oNETSOCCode,
+      fromId: row.oNETSOCCode,
       toNs: NS,
       toType: 'Education',
-      toCode: row.elementID,
+      toId: row.elementID,
       relationshipType: 'requiresEducation',
       category: row.category || '',
       value: row.dataValue || '',
@@ -925,7 +925,7 @@ function transformEducation(): void {
   writeTSV(
     join(REL_DIR, 'ONET.Occupation.Education.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'category', 'value']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'category', 'value']
   )
 }
 
@@ -1032,17 +1032,17 @@ function transformEmergingTasks(): void {
       .map(row => ({
         fromNs: NS,
         fromType: 'Occupation',
-        fromCode: row.oNETSOCCode,
+        fromId: row.oNETSOCCode,
         toNs: NS,
         toType: 'EmergingTask',
-        toCode: row.taskID,
+        toId: row.taskID,
         relationshipType: 'hasEmergingTask',
       }))
 
     writeTSV(
       join(REL_DIR, 'ONET.Occupation.EmergingTask.tsv'),
       relationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   } catch (e) {
     console.log('Emerging tasks file not found, skipping...')
@@ -1235,6 +1235,144 @@ function transformSkillWorkActivityRelationships(): void {
   }
 }
 
+interface AbilityToWorkContext {
+  abilitiesElementID: string
+  abilitiesElementName: string
+  workContextElementID: string
+  workContextElementName: string
+}
+
+function transformAbilityWorkContextRelationships(): void {
+  console.log('Extracting Ability → WorkContext relationships...')
+
+  try {
+    const data = parseTSV<AbilityToWorkContext>(join(SOURCE_DIR, 'ONET.AbilitiesToWorkContext.tsv'))
+
+    const relationships: RelationshipRecord[] = data
+      .filter(row => row.abilitiesElementName && row.workContextElementName)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'Ability',
+        fromId: toWikipediaStyleId(row.abilitiesElementName),
+        toNs: NS,
+        toType: 'WorkContext',
+        toId: toWikipediaStyleId(row.workContextElementName),
+        relationshipType: 'requiredIn',
+      }))
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.Ability.WorkContext.tsv'), relationships)
+    console.log(`Wrote ${relationships.length} Ability → WorkContext relationships`)
+  } catch (e) {
+    console.log('AbilitiesToWorkContext file not found, skipping...')
+  }
+}
+
+interface SkillToWorkContext {
+  skillsElementID: string
+  skillsElementName: string
+  workContextElementID: string
+  workContextElementName: string
+}
+
+function transformSkillWorkContextRelationships(): void {
+  console.log('Extracting Skill → WorkContext relationships...')
+
+  try {
+    const data = parseTSV<SkillToWorkContext>(join(SOURCE_DIR, 'ONET.SkillsToWorkContext.tsv'))
+
+    const relationships: RelationshipRecord[] = data
+      .filter(row => row.skillsElementName && row.workContextElementName)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'Skill',
+        fromId: toWikipediaStyleId(row.skillsElementName),
+        toNs: NS,
+        toType: 'WorkContext',
+        toId: toWikipediaStyleId(row.workContextElementName),
+        relationshipType: 'requiredIn',
+      }))
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.Skill.WorkContext.tsv'), relationships)
+    console.log(`Wrote ${relationships.length} Skill → WorkContext relationships`)
+  } catch (e) {
+    console.log('SkillsToWorkContext file not found, skipping...')
+  }
+}
+
+function transformONETNAICSRelationships(): void {
+  console.log('Extracting ONET Occupation → NAICS Industry relationships...')
+
+  try {
+    // Read SOC to NAICS crosswalk (uses SOC codes like "11-3051")
+    interface SOCNAICSRecord {
+      fromNs: string
+      fromType: string
+      fromCode: string
+      toNs: string
+      toType: string
+      toCode: string
+      relationshipType: string
+    }
+    const socToNaics = parseTSV<SOCNAICSRecord>(join(REL_DIR, 'SOC.NAICS.tsv'))
+
+    // Read ONET Occupations to get code-to-id mapping
+    const onetOccupations = parseTSV<StandardRecord>(join(DATA_DIR, 'ONET.Occupations.tsv'))
+
+    // Read NAICS Industries to get code-to-id mapping
+    const naicsIndustries = parseTSV<StandardRecord>(join(DATA_DIR, 'NAICS.Industries.tsv'))
+
+    // Build lookup maps
+    const naicsCodeToIdType = new Map<string, { id: string; type: string }>()
+    for (const industry of naicsIndustries) {
+      naicsCodeToIdType.set(industry.code, { id: industry.id, type: industry.type })
+    }
+
+    // Build SOC base code to NAICS code map
+    const socToNaicsMap = new Map<string, Array<{ naicsCode: string; naicsType: string }>>()
+    for (const row of socToNaics) {
+      if (!socToNaicsMap.has(row.fromCode)) {
+        socToNaicsMap.set(row.fromCode, [])
+      }
+      socToNaicsMap.get(row.fromCode)!.push({
+        naicsCode: row.toCode,
+        naicsType: row.toType,
+      })
+    }
+
+    // Create ONET → NAICS relationships
+    const relationships: RelationshipRecord[] = []
+
+    for (const occupation of onetOccupations) {
+      // O*NET codes like "11-3051.00" - extract base SOC code "11-3051"
+      const socBaseCode = occupation.code.substring(0, occupation.code.lastIndexOf('.'))
+
+      // Find matching NAICS industries for this SOC code
+      const naicsMatches = socToNaicsMap.get(socBaseCode)
+      if (naicsMatches) {
+        for (const match of naicsMatches) {
+          const naicsInfo = naicsCodeToIdType.get(match.naicsCode)
+          if (naicsInfo) {
+            relationships.push({
+              fromNs: NS,
+              fromType: 'Occupation',
+              fromId: occupation.id,
+              toNs: NAMESPACES.NAICS,
+              toType: naicsInfo.type,
+              toId: naicsInfo.id,
+              relationshipType: 'employed_in',
+            })
+          }
+        }
+      }
+    }
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.Occupation.NAICS.Industry.tsv'), relationships)
+    console.log(`Wrote ${relationships.length} ONET Occupation → NAICS Industry relationships`)
+  } catch (e) {
+    console.log(`Error creating ONET → NAICS relationships: ${e}`)
+  }
+}
+
 export async function transformONET(): Promise<void> {
   console.log('=== ONET Transformation ===')
   ensureOutputDirs()
@@ -1268,6 +1406,9 @@ export async function transformONET(): Promise<void> {
   transformIWADWARelationships()
   transformAbilityWorkActivityRelationships()
   transformSkillWorkActivityRelationships()
+  transformAbilityWorkContextRelationships()
+  transformSkillWorkContextRelationships()
+  transformONETNAICSRelationships()
 
   console.log('=== ONET Transformation Complete ===\n')
 }

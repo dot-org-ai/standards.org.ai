@@ -93,10 +93,10 @@ function transformProcesses(): void {
         relationships.push({
           fromNs: NS,
           fromType: getProcessLevel(row.hierarchyId),
-          fromCode: row.pcfId,
+          fromId: row.pcfId,
           toNs: NS,
           toType: getProcessLevel(parentHierarchyId),
-          toCode: parent.pcfId,
+          toId: parent.pcfId,
           relationshipType: 'childOf',
           hierarchyId: row.hierarchyId,
         })
@@ -107,7 +107,7 @@ function transformProcesses(): void {
   writeTSV(
     join(REL_DIR, 'APQC.Process.Process.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'hierarchyId']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'hierarchyId']
   )
 }
 
@@ -153,17 +153,17 @@ function transformIndustries(): void {
     .map(row => ({
       fromNs: NS,
       fromType: getProcessLevel(row.hierarchyId),
-      fromCode: row.pcfId,
+      fromId: row.pcfId,
       toNs: NS,
       toType: 'Industry',
-      toCode: row.industry.toLowerCase().replace(/\s+/g, '-'),
+      toId: row.industry.toLowerCase().replace(/\s+/g, '-'),
       relationshipType: 'applicableTo',
     }))
 
   writeTSV(
     join(REL_DIR, 'APQC.Process.Industry.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -217,10 +217,10 @@ function transformMetrics(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'Process',
-      fromCode: row.processElementID,
+      fromId: row.processElementID,
       toNs: NS,
       toType: 'Metric',
-      toCode: row.metricID,
+      toId: row.metricID,
       relationshipType: 'measuredBy',
       category: row.metricCategory,
     }))
@@ -228,7 +228,7 @@ function transformMetrics(): void {
   writeTSV(
     join(REL_DIR, 'APQC.Process.Metric.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType', 'category']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'category']
   )
 }
 

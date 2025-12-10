@@ -20,6 +20,9 @@
     "generate:un": "bun run .scripts/un.ts",
     "generate:iana": "bun run .scripts/iana.ts",
     "generate:census": "bun run .scripts/us-census.ts",
+    "generate:sec": "bun run .scripts/us-sec.ts",
+    "generate:sba": "bun run .scripts/us-sba.ts",
+    "generate:sic-naics": "bun run .scripts/sic-naics-crosswalk.ts",
     "generate:w3c": "bun run .scripts/w3c-semantic.ts",
     "generate:w3c-css": "bun run .scripts/w3c-css.ts",
     "generate:w3c-accessibility": "bun run .scripts/w3c-accessibility.ts",
@@ -27,7 +30,11 @@
     "generate:ecommerce": "bun run .scripts/ecommerce.ts",
     "generate:finance": "bun run .scripts/finance.ts",
     "generate:education": "bun run .scripts/education.ts",
-    "generate:edi": "bun run .scripts/edi.ts"
+    "generate:edi": "bun run .scripts/edi.ts",
+    "generate:healthcare": "bun run .scripts/generate.ts healthcare",
+    "generate:healthcare-fhir": "bun run .scripts/healthcare-fhir.ts",
+    "generate:healthcare-drugs": "bun run .scripts/healthcare-drugs.ts",
+    "generate:healthcare-terminology": "bun run .scripts/healthcare-terminology.ts"
   },
   "devDependencies": {
     "bun-types": "latest"

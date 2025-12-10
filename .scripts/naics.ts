@@ -114,10 +114,10 @@ function transformIndustries(descMap: Map<string, string>): void {
       relationships.push({
         fromNs: NS,
         fromType: getNAICSLevel(code),
-        fromCode: code,
+        fromId: code,
         toNs: NS,
         toType: getNAICSLevel(parentCode),
-        toCode: parentCode,
+        toId: parentCode,
         relationshipType: 'childOf',
       })
     }
@@ -126,7 +126,7 @@ function transformIndustries(descMap: Map<string, string>): void {
   writeTSV(
     join(REL_DIR, 'NAICS.Industry.Industry.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 

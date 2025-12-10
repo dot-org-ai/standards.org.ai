@@ -5,6 +5,7 @@
 
 import { join } from 'path'
 import {
+  NAMESPACES,
   StandardRecord,
   RelationshipRecord,
   writeStandardTSV,

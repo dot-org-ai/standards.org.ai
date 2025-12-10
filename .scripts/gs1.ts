@@ -220,10 +220,10 @@ function transformGPCHierarchy(): void {
       hierarchyRelationships.push({
         fromNs: NS,
         fromType: 'Family',
-        fromCode: row.familyCode,
+        fromId: row.familyCode,
         toNs: NS,
         toType: 'Segment',
-        toCode: row.segmentCode,
+        toId: row.segmentCode,
         relationshipType: 'childOf',
       })
     }
@@ -235,10 +235,10 @@ function transformGPCHierarchy(): void {
       hierarchyRelationships.push({
         fromNs: NS,
         fromType: 'Class',
-        fromCode: row.classCode,
+        fromId: row.classCode,
         toNs: NS,
         toType: 'Family',
-        toCode: row.familyCode,
+        toId: row.familyCode,
         relationshipType: 'childOf',
       })
     }
@@ -250,10 +250,10 @@ function transformGPCHierarchy(): void {
       hierarchyRelationships.push({
         fromNs: NS,
         fromType: 'Brick',
-        fromCode: row.brickCode,
+        fromId: row.brickCode,
         toNs: NS,
         toType: 'Class',
-        toCode: row.classCode,
+        toId: row.classCode,
         relationshipType: 'childOf',
       })
     }
@@ -262,7 +262,7 @@ function transformGPCHierarchy(): void {
   writeTSV(
     join(REL_DIR, 'GS1.Hierarchy.tsv'),
     hierarchyRelationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 
   // Write brick-attribute relationships
@@ -277,10 +277,10 @@ function transformGPCHierarchy(): void {
         brickAttributeRelationships.push({
           fromNs: NS,
           fromType: 'Brick',
-          fromCode: row.brickCode,
+          fromId: row.brickCode,
           toNs: NS,
           toType: 'Attribute',
-          toCode: row.attributeCode,
+          toId: row.attributeCode,
           relationshipType: 'hasAttribute',
         })
       }
@@ -290,7 +290,7 @@ function transformGPCHierarchy(): void {
   writeTSV(
     join(REL_DIR, 'GS1.Brick.Attribute.tsv'),
     brickAttributeRelationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -342,17 +342,17 @@ function transformLocationTypes(): void {
       .map(row => ({
         fromNs: NS,
         fromType: 'LocationType',
-        fromCode: row.id,
+        fromId: row.id,
         toNs: NS,
         toType: 'LocationType',
-        toCode: row.parentType,
+        toId: row.parentType,
         relationshipType: 'subtypeOf',
       }))
 
     writeTSV(
       join(REL_DIR, 'GS1.LocationType.LocationType.tsv'),
       relationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   } catch (e) {
     console.log('GS1.Location.Types.tsv not found, skipping...')

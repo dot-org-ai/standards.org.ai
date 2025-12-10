@@ -138,10 +138,10 @@ function transformEmployment(): void {
       relationships.push({
         fromNs: NS,
         fromType: getSOCLevel(code),
-        fromCode: code,
+        fromId: code,
         toNs: NS,
         toType: getSOCLevel(parentCode),
-        toCode: parentCode,
+        toId: parentCode,
         relationshipType: 'childOf',
       })
     }
@@ -150,7 +150,7 @@ function transformEmployment(): void {
   writeTSV(
     join(REL_DIR, 'BLS.Occupation.Occupation.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 
   // Write BLS to ONET occupation linkages
@@ -164,10 +164,10 @@ function transformEmployment(): void {
       return {
         fromNs: NS,
         fromType: getSOCLevel(row.socCode),
-        fromCode: row.socCode,
+        fromId: row.socCode,
         toNs: NAMESPACES.ONET,
         toType: 'Occupation',
-        toCode: onetCode,
+        toId: onetCode,
         relationshipType: 'sameAs',
       }
     })
@@ -175,7 +175,7 @@ function transformEmployment(): void {
   writeTSV(
     join(REL_DIR, 'BLS.ONET.Occupation.tsv'),
     onetRelationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -344,7 +344,7 @@ function transformEducation(): void {
           relationships.push({
             fromNs: NS,
             fromType: getSOCLevel(row.OCC_CODE),
-            fromCode: row.OCC_CODE,
+            fromId: row.OCC_CODE,
             toNs: NS,
             toType: 'Education',
             toId: toWikipediaStyleId(eduLevel.name),
@@ -360,7 +360,7 @@ function transformEducation(): void {
     writeTSV(
       join(REL_DIR, 'BLS.Occupation.Education.tsv'),
       relationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType', 'percentage']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType', 'percentage']
     )
   }
 }

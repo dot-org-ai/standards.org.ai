@@ -264,17 +264,17 @@ function transformHTSHeadings(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'HTSHeading',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'HTSChapter',
-      toCode: row.chapter,
+      toId: row.chapter,
       relationshipType: 'childOf',
     }))
 
   writeTSV(
     join(REL_DIR, 'USITC.Heading.Chapter.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -312,17 +312,17 @@ function transformHTSSubheadings(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'HTSSubheading',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'HTSHeading',
-      toCode: row.heading,
+      toId: row.heading,
       relationshipType: 'childOf',
     }))
 
   writeTSV(
     join(REL_DIR, 'USITC.Subheading.Heading.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -363,17 +363,17 @@ function transformHTSCodes(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'HTSCode',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'HTSSubheading',
-      toCode: row.subheading,
+      toId: row.subheading,
       relationshipType: 'childOf',
     }))
 
   writeTSV(
     join(REL_DIR, 'USITC.Code.Subheading.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -618,17 +618,17 @@ function transformScheduleB(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'ScheduleB',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'HTSCode',
-      toCode: row.htsEquivalent,
+      toId: row.htsEquivalent,
       relationshipType: 'equivalentTo',
     }))
 
   writeTSV(
     join(REL_DIR, 'USITC.ScheduleB.HTS.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 

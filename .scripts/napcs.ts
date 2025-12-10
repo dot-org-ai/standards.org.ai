@@ -80,10 +80,10 @@ function transformProducts(): void {
       relationships.push({
         fromNs: NS,
         fromType: getNAPCSType(row.Level),
-        fromCode: row.Code,
+        fromId: row.Code,
         toNs: NS,
         toType: getNAPCSType(parent.Level),
-        toCode: row.Parent,
+        toId: row.Parent,
         relationshipType: 'childOf',
       })
     }
@@ -92,7 +92,7 @@ function transformProducts(): void {
   writeTSV(
     join(REL_DIR, 'NAPCS.Product.Product.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 

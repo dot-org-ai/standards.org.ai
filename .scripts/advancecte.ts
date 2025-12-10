@@ -132,7 +132,7 @@ function transformSOCCareerClusterCrosswalk(): void {
         socClusterRels.push({
           fromNs: NAMESPACES.ONET,
           fromType: 'Occupation',
-          fromCode: row.sOCCode,
+          fromId: row.sOCCode,
           toNs: NS,
           toType: 'CareerCluster',
           toId: toWikipediaStyleId(row.careerCluster),
@@ -144,7 +144,7 @@ function transformSOCCareerClusterCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'SOC.CareerCluster.tsv'),
       socClusterRels,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
 
     // Write SOC -> SubCluster relationships
@@ -160,7 +160,7 @@ function transformSOCCareerClusterCrosswalk(): void {
         socSubClusterRels.push({
           fromNs: NAMESPACES.ONET,
           fromType: 'Occupation',
-          fromCode: row.sOCCode,
+          fromId: row.sOCCode,
           toNs: NS,
           toType: 'SubCluster',
           toId: toWikipediaStyleId(row.subCluster),
@@ -172,7 +172,7 @@ function transformSOCCareerClusterCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'SOC.SubCluster.tsv'),
       socSubClusterRels,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   } catch (e) {
     console.log('Error processing SOC-CareerCluster crosswalk:', e)
@@ -218,7 +218,7 @@ function transformCIPCareerClusterCrosswalk(): void {
         cipClusterRels.push({
           fromNs: NS,
           fromType: 'CIP',
-          fromCode: cipCode,
+          fromId: cipCode,
           toNs: NS,
           toType: 'CareerCluster',
           toId: toWikipediaStyleId(row.careerCluster),
@@ -230,7 +230,7 @@ function transformCIPCareerClusterCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'CIP.CareerCluster.tsv'),
       cipClusterRels,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
 
     // Write CIP -> SubCluster relationships
@@ -247,7 +247,7 @@ function transformCIPCareerClusterCrosswalk(): void {
         cipSubClusterRels.push({
           fromNs: NS,
           fromType: 'CIP',
-          fromCode: cipCode,
+          fromId: cipCode,
           toNs: NS,
           toType: 'SubCluster',
           toId: toWikipediaStyleId(row.subCluster),
@@ -259,7 +259,7 @@ function transformCIPCareerClusterCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'CIP.SubCluster.tsv'),
       cipSubClusterRels,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toId', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   } catch (e) {
     console.log('Error processing CIP-CareerCluster crosswalk:', e)
@@ -286,10 +286,10 @@ function transformFullCrosswalk(): void {
         socCipRels.push({
           fromNs: NAMESPACES.ONET,
           fromType: 'Occupation',
-          fromCode: row.sOCCode,
+          fromId: row.sOCCode,
           toNs: NS,
           toType: 'CIP',
-          toCode: cipCode,
+          toId: cipCode,
           relationshipType: 'trainedBy',
         })
       }
@@ -298,7 +298,7 @@ function transformFullCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'SOC.CIP.tsv'),
       socCipRels,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
 
     // Write SOC-NAICS relationships
@@ -315,10 +315,10 @@ function transformFullCrosswalk(): void {
         socNaicsRels.push({
           fromNs: NAMESPACES.ONET,
           fromType: 'Occupation',
-          fromCode: row.sOCCode,
+          fromId: row.sOCCode,
           toNs: NAMESPACES.NAICS,
           toType: 'Sector',
-          toCode: naicsCode,
+          toId: naicsCode,
           relationshipType: 'employedIn',
         })
       }
@@ -327,7 +327,7 @@ function transformFullCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'SOC.NAICS.tsv'),
       socNaicsRels,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
 
     // Write CareerCluster-NAICS relationships
@@ -347,7 +347,7 @@ function transformFullCrosswalk(): void {
           fromId: toWikipediaStyleId(row.careerCluster),
           toNs: NAMESPACES.NAICS,
           toType: 'Sector',
-          toCode: naicsCode,
+          toId: naicsCode,
           relationshipType: 'associatedWith',
         })
       }
@@ -356,7 +356,7 @@ function transformFullCrosswalk(): void {
     writeTSV(
       join(REL_DIR, 'CareerCluster.NAICS.tsv'),
       ccNaicsRels,
-      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   } catch (e) {
     console.log('Error processing Full Crosswalk:', e)

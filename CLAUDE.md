@@ -16,18 +16,19 @@ bun install
 bun run generate
 
 # Run specific transformations
-bun run generate:onet      # O*NET occupational data
-bun run generate:naics     # NAICS industry classification
-bun run generate:gs1       # GS1 product/location standards
-bun run generate:iso       # ISO standards (countries, currencies, languages)
-bun run generate:un        # UN standards (LOCODE, M49, EDIFACT)
-bun run generate:bls       # BLS employment statistics
-bun run generate:apqc      # APQC process classification
-bun run generate:iana      # IANA timezone database
-bun run generate:w3c       # All W3C web standards
-bun run generate:finance   # Financial standards
-bun run generate:education # Education standards
-bun run generate:edi       # EDI standards
+bun run generate:onet       # O*NET occupational data
+bun run generate:naics      # NAICS industry classification
+bun run generate:gs1        # GS1 product/location standards
+bun run generate:iso        # ISO standards (countries, currencies, languages)
+bun run generate:un         # UN standards (LOCODE, M49, EDIFACT)
+bun run generate:bls        # BLS employment statistics
+bun run generate:apqc       # APQC process classification
+bun run generate:iana       # IANA timezone database
+bun run generate:w3c        # All W3C web standards
+bun run generate:finance    # Financial standards
+bun run generate:education  # Education standards
+bun run generate:edi        # EDI standards
+bun run generate:sic-naics  # SIC to NAICS crosswalk (Census Bureau)
 
 # Run validation tests
 bun test

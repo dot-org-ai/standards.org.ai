@@ -498,17 +498,17 @@ function transformSICMajorGroups(): void {
   const relationships: Record<string, string>[] = SIC_MAJOR_GROUPS.map(group => ({
     fromNs: NS,
     fromType: 'SICMajorGroup',
-    fromCode: group.code,
+    fromId: group.code,
     toNs: NS,
     toType: 'SICDivision',
-    toCode: group.division,
+    toId: group.division,
     relationshipType: 'childOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'SEC.MajorGroup.Division.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -555,10 +555,10 @@ function transformSICCodes(): void {
     .map(row => ({
       fromNs: NS,
       fromType: 'SICCode',
-      fromCode: row.code,
+      fromId: row.code,
       toNs: NS,
       toType: 'SICMajorGroup',
-      toCode: row.major_group,
+      toId: row.major_group,
       relationshipType: 'childOf',
     }))
 
@@ -566,7 +566,7 @@ function transformSICCodes(): void {
     writeTSV(
       join(REL_DIR, 'SEC.SICCode.MajorGroup.tsv'),
       relationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
     console.log(`Wrote ${relationships.length} SIC Code -> Major Group relationships`)
   }
@@ -578,17 +578,17 @@ function transformFormCategoryRelationships(): void {
   const relationships: Record<string, string>[] = SEC_FORMS.map(form => ({
     fromNs: NS,
     fromType: 'FormType',
-    fromCode: form.code,
+    fromId: form.code,
     toNs: NS,
     toType: 'FilingCategory',
-    toCode: form.category,
+    toId: form.category,
     relationshipType: 'memberOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'SEC.FormType.FilingCategory.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 

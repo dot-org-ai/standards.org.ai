@@ -353,10 +353,10 @@ function transformCSSUnits(): void {
         unitTypeRelationships.push({
           fromNs: NS,
           fromType: 'CSSUnit',
-          fromCode: row.name,
+          fromId: row.name,
           toNs: NS,
           toType: 'CSSDataType',
-          toCode: dataType,
+          toId: dataType,
           relationshipType: 'unitOf',
         })
       }
@@ -367,7 +367,7 @@ function transformCSSUnits(): void {
     writeTSV(
       join(REL_DIR, 'W3C.CSS.Unit.DataType.tsv'),
       unitTypeRelationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   }
 }
@@ -399,10 +399,10 @@ function createCSSRelationships(): void {
       relationships.push({
         fromNs: NS,
         fromType: 'CSSProperty',
-        fromCode: property,
+        fromId: property,
         toNs: NS,
         toType: 'CSSDataType',
-        toCode: dataType,
+        toId: dataType,
         relationshipType: 'acceptsType',
       })
     }
@@ -412,7 +412,7 @@ function createCSSRelationships(): void {
     writeTSV(
       join(REL_DIR, 'W3C.CSS.Property.DataType.tsv'),
       relationships,
-      ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
     )
   }
 }

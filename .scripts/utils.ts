@@ -68,6 +68,21 @@ export const NAMESPACES = {
   // Ecommerce (canonical)
   ECLASS: 'commerce.org.ai',
   ETIM: 'commerce.org.ai',
+
+  // Superset namespaces
+  Occupations: 'occupations.org.ai',
+  Industries: 'industries.org.ai',
+  Products: 'products.org.ai',
+  Services: 'services.org.ai',
+  Skills: 'skills.org.ai',
+  Process: 'process.org.ai',
+
+  // Aggregation domains
+  Web: 'web.org.ai',
+  Tech: 'tech.org.ai',
+  Logistics: 'logistics.org.ai',
+  Business: 'business.org.ai',
+  Manufacturing: 'manufacturing.org.ai',
 } as const
 
 // Standard output columns

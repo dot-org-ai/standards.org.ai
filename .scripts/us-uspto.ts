@@ -238,17 +238,17 @@ function transformCPCClasses(): void {
   const relationships: Record<string, string>[] = sampleClasses.map(cls => ({
     fromNs: NS,
     fromType: 'CPCClass',
-    fromCode: cls.code,
+    fromId: cls.code,
     toNs: NS,
     toType: 'CPCSection',
-    toCode: cls.section,
+    toId: cls.section,
     relationshipType: 'partOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'USPTO.CPC.Class.Section.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -285,17 +285,17 @@ function transformCPCSubclasses(): void {
   const relationships: Record<string, string>[] = sampleSubclasses.map(sub => ({
     fromNs: NS,
     fromType: 'CPCSubclass',
-    fromCode: sub.code,
+    fromId: sub.code,
     toNs: NS,
     toType: 'CPCClass',
-    toCode: sub.class,
+    toId: sub.class,
     relationshipType: 'partOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'USPTO.CPC.Subclass.Class.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -332,17 +332,17 @@ function transformCPCGroups(): void {
   const subclassRelationships: Record<string, string>[] = sampleGroups.map(group => ({
     fromNs: NS,
     fromType: 'CPCGroup',
-    fromCode: group.code,
+    fromId: group.code,
     toNs: NS,
     toType: 'CPCSubclass',
-    toCode: group.subclass,
+    toId: group.subclass,
     relationshipType: 'partOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'USPTO.CPC.Group.Subclass.tsv'),
     subclassRelationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 
   // Create parent-child relationships for groups
@@ -351,17 +351,17 @@ function transformCPCGroups(): void {
     .map(group => ({
       fromNs: NS,
       fromType: 'CPCGroup',
-      fromCode: group.code,
+      fromId: group.code,
       toNs: NS,
       toType: 'CPCGroup',
-      toCode: group.parent!,
+      toId: group.parent!,
       relationshipType: 'childOf',
     }))
 
   writeTSV(
     join(REL_DIR, 'USPTO.CPC.Group.Group.tsv'),
     parentRelationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -420,17 +420,17 @@ function transformUSPCSubclasses(): void {
   const relationships: Record<string, string>[] = sampleSubclasses.map(sub => ({
     fromNs: NS,
     fromType: 'USPCSubclass',
-    fromCode: sub.code,
+    fromId: sub.code,
     toNs: NS,
     toType: 'USPCClass',
-    toCode: sub.class,
+    toId: sub.class,
     relationshipType: 'partOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'USPTO.USPC.Subclass.Class.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 
@@ -588,17 +588,17 @@ function transformLocarnoSubclasses(): void {
   const relationships: Record<string, string>[] = sampleSubclasses.map(sub => ({
     fromNs: NS,
     fromType: 'LocarnoSubclass',
-    fromCode: sub.code,
+    fromId: sub.code,
     toNs: NS,
     toType: 'LocarnoClass',
-    toCode: sub.class,
+    toId: sub.class,
     relationshipType: 'partOf',
   }))
 
   writeTSV(
     join(REL_DIR, 'USPTO.Locarno.Subclass.Class.tsv'),
     relationships,
-    ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+    ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
   )
 }
 

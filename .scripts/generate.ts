@@ -40,9 +40,14 @@ import { transformW3CAccessibility } from './w3c-accessibility'
 import { transformW3CCredentials } from './w3c-credentials'
 import { transformW3CWoT } from './w3c-wot'
 import { transformHealthcareFHIR } from './healthcare-fhir'
+import { transformHealthcareDrugs } from './healthcare-drugs'
+import { transformHealthcareTerminology } from './healthcare-terminology'
 import { transformFinance } from './finance'
 import { transformEducation } from './education'
 import { transformCensus } from './us-census'
+import { transformSEC } from './us-sec'
+import { transformSBA } from './us-sba'
+import { transformSICNAICSCrosswalk } from './sic-naics-crosswalk'
 import { ensureOutputDirs } from './utils'
 
 async function main(): Promise<void> {
@@ -77,6 +82,9 @@ async function main(): Promise<void> {
     { name: 'finance', fn: transformFinance, condition: runAll || sources.has('finance') },
     { name: 'education', fn: transformEducation, condition: runAll || sources.has('education') },
     { name: 'census', fn: transformCensus, condition: runAll || sources.has('census') || sources.has('us-census') },
+    { name: 'sec', fn: transformSEC, condition: runAll || sources.has('sec') || sources.has('us-sec') },
+    { name: 'sba', fn: transformSBA, condition: runAll || sources.has('sba') || sources.has('us-sba') },
+    { name: 'sic-naics-crosswalk', fn: transformSICNAICSCrosswalk, condition: runAll || sources.has('sic-naics') || sources.has('crosswalk') },
     { name: 'w3c-html', fn: transformW3CHTML, condition: runAll || sources.has('w3c') || sources.has('w3c-html') },
     { name: 'w3c-css', fn: transformW3CCSS, condition: runAll || sources.has('w3c') || sources.has('w3c-css') },
     { name: 'w3c-semantic', fn: transformW3CSemantic, condition: runAll || sources.has('w3c') || sources.has('w3c-semantic') },
@@ -84,6 +92,8 @@ async function main(): Promise<void> {
     { name: 'w3c-credentials', fn: transformW3CCredentials, condition: runAll || sources.has('w3c') || sources.has('w3c-credentials') },
     { name: 'w3c-wot', fn: transformW3CWoT, condition: runAll || sources.has('w3c') || sources.has('w3c-wot') },
     { name: 'healthcare-fhir', fn: transformHealthcareFHIR, condition: runAll || sources.has('healthcare') || sources.has('fhir') || sources.has('healthcare-fhir') },
+    { name: 'healthcare-drugs', fn: transformHealthcareDrugs, condition: runAll || sources.has('healthcare') || sources.has('healthcare-drugs') },
+    { name: 'healthcare-terminology', fn: transformHealthcareTerminology, condition: runAll || sources.has('healthcare') || sources.has('healthcare-terminology') },
   ]
 
   let successCount = 0
@@ -146,16 +156,24 @@ Sources:
   education         Education standards (ISCED, CEDS, CASE)
   census            US Census Bureau geographic and business standards
   us-census         Alias for census
+  sec               SEC filing forms, SIC codes, and filer types
+  us-sec            Alias for sec
+  sba               SBA size standards, business types, and contract types
+  us-sba            Alias for sba
+  sic-naics         SIC to NAICS crosswalk relationships (Census Bureau)
+  crosswalk         Alias for sic-naics
   w3c               All W3C web standards (runs all w3c-* modules)
   w3c-html          W3C HTML elements and attributes
   w3c-css           W3C CSS properties and values
   w3c-semantic      W3C Semantic Web vocabularies (RDF, OWL, SKOS)
   w3c-accessibility W3C Web Accessibility standards (WCAG, ARIA, ATAG)
   w3c-credentials   W3C Verifiable Credentials and DID
-  w3c-wot           W3C Web of Things (Thing Descriptions, protocols)
-  healthcare-fhir   HL7 FHIR healthcare interoperability standards
-  healthcare        All Healthcare standards (runs all healthcare-* modules)
-  fhir              Alias for healthcare-fhir
+  w3c-wot                W3C Web of Things (Thing Descriptions, protocols)
+  healthcare             All Healthcare standards (runs all healthcare-* modules)
+  healthcare-fhir        HL7 FHIR healthcare interoperability standards
+  healthcare-drugs       Healthcare drug and provider standards (NDC, RxNorm, NPI, CPT, HCPCS)
+  healthcare-terminology Healthcare terminology standards (ICD, SNOMED, LOINC)
+  fhir                   Alias for healthcare-fhir
 
 Examples:
   bun run .scripts/generate.ts                    # Transform all sources

@@ -186,10 +186,10 @@ function transformEtim(): void {
         .map(row => ({
           fromNs: ETIM_NS,
           fromType: 'Class',
-          fromCode: row.class_code,
+          fromId: row.class_code,
           toNs: ETIM_NS,
           toType: 'Group',
-          toCode: row.group,
+          toId: row.group,
           relationshipType: 'childOf',
         }))
 
@@ -197,7 +197,7 @@ function transformEtim(): void {
         writeTSV(
           join(REL_DIR, 'Ecommerce.ETIM.Class.Group.tsv'),
           classGroupRels,
-          ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+          ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
         )
         console.log(`Wrote ${classGroupRels.length} ETIM class-group relationships`)
       }
@@ -263,10 +263,10 @@ function transformSchemaOrg(): void {
         .map(row => ({
           fromNs: SCHEMA_NS,
           fromType: 'Type',
-          fromCode: row.id.replace('schema:', ''),
+          fromId: row.id.replace('schema:', ''),
           toNs: SCHEMA_NS,
           toType: 'Type',
-          toCode: row.parent.replace('schema:', ''),
+          toId: row.parent.replace('schema:', ''),
           relationshipType: 'subtypeOf',
         }))
 
@@ -274,7 +274,7 @@ function transformSchemaOrg(): void {
         writeTSV(
           join(REL_DIR, 'Ecommerce.SchemaOrg.Type.Type.tsv'),
           typeHierarchyRels,
-          ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+          ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
         )
         console.log(`Wrote ${typeHierarchyRels.length} Schema.org type hierarchy relationships`)
       }
@@ -324,10 +324,10 @@ function transformSchemaOrg(): void {
               typePropRels.push({
                 fromNs: SCHEMA_NS,
                 fromType: 'Type',
-                fromCode: domain,
+                fromId: domain,
                 toNs: SCHEMA_NS,
                 toType: 'Property',
-                toCode: row.id.replace('schema:', ''),
+                toId: row.id.replace('schema:', ''),
                 relationshipType: 'hasProperty',
               })
             }
@@ -339,7 +339,7 @@ function transformSchemaOrg(): void {
         writeTSV(
           join(REL_DIR, 'Ecommerce.SchemaOrg.Type.Property.tsv'),
           typePropRels,
-          ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+          ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
         )
         console.log(`Wrote ${typePropRels.length} Schema.org type-property relationships`)
       }
@@ -415,10 +415,10 @@ function transformSchemaOrg(): void {
         .map(row => ({
           fromNs: SCHEMA_NS,
           fromType: 'Enumeration',
-          fromCode: row.enumeration,
+          fromId: row.enumeration,
           toNs: SCHEMA_NS,
           toType: 'EnumerationMember',
-          toCode: row.id,
+          toId: row.id,
           relationshipType: 'hasMember',
         }))
 
@@ -426,7 +426,7 @@ function transformSchemaOrg(): void {
         writeTSV(
           join(REL_DIR, 'Ecommerce.SchemaOrg.Enumeration.Member.tsv'),
           enumMemberRels,
-          ['fromNs', 'fromType', 'fromCode', 'toNs', 'toType', 'toCode', 'relationshipType']
+          ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
         )
         console.log(`Wrote ${enumMemberRels.length} Schema.org enumeration-member relationships`)
       }
