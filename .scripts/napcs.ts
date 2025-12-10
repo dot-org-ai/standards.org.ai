@@ -84,7 +84,7 @@ function transformProducts(): void {
         toNs: NS,
         toType: getNAPCSType(parent.Level),
         toCode: row.Parent,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }

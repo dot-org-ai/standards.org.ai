@@ -184,7 +184,7 @@ function createCategoryRelationships(): Record<string, string>[] {
     toNs: NS,
     toType: 'ProcessCategory',
     toId: toWikipediaStyleId(proc.category),
-    relationshipType: 'belongs_to',
+    relationshipType: 'belongsTo',
   }))
 }
 

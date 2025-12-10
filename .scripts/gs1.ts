@@ -224,7 +224,7 @@ function transformGPCHierarchy(): void {
         toNs: NS,
         toType: 'Segment',
         toCode: row.segmentCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }
@@ -239,7 +239,7 @@ function transformGPCHierarchy(): void {
         toNs: NS,
         toType: 'Family',
         toCode: row.familyCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }
@@ -254,7 +254,7 @@ function transformGPCHierarchy(): void {
         toNs: NS,
         toType: 'Class',
         toCode: row.classCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }
@@ -281,7 +281,7 @@ function transformGPCHierarchy(): void {
           toNs: NS,
           toType: 'Attribute',
           toCode: row.attributeCode,
-          relationshipType: 'has_attribute',
+          relationshipType: 'hasAttribute',
         })
       }
     }
@@ -346,7 +346,7 @@ function transformLocationTypes(): void {
         toNs: NS,
         toType: 'LocationType',
         toCode: row.parentType,
-        relationshipType: 'subtype_of',
+        relationshipType: 'subtypeOf',
       }))
 
     writeTSV(

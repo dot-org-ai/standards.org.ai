@@ -103,7 +103,7 @@ function transformCountries(): void {
         toNs: NAMESPACES.UN,
         toType: 'Region',
         toId: toWikipediaStyleId(record['Region Name']),
-        relationshipType: 'located_in',
+        relationshipType: 'locatedIn',
       })
     }
 
@@ -116,7 +116,7 @@ function transformCountries(): void {
         toNs: NAMESPACES.UN,
         toType: 'SubRegion',
         toId: toWikipediaStyleId(record['Sub-region Name']),
-        relationshipType: 'located_in',
+        relationshipType: 'locatedIn',
       })
     }
 
@@ -129,7 +129,7 @@ function transformCountries(): void {
         toNs: NS,
         toType: 'Currency',
         toId: record['ISO4217-currency_alphabetic_code'],
-        relationshipType: 'uses_currency',
+        relationshipType: 'usesCurrency',
       })
     }
   }

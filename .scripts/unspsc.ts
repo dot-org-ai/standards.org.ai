@@ -126,7 +126,7 @@ function transformUNSPSC(): void {
         toNs: NS,
         toType: 'Segment',
         toCode: row.segmentCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }
@@ -141,7 +141,7 @@ function transformUNSPSC(): void {
         toNs: NS,
         toType: 'Family',
         toCode: row.familyCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }
@@ -156,7 +156,7 @@ function transformUNSPSC(): void {
         toNs: NS,
         toType: 'Class',
         toCode: row.classCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }

@@ -190,7 +190,7 @@ function transformEtim(): void {
           toNs: ETIM_NS,
           toType: 'Group',
           toCode: row.group,
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
         }))
 
       if (classGroupRels.length > 0) {
@@ -267,7 +267,7 @@ function transformSchemaOrg(): void {
           toNs: SCHEMA_NS,
           toType: 'Type',
           toCode: row.parent.replace('schema:', ''),
-          relationshipType: 'subtype_of',
+          relationshipType: 'subtypeOf',
         }))
 
       if (typeHierarchyRels.length > 0) {
@@ -328,7 +328,7 @@ function transformSchemaOrg(): void {
                 toNs: SCHEMA_NS,
                 toType: 'Property',
                 toCode: row.id.replace('schema:', ''),
-                relationshipType: 'has_property',
+                relationshipType: 'hasProperty',
               })
             }
           }
@@ -419,7 +419,7 @@ function transformSchemaOrg(): void {
           toNs: SCHEMA_NS,
           toType: 'EnumerationMember',
           toCode: row.id,
-          relationshipType: 'has_member',
+          relationshipType: 'hasMember',
         }))
 
       if (enumMemberRels.length > 0) {

@@ -97,7 +97,7 @@ function transformProcesses(): void {
           toNs: NS,
           toType: getProcessLevel(parentHierarchyId),
           toCode: parent.pcfId,
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
           hierarchyId: row.hierarchyId,
         })
       }
@@ -157,7 +157,7 @@ function transformIndustries(): void {
       toNs: NS,
       toType: 'Industry',
       toCode: row.industry.toLowerCase().replace(/\s+/g, '-'),
-      relationshipType: 'applicable_to',
+      relationshipType: 'applicableTo',
     }))
 
   writeTSV(
@@ -221,7 +221,7 @@ function transformMetrics(): void {
       toNs: NS,
       toType: 'Metric',
       toCode: row.metricID,
-      relationshipType: 'measured_by',
+      relationshipType: 'measuredBy',
       category: row.metricCategory,
     }))
 

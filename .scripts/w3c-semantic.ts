@@ -381,7 +381,7 @@ async function transformOWL(): Promise<void> {
           toNs: NS,
           toType: 'OWL_Class',
           toId: domainId,
-          relationshipType: 'has_domain',
+          relationshipType: 'hasDomain',
         })
       }
 
@@ -395,7 +395,7 @@ async function transformOWL(): Promise<void> {
           toNs: NS,
           toType: 'OWL_Class',
           toId: rangeId,
-          relationshipType: 'has_range',
+          relationshipType: 'hasRange',
         })
       }
     }

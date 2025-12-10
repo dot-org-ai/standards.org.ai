@@ -142,7 +142,7 @@ function transformEmployment(): void {
         toNs: NS,
         toType: getSOCLevel(parentCode),
         toCode: parentCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }
@@ -168,7 +168,7 @@ function transformEmployment(): void {
         toNs: NAMESPACES.ONET,
         toType: 'Occupation',
         toCode: onetCode,
-        relationshipType: 'same_as',
+        relationshipType: 'sameAs',
       }
     })
 
@@ -252,7 +252,7 @@ function transformIndustries(): void {
         toNs: NAMESPACES.NAICS,
         toType: 'Sector',
         toId: naicsCode,
-        relationshipType: 'same_as',
+        relationshipType: 'sameAs',
       }
     })
 
@@ -348,7 +348,7 @@ function transformEducation(): void {
             toNs: NS,
             toType: 'Education',
             toId: toWikipediaStyleId(eduLevel.name),
-            relationshipType: 'has_education_distribution',
+            relationshipType: 'hasEducationDistribution',
             percentage: edu.value,
           })
         }
@@ -400,7 +400,7 @@ function transformSTEM(): void {
       toNs: NS,
       toType: 'STEM',
       toId: toWikipediaStyleId(row.OCC_TITLE),
-      relationshipType: 'is_stem_occupation',
+      relationshipType: 'isStemOccupation',
     }))
 
   if (relationships.length > 0) {

@@ -185,7 +185,7 @@ function transformDivisions(): void {
     toNs: NS,
     toType: 'Region',
     toId: toWikipediaStyleId(REGIONS.find(r => r.code === division.region)?.name || ''),
-    relationshipType: 'in_region',
+    relationshipType: 'inRegion',
   }))
 
   writeRelationshipTSV(join(REL_DIR, 'Census.Division.Region.tsv'), relationships)
@@ -236,7 +236,7 @@ function transformCounties(): void {
       toNs: NS,
       toType: 'State',
       toId: toWikipediaStyleId(row.state),
-      relationshipType: 'in_state',
+      relationshipType: 'inState',
     }))
 
   writeRelationshipTSV(join(REL_DIR, 'Census.County.State.tsv'), relationships)
@@ -297,13 +297,11 @@ interface CBSARow {
   'Central/Outlying County': string
 }
 
-function transformCBSA(): void {
-  console.log('Transforming Census CBSA (Core Based Statistical Areas) from source file...')
-
+function parseCBSAFile(): CBSARow[] {
   const sourceFile = join(SOURCE_DIR, 'cbsa_delineation_2023.tsv')
   if (!existsSync(sourceFile)) {
-    console.log('Warning: cbsa_delineation_2023.tsv not found, skipping CBSA')
-    return
+    console.log('Warning: cbsa_delineation_2023.tsv not found')
+    return []
   }
 
   // Custom parsing for CBSA file which has headers on row 3
@@ -319,7 +317,7 @@ function transformCBSA(): void {
   // Headers are on line 3 (index 2)
   if (lines.length < 4) {
     console.log('Warning: cbsa_delineation_2023.tsv has insufficient data')
-    return
+    return []
   }
 
   const headers = lines[2].split('\t').map(h => h.trim())
@@ -335,6 +333,18 @@ function transformCBSA(): void {
     }
 
     data.push(record as CBSARow)
+  }
+
+  return data
+}
+
+function transformCBSA(): void {
+  console.log('Transforming Census CBSA (Core Based Statistical Areas) from source file...')
+
+  const data = parseCBSAFile()
+  if (data.length === 0) {
+    console.log('Skipping CBSA - no data')
+    return
   }
 
   console.log(`Loaded ${data.length} CBSA delineation records from source`)
@@ -363,6 +373,37 @@ function transformCBSA(): void {
 
   writeStandardTSV(join(DATA_DIR, 'Census.CBSAs.tsv'), records)
   console.log(`Wrote ${records.length} unique CBSAs to Census.CBSAs.tsv`)
+}
+
+function transformCBSACountyRelationships(): void {
+  console.log('Extracting CBSA → County relationships...')
+
+  const data = parseCBSAFile()
+  if (data.length === 0) {
+    console.log('Skipping CBSA-County relationships - no data')
+    return
+  }
+
+  // Create CBSA → County relationships
+  const relationships: RelationshipRecord[] = data
+    .filter(row => {
+      const cbsaCode = row['CBSA Code']
+      const countyName = row['County/County Equivalent']
+      const stateName = row['State Name']
+      return cbsaCode && cbsaCode.match(/^\d+$/) && countyName && stateName
+    })
+    .map(row => ({
+      fromNs: NS,
+      fromType: 'CBSA',
+      fromId: toWikipediaStyleId(row['CBSA Title']),
+      toNs: NS,
+      toType: 'County',
+      toId: toWikipediaStyleId(`${row['County/County Equivalent']}_${row['State Name']}`),
+      relationshipType: row['Central/Outlying County'] === 'Central' ? 'containsCentral' : 'containsOutlying',
+    }))
+
+  writeRelationshipTSV(join(REL_DIR, 'Census.CBSA.County.tsv'), relationships)
+  console.log(`Wrote ${relationships.length} CBSA → County relationships`)
 }
 
 function transformCSA(): void {
@@ -448,7 +489,7 @@ function transformMSA(): void {
       toNs: NS,
       toType: 'CBSA',
       toId: row.cbsa,
-      relationshipType: 'replaced_by',
+      relationshipType: 'replacedBy',
     }))
 
   writeRelationshipTSV(join(REL_DIR, 'Census.MSA.CBSA.tsv'), relationships)
@@ -501,7 +542,7 @@ function transformCBP(): void {
       toNs: NAMESPACES.NAICS,
       toType: 'Industry',
       toId: row.naics,
-      relationshipType: 'based_on',
+      relationshipType: 'basedOn',
     }))
 
   writeRelationshipTSV(join(REL_DIR, 'Census.CBP.NAICS.tsv'), relationships)
@@ -520,6 +561,7 @@ export async function transformCensus(): Promise<void> {
 
   // Transform metropolitan areas
   transformCBSA()
+  transformCBSACountyRelationships()
   transformCSA()
   transformMSA()
 

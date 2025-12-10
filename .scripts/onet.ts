@@ -197,7 +197,7 @@ function transformSkills(): void {
       toNs: NS,
       toType: 'Skill',
       toCode: row.elementID,
-      relationshipType: 'requires_skill',
+      relationshipType: 'requiresSkill',
       importance: row.dataValue,
     }))
 
@@ -245,7 +245,7 @@ function transformKnowledge(): void {
       toNs: NS,
       toType: 'Knowledge',
       toCode: row.elementID,
-      relationshipType: 'requires_knowledge',
+      relationshipType: 'requiresKnowledge',
       importance: row.dataValue,
     }))
 
@@ -293,7 +293,7 @@ function transformAbilities(): void {
       toNs: NS,
       toType: 'Ability',
       toCode: row.elementID,
-      relationshipType: 'requires_ability',
+      relationshipType: 'requiresAbility',
       importance: row.dataValue,
     }))
 
@@ -341,7 +341,7 @@ function transformWorkActivities(): void {
       toNs: NS,
       toType: 'WorkActivity',
       toCode: row.elementID,
-      relationshipType: 'involves_activity',
+      relationshipType: 'involvesActivity',
       importance: row.dataValue,
     }))
 
@@ -389,7 +389,7 @@ function transformWorkStyles(): void {
       toNs: NS,
       toType: 'WorkStyle',
       toCode: row.elementID,
-      relationshipType: 'requires_style',
+      relationshipType: 'requiresStyle',
       importance: row.dataValue,
     }))
 
@@ -485,7 +485,7 @@ function transformInterests(): void {
       toNs: NS,
       toType: 'Interest',
       toCode: row.elementID,
-      relationshipType: 'associated_interest',
+      relationshipType: 'associatedInterest',
       score: row.dataValue,
     }))
 
@@ -534,7 +534,7 @@ function transformTechnologySkills(): void {
       toNs: NS,
       toType: 'Technology',
       toId: toWikipediaStyleId(row.example),
-      relationshipType: 'uses_technology',
+      relationshipType: 'usesTechnology',
       hotTechnology: row.hotTechnology,
       inDemand: row.inDemand,
     }))
@@ -589,7 +589,7 @@ function transformJobZones(): void {
       toNs: NS,
       toType: 'JobZone',
       toCode: row.jobZone,
-      relationshipType: 'in_job_zone',
+      relationshipType: 'inJobZone',
     }))
 
   writeTSV(
@@ -610,7 +610,7 @@ function transformRelatedOccupations(): void {
     toNs: NS,
     toType: 'Occupation',
     toCode: row.relatedONETSOCCode,
-    relationshipType: 'related_to',
+    relationshipType: 'relatedTo',
     relatednessScore: row.relatednessScore,
   }))
 
@@ -668,7 +668,7 @@ function transformTasks(): void {
       toNs: NS,
       toType: 'Task',
       toCode: row.taskID,
-      relationshipType: 'performs_task',
+      relationshipType: 'performsTask',
       taskType: row.taskType || '',
     }))
 
@@ -732,7 +732,7 @@ function transformTools(): void {
       toNs: NS,
       toType: 'Tool',
       toId: toWikipediaStyleId(row.example),
-      relationshipType: 'uses_tool',
+      relationshipType: 'usesTool',
     }))
 
   writeTSV(
@@ -869,7 +869,7 @@ function transformWorkContext(): void {
       toNs: NS,
       toType: 'WorkContext',
       toCode: row.elementID,
-      relationshipType: 'has_context',
+      relationshipType: 'hasContext',
       context: row.dataValue,
     }))
 
@@ -917,7 +917,7 @@ function transformEducation(): void {
       toNs: NS,
       toType: 'Education',
       toCode: row.elementID,
-      relationshipType: 'requires_education',
+      relationshipType: 'requiresEducation',
       category: row.category || '',
       value: row.dataValue || '',
     }))
@@ -1036,7 +1036,7 @@ function transformEmergingTasks(): void {
         toNs: NS,
         toType: 'EmergingTask',
         toCode: row.taskID,
-        relationshipType: 'has_emerging_task',
+        relationshipType: 'hasEmergingTask',
       }))
 
     writeTSV(
@@ -1046,6 +1046,192 @@ function transformEmergingTasks(): void {
     )
   } catch (e) {
     console.log('Emerging tasks file not found, skipping...')
+  }
+}
+
+// ========== NEW RELATIONSHIP EXTRACTION FUNCTIONS ==========
+
+interface TaskToDWA {
+  oNETSOCCode: string
+  taskID: string
+  dWAID: string
+  date: string
+  domainSource: string
+}
+
+function transformTaskDWARelationships(): void {
+  console.log('Extracting Task → DWA relationships...')
+
+  try {
+    const data = parseTSV<TaskToDWA>(join(SOURCE_DIR, 'ONET.TasksToDWAs.tsv'))
+
+    // Load DWA reference to get titles for IDs
+    interface DWARef {
+      elementID: string
+      iWAID: string
+      dWAID: string
+      dWATitle: string
+    }
+    const dwaRef = parseTSV<DWARef>(join(SOURCE_DIR, 'ONET.DWAReference.tsv'))
+    const dwaIdToTitle = new Map<string, string>()
+    for (const row of dwaRef) {
+      if (row.dWAID && row.dWATitle) {
+        dwaIdToTitle.set(row.dWAID, row.dWATitle)
+      }
+    }
+
+    const relationships: RelationshipRecord[] = data
+      .filter(row => row.taskID && row.dWAID)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'Task',
+        fromId: row.taskID,
+        toNs: NS,
+        toType: 'DWA',
+        toId: toWikipediaStyleId(dwaIdToTitle.get(row.dWAID) || row.dWAID),
+        relationshipType: 'implementsActivity',
+      }))
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.Task.DWA.tsv'), relationships)
+    console.log(`Wrote ${relationships.length} Task → DWA relationships`)
+  } catch (e) {
+    console.log('TasksToDWAs file not found, skipping...')
+  }
+}
+
+function transformIWADWARelationships(): void {
+  console.log('Extracting IWA → DWA hierarchy relationships...')
+
+  try {
+    interface DWARef {
+      elementID: string
+      iWAID: string
+      dWAID: string
+      dWATitle: string
+    }
+    const dwaRef = parseTSV<DWARef>(join(SOURCE_DIR, 'ONET.DWAReference.tsv'))
+
+    interface IWARef {
+      elementID: string
+      iWAID: string
+      iWATitle: string
+    }
+    const iwaRef = parseTSV<IWARef>(join(SOURCE_DIR, 'ONET.IWAReference.tsv'))
+
+    // Build IWA ID to title map
+    const iwaIdToTitle = new Map<string, string>()
+    for (const row of iwaRef) {
+      if (row.iWAID && row.iWATitle) {
+        iwaIdToTitle.set(row.iWAID, row.iWATitle)
+      }
+    }
+
+    // Extract unique IWA→DWA relationships from DWA reference
+    const relationships: RelationshipRecord[] = dwaRef
+      .filter(row => row.iWAID && row.dWAID && row.dWATitle)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'IWA',
+        fromId: toWikipediaStyleId(iwaIdToTitle.get(row.iWAID) || row.iWAID),
+        toNs: NS,
+        toType: 'DWA',
+        toId: toWikipediaStyleId(row.dWATitle),
+        relationshipType: 'hasDetailedActivity',
+      }))
+
+    // Deduplicate (same IWA can link to multiple DWAs)
+    const uniqueRelationships = Array.from(
+      new Map(relationships.map(r => [`${r.fromId}:${r.toId}`, r])).values()
+    )
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.IWA.DWA.tsv'), uniqueRelationships)
+    console.log(`Wrote ${uniqueRelationships.length} IWA → DWA relationships`)
+
+    // Also extract WorkActivity (GeneralizedWorkActivity) → IWA hierarchy
+    const workActivityToIWA: RelationshipRecord[] = iwaRef
+      .filter(row => row.elementID && row.iWAID && row.iWATitle)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'WorkActivity',
+        fromId: row.elementID, // This is the GWA element ID like "4.A.1.a.1"
+        toNs: NS,
+        toType: 'IWA',
+        toId: toWikipediaStyleId(row.iWATitle),
+        relationshipType: 'hasIntermediateActivity',
+      }))
+
+    const uniqueWAToIWA = Array.from(
+      new Map(workActivityToIWA.map(r => [`${r.fromId}:${r.toId}`, r])).values()
+    )
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.WorkActivity.IWA.tsv'), uniqueWAToIWA)
+    console.log(`Wrote ${uniqueWAToIWA.length} WorkActivity → IWA relationships`)
+  } catch (e) {
+    console.log('DWAReference/IWAReference files not found, skipping...')
+  }
+}
+
+interface AbilityToWorkActivity {
+  abilitiesElementID: string
+  abilitiesElementName: string
+  workActivitiesElementID: string
+  workActivitiesElementName: string
+}
+
+function transformAbilityWorkActivityRelationships(): void {
+  console.log('Extracting Ability → WorkActivity relationships...')
+
+  try {
+    const data = parseTSV<AbilityToWorkActivity>(join(SOURCE_DIR, 'ONET.AbilitiesToWorkActivities.tsv'))
+
+    const relationships: RelationshipRecord[] = data
+      .filter(row => row.abilitiesElementName && row.workActivitiesElementName)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'Ability',
+        fromId: toWikipediaStyleId(row.abilitiesElementName),
+        toNs: NS,
+        toType: 'WorkActivity',
+        toId: toWikipediaStyleId(row.workActivitiesElementName),
+        relationshipType: 'enablesActivity',
+      }))
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.Ability.WorkActivity.tsv'), relationships)
+    console.log(`Wrote ${relationships.length} Ability → WorkActivity relationships`)
+  } catch (e) {
+    console.log('AbilitiesToWorkActivities file not found, skipping...')
+  }
+}
+
+interface SkillToWorkActivity {
+  skillsElementID: string
+  skillsElementName: string
+  workActivitiesElementID: string
+  workActivitiesElementName: string
+}
+
+function transformSkillWorkActivityRelationships(): void {
+  console.log('Extracting Skill → WorkActivity relationships...')
+
+  try {
+    const data = parseTSV<SkillToWorkActivity>(join(SOURCE_DIR, 'ONET.SkillsToWorkActivities.tsv'))
+
+    const relationships: RelationshipRecord[] = data
+      .filter(row => row.skillsElementName && row.workActivitiesElementName)
+      .map(row => ({
+        fromNs: NS,
+        fromType: 'Skill',
+        fromId: toWikipediaStyleId(row.skillsElementName),
+        toNs: NS,
+        toType: 'WorkActivity',
+        toId: toWikipediaStyleId(row.workActivitiesElementName),
+        relationshipType: 'supportsActivity',
+      }))
+
+    writeRelationshipTSV(join(REL_DIR, 'ONET.Skill.WorkActivity.tsv'), relationships)
+    console.log(`Wrote ${relationships.length} Skill → WorkActivity relationships`)
+  } catch (e) {
+    console.log('SkillsToWorkActivities file not found, skipping...')
   }
 }
 
@@ -1076,6 +1262,12 @@ export async function transformONET(): Promise<void> {
   transformRIASEC()
   transformTaskCategories()
   transformEmergingTasks()
+
+  // Cross-domain and hierarchy relationships
+  transformTaskDWARelationships()
+  transformIWADWARelationships()
+  transformAbilityWorkActivityRelationships()
+  transformSkillWorkActivityRelationships()
 
   console.log('=== ONET Transformation Complete ===\n')
 }

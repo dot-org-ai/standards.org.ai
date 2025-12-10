@@ -268,7 +268,7 @@ function transformHTSHeadings(): void {
       toNs: NS,
       toType: 'HTSChapter',
       toCode: row.chapter,
-      relationshipType: 'child_of',
+      relationshipType: 'childOf',
     }))
 
   writeTSV(
@@ -316,7 +316,7 @@ function transformHTSSubheadings(): void {
       toNs: NS,
       toType: 'HTSHeading',
       toCode: row.heading,
-      relationshipType: 'child_of',
+      relationshipType: 'childOf',
     }))
 
   writeTSV(
@@ -367,7 +367,7 @@ function transformHTSCodes(): void {
       toNs: NS,
       toType: 'HTSSubheading',
       toCode: row.subheading,
-      relationshipType: 'child_of',
+      relationshipType: 'childOf',
     }))
 
   writeTSV(
@@ -622,7 +622,7 @@ function transformScheduleB(): void {
       toNs: NS,
       toType: 'HTSCode',
       toCode: row.htsEquivalent,
-      relationshipType: 'equivalent_to',
+      relationshipType: 'equivalentTo',
     }))
 
   writeTSV(

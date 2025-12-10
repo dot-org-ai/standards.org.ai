@@ -643,7 +643,7 @@ function createRelationships(): void {
       toNs: NS,
       toType: 'ProofType',
       toId: 'JsonWebSignature2020',
-      relationshipType: 'can_use',
+      relationshipType: 'canUse',
     },
     {
       fromNs: NS,
@@ -652,7 +652,7 @@ function createRelationships(): void {
       toNs: NS,
       toType: 'ProofType',
       toId: 'Ed25519Signature2020',
-      relationshipType: 'can_use',
+      relationshipType: 'canUse',
     },
     // DID Methods support Verification Method Types
     {

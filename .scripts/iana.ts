@@ -100,7 +100,7 @@ function transformTimezones(): void {
           toNs: NS,
           toType: 'Timezone',
           toId: id,
-          relationshipType: 'belongs_to',
+          relationshipType: 'belongsTo',
         })
       }
     }
@@ -138,7 +138,7 @@ function transformTZDB(): void {
             toNs: NAMESPACES.ISO,
             toType: 'Country',
             toId: countryCode,
-            relationshipType: 'used_in',
+            relationshipType: 'usedIn',
           })
         }
       }

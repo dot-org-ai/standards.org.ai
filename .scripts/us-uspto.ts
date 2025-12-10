@@ -242,7 +242,7 @@ function transformCPCClasses(): void {
     toNs: NS,
     toType: 'CPCSection',
     toCode: cls.section,
-    relationshipType: 'part_of',
+    relationshipType: 'partOf',
   }))
 
   writeTSV(
@@ -289,7 +289,7 @@ function transformCPCSubclasses(): void {
     toNs: NS,
     toType: 'CPCClass',
     toCode: sub.class,
-    relationshipType: 'part_of',
+    relationshipType: 'partOf',
   }))
 
   writeTSV(
@@ -336,7 +336,7 @@ function transformCPCGroups(): void {
     toNs: NS,
     toType: 'CPCSubclass',
     toCode: group.subclass,
-    relationshipType: 'part_of',
+    relationshipType: 'partOf',
   }))
 
   writeTSV(
@@ -355,7 +355,7 @@ function transformCPCGroups(): void {
       toNs: NS,
       toType: 'CPCGroup',
       toCode: group.parent!,
-      relationshipType: 'child_of',
+      relationshipType: 'childOf',
     }))
 
   writeTSV(
@@ -424,7 +424,7 @@ function transformUSPCSubclasses(): void {
     toNs: NS,
     toType: 'USPCClass',
     toCode: sub.class,
-    relationshipType: 'part_of',
+    relationshipType: 'partOf',
   }))
 
   writeTSV(
@@ -592,7 +592,7 @@ function transformLocarnoSubclasses(): void {
     toNs: NS,
     toType: 'LocarnoClass',
     toCode: sub.class,
-    relationshipType: 'part_of',
+    relationshipType: 'partOf',
   }))
 
   writeTSV(

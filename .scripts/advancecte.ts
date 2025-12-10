@@ -101,7 +101,7 @@ function transformCareerClusters(): void {
       toNs: NS,
       toType: 'CareerCluster',
       toId: toWikipediaStyleId(sc.parent),
-      relationshipType: 'child_of',
+      relationshipType: 'childOf',
     }))
     writeTSV(
       join(REL_DIR, 'AdvanceCTE.SubCluster.CareerCluster.tsv'),
@@ -136,7 +136,7 @@ function transformSOCCareerClusterCrosswalk(): void {
           toNs: NS,
           toType: 'CareerCluster',
           toId: toWikipediaStyleId(row.careerCluster),
-          relationshipType: 'belongs_to',
+          relationshipType: 'belongsTo',
         })
       }
     }
@@ -164,7 +164,7 @@ function transformSOCCareerClusterCrosswalk(): void {
           toNs: NS,
           toType: 'SubCluster',
           toId: toWikipediaStyleId(row.subCluster),
-          relationshipType: 'belongs_to',
+          relationshipType: 'belongsTo',
         })
       }
     }
@@ -222,7 +222,7 @@ function transformCIPCareerClusterCrosswalk(): void {
           toNs: NS,
           toType: 'CareerCluster',
           toId: toWikipediaStyleId(row.careerCluster),
-          relationshipType: 'prepares_for',
+          relationshipType: 'preparesFor',
         })
       }
     }
@@ -251,7 +251,7 @@ function transformCIPCareerClusterCrosswalk(): void {
           toNs: NS,
           toType: 'SubCluster',
           toId: toWikipediaStyleId(row.subCluster),
-          relationshipType: 'prepares_for',
+          relationshipType: 'preparesFor',
         })
       }
     }
@@ -290,7 +290,7 @@ function transformFullCrosswalk(): void {
           toNs: NS,
           toType: 'CIP',
           toCode: cipCode,
-          relationshipType: 'trained_by',
+          relationshipType: 'trainedBy',
         })
       }
     }
@@ -319,7 +319,7 @@ function transformFullCrosswalk(): void {
           toNs: NAMESPACES.NAICS,
           toType: 'Sector',
           toCode: naicsCode,
-          relationshipType: 'employed_in',
+          relationshipType: 'employedIn',
         })
       }
     }
@@ -348,7 +348,7 @@ function transformFullCrosswalk(): void {
           toNs: NAMESPACES.NAICS,
           toType: 'Sector',
           toCode: naicsCode,
-          relationshipType: 'associated_with',
+          relationshipType: 'associatedWith',
         })
       }
     }

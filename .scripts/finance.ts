@@ -106,7 +106,7 @@ function transformISO20022(): void {
           toNs: ISO20022_NS,
           toType: 'ISO20022.BusinessArea',
           toId: toWikipediaStyleId(businessArea.Name),
-          relationshipType: 'belongs_to',
+          relationshipType: 'belongsTo',
         }
       })
       .filter((rel): rel is RelationshipRecord => rel !== null)
@@ -345,7 +345,7 @@ function transformMCC(): void {
           toNs: MCC_NS,
           toType: 'MCC.Category',
           toId: toWikipediaStyleId(category.Category),
-          relationshipType: 'belongs_to',
+          relationshipType: 'belongsTo',
         })
       }
     }

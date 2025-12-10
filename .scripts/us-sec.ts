@@ -502,7 +502,7 @@ function transformSICMajorGroups(): void {
     toNs: NS,
     toType: 'SICDivision',
     toCode: group.division,
-    relationshipType: 'child_of',
+    relationshipType: 'childOf',
   }))
 
   writeTSV(
@@ -559,7 +559,7 @@ function transformSICCodes(): void {
       toNs: NS,
       toType: 'SICMajorGroup',
       toCode: row.major_group,
-      relationshipType: 'child_of',
+      relationshipType: 'childOf',
     }))
 
   if (relationships.length > 0) {
@@ -582,7 +582,7 @@ function transformFormCategoryRelationships(): void {
     toNs: NS,
     toType: 'FilingCategory',
     toCode: form.category,
-    relationshipType: 'member_of',
+    relationshipType: 'memberOf',
   }))
 
   writeTSV(

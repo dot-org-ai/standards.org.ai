@@ -150,7 +150,7 @@ function transformSizeStandards(): void {
       toNs: NAMESPACES.NAICS,
       toType: 'Industry',
       toId: row.NAICSCode,
-      relationshipType: 'applies_to_naics',
+      relationshipType: 'appliesToNaics',
     }))
 
   if (naicsRelationships.length > 0) {
@@ -474,7 +474,7 @@ function transformContractTypes(): void {
           toNs: NS,
           toType: 'BusinessType',
           toId: businessType,
-          relationshipType: 'applicable_to',
+          relationshipType: 'applicableTo',
         })
       }
     }

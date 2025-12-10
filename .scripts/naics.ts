@@ -118,7 +118,7 @@ function transformIndustries(descMap: Map<string, string>): void {
         toNs: NS,
         toType: getNAICSLevel(parentCode),
         toCode: parentCode,
-        relationshipType: 'child_of',
+        relationshipType: 'childOf',
       })
     }
   }

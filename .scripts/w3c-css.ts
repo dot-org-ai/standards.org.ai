@@ -357,7 +357,7 @@ function transformCSSUnits(): void {
           toNs: NS,
           toType: 'CSSDataType',
           toCode: dataType,
-          relationshipType: 'unit_of',
+          relationshipType: 'unitOf',
         })
       }
     }
@@ -403,7 +403,7 @@ function createCSSRelationships(): void {
         toNs: NS,
         toType: 'CSSDataType',
         toCode: dataType,
-        relationshipType: 'accepts_type',
+        relationshipType: 'acceptsType',
       })
     }
   }

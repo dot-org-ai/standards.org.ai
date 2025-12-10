@@ -151,7 +151,7 @@ function transformLOCODE(): void {
       toNs: NAMESPACES.ISO,
       toType: 'Country',
       toId: country,
-      relationshipType: 'located_in',
+      relationshipType: 'locatedIn',
     })
   }
 
@@ -207,7 +207,7 @@ function transformM49Regions(): void {
           toNs: NS,
           toType: 'Region',
           toId: toWikipediaStyleId(record.region),
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
         })
       }
     }
@@ -234,7 +234,7 @@ function transformM49Regions(): void {
           toNs: NS,
           toType: 'SubRegion',
           toId: toWikipediaStyleId(record['sub-region']),
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
         })
       }
     }
@@ -321,7 +321,7 @@ function transformEDIFACTCategories(): void {
                 toNs: NS,
                 toType: 'EDIFACTCategory',
                 toId: id,
-                relationshipType: 'belongs_to',
+                relationshipType: 'belongsTo',
               })
             }
           }
@@ -373,6 +373,72 @@ function transformLOCODESubdivisions(): void {
     writeStandardTSV(join(DATA_DIR, 'UN.Subdivisions.tsv'), subdivisions)
   } catch (e) {
     console.log('Skipping LOCODE subdivisions - file not found or invalid:', e)
+  }
+}
+
+function transformLOCODESubdivisionRelationships(): void {
+  console.log('Extracting LOCODE Location → Subdivision relationships...')
+
+  const locodeFile = join(SOURCE_DIR, 'UN.LOCODE.CodeList.csv')
+  const subdivFile = join(SOURCE_DIR, 'UN.LOCODE.SubdivisionCodes.csv')
+
+  try {
+    const locodeRecords = parseCSV<LOCODERecord>(locodeFile)
+    const subdivRecords = parseCSV<LOCODESubdivisionRecord>(subdivFile)
+
+    // Build subdivision lookup: country+code -> name
+    const subdivLookup = new Map<string, string>()
+    for (const subdiv of subdivRecords) {
+      if (subdiv.SUCountry && subdiv.SUCode && subdiv.SUName) {
+        const key = `${subdiv.SUCountry}-${subdiv.SUCode}`
+        subdivLookup.set(key, subdiv.SUName)
+      }
+    }
+
+    const relationships: RelationshipRecord[] = []
+
+    for (const record of locodeRecords) {
+      const country = record.Country
+      const subdivision = record.Subdivision
+      const name = record.Name || record.NameWoDiacritics
+
+      if (!country || !subdivision || !name) continue
+
+      // The subdivision code in LOCODE may be just the code part (e.g., "AZ") or full (e.g., "US-CA")
+      // Try both formats
+      let subdivKey = `${country}-${subdivision}`
+      let subdivName = subdivLookup.get(subdivKey)
+
+      if (!subdivName) {
+        // Try without country prefix if subdivision already has it
+        subdivName = subdivLookup.get(subdivision)
+      }
+
+      if (!subdivName) continue
+
+      const locationId = `${country}_${toWikipediaStyleId(name)}`
+      const subdivId = `${country}_${toWikipediaStyleId(subdivName)}`
+
+      relationships.push({
+        fromNs: NS,
+        fromType: 'Location',
+        fromId: locationId,
+        toNs: NS,
+        toType: 'Subdivision',
+        toId: subdivId,
+        relationshipType: 'locatedInSubdivision',
+      })
+    }
+
+    // Deduplicate
+    const uniqueRelationships = Array.from(
+      new Map(relationships.map(r => [`${r.fromId}:${r.toId}`, r])).values()
+    )
+
+    writeRelationshipTSV(join(REL_DIR, 'UN.Location.Subdivision.tsv'), uniqueRelationships)
+    console.log(`Wrote ${uniqueRelationships.length} Location → Subdivision relationships`)
+  } catch (e) {
+    console.log('Skipping LOCODE-Subdivision relationships - file not found or invalid:', e)
   }
 }
 
@@ -468,7 +534,7 @@ function transformSPSC(): void {
           toNs: NS,
           toType: 'SPSCSegment',
           toCode: row.segmentCode,
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
         })
       }
     }
@@ -483,7 +549,7 @@ function transformSPSC(): void {
           toNs: NS,
           toType: 'SPSCFamily',
           toCode: row.familyCode,
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
         })
       }
     }
@@ -498,7 +564,7 @@ function transformSPSC(): void {
           toNs: NS,
           toType: 'SPSCClass',
           toCode: row.classCode,
-          relationshipType: 'child_of',
+          relationshipType: 'childOf',
         })
       }
     }
@@ -520,6 +586,7 @@ export async function transformUN(): Promise<void> {
   transformM49Regions()
   transformLOCODE()
   transformLOCODESubdivisions()
+  transformLOCODESubdivisionRelationships()
   transformEDIFACT()
   transformEDIFACTCategories()
   transformSPSC()

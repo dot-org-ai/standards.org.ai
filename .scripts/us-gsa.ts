@@ -164,7 +164,7 @@ function transformPSC(): void {
       toNs: NS,
       toType: 'PSCCategory',
       toCode: row.category,
-      relationshipType: 'belongs_to_category',
+      relationshipType: 'belongsToCategory',
     }))
 
   if (categoryRelationships.length > 0) {
@@ -258,7 +258,7 @@ function transformFSC(): void {
       toNs: NS,
       toType: 'FSCGroup',
       toCode: row.parent,
-      relationshipType: 'belongs_to_group',
+      relationshipType: 'belongsToGroup',
     }))
 
   if (groupRelationships.length > 0) {
@@ -370,7 +370,7 @@ function transformSINs(): void {
       toNs: NS,
       toType: 'Schedule',
       toCode: row.schedule,
-      relationshipType: 'belongs_to_schedule',
+      relationshipType: 'belongsToSchedule',
     }))
 
   if (scheduleRelationships.length > 0) {
@@ -471,7 +471,7 @@ function transformBPAs(): void {
       toNs: NS,
       toType: 'Schedule',
       toCode: row.schedule,
-      relationshipType: 'based_on_schedule',
+      relationshipType: 'basedOnSchedule',
     }))
 
   if (scheduleRelationships.length > 0) {

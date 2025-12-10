@@ -232,7 +232,7 @@ function transformWCAGGuidelines(data: WCAGData): void {
         toNs: NS,
         toType: 'WCAG.Principle',
         toId: toWikipediaStyleId(principle.title),
-        relationshipType: 'part_of',
+        relationshipType: 'partOf',
       })
     }
   }
@@ -273,7 +273,7 @@ function transformWCAGSuccessCriteria(data: WCAGData): void {
           toNs: NS,
           toType: 'WCAG.Guideline',
           toId: toWikipediaStyleId(guideline.title),
-          relationshipType: 'part_of',
+          relationshipType: 'partOf',
         })
       }
     }
@@ -338,7 +338,7 @@ function transformWCAGTechniques(data: WCAGData): void {
                 toNs: NS,
                 toType: 'WCAG.SuccessCriterion',
                 toId: criterionId,
-                relationshipType: 'sufficient_for',
+                relationshipType: 'sufficientFor',
                 techniqueCategory: 'Sufficient',
               })
             }
@@ -357,7 +357,7 @@ function transformWCAGTechniques(data: WCAGData): void {
                         toNs: NS,
                         toType: 'WCAG.SuccessCriterion',
                         toId: criterionId,
-                        relationshipType: 'sufficient_for',
+                        relationshipType: 'sufficientFor',
                         techniqueCategory: 'Sufficient',
                         situation: situation.title || '',
                       })
@@ -381,7 +381,7 @@ function transformWCAGTechniques(data: WCAGData): void {
                 toNs: NS,
                 toType: 'WCAG.SuccessCriterion',
                 toId: criterionId,
-                relationshipType: 'advisory_for',
+                relationshipType: 'advisoryFor',
                 techniqueCategory: 'Advisory',
               })
             }
@@ -400,7 +400,7 @@ function transformWCAGTechniques(data: WCAGData): void {
                 toNs: NS,
                 toType: 'WCAG.SuccessCriterion',
                 toId: criterionId,
-                relationshipType: 'failure_for',
+                relationshipType: 'failureFor',
                 techniqueCategory: 'Failure',
               })
             }

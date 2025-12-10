@@ -188,7 +188,7 @@ function createCategoryRelationships(): Record<string, string>[] {
     toNs: NS,
     toType: 'OccupationCategory',
     toId: toWikipediaStyleId(occ.category),
-    relationshipType: 'belongs_to',
+    relationshipType: 'belongsTo',
   }))
 }
 
