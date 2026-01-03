@@ -423,6 +423,147 @@ function transformSWIFT(): void {
 }
 
 // ============================================================================
+// MCC to NAICS Relationships
+// ============================================================================
+
+function transformMCCNAICSRelationships(): void {
+  console.log('Transforming MCC to NAICS relationships...')
+
+  const categoriesFile = join(SOURCE_DIR, 'MCC', 'Categories.tsv')
+  if (!existsSync(categoriesFile)) {
+    console.log('  - MCC Categories file not found, skipping')
+    return
+  }
+
+  const categories = parseTSV<MCCCategoryRow>(categoriesFile)
+
+  // Define mapping from MCC categories to NAICS industries/sectors
+  // Maps MCC category ID (Wikipedia-style) to NAICS ID and relationship description
+  const mccToNaicsMapping: Array<{
+    mccCategoryId: string
+    naicsId: string
+    naicsType: string
+    relationshipType: string
+  }> = [
+    // Agricultural Services (0001-1499) -> Agriculture, Forestry, Fishing and Hunting (11)
+    { mccCategoryId: 'Agricultural_Services', naicsId: 'Agriculture,_Forestry,_Fishing_and_Hunting', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Contracted Services (1500-2999) -> Construction (23)
+    { mccCategoryId: 'Contracted_Services', naicsId: 'Construction', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Airlines (3000-3299) -> Air Transportation (481)
+    { mccCategoryId: 'Airlines', naicsId: 'Air_Transportation', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Car Rental (3300-3499) -> Rental and Leasing Services (532)
+    { mccCategoryId: 'Car_Rental', naicsId: 'Rental_and_Leasing_Services', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Lodging (3500-3999) -> Accommodation (721)
+    { mccCategoryId: 'Lodging', naicsId: 'Accommodation', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Transportation Services (4000-4799) -> Transportation (48-49)
+    { mccCategoryId: 'Transportation_Services', naicsId: 'Transit_and_Ground_Passenger_Transportation', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Telecommunication Services (4800-4899) -> Telecommunications (517)
+    { mccCategoryId: 'Telecommunication_Services', naicsId: 'Telecommunications', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Retail Outlet Services (5000-5599) -> General Merchandise Retailers (452)
+    { mccCategoryId: 'Retail_Outlet_Services', naicsId: 'General_Merchandise_Retailers', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Clothing Stores (5600-5699) -> Clothing Retailers (448)
+    { mccCategoryId: 'Clothing_Stores', naicsId: 'Clothing,_Clothing_Accessories,_Shoe,_and_Jewelry_Retailers', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Miscellaneous Stores (5700-5799) -> Sporting Goods, Hobby, Book Retailers (451)
+    { mccCategoryId: 'Miscellaneous_Stores', naicsId: 'Sporting_Goods,_Hobby,_Musical_Instrument,_Book,_and_Miscellaneous_Retailers', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Eating and Drinking Places (5800-5999) -> Food Services and Drinking Places (722)
+    { mccCategoryId: 'Eating_and_Drinking_Places', naicsId: 'Food_Services_and_Drinking_Places', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Financial Institutions (6000-6299) -> Finance and Insurance (52)
+    { mccCategoryId: 'Financial_Institutions', naicsId: 'Finance_and_Insurance', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Insurance (6300-6399) -> Insurance Carriers and Related Activities (524)
+    { mccCategoryId: 'Insurance', naicsId: 'Insurance_Carriers_and_Related_Activities', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Insurance Services (6400-6513) -> Insurance Carriers and Related Activities (524)
+    { mccCategoryId: 'Insurance_Services', naicsId: 'Insurance_Carriers_and_Related_Activities', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Personal Services (7000-7299) -> Personal and Laundry Services (812)
+    { mccCategoryId: 'Personal_Services', naicsId: 'Personal_and_Laundry_Services', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Business Services (7300-7399) -> Professional, Scientific, and Technical Services (54)
+    { mccCategoryId: 'Business_Services', naicsId: 'Professional,_Scientific,_and_Technical_Services', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Automotive Repair Services (7500-7599) -> Repair and Maintenance (811)
+    { mccCategoryId: 'Automotive_Repair_Services', naicsId: 'Repair_and_Maintenance', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Miscellaneous Repair Services (7600-7699) -> Repair and Maintenance (811)
+    { mccCategoryId: 'Miscellaneous_Repair_Services', naicsId: 'Repair_and_Maintenance', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Recreation Services (7800-7999) -> Arts, Entertainment, and Recreation (71)
+    { mccCategoryId: 'Recreation_Services', naicsId: 'Arts,_Entertainment,_and_Recreation', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Medical and Health Services (8000-8099) -> Health Care and Social Assistance (62)
+    { mccCategoryId: 'Medical_and_Health_Services', naicsId: 'Health_Care_and_Social_Assistance', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Legal and Educational Services (8100-8299) -> Educational Services (61)
+    { mccCategoryId: 'Legal_and_Educational_Services', naicsId: 'Educational_Services', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Accounting and Bookkeeping (8300-8399) -> Professional, Scientific, and Technical Services (54)
+    { mccCategoryId: 'Accounting_and_Bookkeeping', naicsId: 'Professional,_Scientific,_and_Technical_Services', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Professional Services (8400-8499) -> Professional, Scientific, and Technical Services (54)
+    { mccCategoryId: 'Professional_Services', naicsId: 'Professional,_Scientific,_and_Technical_Services', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Membership Organizations (8600-8699) -> Religious, Grantmaking, Civic, Professional, and Similar Organizations (813)
+    { mccCategoryId: 'Membership_Organizations', naicsId: 'Religious,_Grantmaking,_Civic,_Professional,_and_Similar_Organizations', naicsType: 'Subsector', relationshipType: 'classifies_merchants_in' },
+
+    // Architectural and Engineering Services (8700-8899) -> Professional, Scientific, and Technical Services (54)
+    { mccCategoryId: 'Architectural_and_Engineering_Services', naicsId: 'Professional,_Scientific,_and_Technical_Services', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Government Services (9000-9099) -> Public Administration (92)
+    { mccCategoryId: 'Government_Services', naicsId: 'Public_Administration', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Professional and Government Services (9100-9399) -> Public Administration (92)
+    { mccCategoryId: 'Professional_and_Government_Services', naicsId: 'Public_Administration', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+
+    // Government and Utilities (9400-9799) -> Utilities (22)
+    { mccCategoryId: 'Government_and_Utilities', naicsId: 'Utilities', naicsType: 'Sector', relationshipType: 'classifies_merchants_in' },
+  ]
+
+  // Create relationship records
+  const relationships: RelationshipRecord[] = mccToNaicsMapping
+    .filter(mapping => {
+      // Verify the MCC category exists
+      const category = categories.find(cat => toWikipediaStyleId(cat.Category) === mapping.mccCategoryId)
+      if (!category) {
+        console.log(`  - Warning: MCC category not found: ${mapping.mccCategoryId}`)
+        return false
+      }
+      return true
+    })
+    .map(mapping => ({
+      fromNs: MCC_NS,
+      fromType: 'MCC.Category',
+      fromId: mapping.mccCategoryId,
+      toNs: NAMESPACES.NAICS,
+      toType: mapping.naicsType,
+      toId: mapping.naicsId,
+      relationshipType: mapping.relationshipType,
+    }))
+
+  if (relationships.length > 0) {
+    writeTSV(
+      join(REL_DIR, 'Finance.MCC.Category.NAICS.Industry.tsv'),
+      relationships as unknown as Record<string, string>[],
+      ['fromNs', 'fromType', 'fromId', 'toNs', 'toType', 'toId', 'relationshipType']
+    )
+    console.log(`  - Created ${relationships.length} MCC-NAICS relationships`)
+  } else {
+    console.log('  - No MCC-NAICS relationships created')
+  }
+}
+
+// ============================================================================
 // Main Transform Function
 // ============================================================================
 
@@ -458,6 +599,12 @@ export async function transformFinance(): Promise<void> {
     transformSWIFT()
   } catch (e) {
     console.log('SWIFT transformation failed or skipped:', e)
+  }
+
+  try {
+    transformMCCNAICSRelationships()
+  } catch (e) {
+    console.log('MCC-NAICS relationships transformation failed or skipped:', e)
   }
 
   console.log('=== Finance Standards Transformation Complete ===\n')

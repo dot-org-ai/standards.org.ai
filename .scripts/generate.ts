@@ -48,6 +48,8 @@ import { transformCensus } from './us-census'
 import { transformSEC } from './us-sec'
 import { transformSBA } from './us-sba'
 import { transformSICNAICSCrosswalk } from './sic-naics-crosswalk'
+import { transformProductIndustryCrosswalk } from './product-industry-crosswalk'
+import { transformProcessOccupationCrosswalk } from './process-occupation-crosswalk'
 import { ensureOutputDirs } from './utils'
 
 async function main(): Promise<void> {
@@ -85,6 +87,8 @@ async function main(): Promise<void> {
     { name: 'sec', fn: transformSEC, condition: runAll || sources.has('sec') || sources.has('us-sec') },
     { name: 'sba', fn: transformSBA, condition: runAll || sources.has('sba') || sources.has('us-sba') },
     { name: 'sic-naics-crosswalk', fn: transformSICNAICSCrosswalk, condition: runAll || sources.has('sic-naics') || sources.has('crosswalk') },
+    { name: 'product-industry-crosswalk', fn: transformProductIndustryCrosswalk, condition: runAll || sources.has('product-industry') || sources.has('crosswalk') },
+    { name: 'process-occupation-crosswalk', fn: transformProcessOccupationCrosswalk, condition: runAll || sources.has('process-occupation') || sources.has('crosswalk') },
     { name: 'w3c-html', fn: transformW3CHTML, condition: runAll || sources.has('w3c') || sources.has('w3c-html') },
     { name: 'w3c-css', fn: transformW3CCSS, condition: runAll || sources.has('w3c') || sources.has('w3c-css') },
     { name: 'w3c-semantic', fn: transformW3CSemantic, condition: runAll || sources.has('w3c') || sources.has('w3c-semantic') },
@@ -161,7 +165,8 @@ Sources:
   sba               SBA size standards, business types, and contract types
   us-sba            Alias for sba
   sic-naics         SIC to NAICS crosswalk relationships (Census Bureau)
-  crosswalk         Alias for sic-naics
+  product-industry  Product-to-industry crosswalk (GS1/UNSPSC to NAICS)
+  crosswalk         Alias for sic-naics and product-industry
   w3c               All W3C web standards (runs all w3c-* modules)
   w3c-html          W3C HTML elements and attributes
   w3c-css           W3C CSS properties and values

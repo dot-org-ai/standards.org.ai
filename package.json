@@ -23,6 +23,8 @@
     "generate:sec": "bun run .scripts/us-sec.ts",
     "generate:sba": "bun run .scripts/us-sba.ts",
     "generate:sic-naics": "bun run .scripts/sic-naics-crosswalk.ts",
+    "generate:product-industry": "bun run .scripts/product-industry-crosswalk.ts",
+    "generate:process-occupation": "bun run .scripts/process-occupation-crosswalk.ts",
     "generate:w3c": "bun run .scripts/w3c-semantic.ts",
     "generate:w3c-css": "bun run .scripts/w3c-css.ts",
     "generate:w3c-accessibility": "bun run .scripts/w3c-accessibility.ts",

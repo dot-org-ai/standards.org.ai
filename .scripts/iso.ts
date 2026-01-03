@@ -205,6 +205,74 @@ function transformLanguages(): void {
   writeStandardTSV(join(DATA_DIR, 'ISO.Languages.tsv'), languages)
 }
 
+function transformCountryLanguageRelationships(): void {
+  console.log('Transforming Country-Language relationships...')
+
+  // Load country data to get Languages field
+  const countryFile = join(SOURCE_DIR, 'ISO.CountryCodes.csv')
+  const countryRecords = parseCSV<CountryRecord>(countryFile)
+
+  // Load language data to build a mapping from alpha2 code to language ID
+  const languageFile = join(SOURCE_DIR, 'ISO.LanguageCodes.csv')
+  const languageRecords = parseCSV<LanguageRecord>(languageFile)
+
+  // Build map: alpha2 language code -> language ID
+  const languageCodeToId = new Map<string, string>()
+  for (const record of languageRecords) {
+    const alpha2 = record.alpha2
+    const name = record.English
+    if (alpha2 && name) {
+      languageCodeToId.set(alpha2, toWikipediaStyleId(name))
+    }
+  }
+
+  const countryLanguages: RelationshipRecord[] = []
+
+  for (const record of countryRecords) {
+    const countryName = record['CLDR display name'] || record['official_name_en']
+    if (!countryName) continue
+
+    const countryId = toWikipediaStyleId(countryName)
+    const languagesField = record.Languages
+    if (!languagesField) continue
+
+    // Parse the Languages field - it can contain:
+    // - Single language: "en-US"
+    // - Multiple languages: "de-CH,fr-CH,it-CH,rm"
+    // - Language codes may have locale suffix (e.g., "en-US") or be standalone (e.g., "rm")
+    const languageCodes = languagesField.split(',').map(s => s.trim())
+
+    for (const langCode of languageCodes) {
+      if (!langCode) continue
+
+      // Extract the base language code (before any locale suffix like "-CH")
+      const baseLangCode = langCode.includes('-')
+        ? langCode.split('-')[0]
+        : langCode
+
+      // Look up the language ID from our mapping
+      const languageId = languageCodeToId.get(baseLangCode)
+      if (!languageId) {
+        console.warn(`  Warning: Language code "${baseLangCode}" from country "${countryName}" not found in ISO language codes`)
+        continue
+      }
+
+      countryLanguages.push({
+        fromNs: NS,
+        fromType: 'Country',
+        fromId: countryId,
+        toNs: NS,
+        toType: 'Language',
+        toId: languageId,
+        relationshipType: 'official_language',
+      })
+    }
+  }
+
+  writeRelationshipTSV(join(REL_DIR, 'Country.Language.tsv'), countryLanguages)
+  console.log(`  Created ${countryLanguages.length} Country-Language relationships`)
+}
+
 export async function transformISO(): Promise<void> {
   console.log('=== ISO Standards Transformation ===\n')
   ensureOutputDirs()
@@ -212,6 +280,7 @@ export async function transformISO(): Promise<void> {
   transformCountries()
   transformCurrencies()
   transformLanguages()
+  transformCountryLanguageRelationships()
 
   console.log('\n=== ISO Transformation Complete ===')
 }
