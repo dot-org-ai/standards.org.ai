@@ -21,6 +21,35 @@ const SOURCE_DIR = getSourcePath('ONET')
 const DATA_DIR = getDataPath()
 const REL_DIR = getRelationshipsPath()
 
+// O*NET element definitions (Abilities / Skills / Knowledge / Work Styles /
+// Work Values / Interests / Work Activities) live ONLY in the Content Model
+// Reference, keyed by elementID. The per-category score files carry elementID +
+// elementName but no definition — so each attribute node's `description` would
+// otherwise be blank. Join the official definitions in by elementID (the `code`
+// we already stamp on every attribute record). Lazy + memoized so importing
+// this module has no file-read side effect.
+let _cmrDescriptions: Map<string, string> | null = null
+function cmrDescriptions(): Map<string, string> {
+  if (_cmrDescriptions) return _cmrDescriptions
+  const rows = parseTSV<{ elementID: string; elementName: string; description: string }>(
+    join(SOURCE_DIR, 'ONET.ContentModelReference.tsv'),
+  )
+  _cmrDescriptions = new Map(rows.map(r => [r.elementID, r.description]))
+  return _cmrDescriptions
+}
+
+// Fill an empty `description` from the Content Model Reference by elementID
+// (`code`). No-op for records that already have a description or whose code is
+// not a Content Model element.
+function withElementDescriptions(records: StandardRecord[]): StandardRecord[] {
+  const cmr = cmrDescriptions()
+  return records.map(r =>
+    r.description || !r.code
+      ? r
+      : { ...r, description: cleanDescription(cmr.get(r.code)) },
+  )
+}
+
 interface OccupationData {
   oNETSOCCode: string
   title: string
@@ -185,7 +214,7 @@ function transformSkills(): void {
     includedIn: getAggregationsForType('Skill'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.Skills.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.Skills.tsv'), withElementDescriptions(records))
 
   // Write occupation-skill relationships with ratings
   const relationships: Record<string, string>[] = data
@@ -233,7 +262,7 @@ function transformKnowledge(): void {
     includedIn: getAggregationsForType('Knowledge'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.Knowledge.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.Knowledge.tsv'), withElementDescriptions(records))
 
   // Write occupation-knowledge relationships
   const relationships: Record<string, string>[] = data
@@ -281,7 +310,7 @@ function transformAbilities(): void {
     includedIn: getAggregationsForType('Ability'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.Abilities.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.Abilities.tsv'), withElementDescriptions(records))
 
   // Write occupation-ability relationships
   const relationships: Record<string, string>[] = data
@@ -329,7 +358,7 @@ function transformWorkActivities(): void {
     includedIn: getAggregationsForType('WorkActivity'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.WorkActivities.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.WorkActivities.tsv'), withElementDescriptions(records))
 
   // Write occupation-work activity relationships
   const relationships: Record<string, string>[] = data
@@ -377,7 +406,7 @@ function transformWorkStyles(): void {
     includedIn: getAggregationsForType('WorkStyle'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.WorkStyles.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.WorkStyles.tsv'), withElementDescriptions(records))
 
   // Write occupation-work style relationships
   const relationships: Record<string, string>[] = data
@@ -425,7 +454,7 @@ function transformWorkValues(): void {
     includedIn: getAggregationsForType('WorkValue'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.WorkValues.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.WorkValues.tsv'), withElementDescriptions(records))
 
   // Write occupation-work value relationships
   const relationships: Record<string, string>[] = data
@@ -473,7 +502,7 @@ function transformInterests(): void {
     includedIn: getAggregationsForType('Interest'),
   }))
 
-  writeStandardTSV(join(DATA_DIR, 'ONET.Interests.tsv'), records)
+  writeStandardTSV(join(DATA_DIR, 'ONET.Interests.tsv'), withElementDescriptions(records))
 
   // Write occupation-interest relationships
   const relationships: Record<string, string>[] = data
