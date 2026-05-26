@@ -279,25 +279,34 @@ export function toWikipediaStyleId(str: string): string {
 /**
  * Parse a TSV file into an array of objects
  */
-export function parseTSV<T = Record<string, string>>(filePath: string): T[] {
-  let content = readFileSync(filePath, 'utf-8')
+// Maximum newlines a "quoted field" may span before we treat it as a stray-quote
+// data error and bail out of quote-tracking mode for that row. Legitimate
+// multi-line quoted cells in our sources are 1-3 newlines at most; 8 is generous.
+const MAX_QUOTED_NEWLINES = 8
 
-  // Remove BOM if present
-  if (content.charCodeAt(0) === 0xFEFF) {
-    content = content.substring(1)
-  }
-
-  // Split into lines, but handle quoted fields with embedded newlines
+/**
+ * Split file content into logical TSV rows.
+ *
+ * If `useQuotes` is true, double-quotes open/close a "quoted field" within
+ * which newlines are treated as literal characters (the original behavior).
+ *
+ * If `useQuotes` is false, every newline ends a row — used as a defensive
+ * fallback when the file has an odd total quote count (i.e. an unescaped
+ * stray `"` would otherwise swallow the rest of the file into one mega-row).
+ */
+function splitIntoLines(content: string, useQuotes: boolean): string[] {
   const allLines: string[] = []
   let currentLine = ''
   let inQuotes = false
+  let quotedNewlines = 0
 
   for (let i = 0; i < content.length; i++) {
     const char = content[i]
     const nextChar = content[i + 1]
 
-    if (char === '"') {
+    if (useQuotes && char === '"') {
       inQuotes = !inQuotes
+      if (!inQuotes) quotedNewlines = 0
       currentLine += char
     } else if ((char === '\n' || char === '\r') && !inQuotes) {
       if (currentLine.trim()) {
@@ -308,6 +317,30 @@ export function parseTSV<T = Record<string, string>>(filePath: string): T[] {
       if (char === '\r' && nextChar === '\n') {
         i++
       }
+    } else if ((char === '\n' || char === '\r') && inQuotes) {
+      quotedNewlines++
+      if (quotedNewlines > MAX_QUOTED_NEWLINES) {
+        // Defensive bail-out: a "quoted field" spanning more than
+        // MAX_QUOTED_NEWLINES lines almost certainly means an upstream
+        // stray quote, not a legitimate multi-line cell. Treat this
+        // newline as a row boundary and exit quote mode so we don't
+        // silently swallow the rest of the file.
+        if (currentLine.trim()) {
+          allLines.push(currentLine)
+        }
+        currentLine = ''
+        inQuotes = false
+        quotedNewlines = 0
+        if (char === '\r' && nextChar === '\n') {
+          i++
+        }
+      } else {
+        currentLine += char
+        if (char === '\r' && nextChar === '\n') {
+          currentLine += nextChar
+          i++
+        }
+      }
     } else {
       currentLine += char
     }
@@ -317,6 +350,38 @@ export function parseTSV<T = Record<string, string>>(filePath: string): T[] {
   if (currentLine.trim()) {
     allLines.push(currentLine)
   }
+
+  return allLines
+}
+
+export function parseTSV<T = Record<string, string>>(filePath: string): T[] {
+  let content = readFileSync(filePath, 'utf-8')
+
+  // Remove BOM if present
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.substring(1)
+  }
+
+  // Stray-quote guard: if the file's total double-quote count is odd, a
+  // quote-tracking split would flip inQuotes=true on the lone quote and
+  // never close — concatenating every subsequent newline into one mega-row
+  // that fails the column-count check and is silently dropped. This is how
+  // .source/ONET/ONET.ToolsUsed.tsv:881 silently collapsed 41,661 rows
+  // down to 879. Fall back to a no-quote-mode split so the rest of the
+  // file still parses; legitimate balanced files are untouched.
+  let totalQuotes = 0
+  for (let i = 0; i < content.length; i++) {
+    if (content.charCodeAt(i) === 34 /* " */) totalQuotes++
+  }
+  const useQuotes = totalQuotes % 2 === 0
+  if (!useQuotes) {
+    console.warn(
+      `[parseTSV] ${filePath}: odd total quote count (${totalQuotes}); ` +
+      `falling back to no-quote-mode split to recover from stray-quote data error.`,
+    )
+  }
+
+  const allLines = splitIntoLines(content, useQuotes)
 
   if (allLines.length === 0) return []
 
