@@ -18,11 +18,15 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
   // 1.0 Develop Vision and Strategy
   'Develop_Vision_and_Strategy': [
     'Chief_Executives',
-    'Chief_Sustainability_Officers',
+    // 'Chief_Sustainability_Officers' (11-1011.03) is a detailed O*NET-SOC
+    // occupation; the atlas seeds only the broad-SOC grain → roll up to its
+    // parent Chief_Executives (11-1011). Already present above → omit (dup).
     'General_and_Operations_Managers',
     'Management_Analysts',
-    'Business_Intelligence_Analysts',
-    'Investment_Fund_Managers',
+    // 'Business_Intelligence_Analysts' (15-2051.01) → parent Data_Scientists (15-2051)
+    'Data_Scientists',
+    // 'Investment_Fund_Managers' (11-3031.03) → parent Financial_Managers (11-3031)
+    'Financial_Managers',
   ],
 
   // 2.0 Develop and Manage Products and Services
@@ -30,7 +34,8 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
     'General_and_Operations_Managers',
     'Architectural_and_Engineering_Managers',
     'Industrial_Production_Managers',
-    'Quality_Control_Systems_Managers',
+    // 'Quality_Control_Systems_Managers' (11-3051.01) → parent
+    // Industrial_Production_Managers (11-3051). Already present above → omit (dup).
     'Industrial_Engineers',
     'Mechanical_Engineers',
     'Software_Developers',
@@ -51,7 +56,9 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
   // 4.0 Manage Supply Chain for Physical Products
   'Manage_Supply_Chain_for_Physical_Products': [
     'Transportation,_Storage,_and_Distribution_Managers',
-    'Supply_Chain_Managers',
+    // 'Supply_Chain_Managers' (11-3071.04) → parent
+    // Transportation,_Storage,_and_Distribution_Managers (11-3071). Already
+    // present above → omit (dup).
     'Purchasing_Managers',
     'Industrial_Production_Managers',
     'Logisticians',
@@ -92,7 +99,8 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
   // 9.0 Manage Financial Resources
   'Manage_Financial_Resources': [
     'Financial_Managers',
-    'Treasurers_and_Controllers',
+    // 'Treasurers_and_Controllers' (11-3031.01) → parent Financial_Managers
+    // (11-3031). Already present above → omit (dup).
     'Accountants_and_Auditors',
     'Financial_and_Investment_Analysts',
     'Budget_Analysts',
@@ -107,7 +115,14 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
     'Property,_Real_Estate,_and_Community_Association_Managers',
     'Construction_Managers',
     'Purchasing_Managers',
-    'Purchasing_Agents,_Except_Wholesale,_Retail,_and_Farm_Products',
+    // UNRESOLVABLE (reported, not forced): the detailed O*NET occupation
+    // 'Purchasing_Agents,_Except_Wholesale,_Retail,_and_Farm_Products'
+    // (13-1023) does not resolve against the atlas, which seeds the broad-SOC
+    // grain 'Buyers_and_Purchasing_Agents' (13-1020). But that broad slug is
+    // NOT present in this generator's source ONET.Occupations.tsv (which is
+    // detailed grain: only 13-1021/13-1022/13-1023), so the generator cannot
+    // emit it. The only in-atlas sibling, 'Purchasing_Managers' (11-3061), is
+    // already mapped in this group above → no net-new edge available. Omitted.
     'Real_Estate_Brokers',
     'Real_Estate_Sales_Agents',
   ],
@@ -116,9 +131,11 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
   'Manage_Enterprise_Risk,_Compliance,_Remediation,_and_Resiliency': [
     'Compliance_Officers',
     'Emergency_Management_Directors',
-    'Security_Managers',
+    // 'Security_Managers' (11-3013.01) → parent Facilities_Managers (11-3013).
+    'Facilities_Managers',
     'Occupational_Health_and_Safety_Specialists',
-    'Environmental_Compliance_Inspectors',
+    // 'Environmental_Compliance_Inspectors' (13-1041.01) → parent
+    // Compliance_Officers (13-1041). Already present above → omit (dup).
   ],
 
   // 12.0 Manage External Relationships
@@ -133,7 +150,8 @@ const PROCESS_OCCUPATION_MAPPINGS: Record<string, string[]> = {
   // 13.0 Develop and Manage Business Capabilities
   'Develop_and_Manage_Business_Capabilities': [
     'Management_Analysts',
-    'Business_Intelligence_Analysts',
+    // 'Business_Intelligence_Analysts' (15-2051.01) → parent Data_Scientists (15-2051)
+    'Data_Scientists',
     'General_and_Operations_Managers',
     'Operations_Research_Analysts',
     'Project_Management_Specialists',
