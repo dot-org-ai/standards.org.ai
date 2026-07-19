@@ -1,0 +1,34 @@
+---
+$type: Standard
+$id: https://standards.org.ai/RTCA/DO-178C
+source: RTCA
+name: DO-178C
+title: RTCA DO-178C — Software Considerations in Airborne Systems and Equipment Certification
+description: The airborne-software assurance standard — Design Assurance Levels (DAL A–E) assigned from the severity of the failure condition the software can contribute to, with objectives and independence scaling by level.
+canonical: https://www.rtca.org/
+citedBy:
+  - https://schema.org.ai/AssuranceTier
+---
+
+# RTCA DO-178C
+
+**RTCA DO-178C** (*Software Considerations in Airborne Systems and Equipment Certification*) governs certification of airborne software. Each software item is assigned a **Design Assurance Level** (DAL A–E) from the severity of the failure condition it can contribute to — catastrophic through no-safety-effect — and the assigned level determines the certification objectives, the required evidence, and the independence with which that evidence must be produced and verified. Certification credit attaches to the *type design*; conformity of each produced instance is a separate, continuing obligation.
+
+This page is a **G1 seed**: it registers the standard as a source of record so downstream vocabularies can cite it by stable `$id`. It describes the standard; it does not redefine it.
+
+## Constructs contributed
+
+| Construct | Definition (as in the standard) |
+|---|---|
+| DAL A–E | Graduated assurance levels assigned from failure-condition severity. |
+| Objectives-by-level | The set of demanded evidence scales with the assigned level. |
+| Independence | Higher levels require verification independent of the authors. |
+| Type-level certification | Assurance attaches to the certified design; instances conform to it. |
+
+## Citation edges (G2 derivations)
+
+- [`https://schema.org.ai/AssuranceTier`](https://schema.org.ai/AssuranceTier) — the T0–T4 tier axis inherits the DAL pattern: upstream assignment from worst-case consequence, evidence demanded by tier, independence rising with tier, and type-level assurance with per-instance conformance.
+
+## Reference
+
+- Canonical publication: [RTCA DO-178C](https://www.rtca.org/)
