@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "standards-org-ai",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-01",
+  "account_id": "b6641681fe423910342b9ffa1364c76d",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // Every response goes through withHeaders(), which is also where HTML
+    // picks up its charset. A negation list here routes the negated paths
+    // around the worker, and they come back with no CSP, no nosniff, no
+    // charset and the wrong cache-control.
+    "run_worker_first": true
+  },
+  "routes": [
+    // standards.org.ai is served as a custom hostname on the workers.do zone.
+    { "pattern": "standards.org.ai/*", "zone_name": "workers.do" }
+  ]
+}
