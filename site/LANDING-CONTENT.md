@@ -898,7 +898,7 @@ a resolvable endpoint.
 
 As of 2026-07-28 the hosts that serve a real page a person can read are: axp.org.ai,
 mdx.org.ai/docs, mdxld.org, product.md, schema.org.ai, todo.md.org.ai,
-agents.md.org.ai, foundation.org.ai. onet.org.ai, apqc.org.ai and gs1.org.ai serve
+agents.md.org.ai, foundation.org.ai. onet.org.ai and apqc.org.ai serve
 holding pages. wikipedia.org.ai returns JSON and no human page. soc.org.ai serves
 another site's page. naics.org.ai, un.org.ai, x12.org.ai, hl7.org.ai, iso.org.ai,
 ieee.org.ai, iana.org.ai, w3.org.ai, epcis.org.ai, markdown.org.ai, mcp.org.ai and
@@ -1131,7 +1131,7 @@ on the page.** Every other name in this file is text.
   `nucc.org`, `careertech.org`, and the rest. Somebody else's property. **Naming a body is a
   citation; a link is a destination, and we do not hand a reader off to finish our sentence.**
   This one applies even where the site is plainly live and plainly correct.
-- `onet.org.ai`, `apqc.org.ai`, `gs1.org.ai` — 200, but a holding page. A holding page behind a
+- `onet.org.ai`, `apqc.org.ai` — 200, but a holding page. A holding page behind a
   link is a broken promise wearing a link's clothes.
 - `soc.org.ai` — 200, but serves another site's page. A misroute is worse than a dark name.
 - `wikipedia.org.ai` — 200, but returns JSON. Sending a person to a JSON blob is the same broken

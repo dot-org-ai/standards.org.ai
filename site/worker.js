@@ -74,7 +74,7 @@ a resolvable endpoint.
 
 As of 2026-07-28 the hosts that serve a real page a person can read are: axp.org.ai,
 mdx.org.ai/docs, mdxld.org, product.md, schema.org.ai, todo.md.org.ai,
-agents.md.org.ai, foundation.org.ai. onet.org.ai, apqc.org.ai and gs1.org.ai serve
+agents.md.org.ai, foundation.org.ai. onet.org.ai and apqc.org.ai serve
 holding pages. wikipedia.org.ai returns JSON and no human page. soc.org.ai serves
 another site's page. naics.org.ai, un.org.ai, x12.org.ai, hl7.org.ai, iso.org.ai,
 ieee.org.ai, iana.org.ai, w3.org.ai, epcis.org.ai, markdown.org.ai, mcp.org.ai and
