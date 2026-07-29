@@ -1,0 +1,20 @@
+{
+  "name": "standards.org.ai-site",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "og": "node build.js --og",
+    "dev": "npm run build && wrangler dev",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "wrangler": "^4"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd"
+    ]
+  }
+}
