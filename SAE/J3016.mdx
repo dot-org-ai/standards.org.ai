@@ -1,0 +1,41 @@
+---
+$type: Standard
+$id: https://standards.org.ai/SAE/J3016
+source: SAE
+name: J3016
+title: SAE J3016 — Taxonomy and Definitions for Terms Related to Driving Automation Systems
+description: The SAE driving-automation taxonomy — levels 0–5, the Operational Design Domain (ODD), the Dynamic Driving Task (DDT), the Minimal Risk Condition (MRC), and remote assistance.
+canonical: https://www.sae.org/standards/content/j3016_202104/
+citedBy:
+  - https://schema.org.ai/AutonomyLevel
+  - https://schema.org.ai/DeclaredScope
+  - https://schema.org.ai/MinimalRiskCondition
+---
+
+# SAE J3016
+
+**SAE J3016** (*Taxonomy and Definitions for Terms Related to Driving Automation Systems for On-Road Motor Vehicles*) defines the industry-standard taxonomy for driving automation: six levels (0–5) distinguished by who performs the driving task, under what conditions, and with what fallback.
+
+This page is a **G1 seed**: it registers the standard as a source of record so downstream vocabularies can cite it by stable `$id`. It describes the standard; it does not redefine it.
+
+## Constructs contributed
+
+| J3016 construct | Definition (as in the standard) |
+|---|---|
+| Levels 0–5 | Graduated ownership of the driving task, from no automation (0) to full automation under all conditions (5). |
+| DDT — Dynamic Driving Task | The real-time operational and tactical functions required to operate the vehicle. |
+| <a id="ODD"></a>ODD — Operational Design Domain | The operating conditions under which an automation system is specifically designed to function; a Level 4 system is Level 4 *within its ODD*. |
+| MRC — Minimal Risk Condition | The stable, reduced-risk state a system achieves when a trip cannot or should not be continued. |
+| Remote assistance | Human support that advises the system without becoming the driver. |
+
+## Citation edges (G2 derivations)
+
+The schema.org.ai autonomy vocabulary derives from this standard by a recorded delta table (the table lives inside the citing definition — this page stays thin):
+
+- [`https://schema.org.ai/AutonomyLevel`](https://schema.org.ai/AutonomyLevel) — the L0–L5 level axis, with recorded deltas (DDT → consequential-verb portfolio; L5 unclaimable is an estate amendment contra this seed).
+- [`https://schema.org.ai/DeclaredScope`](https://schema.org.ai/DeclaredScope) — derived from the [ODD](#ODD).
+- [`https://schema.org.ai/MinimalRiskCondition`](https://schema.org.ai/MinimalRiskCondition) — derived from the MRC, amended to duty preservation.
+
+## Reference
+
+- Canonical publication: [SAE J3016_202104](https://www.sae.org/standards/content/j3016_202104/)

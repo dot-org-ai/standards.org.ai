@@ -1,0 +1,33 @@
+---
+$type: Standard
+$id: https://standards.org.ai/ISO/26262
+source: ISO
+name: "26262"
+title: ISO 26262 — Road Vehicles, Functional Safety
+description: The automotive functional-safety standard — hazard analysis and risk assessment, and the ASIL (Automotive Safety Integrity Level) classification A–D assigned from severity, exposure, and controllability.
+canonical: https://www.iso.org/standard/68383.html
+citedBy:
+  - https://schema.org.ai/AssuranceTier
+---
+
+# ISO 26262
+
+**ISO 26262** (*Road Vehicles — Functional Safety*) is the automotive adaptation of IEC 61508. Its hazard analysis and risk assessment classifies each hazardous event by **severity × exposure × controllability** and assigns an **ASIL** (Automotive Safety Integrity Level, A–D, plus QM below the floor). The ASIL is assigned from the *unmitigated* hazard — safety mechanisms then become the evidence the assigned level demands, not inputs to the assignment.
+
+This page is a **G1 seed**: it registers the standard as a source of record so downstream vocabularies can cite it by stable `$id`. It describes the standard; it does not redefine it.
+
+## Constructs contributed
+
+| Construct | Definition (as in the standard) |
+|---|---|
+| ASIL A–D | Graduated integrity levels; higher levels demand stronger evidence, independence, and process rigor. |
+| Severity / Exposure / Controllability | The three classification axes of hazard analysis. |
+| Upstream assignment | The integrity level derives from the hazard, not from the countermeasures the builder prefers to take credit for. |
+
+## Citation edges (G2 derivations)
+
+- [`https://schema.org.ai/AssuranceTier`](https://schema.org.ai/AssuranceTier) — the T0–T4 tier axis is seeded by the ASIL pattern: assigned upstream from unmitigated worst-case consequence, never self-selected; mitigations become demanded evidence. The estate's (level, tier) split is deliberately isomorphic to the industry's (J3016, ASIL) factoring.
+
+## Reference
+
+- Canonical publication: [ISO 26262 series](https://www.iso.org/standard/68383.html)
