@@ -48,7 +48,7 @@ Where a ratified physical CBV business step captures the analogous state
 transition, this digital bizStep declares it via `sameAs`. When blank, the term
 is a **pure superset** with no ratified CBV analog.
 
-<a href={bizStep.sameAs}>{bizStep.sameAs}</a>
+{bizStep.sameAs ? <a href={bizStep.sameAs}>{bizStep.sameAs}</a> : <em>None — pure superset term.</em>}
 
 ## Related Dispositions
 
