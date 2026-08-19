@@ -1,0 +1,59 @@
+---
+layout: businessStep
+source: GS1/cbv
+$type: GS1/cbv/DigitalBusinessStep
+$id: https://standards.org.ai/GS1/cbv/DigitalBusinessStep/{bizStep.id}
+sameAs: {bizStep.sameAs}
+canonical: https://gs1.org.ai/cbv/{bizStep.id}
+draft: true
+provisional: true
+params:
+  - BizStep
+schema:
+  bizStep:
+    id: id
+    code: code
+    name: name
+    verb: verb
+    noun: noun
+    description: description
+    sameAs: sameAs
+---
+
+> **DRAFT — Vin superset extension. Provisional, NOT ratified GS1 CBV.**
+> This is a digital-interaction business step in OUR superset of the GS1 Core
+> Business Vocabulary. GS1 has not ratified a `BizStep` for it. Where a ratified
+> physical CBV analog exists, this record projects down to it via `sameAs`
+> (see **Down-projection** below); where none exists, it is a pure superset term.
+
+# {bizStep.id}
+
+<BusinessStepHeader code={bizStep.code} verb={bizStep.verb} noun={bizStep.noun} />
+
+## Description
+
+{bizStep.description}
+
+## Verb
+
+{bizStep.verb}
+
+## Noun
+
+{bizStep.noun}
+
+## Down-projection (sameAs)
+
+Where a ratified physical CBV business step captures the analogous state
+transition, this digital bizStep declares it via `sameAs`. When blank, the term
+is a **pure superset** with no ratified CBV analog.
+
+{bizStep.sameAs ? <a href={bizStep.sameAs}>{bizStep.sameAs}</a> : <em>None — pure superset term.</em>}
+
+## Related Dispositions
+
+<DispositionsByBusinessStep stepCode={bizStep.code} />
+
+## Usage Examples
+
+<BusinessStepExamples stepCode={bizStep.code} />

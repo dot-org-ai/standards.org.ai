@@ -1,0 +1,33 @@
+{
+  "id": "gs1-digital-bizsteps",
+  "issue": "#105",
+  "summary": "Digital-interaction bizStep vocabulary is OUR draft superset extension of GS1 CBV, never ratified GS1.",
+  "armed": true,
+  "pairedSuite": ".scripts/gs1-digital-bizsteps.test.ts",
+  "declaredDebts": [
+    {
+      "kind": "provisional-status",
+      "note": "All 4 digital bizSteps (Resolving, Requesting, Scanning, Viewing) are draft/provisional Vin superset terms. They mint the gs1.org.ai/cbv/BizStep-<gerund> shape and are openly marked NOT ratified GS1 CBV. Every rendered surface (the .data description and the GS1/cbv/[BizStep].mdx banner) must carry that marking."
+    },
+    {
+      "kind": "scope-narrowing",
+      "note": "Rendering (render View) is EXCLUDED and deferred out of scope: it is a presentation-layer concern, not a business-context state transition. Held here rather than shipped. Revisit only if #105 explicitly rules it in."
+    },
+    {
+      "kind": "no-down-projection",
+      "note": "ALL 4 digital bizSteps (Resolving, Requesting, Scanning, Viewing) carry EMPTY sameAs — no ref.gs1.org target was fabricated. There is no ratified CBV bizStep for a digital interaction (AIDC capture, record resolve/request/view), and the once-proposed Viewing->BizStep-inspecting projection was DROPPED after review: CBV 'inspecting' is physical-object defect review, not digital record viewing — too loose to assert honestly."
+    },
+    {
+      "kind": "id-shape-deviation",
+      "note": "Digital rows use id=BizStep-<gerund> and code=bizstep-<gerund>. This is the #105 canonical URI shape (gs1.org.ai/cbv/BizStep-<gerund>), a DISTINCT namespace from the physical EPCIS/BusinessStep/{code} path. validate.test.ts flags such IDs as warn-only, so the suite stays green."
+    }
+  ],
+  "confirmedAgainst105": {
+    "note": "The gs1.org.ai/cbv/BizStep-<gerund> URI shape and the down-projection convention are CONFIRMED against the real #105 ruling (was taken from the task brief; now verified).",
+    "sources": [
+      "vis docs/research/2026-08-03-architecture-review.md:120 — 'Digital bizSteps at https://gs1.org.ai/cbv/BizStep-<gerund> — CBV's own tense; gs1.org.ai is the GS1-facing bridge' (issue #105)",
+      "vis CONTEXT.md:1712 — down-projection pattern: 'https://gs1.org.ai/cbv/BizStep-deleting beside https://ref.gs1.org/cbv/BizStep-destroying' (analog only where a physical one exists; empty otherwise)"
+    ]
+  },
+  "blockers": []
+}

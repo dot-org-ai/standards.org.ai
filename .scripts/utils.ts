@@ -171,6 +171,8 @@ export const TYPE_AGGREGATIONS: Record<string, string[]> = {
   Vocabulary: ['business.org.ai', 'logistics.org.ai'],
   LocationType: ['logistics.org.ai', 'business.org.ai'],
   BusinessStep: ['logistics.org.ai', 'business.org.ai'],
+  // Digital-interaction bizSteps — OUR draft superset extension (#105), never ratified GS1 CBV.
+  DigitalBusinessStep: ['business.org.ai', 'tech.org.ai', 'logistics.org.ai'],
   Disposition: ['logistics.org.ai', 'business.org.ai'],
   IdentifierType: ['logistics.org.ai', 'business.org.ai'],
   GLNFunctionalType: ['logistics.org.ai', 'business.org.ai'],
