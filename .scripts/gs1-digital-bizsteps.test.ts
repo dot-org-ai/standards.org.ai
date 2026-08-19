@@ -48,7 +48,10 @@ function loadRows(): Row[] {
 }
 
 const DIGITAL = ['Resolving', 'Requesting', 'Scanning', 'Viewing'] as const
-const PURE_SUPERSET = ['Resolving', 'Requesting', 'Scanning'] as const
+// All four digital terms are pure superset: none has a ratified CBV analog close
+// enough to project onto honestly (CBV 'inspecting' is physical defect review, not
+// digital record viewing), so every sameAs is intentionally empty.
+const PURE_SUPERSET = ['Resolving', 'Requesting', 'Scanning', 'Viewing'] as const
 
 describe('#105 digital bizStep vocabulary — draft superset invariants', () => {
   const rows = loadRows()
@@ -80,13 +83,7 @@ describe('#105 digital bizStep vocabulary — draft superset invariants', () => 
     }
   })
 
-  it('Viewing down-projects to ratified CBV BizStep-inspecting', () => {
-    if (isLFS) return
-    const viewing = rows.find(r => r.type === 'DigitalBusinessStep' && r.name === 'Viewing')
-    expect(viewing?.sameAs).toBe('https://ref.gs1.org/cbv/BizStep-inspecting')
-  })
-
-  it('pure-superset digital rows carry NO fabricated down-projection', () => {
+  it('all digital rows carry NO fabricated down-projection (honest: no forced CBV analog)', () => {
     if (isLFS) return
     for (const name of PURE_SUPERSET) {
       const r = rows.find(x => x.type === 'DigitalBusinessStep' && x.name === name)

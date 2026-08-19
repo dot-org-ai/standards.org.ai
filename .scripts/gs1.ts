@@ -72,8 +72,10 @@ interface BusinessStepRow {
   // category: 'physical' (default) mirrors ratified CBV bizSteps;
   // 'digital' marks OUR draft superset extension (#105), NOT ratified GS1.
   category?: string
-  // sameAs: down-projection to a ratified CBV physical analog, when one exists
-  // (e.g. Viewing -> ref.gs1.org/cbv/BizStep-inspecting). Empty = pure superset.
+  // sameAs: down-projection to a ratified CBV physical analog, only when a genuine
+  // one exists (pattern per #105 / CONTEXT.md: gs1.org.ai/cbv/BizStep-<gerund> beside
+  // ref.gs1.org/cbv/BizStep-<analog>). All 4 current digital terms are pure superset
+  // with EMPTY sameAs — no digital-interaction analog is close enough to assert.
   sameAs?: string
 }
 
