@@ -68,6 +68,13 @@ interface BusinessStepRow {
   verb: string
   noun: string
   description: string
+  // Additive columns (backward-safe: parseTSV is header-keyed).
+  // category: 'physical' (default) mirrors ratified CBV bizSteps;
+  // 'digital' marks OUR draft superset extension (#105), NOT ratified GS1.
+  category?: string
+  // sameAs: down-projection to a ratified CBV physical analog, when one exists
+  // (e.g. Viewing -> ref.gs1.org/cbv/BizStep-inspecting). Empty = pure superset.
+  sameAs?: string
 }
 
 interface DispositionRow {
@@ -366,15 +373,41 @@ function transformBusinessSteps(): void {
 
     const records: StandardRecord[] = data
       .filter(row => row.businessStep)
-      .map(row => ({
-        ns: NS,
-        type: 'BusinessStep',
-        id: toWikipediaStyleId(row.businessStep),
-        name: row.businessStep,
-        description: cleanDescription(`${row.verb} ${row.noun}. ${row.description || ''}`),
-        code: row.businessStep.toLowerCase(),
-        includedIn: getAggregationsForType('BusinessStep'),
-      }))
+      .map(row => {
+        // Digital-interaction bizSteps (#105) are OUR draft superset extension.
+        // They mint the gs1.org.ai/cbv/BizStep-<gerund> shape (a DISTINCT URI
+        // namespace from the physical EPCIS/BusinessStep/{code} path), carry a
+        // DigitalBusinessStep type, and openly mark themselves as provisional —
+        // never claimed as ratified GS1 CBV. sameAs, when present, is a
+        // down-projection to a ratified physical CBV analog.
+        if (row.category === 'digital') {
+          const gerund = row.businessStep
+          const slug = gerund.toLowerCase()
+          return {
+            ns: NS,
+            type: 'DigitalBusinessStep',
+            id: `BizStep-${slug}`,
+            name: gerund,
+            description: cleanDescription(
+              `${row.verb} ${row.noun}. ${slug} — Vin digital superset (draft, not ratified GS1)`,
+            ),
+            code: `bizstep-${slug}`,
+            sameAs: row.sameAs || '',
+            includedIn: getAggregationsForType('DigitalBusinessStep'),
+          }
+        }
+
+        // Physical bizSteps mirror ratified CBV — unchanged behavior.
+        return {
+          ns: NS,
+          type: 'BusinessStep',
+          id: toWikipediaStyleId(row.businessStep),
+          name: row.businessStep,
+          description: cleanDescription(`${row.verb} ${row.noun}. ${row.description || ''}`),
+          code: row.businessStep.toLowerCase(),
+          includedIn: getAggregationsForType('BusinessStep'),
+        }
+      })
 
     writeStandardTSV(join(DATA_DIR, 'GS1.BusinessSteps.tsv'), records)
   } catch (e) {
