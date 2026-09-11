@@ -1,0 +1,34 @@
+---
+$type: Standard
+$id: https://standards.org.ai/IEC/61508
+source: IEC
+name: "61508"
+title: IEC 61508 — Functional Safety of Electrical/Electronic/Programmable Electronic Safety-Related Systems
+description: The root functional-safety standard — Safety Integrity Levels (SIL 1–4) assigned from required risk reduction, the safety lifecycle, and the safe-state requirement on detected failure.
+canonical: https://www.iec.ch/functional-safety
+citedBy:
+  - https://schema.org.ai/AssuranceTier
+---
+
+# IEC 61508
+
+**IEC 61508** (*Functional Safety of Electrical/Electronic/Programmable Electronic Safety-Related Systems*) is the root standard of the functional-safety family (ISO 26262 is its automotive adaptation). It assigns each safety function a **Safety Integrity Level** (SIL 1–4) from the risk reduction the function must deliver, prescribes a whole-lifecycle discipline (specification through decommissioning), and requires that detected dangerous failures drive the system to a defined **safe state**.
+
+This page is a **G1 seed**: it registers the standard as a source of record so downstream vocabularies can cite it by stable `$id`. It describes the standard; it does not redefine it.
+
+## Constructs contributed
+
+| Construct | Definition (as in the standard) |
+|---|---|
+| SIL 1–4 | Graduated integrity levels assigned from required risk reduction. |
+| Safety lifecycle | Assurance is a property of the whole lifecycle, not a point-in-time test. |
+| Safe state | On detected failure the system must reach a defined reduced-risk state. |
+| MAX-composition | A system's claim is bounded by its least-assured safety-relevant element. |
+
+## Citation edges (G2 derivations)
+
+- [`https://schema.org.ai/AssuranceTier`](https://schema.org.ai/AssuranceTier) — the T0–T4 tier axis inherits the SIL pattern: graduated integrity assigned from consequence, the achievable tier capped by the least-assured component (MIN over assured components), and a required lawful degraded state (the MRC's Frozen-or-Flat declaration is the safe-state requirement carried to business autonomy).
+
+## Reference
+
+- Canonical publication: [IEC 61508 series](https://www.iec.ch/functional-safety)

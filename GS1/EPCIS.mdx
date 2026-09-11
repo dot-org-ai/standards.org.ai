@@ -1,0 +1,36 @@
+---
+$type: Standard
+$id: https://standards.org.ai/GS1/EPCIS
+source: GS1
+name: EPCIS
+title: GS1 EPCIS — Electronic Product Code Information Services
+description: The GS1 standard for sharing supply-chain event data — what/when/where/why evidence events (ObjectEvent, AggregationEvent, TransactionEvent, TransformationEvent, AssociationEvent) with the Core Business Vocabulary.
+canonical: https://www.gs1.org/standards/epcis
+citedBy:
+  - https://schema.org.ai/EvidenceRegister
+---
+
+# GS1 EPCIS
+
+**GS1 EPCIS** (*Electronic Product Code Information Services*, 2.0) is the GS1 standard for capturing and sharing supply-chain visibility events. Each event records **what** objects were involved, **when** it happened, **where** it occurred, and **why** (business step and disposition, drawn from the Core Business Vocabulary). Events are designed to be shared across organizational boundaries — evidence a counterparty can consume, not private telemetry.
+
+This page is a **G1 seed**: it registers the standard as a source of record so downstream vocabularies can cite it by stable `$id`. It describes the standard; it does not redefine it. Entity-level pages for the event vocabulary live under [`GS1/EPCIS/`](https://standards.org.ai/GS1/EPCIS/EventType/ObjectEvent) (EventType, BusinessStep, Disposition).
+
+## Constructs contributed
+
+| Construct | Definition (as in the standard) |
+|---|---|
+| Event types | ObjectEvent, AggregationEvent, TransactionEvent, TransformationEvent, AssociationEvent. |
+| What/When/Where/Why | The four-dimension evidence-event envelope. |
+| CBV — Core Business Vocabulary | Standardized business steps and dispositions giving events shared meaning across parties. |
+| Cross-party sharing | Events are structured for counterparty consumption and reconciliation. |
+
+## Citation edges (G2 derivations)
+
+- [`https://schema.org.ai/EvidenceRegister`](https://schema.org.ai/EvidenceRegister) — the two-register logging law adopts EPCIS as the evidence-event vocabulary: counterparty-checkable events in the tier-governed register.
+
+**Lexeme-binding note:** EPCIS `TransformationEvent` (inputs consumed, outputs produced) is **not** the canon verb `transform` — the shared lexeme binds to different referents in the two registers, and the collision is recorded rather than merged.
+
+## Reference
+
+- Canonical publication: [GS1 EPCIS & CBV 2.0](https://www.gs1.org/standards/epcis)
