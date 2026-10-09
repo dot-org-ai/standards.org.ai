@@ -285,16 +285,17 @@ const SEC = {
   "x-content-type-options": "nosniff",
   "referrer-policy": "strict-origin-when-cross-origin",
   "x-frame-options": "SAMEORIGIN",
-  /* The page loads nothing from anywhere else: the page, its font and its image all come from
-     this origin, so the policy admits this origin (and inline style and script) and no other host. */
+  /* The page loads its style, script, font and images from this origin and from no other host. Its only requests
+     elsewhere are the Foundation's search, reading the record and the vocabulary once someone reaches for it. */
   "content-security-policy":
     "default-src 'none'; " +
     "script-src 'self' 'unsafe-inline'; " +
     "style-src 'self' 'unsafe-inline'; " +
     "font-src 'self'; " +
     "img-src 'self' data:; " +
-    // the estate's edge analytics snippet posts to this origin's /e; allow it rather than log a violation on every page
-    "connect-src 'self'; " +
+    // the estate's edge analytics snippet posts to this origin's /e; allow it rather than log a violation on every page.
+    // The Foundation's search (find.js) reads the occupations from foundation.org.ai and Schema.org's terms from schema.org.ai.
+    "connect-src 'self' https://foundation.org.ai https://schema.org.ai; " +
     "form-action 'self'; " +
     "frame-ancestors 'self'; " +
     "base-uri 'none'",
