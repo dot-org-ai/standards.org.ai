@@ -111,17 +111,49 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .wordmark .logo { width: 20px; height: 20px; }
   .site-head .btn { padding: 0 10px; font-size: 0.875rem; }
 }
+/* small screens: the nav folds behind a menu button right of Partner, and unrolls as a sheet from under the header */
 .menu-btn { display: none; }
 @media (max-width: 899px) {
-  .menu-btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; margin-right: 2px; background: none; border: 0; border-radius: 4px; color: var(--ink-2); font-size: 0.9375rem; cursor: pointer; }
-  .menu-btn[aria-expanded="true"] { color: var(--ink); }
+  .site-head { gap: 6px; }
+  .menu-btn { display: inline-grid; place-items: center; flex: none; width: 44px; height: 44px; margin-right: -13px; padding: 0; background: none; border: 0; border-radius: 6px; color: var(--ink); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color 160ms; }
 }
-@media (max-width: 360px) { .menu-btn { padding: 0 6px; font-size: 0.875rem; } }
-.mnav { position: fixed; z-index: 29; left: 0; right: 0; top: var(--head); display: grid; padding: 4px var(--pad) 14px; background: var(--ground); border-bottom: 1px solid var(--rule); opacity: 0; transform: translateY(-6px); transition: opacity 180ms var(--ease-state), transform 240ms var(--ease-out); }
-.mnav.in { opacity: 1; transform: none; }
+@media (hover: hover) { .menu-btn:hover { background: var(--raise); } }
+.burger { position: relative; width: 18px; height: 11.5px; }
+.burger i { position: absolute; left: 0; width: 18px; height: 1.5px; border-radius: 1px; background: currentColor; transition: transform 420ms var(--ease-out), opacity 180ms var(--ease-state); }
+.burger i:nth-child(1) { top: 0; }
+.burger i:nth-child(2) { top: 5px; }
+.burger i:nth-child(3) { top: 10px; }
+.menu-btn[aria-expanded="true"] .burger i:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+.menu-btn[aria-expanded="true"] .burger i:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.menu-btn[aria-expanded="true"] .burger i:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+.mnav { position: fixed; z-index: 29; inset: var(--head) 0 0; overflow-y: auto; overscroll-behavior: contain; background: oklch(0.12 0.005 78 / 0); transition: background-color 220ms var(--ease-state); -webkit-tap-highlight-color: transparent; }
+.mnav.in { background: oklch(0.12 0.005 78 / 0.62); transition-duration: 320ms; }
 .mnav[hidden] { display: none; }
-.mnav a { min-height: 52px; display: flex; align-items: center; border-bottom: 1px solid var(--rule-faint); color: var(--ink); text-decoration: none; font-size: 1.125rem; }
+/* opening, only the sheet's surface unrolls (on its own layer): an element whose clip-path is animating takes no taps,
+   so the links stay unclipped and answer from the first frame. Closing, the whole sheet folds up with its links. */
+.mnav-panel { position: relative; isolation: isolate; padding: 4px var(--pad) 18px; clip-path: inset(0 0 100% 0); transition: clip-path 220ms cubic-bezier(0.4, 0, 0.9, 0.6); }
+.mnav.in .mnav-panel { clip-path: inset(0); transition: none; }
+.mnav-panel::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ground); border-bottom: 1px solid var(--rule); clip-path: inset(0 0 100% 0); transition: clip-path 0ms 230ms; }
+.mnav.in .mnav-panel::before { clip-path: inset(0); transition: clip-path 520ms var(--ease-out); }
+.mnav a { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; border-bottom: 1px solid var(--rule-faint); color: var(--ink); text-decoration: none; font-size: 1.3125rem; letter-spacing: -0.012em; opacity: 0; transform: translateY(-8px); transition: opacity 0ms 230ms, transform 0ms 230ms; }
 .mnav a:last-child { border-bottom: 0; }
+.mnav.in a { opacity: 1; transform: none; transition: opacity 320ms var(--ease-state), transform 560ms var(--ease-out); }
+@media (prefers-reduced-motion: no-preference) {
+  .mnav.in a:nth-child(1) { transition-delay: 70ms; }
+  .mnav.in a:nth-child(2) { transition-delay: 120ms; }
+  .mnav.in a:nth-child(3) { transition-delay: 170ms; }
+  .mnav.in a:nth-child(4) { transition-delay: 220ms; }
+  .mnav.in a:nth-child(5) { transition-delay: 270ms; }
+}
+/* each link ends in a chevron; the page you are on ends in the amber mark instead */
+.mnav a::after { content: ""; flex: none; width: 7px; height: 7px; margin-right: 4px; border-top: 1.5px solid var(--ink-3); border-right: 1.5px solid var(--ink-3); transform: rotate(45deg); transition: transform 240ms var(--ease-out), border-color 160ms; }
+@media (hover: hover) { .mnav a:hover::after { border-color: var(--ink); transform: translateX(3px) rotate(45deg); } }
+.mnav a:active::after { border-color: var(--ink); transform: translateX(3px) rotate(45deg); }
+.mnav a[aria-current="page"]::after { width: 7px; height: 12px; border: 0; border-radius: 50%; background: var(--now); transform: rotate(24deg); }
+@media (forced-colors: active) {
+  .burger i { forced-color-adjust: none; background: ButtonText; }
+  .mnav a[aria-current="page"]::after { forced-color-adjust: none; background: Highlight; }
+}
 @media (min-width: 900px) { .mnav { display: none !important; } }
 
 
@@ -313,7 +345,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 </head>
 <body>
 <a class="skip" href="#main">Skip to the page</a>
-<header class="site-head"><span class="lockup-h"><a class="wordmark" href="https://foundation.org.ai/" aria-label="Org.AI Foundation, home"><svg class="logo" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><g class="orb" style="--i:0"><g class="mk" style="--i:0;--dx:3.68px;--dy:-13.72px"><ellipse cx="20.32" cy="37.72" rx="6.8" ry="3.9" transform="rotate(129 20.32 37.72)" fill="currentColor"/></g></g><g class="orb" style="--i:1"><g class="mk" style="--i:1;--dx:13.72px;--dy:-3.68px"><ellipse cx="10.28" cy="27.68" rx="6.8" ry="3.9" transform="rotate(189 10.28 27.68)" fill="currentColor"/></g></g><g class="orb" style="--i:2"><g class="mk" style="--i:2;--dx:10.04px;--dy:10.04px"><ellipse cx="13.96" cy="13.96" rx="6.8" ry="3.9" transform="rotate(249 13.96 13.96)" fill="currentColor"/></g></g><g class="orb" style="--i:3"><g class="mk" style="--i:3;--dx:-3.68px;--dy:13.72px"><ellipse cx="27.68" cy="10.28" rx="6.8" ry="3.9" transform="rotate(309 27.68 10.28)" fill="currentColor"/></g></g><g class="orb" style="--i:4"><g class="mk" style="--i:4;--dx:-13.72px;--dy:3.68px"><ellipse cx="37.72" cy="20.32" rx="6.8" ry="3.9" transform="rotate(369 37.72 20.32)" fill="currentColor"/></g></g><g class="orb" style="--i:5"><g class="mk" style="--i:5;--dx:-10.04px;--dy:-10.04px"><ellipse class="amber" cx="34.04" cy="34.04" rx="6.8" ry="3.9" transform="rotate(429 34.04 34.04)" fill="#f0af66"/></g></g></svg><span>Org<span class="dot">.</span>AI Foundation</span></a><span class="lsep" aria-hidden="true">/</span><a class="sub" href="/">Standards</a></span><nav class="site-nav" aria-label="Main"><a href="/#register">The register</a><a href="/#ours">Our standards</a><a href="/#cite">How we cite</a></nav><button class="menu-btn" type="button" aria-expanded="false" aria-controls="mnav">Menu</button><a class="btn btn-primary" href="https://foundation.org.ai/#partner">Partner</a></header><nav class="mnav" id="mnav" aria-label="Main" hidden><a href="/#register">The register</a><a href="/#ours">Our standards</a><a href="/#cite">How we cite</a></nav>
+<header class="site-head"><span class="lockup-h"><a class="wordmark" href="https://foundation.org.ai/" aria-label="Org.AI Foundation, home"><svg class="logo" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><g class="orb" style="--i:0"><g class="mk" style="--i:0;--dx:3.68px;--dy:-13.72px"><ellipse cx="20.32" cy="37.72" rx="6.8" ry="3.9" transform="rotate(129 20.32 37.72)" fill="currentColor"/></g></g><g class="orb" style="--i:1"><g class="mk" style="--i:1;--dx:13.72px;--dy:-3.68px"><ellipse cx="10.28" cy="27.68" rx="6.8" ry="3.9" transform="rotate(189 10.28 27.68)" fill="currentColor"/></g></g><g class="orb" style="--i:2"><g class="mk" style="--i:2;--dx:10.04px;--dy:10.04px"><ellipse cx="13.96" cy="13.96" rx="6.8" ry="3.9" transform="rotate(249 13.96 13.96)" fill="currentColor"/></g></g><g class="orb" style="--i:3"><g class="mk" style="--i:3;--dx:-3.68px;--dy:13.72px"><ellipse cx="27.68" cy="10.28" rx="6.8" ry="3.9" transform="rotate(309 27.68 10.28)" fill="currentColor"/></g></g><g class="orb" style="--i:4"><g class="mk" style="--i:4;--dx:-13.72px;--dy:3.68px"><ellipse cx="37.72" cy="20.32" rx="6.8" ry="3.9" transform="rotate(369 37.72 20.32)" fill="currentColor"/></g></g><g class="orb" style="--i:5"><g class="mk" style="--i:5;--dx:-10.04px;--dy:-10.04px"><ellipse class="amber" cx="34.04" cy="34.04" rx="6.8" ry="3.9" transform="rotate(429 34.04 34.04)" fill="#f0af66"/></g></g></svg><span>Org<span class="dot">.</span>AI Foundation</span></a><span class="lsep" aria-hidden="true">/</span><a class="sub" href="/">Standards</a></span><nav class="site-nav" aria-label="Main"><a href="/#register">The register</a><a href="/#ours">Our standards</a><a href="/#cite">How we cite</a></nav><a class="btn btn-primary" href="https://foundation.org.ai/#partner">Partner</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="mnav" aria-label="Menu"><span class="burger" aria-hidden="true"><i></i><i></i><i></i></span></button></header><nav class="mnav" id="mnav" aria-label="Main" hidden><div class="mnav-panel"><a href="/#register">The register</a><a href="/#ours">Our standards</a><a href="/#cite">How we cite</a></div></nav>
 <main id="main" tabindex="-1"><section class="nf reg" aria-labelledby="nf-h"><div><h1 id="nf-h">This page is not in the register.</h1></div><div><p>There is nothing at <code id="where"></code>. The register is one page: every standard we copied, and every one we wrote.</p><p class="links"><a class="textlink" href="/">The register</a><a class="textlink" href="/#ours">Our standards</a><a class="textlink" href="https://foundation.org.ai/">Org.AI Foundation</a></p></div></section></main>
 <footer class="site-foot">
   <div class="foot-grid">
@@ -383,17 +415,31 @@ button, input, select, textarea { font: inherit; color: inherit; }
   headLogo.addEventListener("animationend", (e) => { if (e.target === lastMark && e.animationName === "logoRepour") headLogo.classList.remove("repour"); });
   $(".wordmark").addEventListener("mouseenter", () => { if (!reduce && !headLogo.classList.contains("repour")) headLogo.classList.add("repour"); });
   const menuBtn = $(".menu-btn"), mnav = $("#mnav");
+  let menuHide = 0;
   function setMenu(open, now) {
+    clearTimeout(menuHide);
     menuBtn.setAttribute("aria-expanded", String(open));
-    if (open) { mnav.hidden = false; requestAnimationFrame(() => mnav.classList.add("in")); $("a", mnav).focus(); }
-    else if (now) { mnav.classList.remove("in"); mnav.hidden = true; }
-    else { mnav.classList.remove("in"); setTimeout(() => { if (menuBtn.getAttribute("aria-expanded") === "false") mnav.hidden = true; }, reduce ? 0 : 200); }
+    if (open) {
+      mnav.hidden = false;
+      mnav.getBoundingClientRect(); // commit the folded state first, so the sheet unrolls from it
+      mnav.classList.add("in");
+      $("a", mnav).focus({ preventScroll: true });
+    } else {
+      mnav.classList.remove("in");
+      if (now || reduce) mnav.hidden = true;
+      else menuHide = setTimeout(() => { mnav.hidden = true; }, 280);
+    }
   }
-  mnav.addEventListener("focusout", (e) => { if (menuBtn.getAttribute("aria-expanded") === "true" && !(e.relatedTarget && e.relatedTarget.closest("#mnav, .menu-btn"))) setMenu(false); });
+  // Tab past the last link closes the menu, so nothing is ever focused behind it. A pointer blur has no
+  // relatedTarget (Safari never focuses a tapped button); taps are handled below, or the X would reopen it.
+  mnav.addEventListener("focusout", (e) => {
+    if (menuBtn.getAttribute("aria-expanded") === "true" && e.relatedTarget && !e.relatedTarget.closest("#mnav, .menu-btn")) setMenu(false);
+  });
   menuBtn.addEventListener("click", () => setMenu(menuBtn.getAttribute("aria-expanded") !== "true"));
-  mnav.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !mnav.hidden) { setMenu(false); menuBtn.focus(); } });
-  document.addEventListener("pointerdown", (e) => { if (!mnav.hidden && !e.target.closest("#mnav, .menu-btn")) setMenu(false); });
+  // choosing a link, or tapping the dimmed page around the sheet, folds it away
+  mnav.addEventListener("click", (e) => { if (e.target.closest("a") || !e.target.closest(".mnav-panel")) setMenu(false); });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && menuBtn.getAttribute("aria-expanded") === "true") { setMenu(false); menuBtn.focus(); } });
+  document.addEventListener("pointerdown", (e) => { if (menuBtn.getAttribute("aria-expanded") === "true" && !e.target.closest("#mnav, .menu-btn")) setMenu(false); });
   addEventListener("resize", () => { if (!isMobile() && menuBtn.getAttribute("aria-expanded") === "true") setMenu(false, true); });
   let where = location.pathname; try { where = decodeURIComponent(where); } catch (e) {}
   $("#where").textContent = where;
