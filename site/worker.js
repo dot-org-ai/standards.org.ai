@@ -293,6 +293,8 @@ const SEC = {
     "style-src 'self' 'unsafe-inline'; " +
     "font-src 'self'; " +
     "img-src 'self' data:; " +
+    // the estate's edge analytics snippet posts to this origin's /e; allow it rather than log a violation on every page
+    "connect-src 'self'; " +
     "form-action 'self'; " +
     "frame-ancestors 'self'; " +
     "base-uri 'none'",
