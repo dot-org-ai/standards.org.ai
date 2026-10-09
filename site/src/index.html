@@ -87,6 +87,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .btn .arr { display: inline-block; transition: transform 220ms var(--ease-out); }
 @media (hover: hover) { .btn:hover .arr { transform: translateX(3px); } }
+/* on small screens a call to action in the page spans its column; the header's Partner and a search field's button keep their size */
+@media (max-width: 899px) { main .btn:not(.field .btn) { width: 100%; } }
 .textlink { color: var(--ink); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 5px; text-decoration-thickness: 1px; transition: text-decoration-color 160ms; }
 @media (hover: hover) { .textlink:hover { text-decoration-color: var(--now); } }
 .live { color: var(--now); text-decoration: underline; text-decoration-color: oklch(0.55 0.08 68); text-underline-offset: 4px; text-decoration-thickness: 1px; }
