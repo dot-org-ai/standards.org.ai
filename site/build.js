@@ -16,7 +16,7 @@ const OUT = path.join(__dirname, "public");
 // empty public/ rather than replace it, so a running `wrangler dev` keeps watching the same folder
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of fs.readdirSync(OUT)) fs.rmSync(path.join(OUT, f), { recursive: true, force: true });
-for (const f of ["index.html", "404.html", "og.png"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, f));
+for (const f of ["index.html", "404.html", "og.png", "favicon.ico", "favicon.svg", "apple-touch-icon.png"]) fs.copyFileSync(path.join(SRC, f), path.join(OUT, f));
 fs.cpSync(path.join(SRC, "fonts"), path.join(OUT, "fonts"), { recursive: true });
 
 for (const f of ["index.html", "404.html"]) {

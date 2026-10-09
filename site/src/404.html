@@ -6,7 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Page not found · Org.AI Foundation</title>
 <meta name="description" content="This address is not in the Org.AI Foundation&#x27;s register of standards.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='11' fill='%2313110e'/%3E%3Cellipse cx='20.32' cy='37.72' rx='6.8' ry='3.9' transform='rotate(129 20.32 37.72)' fill='%23f3f2ee'/%3E%3Cellipse cx='10.28' cy='27.68' rx='6.8' ry='3.9' transform='rotate(189 10.28 27.68)' fill='%23f3f2ee'/%3E%3Cellipse cx='13.96' cy='13.96' rx='6.8' ry='3.9' transform='rotate(249 13.96 13.96)' fill='%23f3f2ee'/%3E%3Cellipse cx='27.68' cy='10.28' rx='6.8' ry='3.9' transform='rotate(309 27.68 10.28)' fill='%23f3f2ee'/%3E%3Cellipse cx='37.72' cy='20.32' rx='6.8' ry='3.9' transform='rotate(369 37.72 20.32)' fill='%23f3f2ee'/%3E%3Cellipse class='amber' cx='34.04' cy='34.04' rx='6.8' ry='3.9' transform='rotate(429 34.04 34.04)' fill='%23f0af66'/%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/publicsans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <meta name="robots" content="noindex">
 <style>
@@ -135,6 +137,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .mnav.in .mnav-panel { clip-path: inset(0); transition: none; }
 .mnav-panel::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--ground); border-bottom: 1px solid var(--rule); clip-path: inset(0 0 100% 0); transition: clip-path 0ms 230ms; }
 .mnav.in .mnav-panel::before { clip-path: inset(0); transition: clip-path 520ms var(--ease-out); }
+/* tablets: a panel under the X that opened it, rather than rows the width of the screen */
+@media (min-width: 600px) {
+  .mnav-panel { margin-left: auto; width: min(100%, 22rem); padding-inline: 28px; }
+  .mnav-panel::before { border-left: 1px solid var(--rule); border-bottom-left-radius: 10px; }
+}
 .mnav a { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; border-bottom: 1px solid var(--rule-faint); color: var(--ink); text-decoration: none; font-size: 1.3125rem; letter-spacing: -0.012em; opacity: 0; transform: translateY(-8px); transition: opacity 0ms 230ms, transform 0ms 230ms; }
 .mnav a:last-child { border-bottom: 0; }
 .mnav.in a { opacity: 1; transform: none; transition: opacity 320ms var(--ease-state), transform 560ms var(--ease-out); }
@@ -240,20 +247,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .site-head .sub { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); text-decoration: none; font-size: 1rem; transition: color 160ms var(--ease-state); white-space: nowrap; }
 @media (hover: hover) { .site-head .sub:hover { color: var(--ink); } }
 
-.std-hero { padding: clamp(40px, 7vw, 96px) var(--pad) clamp(56px, 7vw, 96px); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(32px, 6vw, 96px); align-items: center; }
-.std-hero h1 { font-size: clamp(2.375rem, 1.2rem + 3.2vw, 4.25rem); font-weight: 320; letter-spacing: -0.034em; line-height: 1.02; text-wrap: balance; max-width: 13ch; }
+/* the hero: the words and the shelves side by side, the three facts as one strip beneath both */
+.std-hero { padding: clamp(40px, 6vw, 88px) var(--pad) clamp(56px, 6vw, 88px); grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: clamp(32px, 6vw, 96px); row-gap: clamp(44px, 5vw, 72px); align-items: center; }
+.std-hero h1 { font-size: clamp(2.375rem, 1rem + 3.9vw, 4.75rem); font-weight: 320; letter-spacing: -0.034em; line-height: 1.02; text-wrap: balance; max-width: 12ch; }
+.hero-facts { grid-column: 1 / -1; }
 .std-hero .lede { margin-top: 24px; font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); line-height: 1.55; color: var(--ink-2); max-width: 34rem; }
-.facts { margin-top: clamp(28px, 3.4vw, 40px); max-width: 36rem; border-top: 1px solid var(--rule); }
-.facts > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); column-gap: 20px; padding: 13px 0 14px; border-bottom: 1px solid var(--rule-faint); }
+.facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: clamp(24px, 4vw, 64px); border-top: 1px solid var(--rule); }
+.facts > div { display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; row-gap: 6px; padding: 18px 0 0; }
 .facts dt { font-size: 0.875rem; color: var(--ink-3); padding-top: 2px; }
 .facts dd { color: var(--ink); line-height: 1.45; }
 .facts dd .sub { display: block; margin-top: 2px; font-size: 0.875rem; color: var(--ink-3); }
-.facts-note { margin-top: 12px; font-size: 0.8125rem; color: var(--ink-3); }
+.facts-note { margin-top: 18px; font-size: 0.8125rem; color: var(--ink-3); }
 .std-hero .actions { margin-top: 26px; display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; }
 .std-hero .actions .textlink { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); }
 
 /* the register at a glance: seven shelves of the mark's ovals */
-.shelves { position: relative; margin: 0; justify-self: center; width: min(100%, 520px); }
+.shelves { position: relative; margin: 0; justify-self: end; width: min(100%, 520px); }
 .shelf { display: grid; grid-template-columns: 9.5rem minmax(0, 1fr); align-items: end; column-gap: 18px; padding: 14px 0 12px; border-bottom: 1px solid var(--rule); }
 .shelf:first-child { border-top: 1px solid var(--rule-faint); }
 .sl { font-size: 0.8125rem; line-height: 1.3; color: var(--ink-3); padding-bottom: 3px; }
@@ -303,10 +312,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .std .nm .ov { margin-top: 3px; width: 9px; height: 16px; }
 .std h3 { font-size: 1.1875rem; font-weight: 440; letter-spacing: -0.01em; line-height: 1.3; overflow-wrap: anywhere; }
 .std .what { color: var(--ink); line-height: 1.5; }
-.std .load { margin-top: 6px; color: var(--ink-3); font-size: 0.875rem; line-height: 1.55; }
+.std .load { margin-top: 6px; color: var(--ink-3); font-size: 0.875rem; line-height: 1.55; max-width: 26rem; }
 .std .home { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px 20px; }
 .std .home a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
-.note { margin-top: 22px; color: var(--ink-3); font-size: 0.9375rem; max-width: 40rem; }
+.note { margin-top: 22px; color: var(--ink-3); font-size: 0.9375rem; max-width: 31rem; }
 
 .trace-sec .trace { margin-top: 0; }
 .side .more { margin-top: 18px; display: inline-flex; align-items: center; min-height: 44px; }
@@ -328,7 +337,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .reg { grid-template-columns: minmax(0, 1fr); }
   .std-hero { row-gap: 44px; }
   .side { position: static; margin-bottom: 26px; }
-  .story { max-width: none; }
+  .story { max-width: 33rem; }
+  .shelves { justify-self: start; }
+  .facts { grid-template-columns: minmax(0, 1fr); }
+  .facts > div { grid-template-columns: 7.5rem minmax(0, 1fr); column-gap: 20px; row-gap: 0; padding: 13px 0 14px; border-bottom: 1px solid var(--rule-faint); }
 }
 @media (max-width: 640px) {
   .lsep { margin: 0 8px; }
