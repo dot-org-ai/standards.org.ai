@@ -204,7 +204,7 @@ function build(html, dataDir) {
     copied.flatMap((s) => s.items.map((b) => `<tr><th scope="row">${esc(b.name)}</th><td>${esc(s.name)}</td><td>${KIND[b.k]}</td><td>${fmt(b.rows)}</td></tr>`)).join("") +
     `</tbody></table></div></figure>`;
 
-  return { figure, total, collections: books.length, whole, most, least };
+  return { figure, total, collections: books.length, whole, most, least, sections };
 }
 
 module.exports = { build, LAYOUT, OURS_DEC, HEADROOM };
