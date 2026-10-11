@@ -137,7 +137,7 @@
     { s: "schema", t: "schema.org.ai", d: "The shared vocabulary", h: HOME.schema },
     { s: "standards", t: "standards.org.ai", d: "The standards we keep, and the ones we write", h: HOME.standards },
     { s: "law", t: "law.org.ai", d: "Access to justice, with the lawyer kept in", h: HOME.law },
-    { s: "insurance", t: "insurance.org.ai", d: "The second industry we are writing down", h: HOME.insurance },
+    { s: "insurance", t: "insurance.org.ai", d: "Three acts need a license, and 56 regulators issue it", h: HOME.insurance },
     { t: "id.org.ai", d: "Sign-in for people and AI agents", h: "https://id.org.ai" },
     { t: "mdx.org.ai", d: "Documents that people and machines can both read", h: "https://mdx.org.ai" },
     { t: "primitives.org.ai", d: "The building blocks", h: "https://primitives.org.ai" },
