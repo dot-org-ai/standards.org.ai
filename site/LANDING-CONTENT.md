@@ -1181,6 +1181,8 @@ in the repository root on 2026-07-28.
 | 25,418 rows outside the reserved names | Advance CTE 3,978 + BLS 3,447 + Ecommerce 3,194 + Education 348 + Finance 3,164 + NAPCS 5,362 + U.S. agencies 5,925 |
 | 37 publishers | distinct publishing organisations named by this repository's own READMEs, merging shared publishers. Attribution-based, therefore `/llms.txt` only |
 | every version, date and licence | the repository's own `.source/README.md` or the relevant `.source/*/README.md`, or a source filename. **"No version stated" is a real answer and is printed as one** |
+| the hero's shelf: rows per collection, their total (627,561 on 2026-10-11) and the smallest and largest | counted by `site/shelf.js` on every build: `.data/*.tsv` grouped by filename prefix as above, header excluded; `Graph.*` and `Superset.*` are ours and are not counted. The build stops if a file belongs to no collection, or a collection has no rows |
+| the links on a book's card | counted by `site/shelf.js` on every build: each `.data/relationships/*.tsv`, header excluded, counts for the collection it is inside, or for both of the two it runs between; `BEA.*`, `Graph.*` and `Superset.*` are not on the register and are not counted |
 | 905 pages / 871 types in schema.org.ai | `find things -name '*.mdx' \| wc -l` in that repo, against its README. **They disagree, so no total is printed** |
 | every live/dead state in §9 | `curl -s -o /dev/null -w "%{http_code}"` per host |
 
